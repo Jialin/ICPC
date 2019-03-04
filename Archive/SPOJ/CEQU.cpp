@@ -30,7 +30,6 @@ using namespace std;
 #define FOREACH(i,v) for(typeof((v).begin()) i=(v).begin();i!=(v).end();i++)
 
 namespace mathutil {
-
   template<typename T>
   T gcd(T a, T b) {
     if (a < 0) a = -a;
