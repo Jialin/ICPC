@@ -39,11 +39,16 @@ DIR_OF_THIRD_PARTY = os.path.join( DIR_OF_THIS_SCRIPT, 'third_party' )
 SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
 
 flags = [
-'-Wall',
-'-Wextra',
 '-Werror',
-'-fexceptions',
-'-DNDEBUG',
+'-Weverything',
+'-Wno-c++98-compat',
+'-Wno-double-promotion',
+'-Wno-exit-time-destructors',
+'-Wno-global-constructors',
+'-Wno-missing-prototypes',
+'-Wno-missing-variable-declarations',
+#'-fexceptions',
+#'-DNDEBUG',
 # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
 # language to use when compiling headers. So it will guess. Badly. So C++
 # headers will be compiled as C headers. You don't want that so ALWAYS specify
