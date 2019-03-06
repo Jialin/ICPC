@@ -10,6 +10,7 @@ inline bool isPow2(int n) {
 
 // Computes the smallest 2^x which is not less than n.
 inline int nextPow2(int n) {
+  if (n <= 1) return 1;
   return isPow2(n) ? n : 1 << (32 - __builtin_clz(static_cast<unsigned int>(n)));
 }
 } // namespace mu
