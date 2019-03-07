@@ -1,4 +1,3 @@
-/** TO BE VERIFIED. */
 namespace cs { namespace bit {
 
 template <typename T>
