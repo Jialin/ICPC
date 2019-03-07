@@ -22,5 +22,5 @@ public:
     lis[idx] = absv;
     if (idx == length) ++length;
   }
-};
+}; // class LongestIncreasingSubsequence
 }} // namespace cs::lis

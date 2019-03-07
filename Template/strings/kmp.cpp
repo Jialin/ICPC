@@ -31,5 +31,5 @@ public:
       if (pos == n - 1) matchStartPositions.push_back(i - n + 1);
     }
   }
-};
+}; // class KMP
 }} // namespace ss::kmp

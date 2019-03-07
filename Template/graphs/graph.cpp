@@ -26,5 +26,5 @@ public:
     addDirected(x, y);
     addDirected(y, x);
   }
-};
+}; // class UnweightedGraph
 }} // namespace gs::graph

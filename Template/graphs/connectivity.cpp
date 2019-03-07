@@ -38,5 +38,5 @@ public:
     parent.resize(n); fill(parent.begin(), parent.end(), -1);
     tarjanCutVertex(0, 0, graph, cutVertices);
   }
-};
+}; // class ConnectivitySolver
 }} // namespace gs::connect

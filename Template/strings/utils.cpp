@@ -15,5 +15,4 @@ inline string toString(const vector<int>& vs) {
   ss << ']';
   return ss.str();
 }
-
 }} // namespace ss::utils
