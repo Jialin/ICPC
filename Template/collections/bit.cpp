@@ -1,20 +1,4 @@
-/**
- * Code attached for convenience.
- */
-namespace mu {
-
-// Checks whether the number is in the form of 2^x
-inline bool isPow2(int n) {
-  return n && !(n & (n - 1));
-}
-
-// Computes the smallest 2^x which is not less than n.
-inline int nextPow2(int n) {
-  if (n <= 1) return 1;
-  return isPow2(n) ? n : 1 << (32 - __builtin_clz(static_cast<unsigned int>(n)));
-}
-} // namespace mu
-
+/** TO BE VERIFIED. */
 namespace cs { namespace bit {
 
 template <typename T>
@@ -28,19 +12,20 @@ class BinaryIndexedTree {
 
 public:
   // Initializes
-  inline void init(int n_, bool fixed = true) {
-    this->n = n_;
-    vs.reserve(fixed ? n : mu::nextPow2(n));
+  inline void init(int _n) {
+    this->n = _n;
     vs.resize(n);
-    fill(ALL(vs), 0);
+    fill(vs.begin(), vs.end(), 0);
   }
 
+  // Adds delta @ position i
   inline void update(int i, const T &delta) {
     for (; i < n; i |= i + 1) {
       vs[i] += delta;
     }
   }
 
+  // Calculates sum from position 0 to position i
   inline T calc(int i) {
     if (i < 0) return T();
     T res = vs[i];
@@ -50,8 +35,9 @@ public:
     return res;
   }
 
+  // Calculates sum from position i to position j
   inline T calcRange(int i, int j) {
     return calc(j) - calc(i - 1);
   }
-};
+}; // class BinaryIndexedTree
 }} // namespace cs::bit
