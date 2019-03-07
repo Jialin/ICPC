@@ -42,11 +42,13 @@ flags = [
 '-Werror',
 '-Weverything',
 '-Wno-c++98-compat',
+'-Wno-c++98-compat-pedantic',
 '-Wno-double-promotion',
 '-Wno-exit-time-destructors',
 '-Wno-global-constructors',
 '-Wno-missing-prototypes',
 '-Wno-missing-variable-declarations',
+'-Wno-sign-conversion',
 #'-fexceptions',
 #'-DNDEBUG',
 # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
