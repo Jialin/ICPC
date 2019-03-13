@@ -48,6 +48,7 @@ flags = [
 '-Wno-global-constructors',
 '-Wno-missing-prototypes',
 '-Wno-missing-variable-declarations',
+'-Wno-padded',
 '-Wno-sign-conversion',
 #'-fexceptions',
 #'-DNDEBUG',
