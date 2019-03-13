@@ -1,4 +1,4 @@
-namespace cs { namespace bit {
+namespace trees { namespace bit {
 
 template <typename T>
 class BinaryIndexedTree {
@@ -39,4 +39,4 @@ public:
     return calc(j) - calc(i - 1);
   }
 }; // class BinaryIndexedTree
-}} // namespace cs::bit
+}} // namespace trees::bit

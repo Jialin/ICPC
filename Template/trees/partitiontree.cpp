@@ -1,4 +1,4 @@
-namespace cs { namespace pt {
+namespace trees { namespace pt {
 
 template<typename T>
 class PartitionTree {
@@ -72,4 +72,4 @@ public:
     return fromIdx <= toIdx && vs[depth][lower] < v ? res + 1 : res;
   }
 }; // class PartitionTree
-}} // namespace cs::pt
+}} // namespace trees::pt
