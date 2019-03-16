@@ -7,6 +7,10 @@ public:
 
   vector<int> nxtOut, toIdx;
 
+  inline int edgeCnt() {
+    return static_cast<int>(toIdx.size());
+  }
+
   inline void init(int _n) {
     this->n = _n;
     lastOut.resize(n);
