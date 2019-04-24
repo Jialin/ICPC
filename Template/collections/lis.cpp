@@ -1,7 +1,7 @@
-namespace cs { namespace lis {
+namespace cs {
 
 template<typename T>
-class LongestIncreasingSubsequence {
+class LIS {
   vector<T> lis;
 
 public:
@@ -22,5 +22,5 @@ public:
     lis[idx] = absv;
     if (idx == length) ++length;
   }
-}; // class LongestIncreasingSubsequence
-}} // namespace cs::lis
+}; // class LIS
+} // namespace cs

@@ -1,4 +1,4 @@
-namespace gs { namespace graph {
+namespace gs {
 
 class UnweightedGraph {
 public:
@@ -31,4 +31,4 @@ public:
     addDirected(y, x);
   }
 }; // class UnweightedGraph
-}} // namespace gs::graph
+} // namespace gs

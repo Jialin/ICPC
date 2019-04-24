@@ -1,39 +1,4 @@
-namespace gs { namespace graph {
-
-class UnweightedGraph {
-public:
-  int n;
-  vector<int> lastOut;
-
-  vector<int> nxtOut, toIdx;
-
-  inline int edgeCnt() {
-    return static_cast<int>(toIdx.size());
-  }
-
-  inline void init(int _n) {
-    this->n = _n;
-    lastOut.resize(n);
-    fill(lastOut.begin(), lastOut.end(), -1);
-    nxtOut.clear();
-    toIdx.clear();
-  }
-
-  inline void addDirected(int x, int y) {
-    int edgeIdx = static_cast<int>(nxtOut.size());
-    nxtOut.push_back(lastOut[x]);
-    toIdx.push_back(y);
-    lastOut[x] = edgeIdx;
-  }
-
-  inline void addUndirected(int x, int y) {
-    addDirected(x, y);
-    addDirected(y, x);
-  }
-}; // class UnweightedGraph
-}} // namespace gs::graph
-
-namespace cs { namespace rmq {
+namespace cs {
 
 template<typename T>
 class RMQ {
@@ -78,16 +43,17 @@ public:
     return vs[calcMinIdx(lower, upper)];
   }
 }; // class RMQ
-}} // namespace cs::rmq
+} // namespace cs
 
-namespace trees { namespace lca {
+namespace trees {
 
+template<typename G>
 class LCA {
-  vector<int> depth, nodeIdx;
+  vector<int> nodeIdx;
   vector<int> in, out;
 
-  gs::graph::UnweightedGraph* tree;
-  cs::rmq::RMQ<int> depthRMQ;
+  G* tree;
+  cs::RMQ<int> depthRMQ;
 
   inline void dfs(int _depth, int u, int parent) {
     in[u] = static_cast<int>(depth.size());
@@ -104,7 +70,9 @@ class LCA {
     }
   }
 public:
-  inline void init(gs::graph::UnweightedGraph _tree) {
+  vector<int> depth;
+
+  inline void init(G& _tree) {
     tree = &_tree;
     int n = tree->n, n3 = n * 3;
     depth.clear(); depth.reserve(n3);
@@ -120,4 +88,4 @@ public:
     return nodeIdx[idx];
   }
 }; // class LCA
-}} // namespace trees::lca
+} // namespace trees

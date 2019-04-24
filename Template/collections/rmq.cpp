@@ -1,4 +1,4 @@
-namespace cs { namespace rmq {
+namespace cs {
 
 template<typename T>
 class RMQ {
@@ -43,4 +43,4 @@ public:
     return vs[calcMinIdx(lower, upper)];
   }
 }; // class RMQ
-}} // namespace cs::rmq
+} // namespace cs
