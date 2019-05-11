@@ -1,46 +1,84 @@
+namespace gs {
+
+class UnweightedGraph {
+public:
+  inline void init(int n) {
+    n_ = n;
+    lastOut_.resize(n);
+    fill(lastOut_.begin(), lastOut_.end(), -1);
+    nxtOut_.clear();
+    toIdx_.clear();
+  }
+
+  inline void addDirected(int x, int y) {
+    int edgeIdx = static_cast<int>(nxtOut_.size());
+    nxtOut_.push_back(lastOut_[x]);
+    toIdx_.push_back(y);
+    lastOut_[x] = edgeIdx;
+  }
+
+  inline void addUndirected(int x, int y) {
+    addDirected(x, y);
+    addDirected(y, x);
+  }
+
+  inline int n() const { return n_; }
+  inline int edgeCnt() const { return SIZE(toIdx_); }
+  inline int lastOut(int x) const { return lastOut_[x]; }
+  inline int nxtOut(int x) const { return nxtOut_[x]; }
+  inline int toIdx(int x) const { return toIdx_[x]; }
+
+private:
+  int n_;
+  vector<int> lastOut_, nxtOut_, toIdx_;
+}; // class UnweightedGraph
+} // namespace gs
+
 namespace cs {
 
 template<typename T>
 class RMQ {
-  int n;
-  T* vs;
-  vector<vector<int>> rmqIdx;
-
-  static inline int highestBit(int n) {
-    return 31 - __builtin_clz(n);
-  }
-
-  inline void _init() {
-    int bit = highestBit(n);
-    rmqIdx.resize(bit + 1);
-    for (int i = 0; i <= bit; ++i) rmqIdx[i].resize(n - (1 << i) + 1);
-    for (int i = 0; i < n; ++i) rmqIdx[0][i] = i;
-    for (int i = 1; i <= bit; ++i) for (int j = n - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
-      int jIdx = rmqIdx[i - 1][j];
-      int kIdx = rmqIdx[i - 1][k];
-      rmqIdx[i][j] = vs[jIdx] < vs[kIdx] ? jIdx : kIdx;
-    }
-  }
 public:
-  inline void init(int _n, T* _vs) {
-    n = _n;
-    vs = _vs;
-    _init();
+  inline void init(int n, T* vs) {
+    n_ = n;
+    vs_ = vs;
+    init_();
   }
 
-  inline void init(vector<T>& _vs) {
-    init(static_cast<int>(_vs.size()), _vs.data());
+  inline void init(vector<T>& vs) {
+    init(static_cast<int>(vs.size()), vs.data());
   }
 
-  inline int calcMinIdx(int lower, int upper) {
-    int bit = highestBit(upper - lower + 1);
-    int lowerIdx = rmqIdx[bit][lower];
-    int upperIdx = rmqIdx[bit][upper - (1 << bit) + 1];
-    return vs[lowerIdx] < vs[upperIdx] ? lowerIdx : upperIdx;
+  inline int calcMinIdx(int lower, int upper) const {
+    int bit = highestBit_(upper - lower);
+    int lowerIdx = rmqIdx_[bit][lower];
+    int upperIdx = rmqIdx_[bit][upper - (1 << bit)];
+    return vs_[lowerIdx] < vs_[upperIdx] ? lowerIdx : upperIdx;
   }
 
-  inline T& calcMin(int lower, int upper) {
-    return vs[calcMinIdx(lower, upper)];
+  inline T& calcMin(int lower, int upper) const {
+    return vs_[calcMinIdx(lower, upper)];
+  }
+
+  inline int n() const { return n_; }
+
+private:
+  int n_;
+  T* vs_;
+  vector<vector<int>> rmqIdx_;
+
+  inline static int highestBit_(int n) { return 31 - __builtin_clz(n); }
+
+  inline void init_() {
+    int bit = highestBit_(n_);
+    rmqIdx_.resize(bit + 1);
+    for (int i = 0; i <= bit; ++i) rmqIdx_[i].resize(n_ - (1 << i) + 1);
+    for (int i = 0; i < n_; ++i) rmqIdx_[0][i] = i;
+    for (int i = 1; i <= bit; ++i) for (int j = n_ - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
+      int jIdx = rmqIdx_[i - 1][j];
+      int kIdx = rmqIdx_[i - 1][k];
+      rmqIdx_[i][j] = vs_[jIdx] < vs_[kIdx] ? jIdx : kIdx;
+    }
   }
 }; // class RMQ
 } // namespace cs
@@ -49,43 +87,68 @@ namespace trees {
 
 template<typename G>
 class LCA {
-  vector<int> nodeIdx;
-  vector<int> in, out;
+public:
+  inline void init(const G& _tree) {
+    tree_ = &_tree;
+    int n = tree_->n(), n2 = n << 1;
+    depth_.clear(); depth_.reserve(n2);
+    nodeIdx_.clear(); nodeIdx_.reserve(n2);
+    in_.resize(n);
+    out_.resize(n);
+    parent_.resize(n);
+    dfs_(0, 0, -1);
+    rmq_.init(depth_);
+  }
 
-  G* tree;
-  cs::RMQ<int> depthRMQ;
-
-  inline void dfs(int _depth, int u, int parent) {
-    in[u] = static_cast<int>(depth.size());
-    out[u] = in[u];
-    depth.push_back(_depth);
-    nodeIdx.push_back(u);
-    for (int edgeIdx = tree->lastOut[u]; edgeIdx >= 0; edgeIdx = tree->nxtOut[edgeIdx]) {
-      int v = tree->toIdx[edgeIdx];
-      if (v == parent) continue;
-      dfs(_depth + 1, v, u);
-      out[u] = static_cast<int>(depth.size());
-      depth.push_back(_depth);
-      nodeIdx.push_back(u);
+  inline int calc(int x, int y) const {
+    if (out_[x] < in_[y]) {
+      return parent_[nodeIdx_[rmq_.calcMinIdx(out_[x], in_[y] + 1)]];
+    } else if (out_[y] < in_[x]) {
+      return parent_[nodeIdx_[rmq_.calcMinIdx(out_[y], in_[x] + 1)]];
+    } else {
+      return in_[x] < in_[y] ? x : y;
     }
   }
-public:
-  vector<int> depth;
 
-  inline void init(G& _tree) {
-    tree = &_tree;
-    int n = tree->n, n3 = n * 3;
-    depth.clear(); depth.reserve(n3);
-    nodeIdx.clear(); nodeIdx.reserve(n3);
-    in.clear(); in.reserve(n);
-    out.clear(); out.reserve(n);
-    dfs(0, 0, -1);
-    depthRMQ.init(depth);
+  inline int n() const { return tree_->n(); }
+  inline int nodeIdxSize() const { return SIZE(nodeIdx_); }
+  inline int nodeIdx(int x) const { return nodeIdx_[x]; }
+  inline int in(int x) const { return in_[x]; }
+  inline int out(int x) const { return out_[x]; }
+  inline int depth(int x) const { return depth_[x]; }
+  inline int parent(int x) const { return parent_[x]; }
+
+private:
+  const G* tree_;
+  vector<int> nodeIdx_, in_, out_, depth_, parent_;
+  cs::RMQ<int> rmq_;
+
+  inline void dfs_(int depth, int u, int parent) {
+    parent_[u] = parent;
+    in_[u] = SIZE(depth_);
+    add_(depth, u);
+    for (int edgeIdx = tree_->lastOut(u); edgeIdx >= 0; edgeIdx = tree_->nxtOut(edgeIdx)) {
+      int v = tree_->toIdx(edgeIdx);
+      if (v != parent) dfs_(depth + 1, v, u);
+    }
+    out_[u] = SIZE(depth_);
+    add_(depth, u);
   }
 
-  inline int calc(int x, int y) {
-    int idx = depthRMQ.calcMinIdx(min(in[x], in[y]), max(out[x], out[y]));
-    return nodeIdx[idx];
+  inline void add_(int depth, int u) {
+    depth_.push_back(depth);
+    nodeIdx_.push_back(u);
   }
 }; // class LCA
 } // namespace trees
+
+namespace testing {
+
+template<typename G>
+string toDisplay(const trees::LCA<G>& lca) {
+  ostringstream ss;
+  ss << "order:"; FOR(i, 0, lca.nodeIdxSize()) ss << " " << lca.nodeIdx(i); ss << endl;
+  FOR(i, 0, lca.n()) ss << "\t@" << i << ": [" << lca.in(i) << ", " << lca.out(i) + 1 << ")" << endl;
+  return ss.str();
+}
+} // namespace testing

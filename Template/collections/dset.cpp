@@ -2,19 +2,17 @@ namespace cs {
 
 class DisjointSet {
 public:
-  vector<int> p;
-
   inline void init(int n) {
-    p.resize(n);
-    fill(p.begin(), p.end(), -1);
+    p_.resize(n);
+    fill(p_.begin(), p_.end(), -1);
   }
 
   inline int calcRoot(int x) {
     int root = x;
-    for ( ; p[root] >= 0; root = p[root]) {}
-    while (p[x] >= 0) {
-      int tmp = p[x];
-      p[x] = root;
+    for ( ; p_[root] >= 0; root = p_[root]) {}
+    while (p_[x] >= 0) {
+      int tmp = p_[x];
+      p_[x] = root;
       x = tmp;
     }
     return root;
@@ -24,8 +22,9 @@ public:
     int rootX = calcRoot(x);
     int rootY = calcRoot(y);
     if (rootX != rootY) {
-      p[rootX] += p[rootY];
-      p[rootY] = rootX;
+      if (p_[rootX] > p_[rootY]) swap(rootX, rootY);
+      p_[rootX] += p_[rootY];
+      p_[rootY] = rootX;
       return true;
     } else {
       return false;
@@ -37,7 +36,10 @@ public:
   }
 
   inline int calcSize(int x) {
-    return -p[calcRoot(x)];
+    return -p_[calcRoot(x)];
   }
+
+private:
+  vector<int> p_;
 }; // class DisjointSet
 } // namespace cs
