@@ -1,10 +1,12 @@
 #include <algorithm>
 #include <bitset>
+#include <cassert>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <numeric>
@@ -13,158 +15,225 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 using namespace std;
 
+template<class T> using MINHEAP = priority_queue<T, vector<T>, greater<T>>;
+using LL = long long;
+using ULL = unsigned long long;
+
+#define CAST static_cast
+#define SIZE(v) (CAST<int>((v).size()))
+#define BEGIN(v) ((v).begin())
+#define END(v) ((v).end())
+#define ALL(v) BEGIN(v),END(v)
+#define SORT(v) sort(ALL(v))
+#define UNIQUE(v) SORT(v);(v).erase(unique(ALL(v)),END(v))
+#define INDEX(v,x) lower_bound(ALL(v),x)-BEGIN(v)
 #define FOR(i,l,r) for(int i=(l);i<(r);++i)
 
-namespace gs { namespace graph {
+namespace gs {
 
 class UnweightedGraph {
 public:
-  int n;
-  vector<int> lastOut;
-
-  vector<int> nxtOut, toIdx;
-
-  inline int edgeCnt() {
-    return static_cast<int>(toIdx.size());
-  }
-
-  inline void init(int _n) {
-    this->n = _n;
-    lastOut.resize(n);
-    fill(lastOut.begin(), lastOut.end(), -1);
-    nxtOut.clear();
-    toIdx.clear();
+  inline void init(int n) {
+    n_ = n;
+    lastOut_.resize(n);
+    fill(lastOut_.begin(), lastOut_.end(), -1);
+    nxtOut_.clear();
+    toIdx_.clear();
   }
 
   inline void addDirected(int x, int y) {
-    int edgeIdx = static_cast<int>(nxtOut.size());
-    nxtOut.push_back(lastOut[x]);
-    toIdx.push_back(y);
-    lastOut[x] = edgeIdx;
+    int edgeIdx = SIZE(nxtOut_);
+    nxtOut_.push_back(lastOut_[x]);
+    toIdx_.push_back(y);
+    lastOut_[x] = edgeIdx;
   }
 
   inline void addUndirected(int x, int y) {
     addDirected(x, y);
     addDirected(y, x);
   }
+
+  inline int n() const { return n_; }
+  inline int edgeCnt() const { return SIZE(toIdx_); }
+  inline int lastOut(int x) const { return lastOut_[x]; }
+  inline int nxtOut(int x) const { return nxtOut_[x]; }
+  inline int toIdx(int x) const { return toIdx_[x]; }
+
+private:
+  int n_;
+  vector<int> lastOut_, nxtOut_, toIdx_;
 }; // class UnweightedGraph
-}} // namespace gs::graph
+} // namespace gs
 
-namespace cs { namespace rmq {
+namespace cs {
 
-template<typename T>
-class RMQ {
-  int n;
-  T* vs;
-  vector<vector<int>> rmqIdx;
-
-  static inline int highestBit(int n) {
-    return 31 - __builtin_clz(n);
+template<typename V>
+class Vector2D {
+public:
+  inline void init(int n, int m = -1) {
+    n_ = n;
+    lastOut_.resize(n); fill(lastOut_.begin(), lastOut_.end(), -1);
+    nxtOut_.clear(); if (m >= 0) nxtOut_.reserve(m);
+    vs_.clear(); if (m >= 0) vs_.reserve(m);
   }
 
-  inline void _init() {
-    int bit = highestBit(n);
-    rmqIdx.resize(bit + 1);
-    for (int i = 0; i <= bit; ++i) rmqIdx[i].resize(n - (1 << i) + 1);
-    for (int i = 0; i < n; ++i) rmqIdx[0][i] = i;
-    for (int i = 1; i <= bit; ++i) for (int j = n - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
-      int jIdx = rmqIdx[i - 1][j];
-      int kIdx = rmqIdx[i - 1][k];
-      rmqIdx[i][j] = vs[jIdx] < vs[kIdx] ? jIdx : kIdx;
+  inline void add(int x, const V& v) {
+    int edgeIdx = SIZE(nxtOut_);
+    nxtOut_.push_back(lastOut_[x]);
+    lastOut_[x] = edgeIdx;
+    vs_.push_back(v);
+  }
+
+  inline int n() const { return n_; }
+  inline int lastOut(int x) const { return lastOut_[x]; }
+  inline int nxtOut(int x) const { return nxtOut_[x]; }
+  inline int value(int x) const { return vs_[x]; }
+
+private:
+  int n_;
+  vector<int> lastOut_, nxtOut_;
+  vector<V> vs_;
+}; // class Vector2D
+} // namespace cs
+
+namespace cs {
+
+class DisjointSet {
+public:
+  inline void init(int n) {
+    p_.resize(n);
+    fill(p_.begin(), p_.end(), -1);
+  }
+
+  inline int calcRoot(int x) {
+    int root = x;
+    for ( ; p_[root] >= 0; root = p_[root]) {}
+    while (p_[x] >= 0) {
+      int tmp = p_[x];
+      p_[x] = root;
+      x = tmp;
+    }
+    return root;
+  }
+
+  inline bool setFriend(int x, int y) {
+    int rootX = calcRoot(x);
+    int rootY = calcRoot(y);
+    if (rootX != rootY) {
+      if (p_[rootX] > p_[rootY]) swap(rootX, rootY);
+      p_[rootX] += p_[rootY];
+      p_[rootY] = rootX;
+      return true;
+    } else {
+      return false;
     }
   }
+
+  inline bool isFriend(int x, int y) {
+    return calcRoot(x) == calcRoot(y);
+  }
+
+  inline int calcSize(int x) {
+    return -p_[calcRoot(x)];
+  }
+
+private:
+  vector<int> p_;
+}; // class DisjointSet
+} // namespace cs
+
+namespace ts {
+
+template<typename G>
+class LCAoffline {
 public:
-  inline void init(int _n, T* _vs) {
-    n = _n;
-    vs = _vs;
-    _init();
+  inline void calc(
+      const G& tree,
+      const vector<int>& xs,
+      const vector<int>& ys,
+      vector<int>& lcas) {
+
+    tree_ = &tree;
+    xs_ = &xs;
+    ys_ = &ys;
+    lcas_ = &lcas;
+    int n = tree.n();
+    dset_.init(n);
+    ancestor_.resize(n); FOR(i, 0, n) ancestor_[i] = i;
+    black_.resize(n); fill(black_.begin(), black_.end(), false);
+    int m = SIZE(xs);
+    qIdx_.init(n, m << 1);
+    FOR(i, 0, m) {
+      qIdx_.add(xs[i], i + 1);
+      qIdx_.add(ys[i], -i - 1);
+    }
+    lcas.resize(m);
+    dfs_(0, -1);
   }
 
-  inline void init(vector<T>& _vs) {
-    init(static_cast<int>(_vs.size()), _vs.data());
-  }
+private:
+  const G* tree_;
+  const vector<int>* xs_;
+  const vector<int>* ys_;
+  vector<int>* lcas_;
 
-  inline int calcMinIdx(int lower, int upper) {
-    int bit = highestBit(upper - lower + 1);
-    int lowerIdx = rmqIdx[bit][lower];
-    int upperIdx = rmqIdx[bit][upper - (1 << bit) + 1];
-    return vs[lowerIdx] < vs[upperIdx] ? lowerIdx : upperIdx;
-  }
+  cs::DisjointSet dset_;
+  cs::Vector2D<int> qIdx_;
+  vector<int> ancestor_;
+  vector<bool> black_;
 
-  inline T& calcMin(int lower, int upper) {
-    return vs[calcMinIdx(lower, upper)];
-  }
-}; // class RMQ
-}} // namespace cs::rmq
-
-namespace trees { namespace lca {
-
-class LCA {
-  vector<int> depth, nodeIdx;
-  vector<int> in, out;
-
-  gs::graph::UnweightedGraph* tree;
-  cs::rmq::RMQ<int> depthRMQ;
-
-  inline void dfs(int _depth, int u, int parent) {
-    in[u] = static_cast<int>(depth.size());
-    out[u] = in[u];
-    depth.push_back(_depth);
-    nodeIdx.push_back(u);
-    for (int edgeIdx = tree->lastOut[u]; edgeIdx >= 0; edgeIdx = tree->nxtOut[edgeIdx]) {
-      int v = tree->toIdx[edgeIdx];
+  inline void dfs_(int u, int parent) {
+    for (int edgeIdx = tree_->lastOut(u); edgeIdx >= 0; edgeIdx = tree_->nxtOut(edgeIdx)) {
+      int v = tree_->toIdx(edgeIdx);
       if (v == parent) continue;
-      dfs(_depth + 1, v, u);
-      out[u] = static_cast<int>(depth.size());
-      depth.push_back(_depth);
-      nodeIdx.push_back(u);
+      dfs_(v, u);
+      dset_.setFriend(u, v);
+      ancestor_[dset_.calcRoot(u)] = u;
+    }
+    black_[u] = true;
+    for (int i = qIdx_.lastOut(u); i >= 0; i = qIdx_.nxtOut(i)) {
+      int qIdx = qIdx_.value(i);
+      int v = qIdx > 0 ? ys_->at(qIdx - 1) : xs_->at(-qIdx - 1);
+      if (black_[v]) lcas_->at(abs(qIdx) - 1) = ancestor_[dset_.calcRoot(v)];
     }
   }
-public:
-  inline void init(gs::graph::UnweightedGraph _tree) {
-    tree = &_tree;
-    int n = tree->n, n3 = n * 3;
-    depth.clear(); depth.reserve(n3);
-    nodeIdx.clear(); nodeIdx.reserve(n3);
-    in.clear(); in.reserve(n);
-    out.clear(); out.reserve(n);
-    dfs(0, 0, -1);
-    depthRMQ.init(depth);
-  }
+}; // class LCAoffline
+} // namespace ts
 
-  inline int calc(int x, int y) {
-    int idx = depthRMQ.calcMinIdx(min(in[x], in[y]), max(out[x], out[y]));
-    return nodeIdx[idx];
-  }
-}; // class LCA
-}} // namespace trees::lca
-
-gs::graph::UnweightedGraph tree;
-trees::lca::LCA lca;
+int n;
+gs::UnweightedGraph tree;
+vector<int> xs, ys, lcas;
+ts::LCAoffline<gs::UnweightedGraph> lca;
 
 int main() {
   int taskNumber; scanf("%d", &taskNumber);
   for (int taskIdx = 1; taskIdx <= taskNumber; taskIdx++) {
-    int n; scanf("%d", &n);
+    scanf("%d", &n);
     tree.init(n);
     FOR(i, 0, n) {
       int m; scanf("%d", &m);
-      FOR(j, 0, m) {
-        int x; scanf("%d", &x);
-        tree.addUndirected(i, x - 1);
+      FOR(_, 0, m) {
+        int j; scanf("%d", &j);
+        tree.addUndirected(i, j - 1);
       }
     }
-    printf("Case %d:\n", taskIdx);
-    lca.init(tree);
-    int q; scanf("%d", &q);
-    FOR(i, 0, q) {
+    int m; scanf("%d", &m);
+    xs.resize(m);
+    ys.resize(m);
+    FOR(i, 0, m) {
       int x, y; scanf("%d%d", &x, &y);
-      printf("%d\n", lca.calc(x - 1, y - 1) + 1);
+      xs[i] = x - 1;
+      ys[i] = y - 1;
     }
+    lca.calc(tree, xs, ys, lcas);
+    printf("Case %d:\n", taskIdx);
+    for (int x : lcas) printf("%d\n", x + 1);
   }
   return 0;
 }
