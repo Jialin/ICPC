@@ -1,46 +1,51 @@
 namespace cs {
 
-template<typename T>
+template<typename T, typename Compare = less<T>>
 class RMQ {
-  int n;
-  T* vs;
-  vector<vector<int>> rmqIdx;
-
-  static inline int highestBit(int n) {
-    return 31 - __builtin_clz(n);
-  }
-
-  inline void _init() {
-    int bit = highestBit(n);
-    rmqIdx.resize(bit + 1);
-    for (int i = 0; i <= bit; ++i) rmqIdx[i].resize(n - (1 << i) + 1);
-    for (int i = 0; i < n; ++i) rmqIdx[0][i] = i;
-    for (int i = 1; i <= bit; ++i) for (int j = n - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
-      int jIdx = rmqIdx[i - 1][j];
-      int kIdx = rmqIdx[i - 1][k];
-      rmqIdx[i][j] = vs[jIdx] < vs[kIdx] ? jIdx : kIdx;
-    }
-  }
 public:
-  inline void init(int _n, T* _vs) {
-    n = _n;
-    vs = _vs;
-    _init();
+  inline RMQ(): cmp_(Compare()) {}
+
+  inline void init(int n, T* vs) {
+    n_ = n;
+    vs_ = vs;
+    init_();
   }
 
-  inline void init(vector<T>& _vs) {
-    init(static_cast<int>(_vs.size()), _vs.data());
+  inline void init(vector<T>& vs) {
+    init(SIZE(vs), vs.data());
   }
 
-  inline int calcMinIdx(int lower, int upper) {
-    int bit = highestBit(upper - lower + 1);
-    int lowerIdx = rmqIdx[bit][lower];
-    int upperIdx = rmqIdx[bit][upper - (1 << bit) + 1];
-    return vs[lowerIdx] < vs[upperIdx] ? lowerIdx : upperIdx;
+  inline int calcIdx(int lower, int upper) const {
+    int bit = highestBit_(upper - lower);
+    int lowerIdx = rmqIdx_[bit][lower];
+    int upperIdx = rmqIdx_[bit][upper - (1 << bit)];
+    return cmp_(vs_[lowerIdx], vs_[upperIdx]) ? lowerIdx : upperIdx;
   }
 
-  inline T& calcMin(int lower, int upper) {
-    return vs[calcMinIdx(lower, upper)];
+  inline T& calc(int lower, int upper) {
+    return vs_[calcIdx(lower, upper)];
+  }
+
+  inline int n() const { return n_; }
+
+private:
+  const Compare cmp_;
+  int n_;
+  T* vs_;
+  vector<vector<int>> rmqIdx_;
+
+  inline static int highestBit_(int n) { return 31 - __builtin_clz(n); }
+
+  inline void init_() {
+    int bit = highestBit_(n_);
+    rmqIdx_.resize(bit + 1);
+    for (int i = 0; i <= bit; ++i) rmqIdx_[i].resize(n_ - (1 << i) + 1);
+    for (int i = 0; i < n_; ++i) rmqIdx_[0][i] = i;
+    for (int i = 1; i <= bit; ++i) for (int j = n_ - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
+      int jIdx = rmqIdx_[i - 1][j];
+      int kIdx = rmqIdx_[i - 1][k];
+      rmqIdx_[i][j] = cmp_(vs_[jIdx], vs_[kIdx]) ? jIdx : kIdx;
+    }
   }
 }; // class RMQ
 } // namespace cs
