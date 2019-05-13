@@ -1,0 +1,70 @@
+export ICPC_HOME='/Users/jialino/ICPC'
+export PS1="\[\033[36m\]\t\[\033[m\] \[\033[33;1m\]\w\[\033[m\]\$ "
+export LSCOLORS=GxFxCxDxBxegedabagaced
+
+alias gvim='/Applications/MacVim.app/Contents/bin/gvim -p --remote-tab-silent'
+alias ls='ls -G'
+
+####################################
+# Example usage:
+#   > CPP A.cpp
+#   > CPP A.cpp input
+#   > CPP A.cpp input output
+#   > CPP A.cpp input output answer
+####################################
+function CPP {
+  if [ -z "$1" ]
+  then
+    echo -e "\033[1;31m... Please enter the CPP source file as the first argument.\033[0m"
+    return
+  fi
+  echo -e "\033[1;33m... Compiling $1...\033[0m"
+  g++ "$1" -O2 -std=c++11 \
+      -Weverything \
+      -Wno-c++98-compat \
+      -Wno-c++98-compat-pedantic \
+      -Wno-double-promotion \
+      -Wno-exit-time-destructors \
+      -Wno-global-constructors \
+      -Wno-missing-prototypes \
+      -Wno-missing-variable-declarations \
+      -Wno-padded \
+      -Wno-sign-conversion \
+      -Wno-unused-macros
+  if [[ ! $? -eq 0 ]]; then
+    echo -e "\033[1;31m... Failed to compile $1.\033[0m"
+    return
+  fi
+  if [ -z "$2" ]
+  then
+    echo -e "\033[1;33m... Running & Waiting for input ...\033[0m"
+    ./a.out
+    return
+  fi
+  if [ -z "$3" ]
+  then
+    echo -e "\033[1;33m... Running with data in $2...\033[0m"
+    ./a.out < $2
+    return
+  fi
+  echo -e "\033[1;33m... Running with data in $2 & Writing to $3...\033[0m"
+  ./a.out < $2 > $3
+  if [[ -z "$4" ]]
+  then
+    echo -e "\033[1;33m... Displyaing the tail of $3...\033[0m"
+    tail $3
+  else
+    echo -e "\033[1;33m... Comparing $3 && $4...\033[0m"
+    diff $3 $4
+    echo -e "\033[1;33m... Comparing DONE.\033[0m"
+  fi
+}
+
+#########################
+# Example usage:
+#   > GCJ 0 python3 A.py
+#   > GCJ 1 CPP B.cpp
+#########################
+function GCJ {
+  python $ICPC_HOME/setup/gcj_interactive_runner.py python testing_tool.py $1 -- ${@:2}
+}
