@@ -31,13 +31,10 @@ public:
     }
   }
 
-  inline bool isFriend(int x, int y) {
-    return calcRoot(x) == calcRoot(y);
-  }
-
-  inline int calcSize(int x) {
-    return -p_[calcRoot(x)];
-  }
+  inline bool isFriend(int x, int y) { return calcRoot(x) == calcRoot(y); }
+  inline int calcSize(int x) { return -p_[calcRoot(x)]; }
+  inline bool isRoot(int x) const { return p_[x] < 0; }
+  inline int n() const { return SIZE(p_); }
 
 private:
   vector<int> p_;

@@ -1,26 +1,32 @@
 namespace cs {
 
-template<typename T>
+template<typename T, typename Compare = less<T>>
 class LIS {
-  vector<T> lis;
-
 public:
-  // Length of lis
-  int length;
-
-  // Initializes
   inline void init(int n) {
-    lis.resize(n);
-    length = 0;
+    lis_.clear();
+    lis_.reserve(n);
+    result_ = 0;
   }
 
-  // Try to add v to lis
-  inline void add(const T& v) {
-    T absv = abs(v);
-    const auto& lisBegin = lis.begin();
-    long idx = lower_bound(lisBegin, lisBegin + length, absv) - lisBegin;
-    lis[idx] = absv;
-    if (idx == length) ++length;
+  inline int locateIdx(const T& v) const {
+    return CAST<int>(lower_bound(lis_.begin(), lis_.end(), v, cmp_) - lis_.begin());
   }
+
+  inline void add(const T& v) {
+    int idx = locateIdx(v);
+    if (idx == SIZE(lis_)) {
+      lis_.push_back(v);
+    } else {
+      lis_[idx] = v;
+    }
+  }
+
+  inline int length() const { return SIZE(lis_); }
+
+private:
+  vector<T> lis_;
+  int result_;
+  Compare cmp_;
 }; // class LIS
 } // namespace cs
