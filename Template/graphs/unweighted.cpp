@@ -4,8 +4,9 @@ class UnweightedGraph {
 public:
   inline void init(int n) {
     n_ = n;
-    lastOut_.resize(n);
-    fill(lastOut_.begin(), lastOut_.end(), -1);
+    lastOut_.resize(n); FILL(lastOut_, -1);
+    inDegree_.resize(n); FILL(inDegree_, 0);
+    outDegree_.resize(n); FILL(outDegree_, 0);
     nxtOut_.clear();
     toIdx_.clear();
   }
@@ -15,6 +16,8 @@ public:
     nxtOut_.push_back(lastOut_[x]);
     toIdx_.push_back(y);
     lastOut_[x] = edgeIdx;
+    ++inDegree_[y];
+    ++outDegree_[x];
   }
 
   inline void addUndirected(int x, int y) {
@@ -27,16 +30,23 @@ public:
   inline int lastOut(int x) const { return lastOut_[x]; }
   inline int nxtOut(int x) const { return nxtOut_[x]; }
   inline int toIdx(int x) const { return toIdx_[x]; }
+  inline int inDegree(int x) const { return inDegree_[x]; }
+  inline int outDegree(int x) const { return outDegree_[x]; }
 
 private:
   int n_;
-  vector<int> lastOut_, nxtOut_, toIdx_;
+  vector<int> lastOut_, nxtOut_, toIdx_, inDegree_, outDegree_;
 }; // class UnweightedGraph
 } // namespace gs
 
+using gs::UnweightedGraph;
+
+/***********************************************************************************************************************
+ * TESTING
+ **********************************************************************************************************************/
 namespace testing {
 
-string toDisplay(const gs::UnweightedGraph& g) {
+string toDisplay(const UnweightedGraph& g) {
   ostringstream ss;
   FOR(i, 0, g.n()) {
     ss << i << " to ";
@@ -48,3 +58,4 @@ string toDisplay(const gs::UnweightedGraph& g) {
   return ss.str();
 }
 } // namespace testing
+
