@@ -272,13 +272,13 @@ class ModInt {
 public:
   inline ModInt(int mod = 1000000007) : mod_(mod) {}
 
-  inline int inv(int a) { return inv_(a, mod_, x0, x1); }
+  inline int inv(int a) { return inv_(a, mod_, x0_, x1_); }
   inline int add(int a, int b) { return add_(a, b, mod_); }
   inline int mul(int a, int b) { return mul_(a, b, mod_); }
   inline int div(int a, int b) { return mul_(a, inv(b), mod_); }
 private:
   int mod_;
-  int x0, x1;
+  int x0_, x1_;
 }; // class ModInt
 } // namespace math
 
