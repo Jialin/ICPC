@@ -10,14 +10,11 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 alias gvim='/Applications/MacVim.app/Contents/bin/gvim -p --remote-tab-silent'
 alias ls='ls -G'
 
-####################################
+########################
 # Example usage:
-#   > CPP A.cpp
-#   > CPP A.cpp input
-#   > CPP A.cpp input output
-#   > CPP A.cpp input output answer
-####################################
-function CPP {
+#   > CPP-compile A.cpp
+########################
+function CPP-compile {
   if [ -z "$1" ]
   then
     echo -e "\033[1;31m... Please enter the CPP source file as the first argument.\033[0m"
@@ -38,6 +35,21 @@ function CPP {
       -Wno-unused-macros
   if [[ ! $? -eq 0 ]]; then
     echo -e "\033[1;31m... Failed to compile $1.\033[0m"
+    return 1
+  fi
+  return 0
+}
+
+####################################
+# Example usage:
+#   > CPP A.cpp
+#   > CPP A.cpp input
+#   > CPP A.cpp input output
+#   > CPP A.cpp input output answer
+####################################
+function CPP {
+  CPP-compile $1
+  if [[ ! $? -eq 0 ]]; then
     return
   fi
   if [ -z "$2" ]
@@ -65,11 +77,11 @@ function CPP {
   fi
 }
 
-#########################
+#########################################
 # Example usage:
+#   > CPP-compile B.cpp && GCJ 1 ./a.out
 #   > GCJ 0 python3 A.py
-#   > GCJ 1 CPP B.cpp
-#########################
+#########################################
 function GCJ {
   python $ICPC_HOME/setup/gcj_interactive_runner.py python testing_tool.py $1 -- ${@:2}
 }
