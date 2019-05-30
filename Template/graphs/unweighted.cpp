@@ -11,27 +11,31 @@ public:
     toIdx_.clear();
   }
 
-  inline void addDirected(int x, int y) {
+  inline void addDirected(int u, int v) {
     int edgeIdx = SIZE(nxtOut_);
-    nxtOut_.push_back(lastOut_[x]);
-    toIdx_.push_back(y);
-    lastOut_[x] = edgeIdx;
-    ++inDegree_[y];
-    ++outDegree_[x];
+    nxtOut_.push_back(lastOut_[u]);
+    toIdx_.push_back(v);
+    lastOut_[u] = edgeIdx;
+    ++inDegree_[v];
+    ++outDegree_[u];
   }
 
-  inline void addUndirected(int x, int y) {
-    addDirected(x, y);
-    addDirected(y, x);
+  inline void addUndirected(int u, int v) {
+    addDirected(u, v);
+    addDirected(v, u);
+  }
+
+  inline void outEdges(int u, const function<void(int)>& edgeIdxProcessor) const {
+    for (int edgeIdx = lastOut_[u]; edgeIdx >= 0; edgeIdx = nxtOut_[edgeIdx]) edgeIdxProcessor(edgeIdx);
   }
 
   inline int n() const { return n_; }
   inline int edgeCnt() const { return SIZE(toIdx_); }
-  inline int lastOut(int x) const { return lastOut_[x]; }
-  inline int nxtOut(int x) const { return nxtOut_[x]; }
-  inline int toIdx(int x) const { return toIdx_[x]; }
-  inline int inDegree(int x) const { return inDegree_[x]; }
-  inline int outDegree(int x) const { return outDegree_[x]; }
+  inline int lastOut(int u) const { return lastOut_[u]; }
+  inline int nxtOut(int u) const { return nxtOut_[u]; }
+  inline int toIdx(int u) const { return toIdx_[u]; }
+  inline int inDegree(int u) const { return inDegree_[u]; }
+  inline int outDegree(int u) const { return outDegree_[u]; }
 
 private:
   int n_;

@@ -59,3 +59,5 @@ private:
   int x0, x1;
 }; // class ModUtils
 } // namespace math
+
+using math::ModUtils;
