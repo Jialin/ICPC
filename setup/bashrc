@@ -79,7 +79,7 @@ function CPP {
 
 #########################################
 # Example usage:
-#   > CPP-compile B.cpp && GCJ 1 ./a.out
+#   > CPP-compile A.cpp && GCJ 1 ./a.out
 #   > GCJ 0 python3 A.py
 #########################################
 function GCJ {
