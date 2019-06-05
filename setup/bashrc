@@ -9,6 +9,7 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 
 alias gvim='/Applications/MacVim.app/Contents/bin/gvim -p --remote-tab-silent'
 alias ls='ls -G'
+alias atombeta="ATOM_HOME=~/.atombeta /Applications/Atom\ Beta.app/Contents/MacOS/Atom\ Beta"
 
 ########################
 # Example usage:
