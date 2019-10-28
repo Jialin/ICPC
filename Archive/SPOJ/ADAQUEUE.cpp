@@ -23,6 +23,42 @@
 #include <vector>
 using namespace std;
 
+#define CAST static_cast
+
+namespace oi {
+
+template <typename T> void readNum(T &res) {
+  int ch;
+  while ((ch = getchar()) != EOF && !isdigit(ch) && ch != '+' && ch != '-') {
+  }
+  bool negative = ch == '-';
+  res = isdigit(ch) ? ch - '0' : 0;
+  while ((ch = getchar()) != EOF && isdigit(ch)) {
+    res = (res << 3) + (res << 1) + (ch ^ 48);
+  }
+  if (negative) {
+    res = -res;
+  }
+}
+
+} // namespace oi
+
+namespace oi {
+
+void readCharArray(char res[]) {
+  int ch;
+  while ((ch = getchar()) != EOF && isspace(ch)) {
+  }
+  int idx = 0;
+  res[idx++] = CAST<char>(ch);
+  while ((ch = getchar()) != EOF && !isspace(ch)) {
+    res[idx++] = CAST<char>(ch);
+  }
+  res[idx] = '\0';
+}
+
+} // namespace oi
+
 const int MAXL = 1024;
 
 deque<int> q;
@@ -31,10 +67,10 @@ char op[MAXL];
 
 int main() {
   int queryCnt;
-  scanf("%d", &queryCnt);
+  oi::readNum(queryCnt);
   rev = false;
   for (int _ = 0; _ < queryCnt; ++_) {
-    scanf("%s", op);
+    oi::readCharArray(op);
     char c = op[0];
     int v;
     if (rev) {
@@ -65,11 +101,11 @@ int main() {
       rev = !rev;
       break;
     case 'p':
-      scanf("%d", &v);
+      oi::readNum(v);
       q.push_back(v);
       break;
     case 't':
-      scanf("%d", &v);
+      oi::readNum(v);
       q.push_front(v);
       break;
     default:
