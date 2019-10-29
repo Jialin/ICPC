@@ -2,5 +2,7 @@ a.out
 input*
 output*
 answer*
+
 .*.swp
 .DS_Store
+.ccls-cache
