@@ -13,4 +13,5 @@ template <typename T> void readNum(T &res) {
     res = -res;
   }
 }
+
 } // namespace oi
