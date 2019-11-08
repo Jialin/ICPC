@@ -1,11 +1,15 @@
 '.source.cpp':
   'ALL':
     'prefix': 'ALL'
-    'body': 'using LL = long long;'
+    'body': '#define ALL(vs) vs.begin(), vs.end()'
 
   'CAST':
     'prefix': 'CAST'
     'body': '#define CAST static_cast'
+
+  'CASTINT':
+    'prefix': 'CASTINT'
+    'body': '#define CASTINT static_cast<int>'
 
   'CLEAR':
     'prefix': 'CLEAR'
@@ -22,6 +26,10 @@
   'FOR':
     'prefix': 'FOR'
     'body': '#define FOR(i, a, b) for (int i = a; i < b; ++i)'
+
+  'FORIF':
+    'prefix': 'FORIF'
+    'body': '#define FOR(i, a, b, clause) for (int i = a; i < b; ++i) if (clause)'
 
   'LD':
     'prefix': 'LD'
