@@ -1,0 +1,114 @@
+'.source.cpp':
+  'ALL':
+    'prefix': 'ALL'
+    'body': 'using LL = long long;'
+
+  'CAST':
+    'prefix': 'CAST'
+    'body': '#define CAST static_cast'
+
+  'CLEAR':
+    'prefix': 'CLEAR'
+    'body': '#define CLEAR(as, v) memset(as, v, sizeof(as))'
+
+  'ERR':
+    'prefix': 'ERR'
+    'body': '#define eprintf(args...) fprintf(stderr, args)'
+
+  'FILL':
+    'prefix': 'FILL'
+    'body': '#define FILL(vs, v) fill(vs.begin(), vs.end(), v)'
+
+  'FOR':
+    'prefix': 'FOR'
+    'body': '#define FOR(i, a, b) for (int i = a; i < b; ++i)'
+
+  'LD':
+    'prefix': 'LD'
+    'body': '#define LD long double'
+
+  'LL':
+    'prefix': 'LL'
+    'body': '#define LL long long'
+
+  'SIZE':
+    'prefix': 'SIZE'
+    'body': '#define SIZE(vs) static_cast<int>(vs.size())'
+
+  'CF Template':
+    'prefix': 'CF'
+    'body': """
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+using namespace std;
+
+/** macros */
+
+${1:/** variables */}
+
+int main() {
+  ${2:/** implementation */}
+  return 0;
+}"""
+
+  'GCJ Template':
+    'prefix': 'GCJ'
+    'body': """
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+using namespace std;
+
+/** macros */
+
+${1:/** variables */}
+
+int main() {
+  int taskNumber; scanf("%d", &taskNumber);
+  for (int taskIdx = 1; taskIdx <= taskNumber; taskIdx++) {
+    ${2:/** implementation */}
+    printf("Case #%d: \\\\n", taskIdx);
+  }
+  return 0;
+}"""
