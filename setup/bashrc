@@ -1,9 +1,4 @@
-#######################################
-# Example usage:
-#   . /Users/jialino/ICPC/setup/bashrc
-#######################################
-
-export ICPC_HOME='/Users/jialino/ICPC'
+export ICPC_HOME=$HOME/ICPC
 export PS1="\[\033[36m\]\t\[\033[m\] \[\033[33;1m\]\w\[\033[m\]\$ "
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
