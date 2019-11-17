@@ -35,10 +35,6 @@
     'prefix': 'FORIF'
     'body': '#define FOR(i, a, b, clause) for (int i = a; i < b; ++i) if (clause)'
 
-  'FORS':
-    'prefix': 'FORS'
-    'body': '#define FORS(i, a, b, statement) for (int i = a; i < b; ++i) statement;'
-
   'GET0':
     'prefix': 'GET0'
     'body': '#define GET0 get<0>'
