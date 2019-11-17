@@ -2,6 +2,7 @@ a.out
 input*
 output*
 answer*
+*.o
 
 .*.swp
 .DS_Store
