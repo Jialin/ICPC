@@ -37,7 +37,7 @@
 
   'FORS':
     'prefix': 'FORS'
-    'body': '#define FOR(i, a, b, statement) for (int i = a; i < b; ++i) statement;'
+    'body': '#define FORS(i, a, b, statement) for (int i = a; i < b; ++i) statement;'
 
   'GET0':
     'prefix': 'GET0'
