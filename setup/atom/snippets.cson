@@ -7,17 +7,21 @@
     'prefix': 'CAST'
     'body': '#define CAST static_cast'
 
-  'CASTINT':
-    'prefix': 'CASTINT'
-    'body': '#define CASTINT static_cast<int>'
+  'CASTI32':
+    'prefix': 'CASTI32'
+    'body': '#define CASTI32 static_cast<int>'
+
+  'CASTI64':
+    'prefix': 'CASTI64'
+    'body': '#define CASTI64 static_cast<int64_t>'
 
   'CLEAR':
     'prefix': 'CLEAR'
     'body': '#define CLEAR(as, v) memset(as, v, sizeof(as))'
 
-  'ERR':
-    'prefix': 'ERR'
-    'body': '#define eprintf(args...) fprintf(stderr, args)'
+  'DEBUG':
+    'prefix': 'DEBUG'
+    'body': '#define DEBUG(args...) fprintf(stderr, args)'
 
   'FILL':
     'prefix': 'FILL'
@@ -31,17 +35,41 @@
     'prefix': 'FORIF'
     'body': '#define FOR(i, a, b, clause) for (int i = a; i < b; ++i) if (clause)'
 
+  'GET0':
+    'prefix': 'GET0'
+    'body': '#define GET0 get<0>'
+
+  'GET1':
+    'prefix': 'GET1'
+    'body': '#define GET1 get<1>'
+
+  'GET2':
+    'prefix': 'GET2'
+    'body': '#define GET2 get<2>'
+
   'LD':
     'prefix': 'LD'
     'body': '#define LD long double'
 
-  'LL':
-    'prefix': 'LL'
-    'body': '#define LL long long'
+  'I64':
+    'prefix': 'I64'
+    'body': '#define I64 int64_t'
+
+  'I128':
+    'prefix': 'I128'
+    'body': '#define I128 __int128'
 
   'SIZE':
     'prefix': 'SIZE'
     'body': '#define SIZE(vs) static_cast<int>(vs.size())'
+
+  'SORTALLIF':
+    'prefix': 'SORTALLIF'
+    'body': '#define SORTALLIF(vs, clause) sort(vs.begin(), vs.end(), [](const decltype(vs)::value_type &a, const decltype(vs)::value_type &b) { return clause; })'
+
+  'UI64':
+    'prefix': 'UI64'
+    'body': '#define UI64 uint64_t'
 
   'CF Template':
     'prefix': 'CF'
@@ -71,12 +99,7 @@
 #include <vector>
 using namespace std;
 
-/** macros */
-
-${1:/** variables */}
-
 int main() {
-  ${2:/** implementation */}
   return 0;
 }"""
 
@@ -108,14 +131,9 @@ int main() {
 #include <vector>
 using namespace std;
 
-/** macros */
-
-${1:/** variables */}
-
 int main() {
   int taskNumber; scanf("%d", &taskNumber);
   for (int taskIdx = 1; taskIdx <= taskNumber; taskIdx++) {
-    ${2:/** implementation */}
     printf("Case #%d: \\\\n", taskIdx);
   }
   return 0;
