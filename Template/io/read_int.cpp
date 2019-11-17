@@ -7,7 +7,7 @@ char buffer[kBufferSize];
 int pos, len;
 
 inline void loadBuffer() {
-  len = CASTI32(fread(buffer, sizeof(char), kBufferSize, stdin));
+  len = static_cast<int>(fread(buffer, sizeof(char), kBufferSize, stdin));
   pos = 0;
 }
 
