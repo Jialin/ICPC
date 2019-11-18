@@ -56,31 +56,6 @@ inline int sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c,
   }
 }
 
-/** sgn(a*b-c*d) */
-template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
-  if (b < 0) {
-    a = -a;
-    b = -b;
-  }
-  if (d < 0) {
-    c = -c;
-    d = -d;
-  }
-  if (a < 0) {
-    if (c < 0) {
-      return -sgnUnsignedProduct(-a, b, -c, d);
-    } else {
-      return -1;
-    }
-  } else {
-    if (c < 0) {
-      return 1;
-    } else {
-      return -sgnUnsignedProduct(a, b, c, d);
-    }
-  }
-}
-
 /** sgn(a/b-c/d) */
 template <typename T> inline int sgnFraction(T a, T b, T c, T d) {
   assert(b && d);
