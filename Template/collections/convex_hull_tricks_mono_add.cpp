@@ -162,7 +162,7 @@ public:
       return 0;
     }
     int res = 0;
-    for (int lower = 1, upper = SIZE(nums); lower < upper;) {
+    for (int lower = 1, upper = static_cast<int>(nums.size()); lower < upper;) {
       int medium = (lower + upper) >> 1;
       if (math::sgnFraction<T>(nums[medium], dens[medium], x, 1) < 0) {
         res = medium;
