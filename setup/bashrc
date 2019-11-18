@@ -48,7 +48,8 @@ function CPP-compile {
       -Wno-missing-variable-declarations \
       -Wno-padded \
       -Wno-sign-conversion \
-      -Wno-unused-macros
+      -Wno-unused-macros \
+      -Wno-variadic-macros
   if [[ ! $? -eq 0 ]]; then
     echo -e "\033[1;31m... Failed to compile $1.\033[0m"
     return 1
