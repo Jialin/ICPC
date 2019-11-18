@@ -1,0 +1,8 @@
+"*":
+  editor:
+    fontSize: 10
+  "exception-reporting":
+    userId: "c3ee88ee-c407-47ff-b6f5-b9afa8c58f28"
+  "ide-ccls":
+    cclsPath: "/Users/jialinouyang/ICPC/setup/ccls"
+    enableSemanticHighlighting: true

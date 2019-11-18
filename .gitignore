@@ -9,4 +9,5 @@ answer*
 .ccls-cache
 
 setup/atom/*
+!setup/atom/config.cson
 !setup/atom/snippets.cson
