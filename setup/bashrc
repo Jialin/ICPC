@@ -32,7 +32,7 @@ function CPP-compile {
     return
   fi
   echo -e "\033[1;33m... Compiling $1...\033[0m"
-  g++ "$1" -O2 -std=c++11 \
+  g++ "$1" -O2 -std=c++14 \
       -Weverything \
       -Wno-c++98-compat \
       -Wno-c++98-compat-pedantic \
