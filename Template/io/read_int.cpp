@@ -5,6 +5,7 @@ namespace {
 constexpr int kBufferSize = 1 << 15;
 char buffer[kBufferSize];
 int pos, len;
+bool ended = false;
 
 inline void loadBuffer() {
   len = static_cast<int>(fread(buffer, sizeof(char), kBufferSize, stdin));
@@ -12,8 +13,15 @@ inline void loadBuffer() {
 }
 
 inline char nextChar(bool advance = true) {
+  if (ended) {
+    return 0;
+  }
   if (pos >= len) {
     loadBuffer();
+    if (len == 0) {
+      ended = true;
+      return 0;
+    }
   }
   return buffer[advance ? pos++ : pos];
 }
