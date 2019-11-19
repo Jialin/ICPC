@@ -1,4 +1,5 @@
 #!/bin/sh
-exec /usr/local/bin/ccls -init='{"clang":{"extraArgs":["-isystem", "/Library/Developer/CommandLineTools/usr/include/c++/v1"]}}' "$@"
+exec /usr/local/bin/ccls -init='{"clang":{"extraArgs":["-isystem", "/Library/Developer/CommandLineTools/usr/include/c++/v1", "std=c++14"]}}' "$@"
 
-# for more details: https://github.com/MaskRay/ccls/wiki/Build#macos
+# https://github.com/MaskRay/ccls/wiki/Build#macos
+# Use this shell script wrapper as `ccls` executable path in ide-ccls setting
