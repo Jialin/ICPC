@@ -137,8 +137,9 @@ public:
   }
 
 private:
-  inline void update(const typename multiset<Line<T>, less<>>::iterator &x,
-                     const typename multiset<Line<T>, less<>>::iterator &y) {
+  using Iterator = typename multiset<Line<T>, less<>>::iterator;
+
+  inline void update(const Iterator &x, const Iterator &y) {
     if (y == this->end()) {
       x->num = 1;
       x->den = 0;
@@ -151,9 +152,7 @@ private:
     }
   }
 
-  inline bool
-  inOrder(const typename multiset<Line<T>, less<>>::iterator &x,
-          const typename multiset<Line<T>, less<>>::iterator &y) const {
+  inline bool inOrder(const Iterator &x, const Iterator &y) const {
     return y == this->end() ||
            sgnFraction<T>(x->num, x->den, y->num, y->den) < 0;
   }
