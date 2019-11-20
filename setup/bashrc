@@ -21,6 +21,14 @@ function ATOM {
   return 0
 }
 
+##########################
+# Example usage:
+#   > CPP11-compile A.cpp
+##########################
+function CPP11-compile {
+  g++ "$1" -O2 -std=c++11
+}
+
 ########################
 # Example usage:
 #   > CPP-compile A.cpp
