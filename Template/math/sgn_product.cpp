@@ -76,7 +76,7 @@ template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
     if (c < 0) {
       return 1;
     } else {
-      return -sgnUnsignedProduct(a, b, c, d);
+      return sgnUnsignedProduct(a, b, c, d);
     }
   }
 }
