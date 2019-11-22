@@ -4,10 +4,12 @@ template <typename T, typename CMP_UINT_T = uint64_t> class LiChaoTree {
 public:
   inline void initQueryMax(bool queryMax_,
                            const vector<T> &orderedUniqueQueries) {
+    this->queries = orderedUniqueQueries;
     queryMax = queryMax_;
-    queries = orderedUniqueQueries;
     n = static_cast<int>(orderedUniqueQueries.size());
-    capacity = n << 2;
+    assert(n);
+    capacity = 1 << (31 - __builtin_clz(n));
+    capacity <<= 1 + (capacity < n);
     refresh();
   }
 
@@ -23,7 +25,7 @@ public:
       b = -b;
     }
     int idx = 1, lower = 0, upper = n;
-    while (true) {
+    do {
       if (!touched[idx]) {
         as[idx] = a;
         bs[idx] = b;
@@ -39,9 +41,6 @@ public:
         }
         break;
       }
-      if (lower + 1 == upper) {
-        break;
-      }
       int medium = (lower + upper) >> 1;
       bool mediumAbove = isAbove(a, b, as[idx], bs[idx], queries[medium]);
       if (mediumAbove) {
@@ -55,7 +54,7 @@ public:
         idx |= 1;
         lower = medium;
       }
-    }
+    } while (lower + 1 < upper);
   }
 
   inline T query(T x) const {
@@ -65,17 +64,14 @@ public:
     return queryIdx(idx);
   }
 
-  inline T queryIdx(int queryIdx) const {
+  inline T queryIdx(int queryIdx) {
     assert(touched[1]);
     T x = queries[queryIdx];
     T res = as[1] * x + bs[1];
     int idx = 1, lower = 0, upper = n;
-    while (true) {
+    do {
       if (idx > 1 && touched[idx]) {
         res = max(res, as[idx] * x + bs[idx]);
-      }
-      if (lower + 1 == upper) {
-        break;
       }
       idx <<= 1;
       int medium = (lower + upper) >> 1;
@@ -85,7 +81,7 @@ public:
       } else {
         upper = medium;
       }
-    }
+    } while (lower + 1 < upper);
     return queryMax ? res : -res;
   }
 
@@ -97,26 +93,29 @@ private:
   vector<T> as, bs;
   vector<bool> touched;
 
+  CMP_UINT_T cmpMax = numeric_limits<CMP_UINT_T>::max();
+  int cmpHalfL = numeric_limits<CMP_UINT_T>::digits >> 1;
+  CMP_UINT_T cmpHalfMask = cmpMax >> cmpHalfL;
+
   inline bool isProductOverflow(CMP_UINT_T a, CMP_UINT_T b) {
     if (!a || !b) {
       return false;
     }
-    return a > numeric_limits<CMP_UINT_T>::max() / b;
+    return a > cmpMax / b;
   }
 
   inline void product(CMP_UINT_T a, CMP_UINT_T b, CMP_UINT_T &high,
                       CMP_UINT_T &low) {
-    int halfL = numeric_limits<CMP_UINT_T>::digits >> 1;
-    CMP_UINT_T halfMask = numeric_limits<CMP_UINT_T>::max() >> halfL;
-    CMP_UINT_T aHigh = a >> halfL, aLow = a & halfMask;
-    CMP_UINT_T bHigh = b >> halfL, bLow = b & halfMask;
+    CMP_UINT_T aHigh = a >> cmpHalfL, aLow = a & cmpHalfMask;
+    CMP_UINT_T bHigh = b >> cmpHalfL, bLow = b & cmpHalfMask;
     high = aHigh * bHigh;
     low = aLow * bLow;
     CMP_UINT_T ab = aHigh * bLow, ba = bHigh * aLow;
-    high += (ab >> halfL) + (ba >> halfL);
-    CMP_UINT_T lowHigh = (low >> halfL) + (ab & halfMask) + (ba & halfMask);
-    high += lowHigh >> halfL;
-    low = ((lowHigh & halfMask) << halfL) + (low & halfMask);
+    high += (ab >> cmpHalfL) + (ba >> cmpHalfL);
+    CMP_UINT_T lowHigh =
+        (low >> cmpHalfL) + (ab & cmpHalfMask) + (ba & cmpHalfMask);
+    high += lowHigh >> cmpHalfL;
+    low = ((lowHigh & cmpHalfMask) << cmpHalfL) + (low & cmpHalfMask);
   }
 
   inline int sgn(CMP_UINT_T a, CMP_UINT_T b) {
