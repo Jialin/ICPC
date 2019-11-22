@@ -51,6 +51,10 @@
     'prefix': 'GET2'
     'body': '#define GET2 get<2>'
 
+  'INDEX':
+    'prefix': 'INDEX'
+    'body': '#define INDEX(idx, v) static_cast<int>(lower_bound(idx.begin(), idx.end(), v) - idx.begin())'
+
   'LD':
     'prefix': 'LD'
     'body': '#define LD long double'
@@ -66,6 +70,14 @@
   'SIZE':
     'prefix': 'SIZE'
     'body': '#define SIZE(vs) static_cast<int>(vs.size())'
+
+  'SORTUNIQUE':
+    'prefix': 'SORTUNIQUE'
+    'body': '#define SORTUNIQUE(vs) sort(vs.begin(), vs.end()); vs.erase(unique(vs.begin(), vs.end()), vs.end())'
+
+  'SQR':
+    'prefix': 'SQR'
+    'body': 'template <typename T> inline T sqr(T x) { return x * x; }'
 
   'SORTALLIF':
     'prefix': 'SORTALLIF'
