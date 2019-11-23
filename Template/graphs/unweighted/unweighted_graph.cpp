@@ -16,7 +16,7 @@ public:
   }
 
   inline void addDirected(int u, int v) {
-    int edgeIdx = SIZE(nxtOut);
+    int edgeIdx = edgeCnt();
     nxtOut.push_back(lastOut[u]);
     toIdx.push_back(v);
     lastOut[u] = edgeIdx;
@@ -36,7 +36,7 @@ public:
     }
   }
 
-  inline int edgeCnt() const { return SIZE(toIdx); }
+  inline int edgeCnt() const { return static_cast<int>(toIdx.size()); }
 
   int n;
   vector<int> lastOut, inDegree, outDegree;
