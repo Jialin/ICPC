@@ -71,6 +71,10 @@
     'prefix': 'SIZE'
     'body': '#define SIZE(vs) static_cast<int>(vs.size())'
 
+  'SORT':
+    'prefix': 'SORT'
+    'body': '#define SORT(vs) sort(vs.begin(), vs.end())'
+
   'SORTUNIQUE':
     'prefix': 'SORTUNIQUE'
     'body': '#define SORTUNIQUE(vs) sort(vs.begin(), vs.end()); vs.erase(unique(vs.begin(), vs.end()), vs.end())'
