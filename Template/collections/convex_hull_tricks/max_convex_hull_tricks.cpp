@@ -1,5 +1,5 @@
 // @autogen
-namespace math {
+namespace collections {
 
 namespace {
 
@@ -85,4 +85,82 @@ inline int sgnFraction(T a, T b, T c, T d) {
   }
 }
 
-} // namespace math
+template <typename T, typename CMP_UINT_T = uint64_t>
+class MaxConvexHullTricks {
+private:
+  class Line {
+  public:
+    T a, b;
+    mutable T num, den;
+
+    inline Line(T a_, T b_) : a(a_), b(b_), num(0), den(1) {}
+
+    inline bool operator<(const Line &o) const { return a < o.a; }
+
+    inline bool operator<(T x) const {
+      return sgnFraction<T, CMP_UINT_T>(num, den, x, 1) < 0;
+    }
+  };
+
+  using Iterator = typename multiset<Line, less<>>::iterator;
+
+  multiset<Line, less<>> lines_;
+
+  inline void update(const Iterator &x, const Iterator &y) {
+    if (y == lines_.end()) {
+      x->num = 1;
+      x->den = 0;
+    } else if (x->a == y->a) {
+      x->num = x->b > y->b ? 1 : -1;
+      x->den = 0;
+    } else {
+      x->num = y->b - x->b;
+      x->den = x->a - y->a;
+    }
+  }
+
+  inline bool inOrder(const Iterator &x, const Iterator &y) const {
+    return y == lines_.end() ||
+           sgnFraction<T, CMP_UINT_T>(x->num, x->den, y->num, y->den) < 0;
+  }
+
+public:
+  inline void init() { lines_.clear(); }
+
+  inline void add(T a, T b) {
+    auto y = lines_.emplace(a, b);
+    // Remove following lines
+    auto z = next(y);
+    update(y, z);
+    while (!inOrder(y, z)) {
+      z = lines_.erase(z);
+      update(y, z);
+    }
+    // Remove newly added line
+    if (y == lines_.begin()) {
+      return;
+    }
+    auto x = prev(y);
+    update(x, y);
+    if (!inOrder(x, y)) {
+      y = lines_.erase(y);
+      update(x, y);
+    }
+    // Remove preceeding lines
+    for (y = x; x != lines_.begin() && !inOrder(--x, y); y = x) {
+      update(x, lines_.erase(y));
+    }
+  }
+
+  inline T query(T x) const {
+    assert(!lines_.empty());
+    auto l = lines_.lower_bound(x);
+    return l->a * x + l->b;
+  }
+
+  inline int size() { return static_cast<int>(lines_.size()); }
+
+  inline const multiset<Line, less<>> &lines() const { return lines_; }
+};
+
+} // namespace collections

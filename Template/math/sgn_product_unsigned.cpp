@@ -3,8 +3,6 @@ namespace math {
 
 namespace {
 
-namespace {
-
 template <typename T> inline int sgn(T a, T b) {
   return a < b ? -1 : a == b ? 0 : 1;
 }
@@ -53,34 +51,6 @@ inline int sgnProductUnsigned(UINT a, UINT b, UINT c, UINT d) {
       return -1;
     } else {
       return sgn(a * b, c * d);
-    }
-  }
-}
-} // namespace
-
-/** sgn(a/b-c/d) */
-template <typename T, typename CMP_UINT_T>
-inline int sgnFraction(T a, T b, T c, T d) {
-  assert((a || b) && (c || d));
-  if (b < 0) {
-    a = -a;
-    b = -b;
-  }
-  if (d < 0) {
-    c = -c;
-    d = -d;
-  }
-  if (a < 0) {
-    if (c < 0) {
-      return sgnProductUnsigned<CMP_UINT_T>(-c, b, -a, d);
-    } else {
-      return -1;
-    }
-  } else {
-    if (c < 0) {
-      return 1;
-    } else {
-      return sgnProductUnsigned<CMP_UINT_T>(a, d, c, b);
     }
   }
 }
