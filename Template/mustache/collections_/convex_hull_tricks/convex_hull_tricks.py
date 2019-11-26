@@ -11,8 +11,10 @@ class ConvexHullTricksMustache(AbstractMustache):
     return {'sgn_fraction': SgnFractionMustache().genText()}
 
   def outputFile(self):
-    return 'collections/convex_hull_tricks/{{#isMax}}max{{/isMax}}{{^isMax}}min{{/isMax}}_convex_hull_tricks.cpp'
+    return 'collections/convex_hull_tricks/' \
+        '{{^minMax}}{{#isMax}}max{{/isMax}}{{^isMax}}min{{/isMax}}_{{/minMax}}' \
+        'convex_hull_tricks.cpp'
 
 
 JOBS = [(ConvexHullTricksMustache('collections'),
-         [{'isMax': True}, {'isMax': False}])]
+         [{'isMax': True}, {'isMax': False}, {'minMax': True}])]

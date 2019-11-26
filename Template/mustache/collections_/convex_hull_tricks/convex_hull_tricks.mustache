@@ -1,7 +1,7 @@
 {{> sgn_fraction}}
 
-template <typename T, typename CMP_UINT_T = uint64_t>
-class {{#isMax}}Max{{/isMax}}{{^isMax}}Min{{/isMax}}ConvexHullTricks {
+template <{{#minMax}}bool queryMax, {{/minMax}}typename T, typename CMP_UINT_T = uint64_t>
+class {{^minMax}}{{#isMax}}Max{{/isMax}}{{^isMax}}Min{{/isMax}}{{/minMax}}ConvexHullTricks {
 private:
   class Line {
   public:
@@ -11,7 +11,7 @@ private:
     inline Line(T a_, T b_) : a(a_), b(b_), num(0), den(1) {}
 
     inline bool operator<(const Line &o) const {
-      return a {{#isMax}}<{{/isMax}}{{^isMax}}>{{/isMax}} o.a;
+      return {{#minMax}}queryMax ? a < o.a : a > o.a{{/minMax}}{{^minMax}}a {{#isMax}}<{{/isMax}}{{^isMax}}>{{/isMax}} o.a{{/minMax}};
     }
 
     inline bool operator<(T x) const {
@@ -28,7 +28,7 @@ private:
       x->num = 1;
       x->den = 0;
     } else if (x->a == y->a) {
-      x->num = x->b {{#isMax}}>{{/isMax}}{{^isMax}}<{{/isMax}} y->b ? 1 : -1;
+      x->num = {{#minMax}}(queryMax ? x->b > y->b : x->b < y->b){{/minMax}}{{^minMax}}x->b {{#isMax}}>{{/isMax}}{{^isMax}}<{{/isMax}} y->b{{/minMax}}? 1 : -1;
       x->den = 0;
     } else {
       x->num = y->b - x->b;
