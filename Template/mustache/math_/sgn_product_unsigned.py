@@ -1,11 +1,10 @@
-from math.sgn import SgnMustache
-
+from math_.sgn import SgnMustache
 from mustache import AbstractMustache
 
 
 class SgnProductUnsignedMustache(AbstractMustache):
   def templateFile(self):
-    return 'math/sgn_product_unsigned.mustache'
+    return 'math_/sgn_product_unsigned.mustache'
 
   def partials(self):
     return {'sgn': SgnMustache().genText()}

@@ -3,7 +3,7 @@ from mustache import AbstractMustache
 
 class SgnMustache(AbstractMustache):
   def templateFile(self):
-    return 'math/sgn.mustache'
+    return 'math_/sgn.mustache'
 
   def partials(self):
     return {}

@@ -3,7 +3,7 @@ from mustache import AbstractMustache
 
 class FloorDivMustache(AbstractMustache):
   def templateFile(self):
-    return 'math/floor_div.mustache'
+    return 'math_/floor_div.mustache'
 
   def partials(self):
     return {}
