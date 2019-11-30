@@ -83,9 +83,9 @@
     'prefix': 'SQR'
     'body': 'template <typename T> inline T sqr(T x) { return x * x; }'
 
-  'SORTALLIF':
-    'prefix': 'SORTALLIF'
-    'body': '#define SORTALLIF(vs, clause) sort(vs.begin(), vs.end(), [](const decltype(vs)::value_type &a, const decltype(vs)::value_type &b) { return clause; })'
+  'SORTALLBY':
+    'prefix': 'SORTALLBY'
+    'body': '#define SORTALLBY(vs, clause) sort(vs.begin(), vs.end(), [](const decltype(vs)::value_type &a, const decltype(vs)::value_type &b) { return clause; })'
 
   'UI64':
     'prefix': 'UI64'
