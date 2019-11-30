@@ -45,7 +45,7 @@ public:
   }
 
   inline void add(T a, T b) {
-    if (head >= tail) {
+    if (empty()) {
       pushBack(a, b);
       return;
     }
@@ -65,7 +65,7 @@ public:
       }
       popBack();
     }
-    if (head < tail) {
+    if (!empty()) {
       auto &l = lines.back();
       l.x = x;
     }
@@ -79,10 +79,12 @@ public:
   }
 
   inline T query(T x) {
-    assert(head < tail);
+    assert(!empty());
     const auto &l = lines[queryLineIdx(x)];
     return l.a * x + l.b;
   }
+
+  inline bool empty() const { return head >= tail; }
 };
 
 } // namespace collections
