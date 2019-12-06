@@ -55,10 +55,6 @@
     'prefix': 'INDEX'
     'body': '#define INDEX(idx, v) static_cast<int>(lower_bound(idx.begin(), idx.end(), v) - idx.begin())'
 
-  'LD':
-    'prefix': 'LD'
-    'body': '#define LD long double'
-
   'I64':
     'prefix': 'I64'
     'body': '#define I64 int64_t'
@@ -66,6 +62,14 @@
   'I128':
     'prefix': 'I128'
     'body': '#define I128 __int128'
+
+  'LD':
+    'prefix': 'LD'
+    'body': '#define LD long double'
+
+  'MAXI64':
+    'prefix': 'MAXI64'
+    'body': 'constexpr int64_t kMaxI64 = numeric_limits<int64_t>::max();'
 
   'SIZE':
     'prefix': 'SIZE'
