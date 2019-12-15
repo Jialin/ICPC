@@ -1,81 +1,77 @@
-{{> sgn_fraction}}
+namespace {
 
-template <{{#minMax}}bool queryMax, {{/minMax}}typename T, typename CMP_UINT_T = uint64_t>
-class {{^minMax}}{{#isMax}}Max{{/isMax}}{{^isMax}}Min{{/isMax}}{{/minMax}}ConvexHullTricks {
+{{> floor_div}}
+
+} // namespace
+
+template <typename T> class {{MinMax}}ConvexHullTricks {
 private:
+  const static T kMinI64 = numeric_limits<T>::min();
+  const static T kMaxI64 = numeric_limits<T>::max();
+
   class Line {
   public:
     T a, b;
-    mutable T num, den;
+    mutable T x;
 
-    inline Line(T a_, T b_) : a(a_), b(b_), num(0), den(1) {}
+    inline Line(T a_, T b_) : a(a_), b(b_) {}
 
-    inline bool operator<(const Line &o) const {
-      return {{#minMax}}queryMax ? a < o.a : a > o.a{{/minMax}}{{^minMax}}a {{#isMax}}<{{/isMax}}{{^isMax}}>{{/isMax}} o.a{{/minMax}};
-    }
+    inline bool operator<(const Line &o) const { return o.a {{{lessOp}}} a; }
 
-    inline bool operator<(T x) const {
-      return sgnFraction<T, CMP_UINT_T>(num, den, x, 1) < 0;
-    }
+    inline bool operator<(T x_) const { return x < x_; }
   };
 
   using Iterator = typename multiset<Line, less<>>::iterator;
 
-  multiset<Line, less<>> lines_;
-
   inline void update(const Iterator &x, const Iterator &y) {
-    if (y == lines_.end()) {
-      x->num = 1;
-      x->den = 0;
+    if (y == lines.end()) {
+      x->x = kMaxI64;
     } else if (x->a == y->a) {
-      x->num = {{#minMax}}(queryMax ? x->b > y->b : x->b < y->b){{/minMax}}{{^minMax}}x->b {{#isMax}}>{{/isMax}}{{^isMax}}<{{/isMax}} y->b{{/minMax}}? 1 : -1;
-      x->den = 0;
+      x->x = x->b {{{lessOp}}} x->b ? kMaxI64 : kMinI64;
     } else {
-      x->num = y->b - x->b;
-      x->den = x->a - y->a;
+      x->x = floorDiv(y->b - x->b, x->a - y->a);
     }
   }
 
   inline bool inOrder(const Iterator &x, const Iterator &y) const {
-    return y == lines_.end() ||
-           sgnFraction<T, CMP_UINT_T>(x->num, x->den, y->num, y->den) < 0;
+    return y == lines.end() || x->x < y->x;
   }
 
 public:
-  inline void init() { lines_.clear(); }
+  inline void init() { lines.clear(); }
 
   inline void add(T a, T b) {
-    auto y = lines_.emplace(a, b);
+    auto y = lines.emplace(a, b);
     // Remove following lines
     auto z = next(y);
     update(y, z);
     while (!inOrder(y, z)) {
-      z = lines_.erase(z);
+      z = lines.erase(z);
       update(y, z);
     }
     // Remove newly added line
-    if (y == lines_.begin()) {
+    if (y == lines.begin()) {
       return;
     }
     auto x = prev(y);
     update(x, y);
     if (!inOrder(x, y)) {
-      y = lines_.erase(y);
+      y = lines.erase(y);
       update(x, y);
     }
     // Remove preceeding lines
-    for (y = x; x != lines_.begin() && !inOrder(--x, y); y = x) {
-      update(x, lines_.erase(y));
+    for (y = x; x != lines.begin() && !inOrder(--x, y); y = x) {
+      update(x, lines.erase(y));
     }
   }
 
   inline T query(T x) const {
-    assert(!lines_.empty());
-    auto l = lines_.lower_bound(x);
+    assert(!lines.empty());
+    auto l = lines.lower_bound(x);
     return l->a * x + l->b;
   }
 
-  inline int size() { return static_cast<int>(lines_.size()); }
+  inline int size() { return static_cast<int>(lines.size()); }
 
-  inline const multiset<Line, less<>> &lines() const { return lines_; }
+  multiset<Line, less<>> lines;
 };

@@ -1,4 +1,4 @@
-from math_.sgn_fraction import SgnFractionMustache
+from math_.floor_div import FloorDivMustache
 from mustache import AbstractMustache
 
 
@@ -7,13 +7,12 @@ class ConvexHullTricksMustache(AbstractMustache):
     return 'collections_/convex_hull_tricks/convex_hull_tricks.mustache'
 
   def partials(self):
-    return {'sgn_fraction': SgnFractionMustache().genText()}
+    return {'floor_div': FloorDivMustache().genText()}
 
   def outputFile(self):
-    return 'collections/convex_hull_tricks/' \
-        '{{^minMax}}{{#isMax}}max{{/isMax}}{{^isMax}}min{{/isMax}}_{{/minMax}}' \
-        'convex_hull_tricks.cpp'
+    return 'collections/convex_hull_tricks/{{minmax}}_convex_hull_tricks.cpp'
 
 
 JOBS = [(ConvexHullTricksMustache('collections'),
-         [{'isMax': True}, {'isMax': False}, {'minMax': True}])]
+         [{'MinMax': 'Min', 'minmax': 'min', 'lessgreater': 'greater', 'lessOp': '<'},
+          {'MinMax': 'Max', 'minmax': 'max', 'lessgreater': 'less', 'lessOp': '>'}])]
