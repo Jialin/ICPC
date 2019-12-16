@@ -12,8 +12,9 @@ class ConvexHullTricksMonoAddQueryMustache(AbstractMustache):
 
   def outputFile(self):
     return 'collections/convex_hull_tricks/' \
-        '{{MinMax}}ConvexHullTricksAdd{{AddOrder}}Query{{QueryOrder}}.cpp'
+        '{{minmax}}_convex_hull_tricks_'\
+        'add_{{addorder}}_query_{{queryorder}}.cpp'
 
 
 JOBS = [(ConvexHullTricksMonoAddQueryMustache('collections'),
-         [{'MinMax': 'Min', 'AddOrder': 'Decreasing', 'QueryOrder': 'Increasing'}])]
+         [{'MinMax': 'Min', 'AddOrder': 'Decreasing', 'QueryOrder': 'Increasing', 'minmax': 'min', 'addorder': 'decreasing', 'queryorder': 'increasing'}])]
