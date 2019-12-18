@@ -5,6 +5,8 @@ from collections_.convex_hull_tricks.convex_hull_tricks import \
     JOBS as collectionsConvexHullTricksJobs
 from collections_.convex_hull_tricks.convex_hull_tricks_mono_add_query import \
     JOBS as collectionsConvexHullTricksMonoAddQueryJobs
+from collections_.convex_hull_tricks.convex_hull_tricks_mono_add import \
+    JOBS as collectionsConvexHullTricksMonoAddJobs
 from collections_.convex_hull_tricks.li_chao_tree_known_queries import \
     JOBS as collectionsConvexHullTricksLiChaoTreeKnownQueries
 from math_.floor_div import JOBS as mathFloorDivJobs
@@ -14,6 +16,7 @@ from math_.sgn_product_unsigned import JOBS as mathSgnProductUnsignedJobs
 
 ALL_JOBS = [collectionsConvexHullTricksJobs,
             collectionsConvexHullTricksMonoAddQueryJobs,
+            collectionsConvexHullTricksMonoAddJobs,
             collectionsConvexHullTricksLiChaoTreeKnownQueries,
             mathFloorDivJobs,
             mathSgnFractionJobs,

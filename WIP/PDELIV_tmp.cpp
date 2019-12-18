@@ -24,7 +24,6 @@
 using namespace std;
 
 #define DEBUG(args...) fprintf(stderr, args)
-#define SIZE(vs) static_cast<int>(vs.size())
 
 namespace io {
 
@@ -108,13 +107,12 @@ public:
     auto &line = lines.back();
     if (line.a == a) {
       if (b < line.b) {
-        lines.pop_back();
-      } else {
-        return;
+        line.b = b;
       }
+      return;
     }
-    T x = inf;
-    while (!lines.empty()) {
+    T x;
+    while (true) {
       line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
       if (lines.size() == 1 || line.x < x) {

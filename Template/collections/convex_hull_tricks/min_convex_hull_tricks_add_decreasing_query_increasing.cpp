@@ -31,9 +31,6 @@ private:
     --tail;
   }
 
-  vector<Line> lines;
-  int head, tail;
-
 public:
   inline void init(int n = -1) {
     lines.clear();
@@ -85,6 +82,9 @@ public:
   }
 
   inline bool empty() const { return head >= tail; }
+
+  vector<Line> lines;
+  int head, tail;
 };
 
 } // namespace collections
