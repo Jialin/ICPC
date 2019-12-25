@@ -17,6 +17,7 @@ class ConvexHullTricksMonoAddMustache(AbstractMustache):
 
 
 JOBS = [(ConvexHullTricksMonoAddMustache('collections'),
-         [{'minmax': {'v': 'min', 'cap': 'Min', 'cmp': '<'},
+         [{'container': {'v': 'vector', 'reserve': True},
+           'minmax': {'v': 'min', 'cap': 'Min', 'cmp': '<', 'inf_rev': 'max'},
            'frontback': {'v': 'back', 'cmp': '<', 'inf': 'min'},
            'incdec': {'v': 'decreasing', 'cap': 'Decreasing'}}])]

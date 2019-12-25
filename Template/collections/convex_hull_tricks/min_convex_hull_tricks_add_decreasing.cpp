@@ -21,8 +21,15 @@ private:
     inline Line(T a_, T b_, T x_) : a(a_), b(b_), x(x_) {}
   };
 
+  vector<Line> lines;
+
 public:
-  inline void init() { lines.clear(); }
+  inline void init(int n = -1) {
+    lines.clear();
+    if (n > 0) {
+      lines.reserve(n);
+    }
+  }
 
   inline void add(T a, T b) {
     static T inf = numeric_limits<T>::min();
@@ -30,17 +37,17 @@ public:
       lines.emplace_back(a, b, inf);
       return;
     }
-    const auto &line = lines.back();
-    if (line.a == a) {
-      if (b < line.b) {
+    const auto &lastLine = lines.back();
+    if (lastLine.a == a) {
+      if (b < lastLine.b) {
         lines.pop_back();
       } else {
         return;
       }
     }
-    T x;
-    while (true) {
-      line = lines.back();
+    T x = inf;
+    while (!lines.empty()) {
+      const auto &line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
       if (lines.size() == 1 || line.x < x) {
         break;
@@ -50,20 +57,35 @@ public:
     lines.emplace_back(a, b, x);
   }
 
-  inline int queryLineIdx(T x) {
-    return static_cast<int>(
-        lower_bound(lines.begin(), lines.end(), x,
-                    [](const Line &line, const T x_) { return line.x < x_; }) -
-        lines.begin());
+  inline const Line &queryLine(T x) const {
+    return *(
+        upper_bound(lines.begin(), lines.end(), x,
+                    [](const T x_, const Line &line) { return x_ <= line.x; }) -
+        1);
   }
 
-  inline T query(T x) {
-    assert(!lines.empty());
-    const auto &line = lines[queryLineIdx(x)];
+  inline T query(T x) const {
+    if (lines.empty()) {
+      static T inf = numeric_limits<T>::max();
+      return inf;
+    }
+    const auto &line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  deque<Line> lines;
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+
+  inline typename vector<Line>::const_iterator cbegin() const {
+    return lines.cbegin();
+  }
+
+  inline typename vector<Line>::const_iterator cend() const {
+    return lines.cend();
+  }
+
+  inline int size() const { return static_cast<int>(lines.size()); }
 };
 
 } // namespace collections
