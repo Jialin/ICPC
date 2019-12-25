@@ -96,8 +96,15 @@ private:
     inline Line(T a_, T b_, T x_) : a(a_), b(b_), x(x_) {}
   };
 
+  vector<Line> lines;
+
 public:
-  inline void init() { lines.clear(); }
+  inline void init(int n = -1) {
+    lines.clear();
+    if (n > 0) {
+      lines.reserve(n);
+    }
+  }
 
   inline void add(T a, T b) {
     static T inf = numeric_limits<T>::min();
@@ -105,9 +112,9 @@ public:
       lines.emplace_back(a, b, inf);
       return;
     }
-    auto &line = lines.back();
-    if (line.a == a) {
-      if (b < line.b) {
+    const auto &lastLine = lines.back();
+    if (lastLine.a == a) {
+      if (b < lastLine.b) {
         lines.pop_back();
       } else {
         return;
@@ -115,7 +122,7 @@ public:
     }
     T x = inf;
     while (!lines.empty()) {
-      line = lines.back();
+      const auto &line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
       if (lines.size() == 1 || line.x < x) {
         break;
@@ -125,22 +132,35 @@ public:
     lines.emplace_back(a, b, x);
   }
 
-  inline int queryLineIdx(T x) {
-    return static_cast<int>(lower_bound(lines.begin() + 1, lines.end(), x,
-                                        [](const Line &line, const T x_) {
-                                          return line.x < x_;
-                                        }) -
-                            lines.begin()) -
-           1;
+  inline const Line &queryLine(T x) const {
+    return *(
+        upper_bound(lines.begin(), lines.end(), x,
+                    [](const T x_, const Line &line) { return x_ <= line.x; }) -
+        1);
   }
 
-  inline T query(T x) {
-    assert(!lines.empty());
-    const auto &line = lines[queryLineIdx(x)];
+  inline T query(T x) const {
+    if (lines.empty()) {
+      static T inf = numeric_limits<T>::max();
+      return inf;
+    }
+    const auto &line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  deque<Line> lines;
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+
+  inline typename vector<Line>::const_iterator cbegin() const {
+    return lines.cbegin();
+  }
+
+  inline typename vector<Line>::const_iterator cend() const {
+    return lines.cend();
+  }
+
+  inline int size() const { return static_cast<int>(lines.size()); }
 };
 
 } // namespace collections
@@ -269,38 +289,36 @@ void ChtIntervalTree::createNodes(int capacity) { chts.resize(capacity); }
 
 void ChtIntervalTree::initLeaf(int nodeIdx, int idx) {
   auto &cht = chts[nodeIdx];
-  cht.init();
+  cht.init(1);
   I64 x = xs[idx];
   cht.add(-(x << 1), ps[idx] + sqr(x));
 }
 
 void ChtIntervalTree::merge(int idx, int leftIdx, int rightIdx) {
   auto &cht = chts[idx];
-  const auto &leftCht = chts[leftIdx];
-  const auto &rightCht = chts[rightIdx];
-  int leftSize = SIZE(leftCht.lines);
-  int rightSize = SIZE(rightCht.lines);
-  cht.init();
-  int i, j;
-  for (i = 0, j = 0; i < leftSize && j < rightSize;) {
-    const auto &leftLine = leftCht.lines[i];
-    const auto &rightLine = rightCht.lines[j];
-    if (leftLine.a > rightLine.a) {
-      cht.add(leftLine.a, leftLine.b);
-      ++i;
+  const auto &left = chts[leftIdx];
+  const auto &right = chts[rightIdx];
+  cht.init(left.size() + right.size());
+  auto leftI = left.cbegin();
+  auto rightI = right.cbegin();
+  while (leftI != left.cend() && rightI != right.cend()) {
+    if (leftI->a > rightI->a) {
+      cht.add(leftI->a, leftI->b);
+      ++leftI;
     } else {
-      cht.add(rightLine.a, rightLine.b);
-      ++j;
+      cht.add(rightI->a, rightI->b);
+      ++rightI;
     }
   }
-  for (; i < leftSize; ++i) {
-    const auto &line = leftCht.lines[i];
-    cht.add(line.a, line.b);
+  for (; leftI != left.cend(); ++leftI) {
+    cht.add(leftI->a, leftI->b);
   }
-  for (; j < rightSize; ++j) {
-    const auto &line = rightCht.lines[j];
-    cht.add(line.a, line.b);
+  for (; rightI != right.cend(); ++rightI) {
+    cht.add(rightI->a, rightI->b);
   }
+  // for (const auto &line : cht) {
+  //   DEBUG("range-loop %lld %lld\n", line.a, line.b);
+  // }
 }
 
 ChtIntervalTree itree;
