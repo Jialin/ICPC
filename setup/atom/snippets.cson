@@ -71,6 +71,10 @@
     'prefix': 'MAXI64'
     'body': 'constexpr int64_t kMaxI64 = numeric_limits<int64_t>::max();'
 
+  'MINI64':
+    'prefix': 'MINI64'
+    'body': 'constexpr int64_t kMinI64 = numeric_limits<int64_t>::min();'
+
   'SIZE':
     'prefix': 'SIZE'
     'body': '#define SIZE(vs) static_cast<int>(vs.size())'
