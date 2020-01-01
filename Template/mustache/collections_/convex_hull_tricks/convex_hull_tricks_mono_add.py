@@ -12,12 +12,17 @@ class ConvexHullTricksMonoAddMustache(AbstractMustache):
 
   def outputFile(self):
     return 'collections/convex_hull_tricks/' \
-        '{{#minmax}}{{v}}{{/minmax}}_convex_hull_tricks_' \
-        'add_{{#incdec}}{{v}}{{/incdec}}.cpp'
+        '{{minmax.lower}}_convex_hull_tricks_add_{{incdec.lower}}.cpp'
+
+
+def variables(minmax, incdec):
+  return {'minmax': {'lower': 'min', 'cap': 'Min', '-inf': 'max', 'cmp': '<'} if minmax else {'lower': 'max', 'cap': 'Max', '-inf': 'min', 'cmp': '>'},
+          'incdec': {'lower': 'increasing', 'cap': 'Increasing'} if incdec else {'lower': 'decreasing', 'cap': 'Decreasing'},
+          'reverse': {'v': False, 'inf': 'min', 'cmp': '<'} if minmax ^ incdec else {'v': True, 'inf': 'max', 'cmp': '>'}}
 
 
 JOBS = [(ConvexHullTricksMonoAddMustache('collections'),
-         [{'container': {'v': 'vector', 'reserve': True},
-           'minmax': {'v': 'min', 'cap': 'Min', 'cmp': '<', 'inf_rev': 'max'},
-           'frontback': {'v': 'back', 'cmp': '<', 'inf': 'min'},
-           'incdec': {'v': 'decreasing', 'cap': 'Decreasing'}}])]
+         [variables(minmax=False, incdec=False),
+          variables(minmax=False, incdec=True),
+          variables(minmax=True, incdec=False),
+          variables(minmax=True, incdec=True)])]

@@ -12,7 +12,7 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasing {
+template <typename T> class MaxConvexHullTricksAddIncreasing {
 private:
   class Line {
   public:
@@ -39,7 +39,7 @@ public:
     }
     const auto &lastLine = lines.back();
     if (lastLine.a == a) {
-      if (b < lastLine.b) {
+      if (b > lastLine.b) {
         lines.pop_back();
       } else {
         return;
@@ -66,7 +66,7 @@ public:
 
   inline T query(T x) const {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::min();
       return inf;
     }
     const auto &line = queryLine(x);

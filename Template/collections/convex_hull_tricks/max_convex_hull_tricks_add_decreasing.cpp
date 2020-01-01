@@ -12,7 +12,7 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasing {
+template <typename T> class MaxConvexHullTricksAddDecreasing {
 private:
   class Line {
   public:
@@ -32,14 +32,14 @@ public:
   }
 
   inline void add(T a, T b) {
-    static T inf = numeric_limits<T>::min();
+    static T inf = numeric_limits<T>::max();
     if (lines.empty()) {
       lines.emplace_back(a, b, inf);
       return;
     }
     const auto &lastLine = lines.back();
     if (lastLine.a == a) {
-      if (b < lastLine.b) {
+      if (b > lastLine.b) {
         lines.pop_back();
       } else {
         return;
@@ -49,7 +49,7 @@ public:
     while (!lines.empty()) {
       const auto &line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
-      if (lines.size() == 1 || line.x < x) {
+      if (lines.size() == 1 || line.x > x) {
         break;
       }
       lines.pop_back();
@@ -59,14 +59,14 @@ public:
 
   inline const Line &queryLine(T x) const {
     return *(
-        upper_bound(lines.begin(), lines.end(), x,
-                    [](const T x_, const Line &line) { return x_ <= line.x; }) -
+        lower_bound(lines.begin(), lines.end(), x,
+                    [](const Line &line, const T x_) { return line.x >= x_; }) -
         1);
   }
 
   inline T query(T x) const {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::min();
       return inf;
     }
     const auto &line = queryLine(x);
@@ -75,12 +75,12 @@ public:
 
   inline int size() const { return static_cast<int>(lines.size()); }
 
-  inline typename vector<Line>::iterator begin() { return lines.begin(); }
-  inline typename vector<Line>::iterator end() { return lines.end(); }
-  inline typename vector<Line>::reverse_iterator rbegin() {
+  inline typename vector<Line>::reverse_iterator begin() {
     return lines.rbegin();
   }
-  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
+  inline typename vector<Line>::reverse_iterator end() { return lines.rend(); }
+  inline typename vector<Line>::iterator rbegin() { return lines.begin(); }
+  inline typename vector<Line>::iterator rend() { return lines.end(); }
 };
 
 } // namespace collections

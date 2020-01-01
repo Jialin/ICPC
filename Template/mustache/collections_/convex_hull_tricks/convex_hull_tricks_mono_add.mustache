@@ -18,62 +18,75 @@ private:
 public:
   inline void init(int n = -1) {
     lines.clear();
-    {{#container.reserve}}if (n > 0) { lines.reserve(n); }{{/container.reserve}}
+    if (n > 0) {
+      lines.reserve(n);
+    }
   }
 
   inline void add(T a, T b) {
-    static T inf = numeric_limits<T>::{{frontback.inf}}();
+    static T inf = numeric_limits<T>::{{reverse.inf}}();
     if (lines.empty()) {
-      lines.emplace_{{frontback.v}}(a, b, inf);
+      lines.emplace_back(a, b, inf);
       return;
     }
-    const auto& lastLine = lines.{{frontback.v}}();
+    const auto& lastLine = lines.back();
     if (lastLine.a == a) {
       if (b {{{minmax.cmp}}} lastLine.b) {
-        lines.pop_{{frontback.v}}();
+        lines.pop_back();
       } else {
         return;
       }
     }
     T x = inf;
     while (!lines.empty()) {
-      const auto &line = lines.{{frontback.v}}();
+      const auto &line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
-      if (lines.size() == 1 || line.x {{{frontback.cmp}}} x) {
+      if (lines.size() == 1 || line.x {{{reverse.cmp}}} x) {
         break;
       }
-      lines.pop_{{frontback.v}}();
+      lines.pop_back();
     }
-    lines.emplace_{{frontback.v}}(a, b, x);
+    lines.emplace_back(a, b, x);
   }
 
+  {{#reverse.v}}
+  inline const Line &queryLine(T x) const {
+    return *(
+        lower_bound(lines.begin(), lines.end(), x,
+                    [](const Line &line, const T x_) { return line.x >= x_; }) -
+        1);
+  }
+  {{/reverse.v}}
+  {{^reverse.v}}
   inline const Line &queryLine(T x) const {
     return *(
         upper_bound(lines.begin(), lines.end(), x,
                     [](const T x_, const Line &line) { return x_ <= line.x; }) -
         1);
   }
+  {{/reverse.v}}
 
   inline T query(T x) const {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::{{minmax.-inf}}();
       return inf;
     }
     const auto &line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  inline typename vector<Line>::iterator begin() { return lines.begin(); }
-
-  inline typename vector<Line>::iterator end() { return lines.end(); }
-
-  inline typename vector<Line>::const_iterator cbegin() const {
-    return lines.cbegin();
-  }
-
-  inline typename vector<Line>::const_iterator cend() const {
-    return lines.cend();
-  }
-
   inline int size() const { return static_cast<int>(lines.size()); }
+
+  {{#reverse.v}}
+  inline typename vector<Line>::reverse_iterator begin() { return lines.rbegin(); }
+  inline typename vector<Line>::reverse_iterator end() { return lines.rend(); }
+  inline typename vector<Line>::iterator rbegin() { return lines.begin(); }
+  inline typename vector<Line>::iterator rend() { return lines.end(); }
+  {{/reverse.v}}
+  {{^reverse.v}}
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::reverse_iterator rbegin() { return lines.rbegin(); }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
+  {{/reverse.v}}
 };
