@@ -148,19 +148,14 @@ public:
     return line.a * x + line.b;
   }
 
-  inline typename vector<Line>::iterator begin() { return lines.begin(); }
-
-  inline typename vector<Line>::iterator end() { return lines.end(); }
-
-  inline typename vector<Line>::const_iterator cbegin() const {
-    return lines.cbegin();
-  }
-
-  inline typename vector<Line>::const_iterator cend() const {
-    return lines.cend();
-  }
-
   inline int size() const { return static_cast<int>(lines.size()); }
+
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::reverse_iterator rbegin() {
+    return lines.rbegin();
+  }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
 };
 
 } // namespace collections
@@ -248,7 +243,7 @@ struct Query {
     blackouts.reserve(k + 2);
     blackouts.clear();
     blackouts.push_back(-1);
-    blackouts.push_back(::n);
+    blackouts.push_back(n);
     FOR(i, 0, k) {
       int blackoutIdx;
       io::readInt(blackoutIdx);
@@ -299,14 +294,14 @@ void ChtIntervalTree::merge(int idx, int leftIdx, int rightIdx) {
   auto &left = chts[leftIdx];
   auto &right = chts[rightIdx];
   cht.init(left.size() + right.size());
-  auto rightI = right.cbegin();
+  auto rightI = right.begin();
   for (auto &leftLine : left) {
-    for (; rightI != right.cend() && leftLine.a < rightI->a; ++rightI) {
+    for (; rightI != right.end() && leftLine.a < rightI->a; ++rightI) {
       cht.add(rightI->a, rightI->b);
     }
     cht.add(leftLine.a, leftLine.b);
   }
-  for (; rightI != right.cend(); ++rightI) {
+  for (; rightI != right.end(); ++rightI) {
     cht.add(rightI->a, rightI->b);
   }
 }
@@ -330,7 +325,6 @@ int main() {
   itree.initLeafsAndRollup(n);
   queries.resize(m);
   FOR(i, 0, m) { queries[i].init(i); }
-  SORT(queries);
   answers.resize(m);
   for (const auto &query : queries) {
     answers[query.idx] = itree.query(query);

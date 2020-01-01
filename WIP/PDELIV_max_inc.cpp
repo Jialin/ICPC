@@ -87,7 +87,7 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasing {
+template <typename T> class MaxConvexHullTricksAddIncreasing {
 private:
   class Line {
   public:
@@ -114,7 +114,7 @@ public:
     }
     const auto &lastLine = lines.back();
     if (lastLine.a == a) {
-      if (b < lastLine.b) {
+      if (b > lastLine.b) {
         lines.pop_back();
       } else {
         return;
@@ -141,26 +141,21 @@ public:
 
   inline T query(T x) const {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::min();
       return inf;
     }
     const auto &line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  inline typename vector<Line>::iterator begin() { return lines.begin(); }
-
-  inline typename vector<Line>::iterator end() { return lines.end(); }
-
-  inline typename vector<Line>::const_iterator cbegin() const {
-    return lines.cbegin();
-  }
-
-  inline typename vector<Line>::const_iterator cend() const {
-    return lines.cend();
-  }
-
   inline int size() const { return static_cast<int>(lines.size()); }
+
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::reverse_iterator rbegin() {
+    return lines.rbegin();
+  }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
 };
 
 } // namespace collections
@@ -232,7 +227,7 @@ vector<int> xs, ps;
   vs.erase(unique(vs.begin(), vs.end()), vs.end())
 #define SIZE(vs) static_cast<int>(vs.size())
 
-constexpr int64_t kMaxI64 = numeric_limits<int64_t>::max();
+constexpr int64_t kMinI64 = numeric_limits<int64_t>::min();
 
 template <typename T> inline T sqr(T x) { return x * x; }
 
@@ -269,17 +264,17 @@ public:
   void initLeaf(int nodeIdx, int idx) override;
   void merge(int idx, int leftIdx, int rightIdx) override;
 
-  vector<collections::MinConvexHullTricksAddDecreasing<I64>> chts;
+  vector<collections::MaxConvexHullTricksAddIncreasing<I64>> chts;
 
   inline I64 query(const Query &query) {
-    I64 res = kMaxI64;
+    I64 res = kMinI64;
     FOR(i, 1, SIZE(query.blackouts)) {
       queryRange(query.blackouts[i - 1] + 1, query.blackouts[i],
                  [this, &res, &query](int nodeIdx) {
-                   res = min(res, this->chts[nodeIdx].query(query.x));
+                   res = max(res, this->chts[nodeIdx].query(query.x));
                  });
     }
-    return res + sqr<I64>(query.x);
+    return res - sqr<I64>(query.x);
   }
 };
 
@@ -291,7 +286,7 @@ void ChtIntervalTree::initLeaf(int nodeIdx, int idx) {
   auto &cht = chts[nodeIdx];
   cht.init(1);
   I64 x = xs[idx];
-  cht.add(-(x << 1), ps[idx] + sqr(x));
+  cht.add(x << 1, -ps[idx] - sqr(x));
 }
 
 void ChtIntervalTree::merge(int idx, int leftIdx, int rightIdx) {
@@ -299,14 +294,21 @@ void ChtIntervalTree::merge(int idx, int leftIdx, int rightIdx) {
   auto &left = chts[leftIdx];
   auto &right = chts[rightIdx];
   cht.init(left.size() + right.size());
-  auto rightI = right.cbegin();
-  for (auto &leftLine : left) {
-    for (; rightI != right.cend() && leftLine.a < rightI->a; ++rightI) {
+  auto leftI = left.begin();
+  auto rightI = right.begin();
+  while (leftI != left.end() && rightI != right.end()) {
+    if (leftI->a < rightI->a) {
+      cht.add(leftI->a, leftI->b);
+      ++leftI;
+    } else {
       cht.add(rightI->a, rightI->b);
+      ++rightI;
     }
-    cht.add(leftLine.a, leftLine.b);
   }
-  for (; rightI != right.cend(); ++rightI) {
+  for (; leftI != left.end(); ++leftI) {
+    cht.add(leftI->a, leftI->b);
+  }
+  for (; rightI != right.end(); ++rightI) {
     cht.add(rightI->a, rightI->b);
   }
 }
@@ -330,11 +332,10 @@ int main() {
   itree.initLeafsAndRollup(n);
   queries.resize(m);
   FOR(i, 0, m) { queries[i].init(i); }
-  SORT(queries);
   answers.resize(m);
   for (const auto &query : queries) {
     answers[query.idx] = itree.query(query);
   }
-  FOR(i, 0, m) { printf("%lld\n", answers[i]); }
+  FOR(i, 0, m) { printf("%lld\n", -answers[i]); }
   return 0;
 }
