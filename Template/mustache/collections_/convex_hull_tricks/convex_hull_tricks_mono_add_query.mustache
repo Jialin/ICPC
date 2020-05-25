@@ -4,21 +4,24 @@ namespace {
 
 } // namespace
 
-template <typename T> class {{MinMax}}ConvexHullTricksAdd{{AddOrder}}Query{{QueryOrder}} {
+template <typename T> class {{minmax.cap}}ConvexHullTricksAdd{{addincdec.cap}}Query{{queryincdec.cap}} {
 private:
   class Line {
   public:
     T a, b, x;
 
-    inline Line(T a_, T b_) : a(a_), b(b_), x(0) {}
+    inline Line(T a_, T b_, T x_) : a(a_), b(b_), x(x_) {}
   };
 
-  inline void pushBack(T a, T b) {
-    lines.emplace_back(a, b);
+  vector<Line> lines;
+  int head, tail;
+
+  inline void push(T a, T b, T x) {
+    lines.emplace_back(a, b, x);
     ++tail;
   }
 
-  inline void popBack() {
+  inline void pop() {
     lines.pop_back();
     --tail;
   }
@@ -34,47 +37,86 @@ public:
   }
 
   inline void add(T a, T b) {
+    static T inf = numeric_limits<T>::{{addreverse.inf}}();
     if (empty()) {
-      pushBack(a, b);
+      push(a, b, inf);
       return;
     }
-    const auto &cl = lines.back();
-    if (cl.a == a) {
-      if (cl.b <= b) {
+    const auto &lastLine = lines.back();
+    if (lastLine.a == a) {
+      if (b {{{minmax.cmp}}} lastLine.b) {
+        pop();
+      } else {
         return;
       }
-      popBack();
     }
-    T x;
-    while (true) {
-      const auto &l = lines.back();
-      x = floorDiv(b - l.b, l.a - a);
-      if (head + 1 >= tail || lines[tail - 2].x < x) {
+    T x = inf;
+    while (!empty()) {
+      const auto &line = lines.back();
+      x = floorDiv(b - line.b, line.a - a);
+      if (lines.size() == 1 || line.x {{{addreverse.cmp}}} x) {
         break;
       }
-      popBack();
+      pop();
     }
-    if (!empty()) {
-      auto &l = lines.back();
-      l.x = x;
-    }
-    pushBack(a, b);
+    push(a, b, x);
   }
 
-  inline int queryLineIdx(T x) {
-    for (; head + 1 < tail && x > lines[head].x; ++head) {
-    }
-    return head;
+  inline const Line &queryLine(T x) {
+    {{#queryincdec.v}}{{#addreverse.v}}
+    for ( ; head + 1 < tail && lines[tail - 1].x < x; --tail) {}
+    return lines[tail - 1];
+    {{/addreverse.v}}{{/queryincdec.v}}
+    {{#queryincdec.v}}{{^addreverse.v}}
+    for ( ; head + 1 < tail && lines[head + 1].x < x; ++head) {}
+    return lines[head];
+    {{/addreverse.v}}{{/queryincdec.v}}
+    {{^queryincdec.v}}{{#addreverse.v}}
+    for ( ; head + 1 < tail && x <= lines[head + 1].x; ++head) {}
+    return lines[head];
+    {{/addreverse.v}}{{/queryincdec.v}}
+    {{^queryincdec.v}}{{^addreverse.v}}
+    for ( ; head + 1 < tail && x <= lines[tail - 1].x; --tail) {}
+    return lines[tail - 1];
+    {{/addreverse.v}}{{/queryincdec.v}}
   }
 
   inline T query(T x) {
-    assert(!empty());
-    const auto &l = lines[queryLineIdx(x)];
-    return l.a * x + l.b;
+    if (lines.empty()) {
+      static T inf = numeric_limits<T>::{{minmax.-inf}}();
+      return inf;
+    }
+    const auto &line = queryLine(x);
+    return line.a * x + line.b;
   }
 
   inline bool empty() const { return head >= tail; }
 
-  vector<Line> lines;
-  int head, tail;
+  inline int size() const { return static_cast<int>(lines.size()); }
+
+  {{#queryincdec.v}}{{#addreverse.v}}
+  inline typename vector<Line>::reverse_iterator begin() { return lines.rend() - tail; }
+  inline typename vector<Line>::reverse_iterator end() { return lines.rend(); }
+  inline typename vector<Line>::iterator rbegin() { return lines.begin(); }
+  inline typename vector<Line>::iterator rend() { return lines.begin() + tail; }
+  {{/addreverse.v}}{{/queryincdec.v}}
+  {{#queryincdec.v}}{{^addreverse.v}}
+  inline typename vector<Line>::iterator begin() { return lines.begin() + head; }
+  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::reverse_iterator rbegin() { return lines.rbegin(); }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend() - head; }
+  {{/addreverse.v}}{{/queryincdec.v}}
+  {{^queryincdec.v}}{{#addreverse.v}}
+  inline typename vector<Line>::reverse_iterator begin() { return lines.rbegin(); }
+  inline typename vector<Line>::reverse_iterator end() { return lines.rend() - head; }
+  inline typename vector<Line>::iterator rbegin() { return lines.begin() + head; }
+  inline typename vector<Line>::iterator rend() { return lines.end(); }
+  {{/addreverse.v}}{{/queryincdec.v}}
+  {{^queryincdec.v}}{{^addreverse.v}}
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+  inline typename vector<Line>::iterator end() { return lines.begin() + tail; }
+  inline typename vector<Line>::reverse_iterator rbegin() { return lines.rend() - tail; }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
+  {{/addreverse.v}}{{/queryincdec.v}}
+
 };

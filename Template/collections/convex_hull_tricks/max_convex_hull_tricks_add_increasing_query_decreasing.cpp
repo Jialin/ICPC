@@ -12,7 +12,7 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasingQueryIncreasing {
+template <typename T> class MaxConvexHullTricksAddIncreasingQueryDecreasing {
 private:
   class Line {
   public:
@@ -52,7 +52,7 @@ public:
     }
     const auto &lastLine = lines.back();
     if (lastLine.a == a) {
-      if (b < lastLine.b) {
+      if (b > lastLine.b) {
         pop();
       } else {
         return;
@@ -72,14 +72,14 @@ public:
 
   inline const Line &queryLine(T x) {
 
-    for (; head + 1 < tail && lines[head + 1].x < x; ++head) {
+    for (; head + 1 < tail && x <= lines[tail - 1].x; --tail) {
     }
-    return lines[head];
+    return lines[tail - 1];
   }
 
   inline T query(T x) {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::min();
       return inf;
     }
     const auto &line = queryLine(x);
@@ -90,16 +90,12 @@ public:
 
   inline int size() const { return static_cast<int>(lines.size()); }
 
-  inline typename vector<Line>::iterator begin() {
-    return lines.begin() + head;
-  }
-  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::iterator begin() { return lines.begin(); }
+  inline typename vector<Line>::iterator end() { return lines.begin() + tail; }
   inline typename vector<Line>::reverse_iterator rbegin() {
-    return lines.rbegin();
+    return lines.rend() - tail;
   }
-  inline typename vector<Line>::reverse_iterator rend() {
-    return lines.rend() - head;
-  }
+  inline typename vector<Line>::reverse_iterator rend() { return lines.rend(); }
 };
 
 } // namespace collections

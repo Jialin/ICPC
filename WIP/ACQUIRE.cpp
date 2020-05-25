@@ -163,7 +163,7 @@ int n;
 vector<pair<int, int>> xs;
 vector<pair<int, int>> ys;
 
-int main() {
+int main() {  
   scanf("%d", &n);
   xs.reserve(n);
   ys.reserve(n);

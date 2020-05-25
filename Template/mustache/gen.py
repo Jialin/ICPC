@@ -3,10 +3,10 @@ import sys
 
 from collections_.convex_hull_tricks.convex_hull_tricks import \
     JOBS as collectionsConvexHullTricksJobs
-from collections_.convex_hull_tricks.convex_hull_tricks_mono_add_query import \
-    JOBS as collectionsConvexHullTricksMonoAddQueryJobs
 from collections_.convex_hull_tricks.convex_hull_tricks_mono_add import \
     JOBS as collectionsConvexHullTricksMonoAddJobs
+from collections_.convex_hull_tricks.convex_hull_tricks_mono_add_query import \
+    JOBS as collectionsConvexHullTricksMonoAddQueryJobs
 from collections_.convex_hull_tricks.li_chao_tree_known_queries import \
     JOBS as collectionsConvexHullTricksLiChaoTreeKnownQueries
 from math_.floor_div import JOBS as mathFloorDivJobs
@@ -24,6 +24,9 @@ ALL_JOBS = [collectionsConvexHullTricksJobs,
             mathSgnProductUnsignedJobs]
 
 for jobs in ALL_JOBS:
+  # print(jobs)
   for mustache, contexts in jobs:
+    # print('\t', mustache, contexts)
     for context in contexts:
+      # print('\t\t', context)
       mustache.genFile(context)

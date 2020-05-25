@@ -12,7 +12,7 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasingQueryIncreasing {
+template <typename T> class MaxConvexHullTricksAddDecreasingQueryDecreasing {
 private:
   class Line {
   public:
@@ -45,14 +45,14 @@ public:
   }
 
   inline void add(T a, T b) {
-    static T inf = numeric_limits<T>::min();
+    static T inf = numeric_limits<T>::max();
     if (empty()) {
       push(a, b, inf);
       return;
     }
     const auto &lastLine = lines.back();
     if (lastLine.a == a) {
-      if (b < lastLine.b) {
+      if (b > lastLine.b) {
         pop();
       } else {
         return;
@@ -62,7 +62,7 @@ public:
     while (!empty()) {
       const auto &line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
-      if (lines.size() == 1 || line.x < x) {
+      if (lines.size() == 1 || line.x > x) {
         break;
       }
       pop();
@@ -72,14 +72,14 @@ public:
 
   inline const Line &queryLine(T x) {
 
-    for (; head + 1 < tail && lines[head + 1].x < x; ++head) {
+    for (; head + 1 < tail && x <= lines[head + 1].x; ++head) {
     }
     return lines[head];
   }
 
   inline T query(T x) {
     if (lines.empty()) {
-      static T inf = numeric_limits<T>::max();
+      static T inf = numeric_limits<T>::min();
       return inf;
     }
     const auto &line = queryLine(x);
@@ -90,16 +90,16 @@ public:
 
   inline int size() const { return static_cast<int>(lines.size()); }
 
-  inline typename vector<Line>::iterator begin() {
-    return lines.begin() + head;
-  }
-  inline typename vector<Line>::iterator end() { return lines.end(); }
-  inline typename vector<Line>::reverse_iterator rbegin() {
+  inline typename vector<Line>::reverse_iterator begin() {
     return lines.rbegin();
   }
-  inline typename vector<Line>::reverse_iterator rend() {
+  inline typename vector<Line>::reverse_iterator end() {
     return lines.rend() - head;
   }
+  inline typename vector<Line>::iterator rbegin() {
+    return lines.begin() + head;
+  }
+  inline typename vector<Line>::iterator rend() { return lines.end(); }
 };
 
 } // namespace collections
