@@ -9,7 +9,8 @@
             "cppStandard": "gnu++14",
             "intelliSenseMode": "clang-x64",
             "includePath": [
-                "${workspaceRoot}/Template"
+                "${workspaceRoot}/Template",
+                "/private/var/tmp/_bazel_jialino/db3e31efb2747f53663d170465048e0e/external/gtest/googletest/include"
             ]
         }
     ],

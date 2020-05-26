@@ -119,3 +119,15 @@ function CPP-gen-run11 {
   CPP-gen $@
   CPP-run11 gen_$1 ${@:2}
 }
+
+#################
+# Example usage:
+#   > unittest
+#################
+function unittest {
+  local current_path=$(pwd)
+  trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
+  cd $ICPC_HOME/Template
+  bazel test //...
+  cd $current_path
+}

@@ -11,3 +11,8 @@ answer*
 
 setup/atom/*
 !setup/atom/snippets.cson
+
+Template/bazel-bin
+Template/bazel-out
+Template/bazel-Template
+Template/bazel-testlogs
