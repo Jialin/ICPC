@@ -10,4 +10,9 @@ TEST(ExpMod, test) {
   EXPECT_EQ(expMod(1463, 1397372724, 29478), 27031);
 }
 
+TEST(ExpMod, testMod1) {
+  EXPECT_EQ(expMod(1, 0, 1), 0);
+  EXPECT_EQ(expMod(2, 3, 1), 0);
+}
+
 } // namespace math

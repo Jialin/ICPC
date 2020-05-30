@@ -11,10 +11,17 @@ cc_library(
 )
 
 cc_library(
+    name = "exp_quick",
+    hdrs = ["exp_quick.h"],
+    deps = [
+        ":mul",
+    ],
+)
+
+cc_library(
     name = "exp",
     hdrs = ["exp.h"],
     deps = [
-        ":fix_inline",
         ":mul",
     ],
 )
@@ -23,6 +30,12 @@ cc_library(
     name = "fix_inline",
     hdrs = ["fix_inline.h"],
     deps = [":slight_fix_inline"],
+)
+
+cc_library(
+    name = "fix",
+    hdrs = ["fix.h"],
+    deps = [":fix_inline"],
 )
 
 cc_library(

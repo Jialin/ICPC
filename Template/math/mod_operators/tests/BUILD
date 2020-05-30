@@ -11,6 +11,16 @@ cc_test(
 )
 
 cc_test(
+    name = "exp_quick_test",
+    srcs = ["exp_quick_test.cpp"],
+    deps = [
+        "//math/mod_operators:exp_quick",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "exp_test",
     srcs = ["exp_test.cpp"],
     deps = [
@@ -25,6 +35,16 @@ cc_test(
     srcs = ["fix_inline_test.cpp"],
     deps = [
         "//math/mod_operators:fix_inline",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "fix_test",
+    srcs = ["fix_test.cpp"],
+    deps = [
+        "//math/mod_operators:fix",
         "@gtest",
         "@gtest//:gtest_main",
     ],

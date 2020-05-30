@@ -8,13 +8,14 @@
 namespace math {
 
 template <typename V = int32_t, typename EXP = int32_t, typename VV = int64_t>
-V expMod(V v, EXP exp, const V &mod) {
+V expMod(V base, EXP exp, const V &mod) {
   assert(exp >= 0);
-  fixModInline(v, mod);
+  fixModInline(base, mod);
   V res = 1;
-  for (; exp > 0; exp >>= 1, v = mulMod(v, v, mod)) {
+  fixModInline(res, mod);
+  for (; exp > 0; exp >>= 1, base = mulMod(base, base, mod)) {
     if (exp & 1) {
-      res = mulMod<V, VV>(res, v, mod);
+      res = mulMod<V, VV>(res, base, mod);
     }
   }
   return res;
