@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-INCLUDES = ["cassert", "cstdint", "cstdio", "cstring"]
+INCLUDES = ["cassert", "cctype", "cstdint", "cstdio", "cstring"]
 
 
 def default_includes():
