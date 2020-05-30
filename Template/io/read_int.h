@@ -1,3 +1,6 @@
+#include <cctype>
+#include <cstdio>
+
 namespace io {
 
 namespace {
