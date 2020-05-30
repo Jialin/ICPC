@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "add_test",
+    srcs = ["add_test.cpp"],
+    deps = [
+        "//math/mod_operators:add",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "exp_test",
     srcs = ["exp_test.cpp"],
     deps = [

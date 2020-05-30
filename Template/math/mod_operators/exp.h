@@ -14,7 +14,7 @@ V expMod(V v, EXP exp, const V &mod) {
   V res = 1;
   for (; exp > 0; exp >>= 1, v = mulMod(v, v, mod)) {
     if (exp & 1) {
-      res = mulMod(res, v, mod);
+      res = mulMod<V, VV>(res, v, mod);
     }
   }
   return res;
