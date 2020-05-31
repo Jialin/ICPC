@@ -73,9 +73,7 @@ public:
   }
 
   inline const Line& queryLine(T x) {
-
-    for (; head + 1 < tail && lines[tail - 1].x < x; --tail) {
-    }
+    for (; head + 1 < tail && lines[tail - 1].x < x; --tail) {}
     return lines[tail - 1];
   }
 

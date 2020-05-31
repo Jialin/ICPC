@@ -61,7 +61,9 @@ public:
 
   inline const Line& queryLine(T x) const {
     return *(
-        upper_bound(lines.begin(), lines.end(), x,
+        upper_bound(lines.begin(),
+                    lines.end(),
+                    x,
                     [](const T x_, const Line& line) { return x_ <= line.x; }) -
         1);
   }
