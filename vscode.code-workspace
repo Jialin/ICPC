@@ -6,9 +6,11 @@
 	],
 	"settings": {
 		"files.associations": {
-			"cstdint": "cpp"
+			"gencpp_*.cpp": "plaintext",
+			"cstdint": "cpp",
+			"cmath": "cpp",
+			"complex": "cpp"
 		},
-		"python.formatting.autopep8Path": "/opt/homebrew/bin/autopep8",
 		"python.linting.prospectorEnabled": true
 	},
 	"C_Cpp.default.forcedInclude": []
