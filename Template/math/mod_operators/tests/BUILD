@@ -51,6 +51,16 @@ cc_test(
 )
 
 cc_test(
+    name = "inv_test",
+    srcs = ["inv_test.cpp"],
+    deps = [
+        "//math/mod_operators:inv",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "mul_inline_test",
     srcs = ["mul_inline_test.cpp"],
     deps = [
@@ -75,6 +85,16 @@ cc_test(
     srcs = ["slight_fix_inline_test.cpp"],
     deps = [
         "//math/mod_operators:slight_fix_inline",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "sub_test",
+    srcs = ["sub_test.cpp"],
+    deps = [
+        "//math/mod_operators:sub",
         "@gtest",
         "@gtest//:gtest_main",
     ],

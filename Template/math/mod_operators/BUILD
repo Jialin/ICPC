@@ -39,6 +39,15 @@ cc_library(
 )
 
 cc_library(
+    name = "inv",
+    hdrs = ["inv.h"],
+    deps = [
+        ":slight_fix_inline",
+        "//math:ext_gcd",
+    ],
+)
+
+cc_library(
     name = "mul_inline",
     hdrs = ["mul_inline.h"],
     deps = [":fix_inline"],
@@ -53,4 +62,12 @@ cc_library(
 cc_library(
     name = "slight_fix_inline",
     hdrs = ["slight_fix_inline.h"],
+)
+
+cc_library(
+    name = "sub",
+    hdrs = ["sub.h"],
+    deps = [
+        ":fix_inline",
+    ],
 )
