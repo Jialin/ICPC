@@ -1,0 +1,103 @@
+#pragma once
+
+{{#fix.v}}
+#include "math/mod_operators/fix.h"
+{{/fix.v}}
+{{#add.v}}
+#include "math/mod_operators/add.h"
+{{/add.v}}
+{{#addi.v}}
+#include "math/mod_operators/add_inline.h"
+{{/addi.v}}
+{{#sub.v}}
+#include "math/mod_operators/sub.h"
+{{/sub.v}}
+{{#mul.v}}
+#include "math/mod_operators/mul.h"
+{{/mul.v}}
+{{#muli.v}}
+#include "math/mod_operators/mul_inline.h"
+{{/muli.v}}
+{{#exp.v}}
+#include "math/mod_operators/exp.h"
+{{/exp.v}}
+{{#inv.v}}
+#include "math/mod_operators/inv.h"
+{{/inv.v}}
+{{#div.v}}
+#include "math/mod_operators/inv.h"
+#include "math/mod_operators/mul.h"
+{{/div.v}}
+
+namespace math {
+
+template<typename V = int32_t, typename V_SQR = int64_t, typename V_DOUBLE = int32_t>
+class ModUtils {
+public:
+  inline ModUtils(const V& mod = 1000000007) {
+    init(mod);
+  }
+
+  inline void init(const V& mod) {
+    mod_ = mod;
+  }
+
+  {{#fix.v}}
+  inline V fix(const V& a) const {
+    return fixMod<V>(a, mod_);
+  }
+  {{/fix.v}}
+
+  {{#add.v}}
+  inline V add(const V& a, const V& b) const {
+    return addMod<V, V_DOUBLE>(a, b, mod_);
+  }
+  {{/add.v}}
+
+  {{#addi.v}}
+  inline V addInline(V& a, const V& b) const {
+    return addModInline<V, V_DOUBLE>(a, b, mod_);
+  }
+  {{/addi.v}}
+
+  {{#sub.v}}
+  inline V sub(const V& a, const V& b) const {
+    return subMod<V, V_DOUBLE>(a, b, mod_);
+  }
+  {{/sub.v}}
+
+  {{#mul.v}}
+  inline V mul(const V& a, const V& b) const {
+    return mulMod<V, V_SQR>(a, b, mod_);
+  }
+  {{/mul.v}}
+
+  {{#muli.v}}
+  inline V mulInline(const V& a, const V& b) const {
+    return mulModInline<V, V_SQR>(a, b, mod_);
+  }
+  {{/muli.v}}
+
+  {{#exp.v}}
+  inline V exp(const V& a, const V& b) const {
+    return expMod<V, V_SQR>(a, b, mod_);
+  }
+  {{/exp.v}}
+
+  {{#inv.v}}
+  inline V inv(const V& a) const {
+    return invMod<V>(a, mod_);
+  }
+  {{/inv.v}}
+
+  {{#div.v}}
+  inline V div(const V& a, const V& b) const {
+    return mulMod<V, V_SQR>(a, invMod<V>(b, mod_), mod_);
+  }
+  {{/div.v}}
+
+private:
+  V mod_;
+};
+
+} // namespace math
