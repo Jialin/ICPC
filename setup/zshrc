@@ -100,6 +100,7 @@ function CPP-run11 {
 ####################
 function CPP-gen {
   python3 $ICPC_HOME/setup/cpp_gen.py $@
+  return $?
 }
 
 ########################
@@ -108,7 +109,10 @@ function CPP-gen {
 ########################
 function CPP-gen-run {
   CPP-gen $@
-  CPP-run gen_$1 ${@:2}
+  if [ $? = 0 ]
+  then
+    CPP-run gencpp_$1 ${@:2}
+  fi
 }
 
 ##########################
@@ -117,7 +121,10 @@ function CPP-gen-run {
 ##########################
 function CPP-gen-run11 {
   CPP-gen $@
-  CPP-run11 gen_$1 ${@:2}
+  if [ $? = 0 ]
+  then
+    CPP-run11 gencpp_$1 ${@:2}
+  fi
 }
 
 #################
@@ -129,5 +136,17 @@ function unittest {
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
   bazel test //...
+  cd $current_path
+}
+
+##################
+# Example usage:
+#   > mustachegen
+##################
+function mustachegen {
+  local current_path=$(pwd)
+  trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
+  cd $ICPC_HOME/Template/mustache
+  python3 gen.py
   cd $current_path
 }
