@@ -1,20 +1,20 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "add_test",
-    srcs = ["add_test.cpp"],
+    name = "add_inline_test",
+    srcs = ["add_inline_test.cpp"],
     deps = [
-        "//math/mod_operators:add",
+        "//math/mod_operators:add_inline",
         "@gtest",
         "@gtest//:gtest_main",
     ],
 )
 
 cc_test(
-    name = "exp_quick_test",
-    srcs = ["exp_quick_test.cpp"],
+    name = "add_test",
+    srcs = ["add_test.cpp"],
     deps = [
-        "//math/mod_operators:exp_quick",
+        "//math/mod_operators:add",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -55,6 +55,16 @@ cc_test(
     srcs = ["inv_test.cpp"],
     deps = [
         "//math/mod_operators:inv",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "mod_exp_utils_test",
+    srcs = ["mod_exp_utils_test.cpp"],
+    deps = [
+        "//math/mod_operators:mod_exp_utils",
         "@gtest",
         "@gtest//:gtest_main",
     ],

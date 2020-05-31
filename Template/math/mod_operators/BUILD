@@ -3,18 +3,18 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "add",
-    hdrs = ["add.h"],
+    name = "add_inline",
+    hdrs = ["add_inline.h"],
     deps = [
         ":fix_inline",
     ],
 )
 
 cc_library(
-    name = "exp_quick",
-    hdrs = ["exp_quick.h"],
+    name = "add",
+    hdrs = ["add.h"],
     deps = [
-        ":mul_inline",
+        ":add_inline",
     ],
 )
 
@@ -44,6 +44,15 @@ cc_library(
     deps = [
         ":slight_fix_inline",
         "//math:ext_gcd",
+    ],
+)
+
+cc_library(
+    name = "mod_exp_utils",
+    hdrs = ["mod_exp_utils.h"],
+    deps = [
+        ":fix_inline",
+        ":mul_inline",
     ],
 )
 
