@@ -8,7 +8,7 @@ BinPackParameters: false
 BreakStringLiterals: true
 CompactNamespaces: true
 IndentWidth: 2
-KeepEmptyLinesAtTheStartOfBlocks: False
+KeepEmptyLinesAtTheStartOfBlocks: false
 PointerAlignment: Left
 SpaceAfterTemplateKeyword: false
 TabWidth: 4
