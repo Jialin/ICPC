@@ -11,7 +11,8 @@
 			"cmath": "cpp",
 			"complex": "cpp"
 		},
-		"python.linting.prospectorEnabled": true
+		"python.linting.prospectorEnabled": true,
+		"python.formatting.provider": "black"
 	},
 	"C_Cpp.default.forcedInclude": []
 }
