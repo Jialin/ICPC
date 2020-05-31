@@ -31,7 +31,7 @@ inline char nextChar(bool advance = true) {
 
 } // namespace
 
-template <typename T> void readInt(T &res) {
+template <typename T> inline void readInt(T &res) {
   for (; isspace(nextChar(false)); nextChar()) {
   }
   bool negative = nextChar(false) == '-';
