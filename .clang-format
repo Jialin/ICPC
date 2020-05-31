@@ -1,0 +1,15 @@
+AllowShortBlocksOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: Yes
+BasedOnStyle: LLVM
+BinPackArguments: false
+BinPackParameters: false
+BreakStringLiterals: true
+CompactNamespaces: true
+IndentWidth: 2
+KeepEmptyLinesAtTheStartOfBlocks: False
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
+TabWidth: 4
+UseTab: Never
