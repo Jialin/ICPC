@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-INCLUDES = ["cassert", "cctype", "cstdint", "cstdio", "cstring", "vector"]
+INCLUDES = ["cassert", "cctype", "cmath", "cstdint", "cstdio", "cstring", "vector"]
 
 
 def default_includes():
@@ -15,14 +15,31 @@ if len(sys.argv) < 2:
 file_name = sys.argv[1]
 if not file_name.endswith(".cpp"):
     print("Only support cpp file.")
-proc = subprocess.Popen(["g++", file_name, "-O2", "-std=c++14", "-I", os.path.join(os.environ["ICPC_HOME"], "Template"),
-                         "-E", "-nostdinc", "-nostdinc++", "-C"], stdout=subprocess.PIPE)
+    sys.exit(1)
+if not os.path.exists(file_name):
+    print("{} not found.".format(file_name))
+    sys.exit(1)
+proc = subprocess.Popen(
+    [
+        "g++",
+        file_name,
+        "-O2",
+        "-std=c++14",
+        "-I",
+        os.path.join(os.environ["ICPC_HOME"], "Template"),
+        "-E",
+        "-nostdinc",
+        "-nostdinc++",
+        "-C",
+    ],
+    stdout=subprocess.PIPE,
+)
 proc.wait()
 clean_lines = []
 for line in proc.stdout.read().split(b"\n"):
     if not line.startswith(b"#"):
         clean_lines.append(line.decode("utf-8"))
-gen_file_name = "gen_" + file_name
+gen_file_name = "gencpp_" + file_name
 file = open(gen_file_name, "w")
 file.write("\n".join(default_includes() + clean_lines))
 file.close()
