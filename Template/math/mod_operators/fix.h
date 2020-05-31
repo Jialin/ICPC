@@ -6,7 +6,7 @@ namespace math {
 
 template <typename V = int32_t> inline V fixMod(const V &v, const V &mod) {
   V res = v;
-  fixModInline(res, mod);
+  fixModInline<V>(res, mod);
   return res;
 }
 

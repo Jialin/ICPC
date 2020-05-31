@@ -14,7 +14,7 @@ cc_library(
     name = "exp_quick",
     hdrs = ["exp_quick.h"],
     deps = [
-        ":mul",
+        ":mul_inline",
     ],
 )
 
@@ -39,9 +39,15 @@ cc_library(
 )
 
 cc_library(
+    name = "mul_inline",
+    hdrs = ["mul_inline.h"],
+    deps = [":fix_inline"],
+)
+
+cc_library(
     name = "mul",
     hdrs = ["mul.h"],
-    deps = [":fix_inline"],
+    deps = [":mul_inline"],
 )
 
 cc_library(
