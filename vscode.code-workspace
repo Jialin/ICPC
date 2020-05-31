@@ -12,7 +12,8 @@
 			"complex": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
-		"python.formatting.provider": "black"
+		"python.formatting.provider": "black",
+		"files.trimTrailingWhitespace": true
 	},
 	"C_Cpp.default.forcedInclude": []
 }
