@@ -4,7 +4,8 @@ namespace collections {
 namespace {
 
 /** floor(num/den) */
-template <typename T> inline T floorDiv(T num, T den) {
+template<typename T>
+inline T floorDiv(T num, T den) {
   assert(den);
   T res = num / den;
   return (num ^ den) >= 0 ? res : res - static_cast<bool>(num % den);
@@ -12,7 +13,8 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MaxLiChaoTreeKnownQueries {
+template<typename T>
+class MaxLiChaoTreeKnownQueries {
 private:
   class Node {
   public:
@@ -34,7 +36,7 @@ private:
   vector<Node> nodes;
 
 public:
-  inline void init(const vector<T> &orderedUniqueQueries) {
+  inline void init(const vector<T>& orderedUniqueQueries) {
     this->queries = orderedUniqueQueries;
     n = static_cast<int>(orderedUniqueQueries.size());
     int capacity = 1 << (31 - __builtin_clz(n));
@@ -42,7 +44,9 @@ public:
     reset();
   }
 
-  inline void reset() { nodes.clear(); }
+  inline void reset() {
+    nodes.clear();
+  }
 
   inline void add(T a, T b) {
     if (nodes.empty()) {
@@ -51,7 +55,7 @@ public:
     }
     int idx = 0, lower = 0, upper = n;
     while (true) {
-      auto &node = nodes[idx];
+      auto& node = nodes[idx];
       if (node.a == a) {
         if (node.b < b) {
           node.b = b;
@@ -112,7 +116,7 @@ public:
     T x = queries[queryIdx];
     T res = nodes[0].a * x + nodes[0].b;
     for (int idx = 0, lower = 0, upper = n; idx >= 0;) {
-      const auto &node = nodes[idx];
+      const auto& node = nodes[idx];
       if (idx) {
         T subRes = node.a * x + node.b;
         if (res < subRes) {

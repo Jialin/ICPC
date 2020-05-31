@@ -4,7 +4,8 @@ namespace collections {
 namespace {
 
 /** floor(num/den) */
-template <typename T> inline T floorDiv(T num, T den) {
+template<typename T>
+inline T floorDiv(T num, T den) {
   assert(den);
   T res = num / den;
   return (num ^ den) >= 0 ? res : res - static_cast<bool>(num % den);
@@ -12,7 +13,8 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasingQueryIncreasing {
+template<typename T>
+class MinConvexHullTricksAddDecreasingQueryIncreasing {
 private:
   class Line {
   public:
@@ -50,7 +52,7 @@ public:
       push(a, b, inf);
       return;
     }
-    const auto &lastLine = lines.back();
+    const auto& lastLine = lines.back();
     if (lastLine.a == a) {
       if (b < lastLine.b) {
         pop();
@@ -60,7 +62,7 @@ public:
     }
     T x = inf;
     while (!empty()) {
-      const auto &line = lines.back();
+      const auto& line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
       if (lines.size() == 1 || line.x < x) {
         break;
@@ -70,7 +72,7 @@ public:
     push(a, b, x);
   }
 
-  inline const Line &queryLine(T x) {
+  inline const Line& queryLine(T x) {
 
     for (; head + 1 < tail && lines[head + 1].x < x; ++head) {
     }
@@ -82,18 +84,24 @@ public:
       static T inf = numeric_limits<T>::max();
       return inf;
     }
-    const auto &line = queryLine(x);
+    const auto& line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  inline bool empty() const { return head >= tail; }
+  inline bool empty() const {
+    return head >= tail;
+  }
 
-  inline int size() const { return static_cast<int>(lines.size()); }
+  inline int size() const {
+    return static_cast<int>(lines.size());
+  }
 
   inline typename vector<Line>::iterator begin() {
     return lines.begin() + head;
   }
-  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::iterator end() {
+    return lines.end();
+  }
   inline typename vector<Line>::reverse_iterator rbegin() {
     return lines.rbegin();
   }

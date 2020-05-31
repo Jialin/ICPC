@@ -3,11 +3,13 @@ namespace math {
 
 namespace {
 
-template <typename T> inline int sgn(T a, T b) {
+template<typename T>
+inline int sgn(T a, T b) {
   return a < b ? -1 : a == b ? 0 : 1;
 }
 
-template <typename UINT> inline bool isProductOverflow(UINT a, UINT b) {
+template<typename UINT>
+inline bool isProductOverflow(UINT a, UINT b) {
   if (!a || !b) {
     return false;
   }
@@ -15,8 +17,8 @@ template <typename UINT> inline bool isProductOverflow(UINT a, UINT b) {
   return a > maxUI / b;
 }
 
-template <typename UINT>
-inline void product(UINT a, UINT b, UINT &high, UINT &low) {
+template<typename UINT>
+inline void product(UINT a, UINT b, UINT& high, UINT& low) {
   static int halfL = numeric_limits<UINT>::digits >> 1;
   static UINT halfMask = numeric_limits<UINT>::max() >> halfL;
   UINT aHigh = a >> halfL, aLow = a & halfMask;
@@ -32,7 +34,7 @@ inline void product(UINT a, UINT b, UINT &high, UINT &low) {
 
 } // namespace
 
-template <typename UINT>
+template<typename UINT>
 inline int sgnProductUnsigned(UINT a, UINT b, UINT c, UINT d) {
   bool overflowAB = isProductOverflow(a, b);
   bool overflowCD = isProductOverflow(c, d);

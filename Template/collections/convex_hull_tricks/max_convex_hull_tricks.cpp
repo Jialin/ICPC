@@ -4,7 +4,8 @@ namespace collections {
 namespace {
 
 /** floor(num/den) */
-template <typename T> inline T floorDiv(T num, T den) {
+template<typename T>
+inline T floorDiv(T num, T den) {
   assert(den);
   T res = num / den;
   return (num ^ den) >= 0 ? res : res - static_cast<bool>(num % den);
@@ -12,7 +13,8 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MaxConvexHullTricks {
+template<typename T>
+class MaxConvexHullTricks {
 private:
   const static T kMinI64 = numeric_limits<T>::min();
   const static T kMaxI64 = numeric_limits<T>::max();
@@ -24,14 +26,18 @@ private:
 
     inline Line(T a_, T b_) : a(a_), b(b_) {}
 
-    inline bool operator<(const Line &o) const { return o.a > a; }
+    inline bool operator<(const Line& o) const {
+      return o.a > a;
+    }
 
-    inline bool operator<(T x_) const { return x < x_; }
+    inline bool operator<(T x_) const {
+      return x < x_;
+    }
   };
 
   using Iterator = typename multiset<Line, less<>>::iterator;
 
-  inline void update(const Iterator &x, const Iterator &y) {
+  inline void update(const Iterator& x, const Iterator& y) {
     if (y == lines.end()) {
       x->x = kMaxI64;
     } else if (x->a == y->a) {
@@ -41,12 +47,14 @@ private:
     }
   }
 
-  inline bool inOrder(const Iterator &x, const Iterator &y) const {
+  inline bool inOrder(const Iterator& x, const Iterator& y) const {
     return y == lines.end() || x->x < y->x;
   }
 
 public:
-  inline void init() { lines.clear(); }
+  inline void init() {
+    lines.clear();
+  }
 
   inline void add(T a, T b) {
     auto y = lines.emplace(a, b);
@@ -79,7 +87,9 @@ public:
     return l->a * x + l->b;
   }
 
-  inline int size() { return static_cast<int>(lines.size()); }
+  inline int size() {
+    return static_cast<int>(lines.size());
+  }
 
   multiset<Line, less<>> lines;
 };
