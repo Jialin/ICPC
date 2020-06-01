@@ -1,16 +1,6 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "add_inline_test",
-    srcs = ["add_inline_test.cpp"],
-    deps = [
-        "//math/mod:add_inline",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
     name = "add_test",
     srcs = ["add_test.cpp"],
     deps = [

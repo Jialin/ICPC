@@ -3,18 +3,10 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "add_inline",
-    hdrs = ["add_inline.h"],
-    deps = [
-        ":fix_inline",
-    ],
-)
-
-cc_library(
     name = "add",
     hdrs = ["add.h"],
     deps = [
-        ":add_inline",
+        ":fix_inline",
     ],
 )
 
