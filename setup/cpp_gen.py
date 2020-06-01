@@ -2,7 +2,17 @@ import os
 import subprocess
 import sys
 
-INCLUDES = ["cassert", "cctype", "cmath", "cstdint", "cstdio", "cstring", "vector"]
+INCLUDES = [
+    "algorithm",
+    "cassert",
+    "cctype",
+    "cmath",
+    "cstddef",
+    "cstdint",
+    "cstdio",
+    "cstring",
+    "vector",
+]
 
 
 def default_includes():
