@@ -6,3 +6,8 @@ cc_library(
     name = "ext_gcd",
     hdrs = ["ext_gcd.h"],
 )
+
+cc_library(
+    name = "gcd",
+    hdrs = ["gcd.h"],
+)

@@ -9,3 +9,13 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "gcd_test",
+    srcs = ["gcd_test.cpp"],
+    deps = [
+        "//math:gcd",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
