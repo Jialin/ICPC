@@ -13,7 +13,8 @@
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
-		"files.trimTrailingWhitespace": true
+		"files.trimTrailingWhitespace": true,
+		"editor.scrollBeyondLastLine": false
 	},
 	"C_Cpp.default.forcedInclude": []
 }
