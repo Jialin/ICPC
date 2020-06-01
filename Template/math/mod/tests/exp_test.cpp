@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod_operators/exp.h"
+#include "math/mod/exp.h"
 
 namespace math {
 

@@ -1,10 +1,10 @@
 // @autogen
 #pragma once
 
-#include "math/mod_operators/add.h"
-#include "math/mod_operators/fix.h"
-#include "math/mod_operators/mul.h"
-#include "math/mod_operators/sub.h"
+#include "math/mod/add.h"
+#include "math/mod/fix.h"
+#include "math/mod/mul.h"
+#include "math/mod/sub.h"
 
 namespace math {
 

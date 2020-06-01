@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "math/mod_operators/mod_exp_utils.h"
+#include "math/mod/mod_exp_utils.h"
 
 using namespace std;
 

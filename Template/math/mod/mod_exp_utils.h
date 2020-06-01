@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "math/mod_operators/fix_inline.h"
-#include "math/mod_operators/mul_inline.h"
+#include "math/mod/fix_inline.h"
+#include "math/mod/mul_inline.h"
 
 using namespace std;
 

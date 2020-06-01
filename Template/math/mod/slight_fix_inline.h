@@ -4,8 +4,8 @@
 
 namespace math {
 
-template <typename V = int32_t>
-inline void slightFixModInline(V &v, const V &mod) {
+template<typename V = int32_t>
+inline void slightFixModInline(V& v, const V& mod) {
   if (v < 0) {
     v += mod;
   }

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod_operators/mul_inline.h"
+#include "math/mod/mul_inline.h"
 
 namespace math {
 

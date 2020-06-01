@@ -10,7 +10,7 @@ class ModUtilMustache(AbstractMustache):
 
     def outputFile(self):
         return (
-            "math/mod_operators/mod_utils"
+            "math/mod/mod_utils"
             "{{#fix.v}}_fix{{/fix.v}}"
             "{{#add.v}}_add{{/add.v}}"
             "{{#addi.v}}_addi{{/addi.v}}"

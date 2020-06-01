@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/mod_operators/add_inline.h"
+#include "math/mod/add_inline.h"
 
 namespace math {
 
