@@ -7,10 +7,6 @@
 	"settings": {
 		"files.associations": {
 			"gencpp_*.cpp": "plaintext",
-			"cstdint": "cpp",
-			"cmath": "cpp",
-			"complex": "cpp",
-			"tuple": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
