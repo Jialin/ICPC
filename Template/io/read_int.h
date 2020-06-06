@@ -31,19 +31,37 @@ inline char nextChar(bool advance = true) {
 
 } // namespace
 
-template <typename T> inline void readInt(T &res) {
-  for (; isspace(nextChar(false)); nextChar()) {
+template<typename T>
+inline bool readInt(T& res) {
+  char ch;
+  while (true) {
+    ch = nextChar(false);
+    if (!ch) {
+      return false;
+    }
+    if (!isspace(ch)) {
+      break;
+    }
+    ++pos;
   }
-  bool negative = nextChar(false) == '-';
+  ch = nextChar(false);
+  bool negative = ch == '-';
   if (negative) {
-    nextChar();
+    ++pos;
   }
   res = 0;
-  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {
+  while (true) {
+    ch = nextChar(false);
+    if (!isdigit(ch)) {
+      break;
+    }
+    res = res * 10 + (ch - '0');
+    ++pos;
   }
   if (negative) {
     res = -res;
   }
+  return true;
 }
 
 } // namespace io
