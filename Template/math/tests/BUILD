@@ -19,3 +19,13 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "linear_diophantine_test",
+    srcs = ["linear_diophantine_test.cpp"],
+    deps = [
+        "//math:linear_diophantine",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

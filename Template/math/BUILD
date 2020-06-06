@@ -11,3 +11,11 @@ cc_library(
     name = "gcd",
     hdrs = ["gcd.h"],
 )
+
+cc_library(
+    name = "linear_diophantine",
+    hdrs = ["linear_diophantine.h"],
+    deps = [
+        ":ext_gcd",
+    ],
+)
