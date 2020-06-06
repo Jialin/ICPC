@@ -4,8 +4,10 @@ using namespace std;
 
 namespace math {
 
-// ax+by=gcd(a, b) and the return x, y satisfy:
-//   abs(x)+abs(y) is minimum, if multiple minimums, x <= y
+// ax+by=gcd(a, b) and the return
+// - value is non-negative
+// - x, y satisfy:
+//   - abs(x)+abs(y) is minimum, if multiple minimum solutions, x <= y
 template<typename V = int32_t>
 inline V extGcd(V a, V b, V& x, V& y) {
   bool negativeA = false;
