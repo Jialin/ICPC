@@ -1,3 +1,4 @@
+AlignAfterOpenBracket: AlwaysBreak
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
@@ -11,6 +12,7 @@ CompactNamespaces: true
 IndentWidth: 2
 KeepEmptyLinesAtTheStartOfBlocks: false
 PointerAlignment: Left
+SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
 TabWidth: 4
 UseTab: Never
