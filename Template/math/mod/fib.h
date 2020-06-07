@@ -2,6 +2,11 @@
 
 #include <utility>
 
+#include "math/mod/add.h"
+#include "math/mod/mul.h"
+#include "math/mod/slight_fix.h"
+#include "math/mod/sub.h"
+
 using namespace std;
 
 namespace math {
@@ -9,18 +14,25 @@ namespace math {
 // Computes {F(n), F(n+1)}, using
 //   F(2k)=F(k)(2F(k+1)-F(k))
 //   F(2k+1)=F(k+1)^2+F(k)^2
-template<typename V = int, IDX = int, V_DOUBLE = int, V_SQR = long long>
+template<
+    typename V = int,
+    typename IDX = int,
+    typename V_DOUBLE = int,
+    typename V_SQR = long long>
 inline pair<V, V> fib(IDX n, const V& mod) {
   if (!n) {
-    return {0, fix(1, mod)};
+    return {0, slightFixMod<V>(1, mod)};
   }
-  tie(a, b) = fib(n >> 1);
-
-  slightFixModInline<V>(v, mod);
-  if (v < 0 || mod <= v) {
-    assert(mod);
-    v %= mod;
-    slightFixModInline<V>(v, mod);
+  V a, b;
+  tie(a, b) = fib<V, IDX, V_DOUBLE, V_SQR>(n >> 1, mod);
+  V c = mulMod<V, V_SQR>(
+      a, subMod<V, V_DOUBLE>(addMod<V, V_DOUBLE>(b, b, mod), a, mod), mod);
+  V d = addMod<V, V_DOUBLE>(
+      mulMod<V, V_SQR>(a, a, mod), mulMod<V, V_SQR>(b, b, mod), mod);
+  if (n & 1) {
+    return {d, addMod<V, V_DOUBLE>(c, d, mod)};
+  } else {
+    return {c, d};
   }
 }
 

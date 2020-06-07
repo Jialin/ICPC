@@ -14,7 +14,19 @@ cc_library(
     name = "exp",
     hdrs = ["exp.h"],
     deps = [
+        ":fix_inline",
+        ":mul_inline",
+    ],
+)
+
+cc_library(
+    name = "fib",
+    hdrs = ["fib.h"],
+    deps = [
+        ":add",
         ":mul",
+        ":slight_fix",
+        ":sub",
     ],
 )
 
