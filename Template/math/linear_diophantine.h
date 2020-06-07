@@ -50,13 +50,11 @@ inline long long linearDiophantineSolutionCount(
     return 0;
   }
   if (negativeA) {
-    x = -x;
     swap(xmin, xmax);
     xmin = -xmin;
     xmax = -xmax;
   }
   if (negativeB) {
-    y = -y;
     swap(ymin, ymax);
     ymin = -ymin;
     ymax = -ymax;
@@ -69,7 +67,6 @@ inline long long linearDiophantineSolutionCount(
     x += delta * dx;
     y -= delta * dy;
   };
-  // shift X to minimum value in the range
   if (x < xmin) {
     shift((xmin - x + dx - 1) / dx);
   } else {
