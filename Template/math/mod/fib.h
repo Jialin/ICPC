@@ -19,7 +19,7 @@ template<
     typename IDX = int,
     typename V_DOUBLE = int,
     typename V_SQR = long long>
-inline pair<V, V> fib(IDX n, const V& mod) {
+inline pair<V, V> fib(IDX n, const V& mod = 1000000007) {
   if (!n) {
     return {0, slightFixMod<V>(1, mod)};
   }

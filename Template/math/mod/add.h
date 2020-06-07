@@ -5,7 +5,7 @@
 namespace math {
 
 template<typename V = int32_t, typename V_DOUBLE = int32_t>
-inline V addMod(const V& a, V b, const V& mod) {
+inline V addMod(const V& a, V b, const V& mod = 1000000007) {
   V_DOUBLE res = a;
   fixModInline<V_DOUBLE>(res, mod);
   fixModInline<V>(b, mod);
