@@ -10,6 +10,7 @@ INCLUDES = [
     "cstddef",
     "cstdint",
     "cstdio",
+    "iostream",
     "cstring",
     "tuple",
     "vector",
@@ -47,9 +48,15 @@ proc = subprocess.Popen(
 )
 proc.wait()
 clean_lines = []
+using_std = False
 for line in proc.stdout.read().split(b"\n"):
     if not line.startswith(b"#"):
-        clean_lines.append(line.decode("utf-8"))
+        utf8_line = line.decode("utf-8")
+        if utf8_line == "using namespace std;":
+            if using_std:
+                continue
+            using_std = True
+        clean_lines.append(utf8_line)
 gen_file_name = "gencpp_" + file_name
 file = open(gen_file_name, "w")
 file.write("\n".join(default_includes() + clean_lines))
