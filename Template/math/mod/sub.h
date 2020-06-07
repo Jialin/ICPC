@@ -4,13 +4,13 @@
 
 namespace math {
 
-template<typename V = int32_t, typename V_DOUBLE = int32_t>
+template<typename V = int>
 inline V subMod(const V& a, V b, const V& mod) {
-  V_DOUBLE res = a;
-  fixModInline<V_DOUBLE>(res, mod);
+  V res = a;
+  fixModInline<V>(res, mod);
   fixModInline<V>(b, mod);
   res -= b;
-  slightFixModInline<V_DOUBLE>(res, mod);
+  slightFixModInline<V>(res, mod);
   return res;
 }
 

@@ -13,7 +13,7 @@ TEST(AddMod, test) {
 }
 
 TEST(AddMod, testOverflow) {
-  int32_t res = addMod<int32_t, int64_t>(2147483647, 2147483647, 1000000007);
+  long long res = addMod<long long>(2147483647, 2147483647, 1000000007);
   EXPECT_EQ(res, 294967266);
 }
 

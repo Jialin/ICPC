@@ -12,9 +12,8 @@ namespace math {
 template<typename V = int32_t, typename V_SQR = int64_t>
 class ModExpUtils {
 public:
-  inline ModExpUtils(const V& base = 2,
-                     const V& mod = 1000000007,
-                     const int& capacity = -1) {
+  inline ModExpUtils(
+      const V& base = 2, const V& mod = 1000000007, const int& capacity = -1) {
     init(base, mod, capacity);
   }
 
