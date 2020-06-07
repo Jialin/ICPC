@@ -7,6 +7,8 @@
 	"settings": {
 		"files.associations": {
 			"gencpp_*.cpp": "plaintext",
+			"unordered_map": "cpp",
+			"unordered_set": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
