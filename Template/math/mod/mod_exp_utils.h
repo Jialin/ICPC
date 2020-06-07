@@ -29,18 +29,19 @@ public:
   }
 
   template<typename EXP = int32_t>
-  inline V exp(EXP exp) {
-    assert(exp >= 0);
+  inline V exp(EXP e) {
+    assert(e >= 0);
     V res = 1;
     fixModInline(res, mod_);
-    for (size_t i = 0; exp > 0; exp >>= 1, ++i) {
-      if (exp & 1) {
-        while (i >= pows_.size()) {
-          pows_.emplace_back(pows_.back());
-          mulModInline<V, V_SQR>(pows_.back(), pows_.back(), mod_);
-        }
-        mulModInline<V, V_SQR>(res, pows_[i], mod_);
+    for (size_t i = 0; e > 0; e >>= 1, ++i) {
+      if (!(e & 1)) {
+        continue;
       }
+      while (i >= pows_.size()) {
+        pows_.emplace_back(pows_.back());
+        mulModInline<V, V_SQR>(pows_.back(), pows_.back(), mod_);
+      }
+      mulModInline<V, V_SQR>(res, pows_[i], mod_);
     }
     return res;
   }
