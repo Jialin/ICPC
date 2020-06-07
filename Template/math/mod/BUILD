@@ -66,6 +66,11 @@ cc_library(
 )
 
 cc_library(
+    name = "slight_fix",
+    hdrs = ["slight_fix.h"],
+)
+
+cc_library(
     name = "sub",
     hdrs = ["sub.h"],
     deps = [

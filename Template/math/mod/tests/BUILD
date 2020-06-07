@@ -91,6 +91,16 @@ cc_test(
 )
 
 cc_test(
+    name = "slight_fix_test",
+    srcs = ["slight_fix_test.cpp"],
+    deps = [
+        "//math/mod:slight_fix",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "sub_test",
     srcs = ["sub_test.cpp"],
     deps = [
