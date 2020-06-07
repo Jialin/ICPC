@@ -20,6 +20,15 @@ cc_library(
 )
 
 cc_library(
+    name = "fib_utils",
+    hdrs = ["fib_utils.h"],
+    deps = [
+        "//math/matrix:matrix_mod_exp_utils",
+        "//math/mod:add",
+    ],
+)
+
+cc_library(
     name = "fib",
     hdrs = ["fib.h"],
     deps = [

@@ -31,6 +31,16 @@ cc_test(
 )
 
 cc_test(
+    name = "fib_utils_test",
+    srcs = ["fib_utils_test.cpp"],
+    deps = [
+        "//math/mod:fib_utils",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "fix_inline_test",
     srcs = ["fix_inline_test.cpp"],
     deps = [
