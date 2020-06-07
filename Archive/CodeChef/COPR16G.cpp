@@ -10,13 +10,19 @@
 #include <vector>
 
 #include "io/read_int.h"
-#include "io/write_char_array.h"
 #include "io/write_int.h"
 #include "math/gcd.h"
 
 using namespace std;
 
-int a, b, c;
+int a, b;
+
+inline long long calc() {
+  if (math::gcd(a, b) != 1) {
+    return -1;
+  }
+  return static_cast<long long>(a) * b - a - b + 1;
+}
 
 int main() {
   int taskNumber;
@@ -24,11 +30,7 @@ int main() {
   for (int taskIdx = 1; taskIdx <= taskNumber; ++taskIdx) {
     io::readInt(a);
     io::readInt(b);
-    io::readInt(c);
-    io::writeCharArray("Case ");
-    io::writeInt(taskIdx);
-    io::writeCharArray(": ");
-    io::writeCharArray(c % math::gcd(a, b) ? "No" : "Yes");
+    io::writeInt(calc());
     io::writeChar('\n');
   }
   return 0;
