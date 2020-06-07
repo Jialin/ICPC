@@ -4,9 +4,9 @@
 
 namespace math {
 
-template<typename V = int32_t, typename VV = int64_t>
+template<typename V = int32_t, typename V_SQR = int64_t>
 inline V mulMod(V a, const V& b, const V& mod) {
-  mulModInline<V, VV>(a, b, mod);
+  mulModInline<V, V_SQR>(a, b, mod);
   return a;
 }
 

@@ -4,7 +4,7 @@
 
 namespace math {
 
-template<typename V = int32_t, typename VV = int64_t>
+template<typename V = int32_t, typename V_SQR = int64_t>
 inline void mulModInline(V& res, V x, const V& mod) {
   fixModInline<V>(res, mod);
   fixModInline<V>(x, mod);
@@ -13,7 +13,7 @@ inline void mulModInline(V& res, V x, const V& mod) {
   } else if (res < mod / x) {
     res *= x;
   } else {
-    res = static_cast<VV>(res) * x % mod;
+    res = static_cast<V_SQR>(res) * x % mod;
   }
 }
 
