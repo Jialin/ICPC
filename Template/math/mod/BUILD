@@ -20,26 +20,6 @@ cc_library(
 )
 
 cc_library(
-    name = "fib_utils",
-    hdrs = ["fib_utils.h"],
-    deps = [
-        "//math/matrix:matrix_mod_exp_utils",
-        "//math/mod:add",
-    ],
-)
-
-cc_library(
-    name = "fib",
-    hdrs = ["fib.h"],
-    deps = [
-        ":add",
-        ":mul",
-        ":slight_fix",
-        ":sub",
-    ],
-)
-
-cc_library(
     name = "fix_inline",
     hdrs = ["fix_inline.h"],
     deps = [":slight_fix_inline"],

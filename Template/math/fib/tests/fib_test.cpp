@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod/fib.h"
+#include "math/fib/fib.h"
 
 namespace math {
 
