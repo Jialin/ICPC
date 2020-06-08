@@ -23,6 +23,18 @@ TEST(FibUtils, testMod1) {
   EXPECT_EQ(fibUtils.exp(2), 0);
 }
 
+TEST(FibUtils, testMod5) {
+  FibUtils<> fibUtils(5);
+  EXPECT_EQ(fibUtils.exp(0), 0);
+  EXPECT_EQ(fibUtils.exp(1), 1);
+  EXPECT_EQ(fibUtils.exp(2), 1);
+  EXPECT_EQ(fibUtils.exp(3), 2);
+  EXPECT_EQ(fibUtils.exp(4), 3);
+  EXPECT_EQ(fibUtils.exp(5), 0);
+  EXPECT_EQ(fibUtils.exp(6), 3);
+  EXPECT_EQ(fibUtils.exp(7), 3);
+}
+
 TEST(FibUtils, testBig) {
   FibUtils<> fibUtils;
   EXPECT_EQ(fibUtils.exp(30), 832040);
