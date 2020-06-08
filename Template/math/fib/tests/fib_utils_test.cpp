@@ -5,7 +5,7 @@
 namespace math {
 
 TEST(FibUtils, testSmall) {
-  FibUtils<> fibUtils;
+  FibUtils<> fibUtils(1000000007);
   EXPECT_EQ(fibUtils.exp(0), 0);
   EXPECT_EQ(fibUtils.exp(1), 1);
   EXPECT_EQ(fibUtils.exp(2), 1);
@@ -36,7 +36,7 @@ TEST(FibUtils, testMod5) {
 }
 
 TEST(FibUtils, testBig) {
-  FibUtils<> fibUtils;
+  FibUtils<> fibUtils(1000000007);
   EXPECT_EQ(fibUtils.exp(30), 832040);
   EXPECT_EQ(fibUtils.exp(31), 1346269);
   EXPECT_EQ(fibUtils.exp(44), 701408733);

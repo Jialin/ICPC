@@ -15,7 +15,7 @@ namespace math {
 //   F(2k)=F(k)(2F(k+1)-F(k))
 //   F(2k+1)=F(k+1)^2+F(k)^2
 template<typename V = int, typename IDX = int, typename V_SQR = long long>
-inline pair<V, V> fib(IDX n, const V& mod = 1000000007) {
+inline pair<V, V> fib(IDX n, const V& mod) {
   if (!n) {
     return {0, slightFixMod<V>(1, mod)};
   }

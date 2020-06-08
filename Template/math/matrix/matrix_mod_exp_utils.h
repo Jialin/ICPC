@@ -17,16 +17,12 @@ public:
   inline MatrixModExpUtils() {}
 
   inline MatrixModExpUtils(
-      const Matrix<V>& base,
-      const V& mod = 1000000007,
-      const int& capacity = -1) {
+      const Matrix<V>& base, const V& mod, const int& capacity = -1) {
     init(base, mod, capacity);
   }
 
-  inline void init(
-      const Matrix<V>& base,
-      const V& mod = 1000000007,
-      const int& capacity = -1) {
+  inline void
+  init(const Matrix<V>& base, const V& mod, const int& capacity = -1) {
     assert(base.n() == base.m());
     n_ = base.n();
     mod_ = mod;

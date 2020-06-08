@@ -10,7 +10,7 @@ TEST(MatrixModExpUtils, testFib) {
   base.at(0, 1) = 1;
   base.at(1, 0) = 1;
   base.at(1, 1) = 1;
-  MatrixModExpUtils<> expUtils(base);
+  MatrixModExpUtils<> expUtils(base, 1000000007);
   Matrix<> res;
 
   expUtils.exp(res, 0);

@@ -7,7 +7,7 @@ namespace math {
 template<typename V = int, typename V_SQR = long long>
 class FibUtils {
 public:
-  inline FibUtils(const V& mod = 1000000007, int capacity = -1) {
+  inline FibUtils(const V& mod, int capacity = -1) {
     mod_ = mod;
     Matrix<V> base(2, 2);
     base.at(0, 1) = 1;
