@@ -8,12 +8,13 @@
 
 namespace math {
 
-template<typename V = int32_t,
-         typename V_SQR = int64_t,
-         typename V_DOUBLE = int32_t>
+template<
+    typename V = int32_t,
+    typename V_SQR = int64_t,
+    typename V_DOUBLE = int32_t>
 class ModUtils {
 public:
-  inline ModUtils(const V& mod = 1000000007) {
+  inline ModUtils(const V& mod) {
     init(mod);
   }
 

@@ -12,13 +12,11 @@ namespace math {
 template<typename V = int32_t, typename V_SQR = int64_t>
 class ModExpUtils {
 public:
-  inline ModExpUtils(
-      const V& base = 2, const V& mod = 1000000007, const int& capacity = -1) {
+  inline ModExpUtils(const V& base, const V& mod, const int& capacity = -1) {
     init(base, mod, capacity);
   }
 
-  inline void
-  init(const V& base, const V& mod = 1000000007, const int& capacity = -1) {
+  inline void init(const V& base, const V& mod, const int& capacity = -1) {
     mod_ = mod;
     pows_.clear();
     if (capacity > 0) {
