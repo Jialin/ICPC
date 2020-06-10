@@ -68,6 +68,14 @@ file = open(gen_file_name, "w")
 file.write("\n".join(default_includes() + clean_lines))
 file.close()
 subprocess.Popen(["clang-format", "-i", gen_file_name])
-print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-print("! " + gen_file_name + " is generated.")
-print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+with open(gen_file_name, "r") as input_file:
+    subprocess.Popen(["pbcopy"], stdin=input_file)
+print(
+    """
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! {} is generated and copied to clipboard
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+""".format(
+        gen_file_name
+    )
+)
