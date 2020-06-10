@@ -4,6 +4,7 @@ import sys
 
 INCLUDES = [
     "algorithm",
+    "bitset",
     "cassert",
     "cctype",
     "cmath",
@@ -67,9 +68,9 @@ gen_file_name = "gencpp_" + file_name
 file = open(gen_file_name, "w")
 file.write("\n".join(default_includes() + clean_lines))
 file.close()
-subprocess.Popen(["clang-format", "-i", gen_file_name])
+subprocess.Popen(["clang-format", "-i", gen_file_name]).wait()
 with open(gen_file_name, "r") as input_file:
-    subprocess.Popen(["pbcopy"], stdin=input_file)
+    subprocess.Popen(["pbcopy"], stdin=input_file).wait()
 print(
     """
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
