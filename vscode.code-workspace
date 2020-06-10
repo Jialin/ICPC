@@ -16,7 +16,11 @@
 			"list": "cpp",
 			"string": "cpp",
 			"system_error": "cpp",
-			"bitset": "cpp"
+			"bitset": "cpp",
+			"array": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp",
+			"utility": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
