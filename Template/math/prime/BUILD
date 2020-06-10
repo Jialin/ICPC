@@ -8,9 +8,6 @@ cc_library(
 )
 
 cc_library(
-    name = "mark_primes",
-    hdrs = ["mark_primes.h"],
-    deps = [
-        "//collections:bitset",
-    ],
+    name = "prime_checker",
+    hdrs = ["prime_checker.h"],
 )

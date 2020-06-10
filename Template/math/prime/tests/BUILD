@@ -11,10 +11,10 @@ cc_test(
 )
 
 cc_test(
-    name = "mark_primes_test",
-    srcs = ["mark_primes_test.cpp"],
+    name = "prime_checker_test",
+    srcs = ["prime_checker_test.cpp"],
     deps = [
-        "//math/prime:mark_primes",
+        "//math/prime:prime_checker",
         "@gtest",
         "@gtest//:gtest_main",
     ],
