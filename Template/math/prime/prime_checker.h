@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cmath>
+#include <vector>
+
 using namespace std;
 
 namespace math {
@@ -11,23 +14,25 @@ public:
   }
 
   inline void init(int n) {
-    isPrime_.assign(n + 1, true);
-    for (int i = 3; i <= n / i; i += 2) {
-      if (!isPrime_[i]) {
+    int size = (n + 1) >> 1;
+    isPrime_.assign(size, true);
+    isPrime_[0] = false;
+    int bound = static_cast<int>(sqrt(n) + 1);
+    for (int i = 3; i <= bound; i += 2) {
+      if (!isPrime_[i >> 1]) {
         continue;
       }
-      int ii = i << 1;
-      for (int j = i * i; j <= n; j += ii) {
+      for (int j = (i * i) >> 1; j < size; j += i) {
         isPrime_[j] = false;
       }
     }
   }
 
-  inline bool check(int x) {
+  inline bool isPrime(int x) {
     if (x == 2) {
       return true;
     }
-    return x > 2 && (x & 1) && isPrime_[x];
+    return (x & 1) && isPrime_[x >> 1];
   }
 
 private:
