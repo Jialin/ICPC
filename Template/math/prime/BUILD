@@ -8,6 +8,21 @@ cc_library(
 )
 
 cc_library(
+    name = "prime_checker_blast",
+    hdrs = ["prime_checker_blast.h"],
+)
+
+cc_library(
+    name = "prime_checker_quick",
+    hdrs = ["prime_checker_quick.h"],
+)
+
+cc_library(
     name = "prime_checker",
     hdrs = ["prime_checker.h"],
+)
+
+cc_library(
+    name = "prime_gen_blast",
+    hdrs = ["prime_gen_blast.h"],
 )
