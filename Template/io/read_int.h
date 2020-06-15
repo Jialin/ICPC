@@ -28,7 +28,7 @@ inline bool readInt(T& res) {
     if (!isdigit(ch)) {
       break;
     }
-    res = res * 10 + (ch - '0');
+    res = (res << 3) + (res << 1) + (ch & 15);
     ++readPos;
   }
   if (negative) {
