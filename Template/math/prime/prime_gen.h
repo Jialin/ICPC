@@ -24,10 +24,9 @@ public:
   for(m=sieve+(30*n+E)*n+S;m<e;m+=i0){*m|=1<<v0;*(m+=i1)|=1<<v1;*(m+=i2)|=1<<v2;*(m+=i3)|=1<<v3;*(m+=i4)|=1<<v4;*(m+=i5)|=1<<v5;*(m+=i6)|=1<<v6;*(m+=i7)|=1<<v7;}\
   if(m<eos){*m|=1<<v0;if((m+=i1)<eos){*m|=1<<v1;if((m+=i2)<eos){*m|=1<<v2;if((m+=i3)<eos){*m|=1<<v3;if((m+=i4)<eos){*m|=1<<v4;if((m+=i5)<eos){*m|=1<<v5;if((m+=i6)<eos)*m|=1<<v6;}}}}}}}
 
-  inline void init(int n_,int cap=-1) {
-    int bytes=n_/30+1;
+  inline void init(int n_,int cap=-1){
+    int bytes=n_/30+1,p,q,r,k=0,n,s;
     sieve_.assign(bytes,0);
-    int p,q,r,k=0,n,s;
     char*m,*e,*eos,*sieve=sieve_.data();
     if(bytes>30)for(k=r=(bytes-1)/30;(q=r/k)<k;k>>=1)k+=q;
     eos=sieve+bytes;s=k+1;*sieve=1;
@@ -48,18 +47,13 @@ public:
     primes.push_back(5);
     int base=0;
     for(char sieveV:sieve_){
-      for(int idx=0;idx<8;++idx){
-        if (!(sieveV&(1<<idx))){
-          int prime=base+PRIME_BITS[idx];
-          if (prime<=n_) {
-            primes.push_back(prime);
-          }
-        }
+      for(int idx=0;idx<8;++idx)if(!(sieveV&(1<<idx))){
+        int prime=base+PRIME_BITS[idx];
+        if(prime<=n_)primes.push_back(prime);
       }
       base+=30;
     }
   }
-
   vector<int> primes;
 private:
   vector<char> sieve_;
