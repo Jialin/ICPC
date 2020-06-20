@@ -3,8 +3,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "gen_primes",
-    hdrs = ["gen_primes.h"],
+    name = "min_prime_tagger",
+    hdrs = ["min_prime_tagger.h"],
 )
 
 cc_library(

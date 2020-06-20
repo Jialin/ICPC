@@ -1,10 +1,10 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "gen_primes_test",
-    srcs = ["gen_primes_test.cpp"],
+    name = "gen_primemin_prime_tagger_test",
+    srcs = ["min_prime_tagger_test.cpp"],
     deps = [
-        "//math/prime:gen_primes",
+        "//math/prime:min_prime_tagger",
         "@gtest",
         "@gtest//:gtest_main",
     ],
