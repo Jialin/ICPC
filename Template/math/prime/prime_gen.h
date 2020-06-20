@@ -47,9 +47,9 @@ public:
     primes.push_back(3);
     primes.push_back(5);
     int base=0;
-    for(char sieve:sieve_){
+    for(char sieveV:sieve_){
       for(int idx=0;idx<8;++idx){
-        if (!(sieve&(1<<idx))){
+        if (!(sieveV&(1<<idx))){
           int prime=base+PRIME_BITS[idx];
           if (prime<=n_) {
             primes.push_back(prime);

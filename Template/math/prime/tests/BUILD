@@ -11,20 +11,20 @@ cc_test(
 )
 
 cc_test(
-    name = "prime_checker_blast_test",
-    srcs = ["prime_checker_blast_test.cpp"],
+    name = "prime_checker_quick_test",
+    srcs = ["prime_checker_quick_test.cpp"],
     deps = [
-        "//math/prime:prime_checker_blast",
+        "//math/prime:prime_checker_quick",
         "@gtest",
         "@gtest//:gtest_main",
     ],
 )
 
 cc_test(
-    name = "prime_checker_quick_test",
-    srcs = ["prime_checker_quick_test.cpp"],
+    name = "prime_checker_slow_test",
+    srcs = ["prime_checker_slow_test.cpp"],
     deps = [
-        "//math/prime:prime_checker_quick",
+        "//math/prime:prime_checker_slow",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -41,10 +41,10 @@ cc_test(
 )
 
 cc_test(
-    name = "prime_gen_blast_test",
-    srcs = ["prime_gen_blast_test.cpp"],
+    name = "prime_gen_test",
+    srcs = ["prime_gen_test.cpp"],
     deps = [
-        "//math/prime:prime_gen_blast",
+        "//math/prime:prime_gen",
         "@gtest",
         "@gtest//:gtest_main",
     ],

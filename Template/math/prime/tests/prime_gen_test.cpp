@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/prime/prime_gen_blast.h"
+#include "math/prime/prime_gen.h"
 
 namespace math {
 
