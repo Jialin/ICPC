@@ -127,6 +127,14 @@ function CPP-gen-run11 {
   fi
 }
 
+########################
+# Example usage:
+#   > cpp-compact A.cpp
+########################
+function cpp-compact {
+  python3 $ICPC_HOME/setup/cpp_compact.py $@
+}
+
 #################
 # Example usage:
 #   > unittest
