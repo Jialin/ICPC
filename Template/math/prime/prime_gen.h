@@ -60,4 +60,4 @@ private:
 };
 
 } // namespace math
-// clang-format off
+// clang-format on
