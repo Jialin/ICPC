@@ -49,3 +49,13 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "segmented_prime_checker_test",
+    srcs = ["segmented_prime_checker_test.cpp"],
+    deps = [
+        "//math/prime:segmented_prime_checker",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

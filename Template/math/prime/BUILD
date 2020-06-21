@@ -26,3 +26,8 @@ cc_library(
     name = "prime_gen",
     hdrs = ["prime_gen.h"],
 )
+
+cc_library(
+    name = "segmented_prime_checker",
+    hdrs = ["segmented_prime_checker.h"],
+)
