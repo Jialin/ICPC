@@ -12,6 +12,7 @@ INCLUDES = [
     "cstdint",
     "cstdio",
     "cstring",
+    "functional",
     "iostream",
     "map",
     "set",
