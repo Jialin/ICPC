@@ -84,6 +84,18 @@ function CPP-run {
 
 ##########################################
 # Example usage:
+#   > CPP-run03 A.cpp
+#   > CPP-run03 A.cpp input
+#   > CPP-run03 A.cpp input output
+#   > CPP-run03 A.cpp input output answer
+##########################################
+function CPP-run03 {
+  CPP-compile $1 c++03
+  _CPP-run $@
+}
+
+##########################################
+# Example usage:
 #   > CPP-run11 A.cpp
 #   > CPP-run11 A.cpp input
 #   > CPP-run11 A.cpp input output
@@ -112,6 +124,18 @@ function CPP-gen-run {
   if [ $? = 0 ]
   then
     CPP-run gencpp_$1 ${@:2}
+  fi
+}
+
+##########################
+# Example usage:
+#   > CPP-gen-run03 A.cpp
+##########################
+function CPP-gen-run03 {
+  CPP-gen $@
+  if [ $? = 0 ]
+  then
+    CPP-run03 gencpp_$1 ${@:2}
   fi
 }
 
