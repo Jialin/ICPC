@@ -8,26 +8,16 @@ cc_library(
 )
 
 cc_library(
-    name = "prime_checker_quick",
-    hdrs = ["prime_checker_quick.h"],
-)
-
-cc_library(
-    name = "prime_checker_slow",
-    hdrs = ["prime_checker_slow.h"],
-)
-
-cc_library(
     name = "prime_checker",
     hdrs = ["prime_checker.h"],
 )
 
 cc_library(
-    name = "prime_gen",
-    hdrs = ["prime_gen.h"],
+    name = "prime_iterator",
+    hdrs = ["prime_iterator.h"],
 )
 
 cc_library(
-    name = "segmented_prime_checker",
-    hdrs = ["segmented_prime_checker.h"],
+    name = "segmented_prime_iterator",
+    hdrs = ["segmented_prime_iterator.h"],
 )

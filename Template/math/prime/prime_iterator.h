@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <cstring>
+#include <functional>
 #include <vector>
 
 using namespace std;
@@ -20,9 +22,9 @@ const int COPRIMES[COPRIME_CNT] = {
 
 } // namespace
 
-class PrimeChecker {
+class PrimeIterator {
 public:
-  inline PrimeChecker(int n = 30) {
+  inline PrimeIterator(int n = 30) {
     precompute_();
     init(n);
   }
@@ -53,12 +55,29 @@ public:
     }
   }
 
-  inline bool isPrime(int x) {
-    if (x == 2 || x == 3 || x == 5 || x == 7) {
-      return true;
+  inline void iterate(int n, const std::function<void(int)>& processor) {
+    for (int p : PRIME_WHEEL) {
+      if (p < n) {
+        processor(p);
+      }
     }
-    int idx = coprimesInv_[x % PRIME_LCM];
-    return idx >= 0 && !((sieve_[x / PRIME_LCM] >> idx) & 1);
+    int base = 0;
+    for (const auto& sieve : sieve_) {
+      for (int idx = 0; idx < COPRIME_CNT; ++idx) {
+        if ((sieve >> idx) & 1) {
+          continue;
+        }
+        int v = base + COPRIMES[idx];
+        if (v >= n) {
+          break;
+        }
+        processor(v);
+      }
+      base += PRIME_LCM;
+      if (base >= n) {
+        break;
+      }
+    }
   }
 
 private:
