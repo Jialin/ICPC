@@ -23,7 +23,8 @@
 			"utility": "cpp",
 			"chrono": "cpp",
 			"random": "cpp",
-			"limits": "cpp"
+			"limits": "cpp",
+			"functional": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
