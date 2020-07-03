@@ -24,7 +24,9 @@
 			"chrono": "cpp",
 			"random": "cpp",
 			"limits": "cpp",
-			"functional": "cpp"
+			"functional": "cpp",
+			"valarray": "cpp",
+			"cmath": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
