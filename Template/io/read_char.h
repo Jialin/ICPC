@@ -7,7 +7,7 @@ namespace io {
 
 namespace {
 
-constexpr int kReadBufferSize = 1 << 15;
+const int kReadBufferSize = 1 << 15;
 char readBuffer[kReadBufferSize];
 int readPos;
 int readLength;

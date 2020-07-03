@@ -6,10 +6,10 @@ namespace io {
 
 namespace {
 
-constexpr int kWriteBufferSize = 1 << 15;
+const int kWriteBufferSize = 1 << 15;
 
-static int writePos = 0;
-static char writeBuffer[kWriteBufferSize];
+int writePos = 0;
+char writeBuffer[kWriteBufferSize];
 
 } // namespace
 
