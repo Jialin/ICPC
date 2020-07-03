@@ -9,7 +9,6 @@ namespace math {
 
 namespace {
 
-const int PRIME_WHEEL[4] = {2, 3, 5, 7};
 const int PRIME_LCM = 2 * 3 * 5 * 7;
 const int COPRIME_CNT = 48;
 const int COPRIMES[COPRIME_CNT] = {
