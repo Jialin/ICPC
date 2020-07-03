@@ -3,6 +3,11 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "factorizer",
+    hdrs = ["factorizer.h"],
+)
+
+cc_library(
     name = "min_prime_tagger",
     hdrs = ["min_prime_tagger.h"],
 )

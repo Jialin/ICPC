@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "factorizer_test",
+    srcs = ["factorizer_test.cpp"],
+    deps = [
+        "//math/prime:factorizer",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "min_prime_tagger_test",
     srcs = ["min_prime_tagger_test.cpp"],
     deps = [
