@@ -20,20 +20,28 @@ const int COPRIMES[COPRIME_CNT] = {
 
 } // namespace
 
+template<typename V = int>
 class SegmentedPrimeIterator {
 public:
-  inline SegmentedPrimeIterator(int n = 30) {
+  inline SegmentedPrimeIterator(V maxUpperBound = 30, int maxRange = -1) {
     precompute_();
-    init(n);
+    init(maxUpperBound, maxRange);
   }
 
-  inline void init(int n) {
-    int primeBound = static_cast<int>(sqrt(n) + 1);
+  inline void init(V maxUpperBound, int maxRange = -1) {
+    if (maxRange >= 0) {
+      segmentedSieve_.reserve(maxRange / PRIME_LCM + 2);
+    }
+    int primeBound = static_cast<int>(sqrt(maxUpperBound) + 1);
     int size = primeBound / PRIME_LCM + 1;
     sieve_.assign(size, 0);
     sieve_[0] = 1;
     int bound = static_cast<int>(sqrt(primeBound) + 1);
-    memcpy(mul_, mulInit_, sizeof(mul_));
+    for (int i = 0; i < COPRIME_CNT; ++i) {
+      for (int j = 0; j < COPRIME_CNT; ++j) {
+        mul_[i][j] = mulInit_[i][j];
+      }
+    }
     auto* sieve = sieve_.data();
     const auto* sieveEnd = sieve + size;
     for (int base = 0; base <= bound; base += PRIME_LCM, ++sieve) {
@@ -47,30 +55,31 @@ public:
               mul_[i],
               nextIdx_[i]);
         }
-        for (int k = 0; k < COPRIME_CNT; ++k) {
-          mul_[i][k] += mulStep_[i][k];
+        for (int j = 0; j < COPRIME_CNT; ++j) {
+          mul_[i][j] += mulStep_[i][j];
         }
       }
     }
   }
 
-  inline void iterate(
-      int lower,
-      int upper,
-      const std::function<void(int)>& processor,
-      int maxRangeGap = -1) {
-    if (maxRangeGap >= 0) {
-      segmentedSieve_.reserve(maxRangeGap / PRIME_LCM + 2);
+  inline void
+  iterate(V lower, V upper, const std::function<void(V)>& processor) {
+    if (lower >= upper) {
+      return;
     }
-    int lb = lower / PRIME_LCM;
-    int ub = (upper + PRIME_LCM - 1) / PRIME_LCM;
-    int offset = lb * PRIME_LCM;
+    V lb = lower / PRIME_LCM;
+    V ub = (upper + PRIME_LCM - 1) / PRIME_LCM;
+    V offset = lb * PRIME_LCM;
     int size = ub - lb;
     segmentedSieve_.assign(size, 0);
     if (!lb) {
       segmentedSieve_[0] = 1;
     }
-    memcpy(mul_, mulInit_, sizeof(mul_));
+    for (int i = 0; i < COPRIME_CNT; ++i) {
+      for (int j = 0; j < COPRIME_CNT; ++j) {
+        mul_[i][j] = mulInit_[i][j];
+      }
+    }
     const auto* sieve = sieve_.data();
     auto* segmentedSieveBegin = segmentedSieve_.data();
     const auto* segmentedSieveEnd = segmentedSieveBegin + size;
@@ -78,7 +87,7 @@ public:
     for (int base = 0; !exceeded; base += PRIME_LCM, ++sieve) {
       for (int i = 0; i < COPRIME_CNT; ++i) {
         if (!((*sieve >> i) & 1)) {
-          int v = base + COPRIMES[i], vv = v * v;
+          V v = base + COPRIMES[i], vv = v * v;
           if (vv >= upper) {
             exceeded = true;
             break;
@@ -99,19 +108,19 @@ public:
         }
       }
     }
-    for (int p : PRIME_WHEEL) {
+    for (V p : PRIME_WHEEL) {
       if (lower <= p && p < upper) {
         processor(p);
       }
     }
     const auto* segmentedSieve = segmentedSieve_.data();
-    for (int base = offset; segmentedSieve < segmentedSieveEnd;
+    for (V base = offset; segmentedSieve < segmentedSieveEnd;
          base += PRIME_LCM, ++segmentedSieve) {
       for (int i = 0; i < COPRIME_CNT; ++i) {
         if ((*segmentedSieve >> i) & 1) {
           continue;
         }
-        int v = base + COPRIMES[i];
+        V v = base + COPRIMES[i];
         if (lower <= v && v < upper) {
           processor(v);
         }
@@ -160,7 +169,7 @@ private:
       int idx,
       long long* sieve,
       const long long* sieveEnd,
-      const int* mul,
+      const V* mul,
       const int* nextIdx) {
     while (sieve < sieveEnd) {
       *sieve |= 1LL << idx;
@@ -169,7 +178,7 @@ private:
     }
   }
 
-  int mul_[COPRIME_CNT][COPRIME_CNT];
+  V mul_[COPRIME_CNT][COPRIME_CNT];
   int coprimesInv_[PRIME_LCM];
   int mulInit_[COPRIME_CNT][COPRIME_CNT];
   int mulStep_[COPRIME_CNT][COPRIME_CNT];
