@@ -6,7 +6,7 @@ namespace math {
 
 TEST(SegmentedPrimeIterator, test1E8Every100) {
   int bound = 100000000;
-  SegmentedPrimeIterator spi(bound);
+  SegmentedPrimeIterator<> spi(bound);
   int cnt;
 
   vector<int> primes;
@@ -42,7 +42,7 @@ TEST(SegmentedPrimeIterator, test1E8Every100) {
 
 TEST(PrimeIterator, test1E9Every500) {
   int bound = 1000000000;
-  SegmentedPrimeIterator spi(bound);
+  SegmentedPrimeIterator<> spi(bound);
   int cnt;
 
   vector<int> primes;
