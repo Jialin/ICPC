@@ -11,6 +11,16 @@ cc_test(
 )
 
 cc_test(
+    name = "miller_rabin_test",
+    srcs = ["miller_rabin_test.cpp"],
+    deps = [
+        "//math/prime:miller_rabin",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "min_prime_tagger_test",
     srcs = ["min_prime_tagger_test.cpp"],
     deps = [

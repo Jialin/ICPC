@@ -8,6 +8,15 @@ cc_library(
 )
 
 cc_library(
+    name = "miller_rabin",
+    hdrs = ["miller_rabin.h"],
+    deps = [
+        "//math/mod:exp",
+        "//math/mod:mul_inline",
+    ],
+)
+
+cc_library(
     name = "min_prime_tagger",
     hdrs = ["min_prime_tagger.h"],
 )
