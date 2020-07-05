@@ -27,7 +27,9 @@
 			"functional": "cpp",
 			"valarray": "cpp",
 			"cmath": "cpp",
-			"regex": "cpp"
+			"regex": "cpp",
+			"complex": "cpp",
+			"algorithm": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
