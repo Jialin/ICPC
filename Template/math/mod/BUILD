@@ -20,6 +20,14 @@ cc_library(
 )
 
 cc_library(
+    name = "exp128",
+    hdrs = ["exp128.h"],
+    deps = [
+        "//math:montgomery_mul",
+    ],
+)
+
+cc_library(
     name = "fix_inline",
     hdrs = ["fix_inline.h"],
     deps = [":slight_fix_inline"],

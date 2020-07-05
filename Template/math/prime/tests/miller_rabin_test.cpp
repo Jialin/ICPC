@@ -18,7 +18,7 @@ TEST(MillerRabin, testComposite) {
   EXPECT_FALSE(millerRabin(3215031751));
 }
 
-TEST(millerRabin, testCarmichael) {
+TEST(MillerRabin, testCarmichael) {
   EXPECT_FALSE(millerRabin(6601));
   EXPECT_FALSE(millerRabin(62745));
   EXPECT_FALSE(millerRabin(63973));
