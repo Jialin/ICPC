@@ -18,6 +18,19 @@ cc_library(
 )
 
 cc_library(
+    name = "gcd64",
+    hdrs = ["gcd64.h"],
+)
+
+cc_library(
+    name = "gcd128",
+    hdrs = ["gcd128.h"],
+    deps = [
+        ":ctz128",
+    ],
+)
+
+cc_library(
     name = "linear_diophantine",
     hdrs = ["linear_diophantine.h"],
     deps = [

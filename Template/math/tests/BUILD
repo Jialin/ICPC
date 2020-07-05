@@ -31,6 +31,26 @@ cc_test(
 )
 
 cc_test(
+    name = "gcd64_test",
+    srcs = ["gcd64_test.cpp"],
+    deps = [
+        "//math:gcd64",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "gcd128_test",
+    srcs = ["gcd128_test.cpp"],
+    deps = [
+        "//math:gcd128",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "linear_diophantine_test",
     srcs = ["linear_diophantine_test.cpp"],
     deps = [
@@ -41,10 +61,10 @@ cc_test(
 )
 
 cc_test(
-    name = "montgomery_test",
-    srcs = ["montgomery_test.cpp"],
+    name = "montgomery_mul_test",
+    srcs = ["montgomery_mul_test.cpp"],
     deps = [
-        "//math:montgomery",
+        "//math:montgomery_mul",
         "@gtest",
         "@gtest//:gtest_main",
     ],

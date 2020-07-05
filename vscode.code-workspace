@@ -29,7 +29,8 @@
 			"cmath": "cpp",
 			"regex": "cpp",
 			"complex": "cpp",
-			"algorithm": "cpp"
+			"algorithm": "cpp",
+			"numeric": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
