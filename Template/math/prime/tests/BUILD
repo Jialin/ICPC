@@ -21,6 +21,16 @@ cc_test(
 )
 
 cc_test(
+    name = "miller_rabin128_test",
+    srcs = ["miller_rabin128_test.cpp"],
+    deps = [
+        "//math/prime:miller_rabin128",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "min_prime_tagger_test",
     srcs = ["min_prime_tagger_test.cpp"],
     deps = [
@@ -45,6 +55,16 @@ cc_test(
     srcs = ["prime_iterator_test.cpp"],
     deps = [
         "//math/prime:prime_iterator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "rho128_test",
+    srcs = ["rho128_test.cpp"],
+    deps = [
+        "//math/prime:rho128",
         "@gtest",
         "@gtest//:gtest_main",
     ],
