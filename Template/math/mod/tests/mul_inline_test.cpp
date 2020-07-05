@@ -24,4 +24,12 @@ TEST(MulMod, testLarge) {
   EXPECT_EQ(res, 30030046);
 }
 
+TEST(MulMod, testOverflow) {
+  int32_t res;
+
+  res = 999999991;
+  mulModInline<int32_t, int32_t>(res, 123123123, 1000000007);
+  EXPECT_EQ(res, 30030046);
+}
+
 } // namespace math

@@ -52,7 +52,10 @@ cc_library(
 cc_library(
     name = "mul_inline",
     hdrs = ["mul_inline.h"],
-    deps = [":fix_inline"],
+    deps = [
+        ":add",
+        ":fix_inline",
+    ],
 )
 
 cc_library(
