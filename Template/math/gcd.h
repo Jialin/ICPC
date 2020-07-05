@@ -1,5 +1,6 @@
+#pragma once
+
 #include <algorithm>
-#include <cstddef>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ inline int gcd(int a, int b) {
   if (!a || !b) {
     return a | b;
   }
-  size_t shift = __builtin_ctz(a | b);
+  int shift = __builtin_ctz(a | b);
   a >>= __builtin_ctz(a);
   do {
     b >>= __builtin_ctz(b);
