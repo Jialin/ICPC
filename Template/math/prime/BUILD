@@ -17,6 +17,16 @@ cc_library(
 )
 
 cc_library(
+    name = "miller_rabin128",
+    hdrs = ["miller_rabin128.h"],
+    deps = [
+        "//math:ctz128",
+        "//math:montgomery_mul",
+        "//math/mod:exp128",
+    ],
+)
+
+cc_library(
     name = "min_prime_tagger",
     hdrs = ["min_prime_tagger.h"],
 )
@@ -29,6 +39,16 @@ cc_library(
 cc_library(
     name = "prime_iterator",
     hdrs = ["prime_iterator.h"],
+)
+
+cc_library(
+    name = "rho128",
+    hdrs = ["rho128.h"],
+    deps = [
+        "//math:gcd128",
+        "//math:montgomery_mul",
+        "//math/mod:add",
+    ],
 )
 
 cc_library(
