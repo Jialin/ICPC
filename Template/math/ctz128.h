@@ -7,9 +7,9 @@ inline int ctz128(__uint128_t n) {
     return 128;
   }
   if (!static_cast<uint64_t>(n)) {
-    return __builtin_ctzll(n >> 64) + 64;
+    return __builtin_ctzll(static_cast<uint64_t>(n >> 64)) + 64;
   } else {
-    return __builtin_ctzll(n);
+    return __builtin_ctzll(static_cast<uint64_t>(n));
   }
 }
 

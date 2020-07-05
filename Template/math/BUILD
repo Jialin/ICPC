@@ -26,8 +26,8 @@ cc_library(
 )
 
 cc_library(
-    name = "montgomery",
-    hdrs = ["montgomery.h"],
+    name = "montgomery_mul",
+    hdrs = ["montgomery_mul.h"],
     deps = [
         ":uint256",
     ],
