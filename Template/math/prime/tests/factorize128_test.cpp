@@ -69,7 +69,7 @@ TEST(Factorizer, testLarge) {
   };
 
   ps.clear();
-  factorize128(2000000014ULL, mont, processor);
+  factorize128(2 * 1000000007ULL, mont, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
   EXPECT_EQ(ps[0].first, 2);
@@ -78,7 +78,7 @@ TEST(Factorizer, testLarge) {
   EXPECT_EQ(ps[1].second, 1);
 
   ps.clear();
-  factorize128(1000000014000000049ULL, mont, processor);
+  factorize128(1000000007 * 1000000007ULL, mont, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 1000000007);

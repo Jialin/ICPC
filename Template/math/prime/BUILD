@@ -3,6 +3,15 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "factorize64",
+    hdrs = ["factorize64.h"],
+    deps = [
+        "//math/prime:miller_rabin",
+        "//math/prime:rho64",
+    ],
+)
+
+cc_library(
     name = "factorize128",
     hdrs = ["factorize128.h"],
     deps = [
@@ -48,6 +57,16 @@ cc_library(
 cc_library(
     name = "prime_iterator",
     hdrs = ["prime_iterator.h"],
+)
+
+cc_library(
+    name = "rho64",
+    hdrs = ["rho64.h"],
+    deps = [
+        "//math:gcd64",
+        "//math/mod:add",
+        "//math/mod:mul_inline",
+    ],
 )
 
 cc_library(
