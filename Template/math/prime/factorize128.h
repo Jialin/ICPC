@@ -9,23 +9,19 @@ using namespace std;
 
 namespace math {
 
-MontgomeryMul mont;
-
-inline void
-factorize128(__uint128_t n, const function<bool(__uint128_t, int)>& processor) {
+inline void factorize128(
+    __uint128_t n,
+    MontgomeryMul& mont,
+    const function<void(__uint128_t, int)>& processor) {
   if (!(n & 1)) {
     int shift = ctz128(n);
     n >>= shift;
-    if (!processor(2, shift)) {
-      return;
-    }
+    processor(2, shift);
   }
   while (n > 1) {
     mont.init(n);
     if (millerRabin128(n, mont, false)) {
-      if (!processor(n, 1)) {
-        return;
-      }
+      processor(n, 1);
       break;
     }
     __uint128_t p = n;
@@ -35,9 +31,7 @@ factorize128(__uint128_t n, const function<bool(__uint128_t, int)>& processor) {
     } while (p == n || !millerRabin128(p, mont, false));
     int cnt = 1;
     for (n /= p; !(n % p); n /= p, ++cnt) {}
-    if (!processor(p, cnt)) {
-      return;
-    }
+    processor(p, cnt);
   }
 }
 
