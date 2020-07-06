@@ -25,8 +25,8 @@ inline void factorize128(
       break;
     }
     __uint128_t p = n;
+    mont.init(p);
     do {
-      mont.init(p);
       p = rho128(p, mont, false);
     } while (p == n || !millerRabin128(p, mont, false));
     int cnt = 1;
