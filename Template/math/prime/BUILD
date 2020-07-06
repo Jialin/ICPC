@@ -3,6 +3,15 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "factorize128",
+    hdrs = ["factorize128.h"],
+    deps = [
+        "//math/prime:miller_rabin128",
+        "//math/prime:rho128",
+    ],
+)
+
+cc_library(
     name = "factorizer",
     hdrs = ["factorizer.h"],
 )
