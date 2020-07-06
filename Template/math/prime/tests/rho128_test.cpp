@@ -14,10 +14,10 @@ TEST(Rho128, testSmall) {
 TEST(Rho128, testLarge) {
   MontgomeryMul mont;
 
-  __uint128_t v = rho128(3000000014ULL, mont, true, 1, 2);
+  __uint128_t v = rho128(2 * 1000000007ULL, mont, true, 1, 2);
   EXPECT_TRUE(v == 2 || v == 1000000007);
 
-  EXPECT_EQ(rho128(1000000014000000049ULL, mont, true, 1, 2), 1000000007);
+  EXPECT_EQ(rho128(1000000007 * 1000000007ULL, mont, true, 1, 2), 1000000007);
 
   v = rho128(
       __uint128_t(9616562014629204ULL) * 100000000000000ULL + 97194293996611ULL,
