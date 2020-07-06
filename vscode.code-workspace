@@ -30,7 +30,8 @@
 			"regex": "cpp",
 			"complex": "cpp",
 			"algorithm": "cpp",
-			"numeric": "cpp"
+			"numeric": "cpp",
+			"map": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
