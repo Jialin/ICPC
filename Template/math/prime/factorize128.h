@@ -12,6 +12,7 @@ namespace math {
 inline void factorize128(
     __uint128_t n,
     MontgomeryMul& mont,
+    MontgomeryMul& mont2,
     const function<void(__uint128_t, int)>& processor) {
   if (!(n & 1)) {
     int shift = ctz128(n);
@@ -28,7 +29,7 @@ inline void factorize128(
     mont.init(p);
     do {
       p = rho128(p, mont, false);
-    } while (p == n || !millerRabin128(p, mont, false));
+    } while (p == n || !millerRabin128(p, mont2));
     int cnt = 1;
     for (n /= p; !(n % p); n /= p, ++cnt) {}
     processor(p, cnt);

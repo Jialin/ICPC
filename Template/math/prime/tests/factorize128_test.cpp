@@ -5,27 +5,27 @@
 namespace math {
 
 TEST(Factorizer, testSmall) {
-  MontgomeryMul mont;
+  MontgomeryMul mont, mont2;
   vector<pair<__uint128_t, __uint128_t>> ps;
   const auto& processor = [&ps](__uint128_t p, int e) {
     ps.emplace_back(p, e);
   };
 
-  factorize128(2, mont, processor);
+  factorize128(2, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 2);
   EXPECT_EQ(ps[0].second, 1);
 
   ps.clear();
-  factorize128(1024, mont, processor);
+  factorize128(1024, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 2);
   EXPECT_EQ(ps[0].second, 10);
 
   ps.clear();
-  factorize128(10, mont, processor);
+  factorize128(10, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
   EXPECT_EQ(ps[0].first, 2);
@@ -34,14 +34,14 @@ TEST(Factorizer, testSmall) {
   EXPECT_EQ(ps[1].second, 1);
 
   ps.clear();
-  factorize128(27, mont, processor);
+  factorize128(27, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 3);
   EXPECT_EQ(ps[0].second, 3);
 
   ps.clear();
-  factorize128(840, mont, processor);
+  factorize128(840, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 4);
   EXPECT_EQ(ps[0].first, 2);
@@ -54,7 +54,7 @@ TEST(Factorizer, testSmall) {
   EXPECT_EQ(ps[3].second, 1);
 
   ps.clear();
-  factorize128(1009, mont, processor);
+  factorize128(1009, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 1009);
@@ -62,14 +62,14 @@ TEST(Factorizer, testSmall) {
 }
 
 TEST(Factorizer, testLarge) {
-  MontgomeryMul mont;
+  MontgomeryMul mont, mont2;
   vector<pair<__uint128_t, __uint128_t>> ps;
   const auto& processor = [&ps](__uint128_t p, int e) {
     ps.emplace_back(p, e);
   };
 
   ps.clear();
-  factorize128(2 * 1000000007ULL, mont, processor);
+  factorize128(2 * 1000000007ULL, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
   EXPECT_EQ(ps[0].first, 2);
@@ -78,7 +78,7 @@ TEST(Factorizer, testLarge) {
   EXPECT_EQ(ps[1].second, 1);
 
   ps.clear();
-  factorize128(1000000007 * 1000000007ULL, mont, processor);
+  factorize128(1000000007 * 1000000007ULL, mont, mont2, processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(ps[0].first, 1000000007);
@@ -88,6 +88,7 @@ TEST(Factorizer, testLarge) {
   factorize128(
       __uint128_t(9616562014629204ULL) * 100000000000000ULL + 97194293996611ULL,
       mont,
+      mont2,
       processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
@@ -100,6 +101,7 @@ TEST(Factorizer, testLarge) {
   factorize128(
       __uint128_t(9553427693635611ULL) * 100000000000000ULL + 1863533963531ULL,
       mont,
+      mont2,
       processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
@@ -112,6 +114,7 @@ TEST(Factorizer, testLarge) {
   factorize128(
       __uint128_t(9637823792045106ULL) * 100000000000000ULL + 91122291047909ULL,
       mont,
+      mont2,
       processor);
   sort(ps.begin(), ps.end());
   EXPECT_EQ(ps.size(), 2);
