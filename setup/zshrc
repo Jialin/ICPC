@@ -167,7 +167,7 @@ function unittest {
   local current_path=$(pwd)
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
-  bazel test //...
+  bazel test //... --compilation_mode opt
   cd $current_path
 }
 
