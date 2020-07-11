@@ -1,11 +1,11 @@
 #include "gtest/gtest.h"
 
-#include "math/prime/factorizer.h"
+#include "math/prime/factorize_all.h"
 
 namespace math {
 
-TEST(Factorizer, test) {
-  Factorizer f(1024 + 1);
+TEST(FactorizeAll, test) {
+  FactorizeAll fa(1024 + 1);
   vector<int> ps;
   vector<int> es;
   const auto& processor = [&ps, &es](int p, int e) {
@@ -14,7 +14,7 @@ TEST(Factorizer, test) {
     return true;
   };
 
-  f.factorize(2, processor);
+  fa.factorize(2, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 2);
@@ -22,7 +22,7 @@ TEST(Factorizer, test) {
 
   ps.clear();
   es.clear();
-  f.factorize(1024, processor);
+  fa.factorize(1024, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 2);
@@ -30,7 +30,7 @@ TEST(Factorizer, test) {
 
   ps.clear();
   es.clear();
-  f.factorize(10, processor);
+  fa.factorize(10, processor);
   EXPECT_EQ(ps.size(), 2);
   EXPECT_EQ(es.size(), 2);
   EXPECT_EQ(ps[0], 2);
@@ -40,7 +40,7 @@ TEST(Factorizer, test) {
 
   ps.clear();
   es.clear();
-  f.factorize(27, processor);
+  fa.factorize(27, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 3);
@@ -48,7 +48,7 @@ TEST(Factorizer, test) {
 
   ps.clear();
   es.clear();
-  f.factorize(840, processor);
+  fa.factorize(840, processor);
   EXPECT_EQ(ps.size(), 4);
   EXPECT_EQ(es.size(), 4);
   EXPECT_EQ(ps[0], 2);
@@ -62,7 +62,7 @@ TEST(Factorizer, test) {
 
   ps.clear();
   es.clear();
-  f.factorize(1009, processor);
+  fa.factorize(1009, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 1009);

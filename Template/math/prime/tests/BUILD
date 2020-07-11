@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "factorize_all_test",
+    srcs = ["factorize_all_test.cpp"],
+    deps = [
+        "//math/prime:factorize_all",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "factorize64_test",
     srcs = ["factorize64_test.cpp"],
     deps = [
@@ -15,16 +25,6 @@ cc_test(
     srcs = ["factorize128_test.cpp"],
     deps = [
         "//math/prime:factorize128",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "factorizer_test",
-    srcs = ["factorizer_test.cpp"],
-    deps = [
-        "//math/prime:factorizer",
         "@gtest",
         "@gtest//:gtest_main",
     ],

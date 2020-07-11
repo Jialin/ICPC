@@ -8,9 +8,9 @@ using namespace std;
 
 namespace math {
 
-class Factorizer {
+class FactorizeAll {
 public:
-  inline Factorizer(int n) {
+  inline FactorizeAll(int n) {
     init(n);
   }
 
