@@ -8,14 +8,15 @@ TEST(PrimeIterator, test1E8Every100) {
   int bound = 100000000;
   PrimeIterator pi(bound);
   int cnt = 99;
-  vector<int> primes;
-  pi.iterate(bound, [&cnt, &primes](int p) {
+  vector<uint32_t> primes;
+  pi.iterate(bound, [&cnt, &primes](uint32_t p) {
     if (cnt == 99) {
       primes.push_back(p);
       cnt = 0;
     } else {
       ++cnt;
     }
+    return true;
   });
   ASSERT_EQ(primes.size(), 57615);
   EXPECT_EQ(primes[0], 2);
@@ -30,14 +31,15 @@ TEST(PrimeIterator, test1E9Every500) {
   int bound = 1000000000;
   PrimeIterator pi(bound);
   int cnt = 499;
-  vector<int> primes;
-  pi.iterate(bound, [&cnt, &primes](int p) {
+  vector<uint32_t> primes;
+  pi.iterate(bound, [&cnt, &primes](uint32_t p) {
     if (cnt == 499) {
       primes.push_back(p);
       cnt = 0;
     } else {
       ++cnt;
     }
+    return true;
   });
   ASSERT_EQ(primes.size(), 101696);
   EXPECT_EQ(primes[0], 2);
