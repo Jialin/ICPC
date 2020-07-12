@@ -9,7 +9,11 @@ inline V subMod(const V& a, V b, const V& mod) {
   V res = a;
   fixModInline<V>(res, mod);
   fixModInline<V>(b, mod);
-  res -= b;
+  if (res >= b) {
+    res -= b;
+  } else {
+    res = mod - (b - res);
+  }
   slightFixModInline<V>(res, mod);
   return res;
 }

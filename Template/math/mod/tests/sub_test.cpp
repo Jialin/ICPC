@@ -13,4 +13,9 @@ TEST(SubMod, test) {
   EXPECT_EQ(subMod(-1000, 2147483647, 1000000007), 852515374);
 }
 
+TEST(SubMod, testUnsigned) {
+  EXPECT_EQ(subMod<uint64_t>(5, 2, 7), 3);
+  EXPECT_EQ(subMod<uint64_t>(2, 5, 7), 4);
+}
+
 } // namespace math
