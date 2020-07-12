@@ -55,10 +55,13 @@ public:
     }
   }
 
-  inline void iterate(int n, const std::function<void(int)>& processor) {
+  inline void
+  iterate(int n, const std::function<bool(uint32_t)>& processor) const {
     for (int p : PRIME_WHEEL) {
       if (p < n) {
-        processor(p);
+        if (!processor(p)) {
+          return;
+        }
       }
     }
     int base = 0;
@@ -71,7 +74,9 @@ public:
         if (v >= n) {
           break;
         }
-        processor(v);
+        if (!processor(v)) {
+          return;
+        }
       }
       base += PRIME_LCM;
       if (base >= n) {
