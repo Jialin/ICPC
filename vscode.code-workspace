@@ -31,7 +31,8 @@
 			"complex": "cpp",
 			"algorithm": "cpp",
 			"numeric": "cpp",
-			"map": "cpp"
+			"map": "cpp",
+			"tuple": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
