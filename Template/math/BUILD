@@ -18,6 +18,11 @@ cc_library(
 )
 
 cc_library(
+    name = "gcd32",
+    hdrs = ["gcd32.h"],
+)
+
+cc_library(
     name = "gcd64",
     hdrs = ["gcd64.h"],
 )
