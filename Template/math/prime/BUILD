@@ -28,6 +28,15 @@ cc_library(
 )
 
 cc_library(
+    name = "factorize32",
+    hdrs = ["factorize32.h"],
+    deps = [
+        ":miller_rabin32",
+        ":rho32",
+    ],
+)
+
+cc_library(
     name = "factorize64",
     hdrs = ["factorize64.h"],
     deps = [
@@ -42,6 +51,15 @@ cc_library(
     deps = [
         ":miller_rabin128",
         ":rho128",
+    ],
+)
+
+cc_library(
+    name = "miller_rabin32",
+    hdrs = ["miller_rabin32.h"],
+    deps = [
+        "//math/mod:exp",
+        "//math/mod:mul_inline",
     ],
 )
 
@@ -82,6 +100,16 @@ cc_library(
 cc_library(
     name = "prime_iterator",
     hdrs = ["prime_iterator.h"],
+)
+
+cc_library(
+    name = "rho32",
+    hdrs = ["rho32.h"],
+    deps = [
+        "//math:gcd32",
+        "//math/mod:add",
+        "//math/mod:mul_inline",
+    ],
 )
 
 cc_library(

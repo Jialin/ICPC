@@ -31,6 +31,16 @@ cc_test(
 )
 
 cc_test(
+    name = "factorize32_test",
+    srcs = ["factorize32_test.cpp"],
+    deps = [
+        "//math/prime:factorize32",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "factorize64_test",
     srcs = ["factorize64_test.cpp"],
     deps = [
@@ -45,6 +55,16 @@ cc_test(
     srcs = ["factorize128_test.cpp"],
     deps = [
         "//math/prime:factorize128",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "miller_rabin32_test",
+    srcs = ["miller_rabin32_test.cpp"],
+    deps = [
+        "//math/prime:miller_rabin32",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -105,6 +125,26 @@ cc_test(
     srcs = ["prime_iterator_test.cpp"],
     deps = [
         "//math/prime:prime_iterator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "rho32_test",
+    srcs = ["rho32_test.cpp"],
+    deps = [
+        "//math/prime:rho32",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "rho64_test",
+    srcs = ["rho64_test.cpp"],
+    deps = [
+        "//math/prime:rho64",
         "@gtest",
         "@gtest//:gtest_main",
     ],
