@@ -9,6 +9,8 @@ namespace math {
 
 class MinPrimeTagger {
 public:
+  inline MinPrimeTagger() {}
+
   inline MinPrimeTagger(int n) {
     init(n);
   }
@@ -27,18 +29,37 @@ public:
         }
       }
     }
+    minPrimeCnt_.assign(size, 1);
+    jump_.assign(size, 1);
+    for (int i = 3, j = 1; i < n; i += 2, ++j) {
+      if (!minPrime_[j]) {
+        minPrime_[j] = i;
+        continue;
+      }
+      int k = i / minPrime_[j], kHalf = k >> 1;
+      if (minPrime_[j] == minPrime_[kHalf]) {
+        minPrimeCnt_[j] = minPrimeCnt_[kHalf] + 1;
+        jump_[j] = jump_[kHalf];
+      } else {
+        jump_[j] = k;
+      }
+    }
   }
 
-  inline int getMinPrimeFactor(int n) {
+  inline void process(int n, int& prime, int& primeCnt, int& nxtN) const {
     if (n & 1) {
-      int res = minPrime_[n >> 1];
-      return res ? res : n;
+      prime = minPrime_[n >> 1];
+      primeCnt = minPrimeCnt_[n >> 1];
+      nxtN = jump_[n >> 1];
+    } else {
+      prime = 2;
+      primeCnt = __builtin_ctz(n);
+      nxtN = n >> primeCnt;
     }
-    return 2;
   }
 
 private:
-  vector<int> minPrime_;
+  vector<int> minPrime_, minPrimeCnt_, jump_;
 };
 
 } // namespace math
