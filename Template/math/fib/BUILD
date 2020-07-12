@@ -28,3 +28,25 @@ cc_library(
         "//math/mod:sub",
     ],
 )
+
+cc_library(
+    name = "pisano_period",
+    hdrs = ["pisano_period.h"],
+    deps = [
+        ":fib",
+        "//math:gcd",
+        "//math/prime:divisor",
+        "//math/prime:min_prime_tagger",
+    ],
+)
+
+cc_library(
+    name = "pisano_period64",
+    hdrs = ["pisano_period64.h"],
+    deps = [
+        ":pisano_period",
+        "//math:gcd64",
+        "//math/prime:divisor64",
+        "//math/prime:factorize64",
+    ],
+)

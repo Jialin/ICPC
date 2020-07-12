@@ -29,3 +29,23 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "pisano_period_test",
+    srcs = ["pisano_period_test.cpp"],
+    deps = [
+        "//math/fib:pisano_period",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "pisano_period64_test",
+    srcs = ["pisano_period64_test.cpp"],
+    deps = [
+        "//math/fib:pisano_period64",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
