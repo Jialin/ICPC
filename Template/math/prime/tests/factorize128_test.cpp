@@ -6,7 +6,7 @@ namespace math {
 
 TEST(Factorizer, testSmall) {
   MontgomeryMul mont, mont2;
-  vector<pair<__uint128_t, __uint128_t>> ps;
+  vector<pair<__uint128_t, int>> ps;
   const auto& processor = [&ps](__uint128_t p, int e) {
     ps.emplace_back(p, e);
   };
@@ -63,7 +63,7 @@ TEST(Factorizer, testSmall) {
 
 TEST(Factorizer, testLarge) {
   MontgomeryMul mont, mont2;
-  vector<pair<__uint128_t, __uint128_t>> ps;
+  vector<pair<__uint128_t, int>> ps;
   const auto& processor = [&ps](__uint128_t p, int e) {
     ps.emplace_back(p, e);
   };

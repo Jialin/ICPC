@@ -2,11 +2,11 @@
 
 #include <algorithm>
 
-using namespace std;
-
 #include "math/gcd64.h"
 #include "math/mod/add.h"
 #include "math/mod/mul_inline.h"
+
+using namespace std;
 
 namespace math {
 

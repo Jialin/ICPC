@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <cstdint>
-#include <vector>
-
 #include "math/mod/exp.h"
 
 using namespace std;

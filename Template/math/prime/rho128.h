@@ -2,11 +2,11 @@
 
 #include <algorithm>
 
-using namespace std;
-
 #include "math/gcd128.h"
 #include "math/mod/add.h"
 #include "math/montgomery_mul.h"
+
+using namespace std;
 
 namespace math {
 

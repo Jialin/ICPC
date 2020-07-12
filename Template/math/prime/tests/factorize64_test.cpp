@@ -5,7 +5,7 @@
 namespace math {
 
 TEST(Factorizer64, testSmall) {
-  vector<pair<uint64_t, uint64_t>> ps;
+  vector<pair<uint64_t, int>> ps;
   const auto& processor = [&ps](uint64_t p, int e) { ps.emplace_back(p, e); };
 
   factorize64(2, processor);
@@ -59,7 +59,7 @@ TEST(Factorizer64, testSmall) {
 }
 
 TEST(Factorizer64, testLarge) {
-  vector<pair<uint64_t, uint64_t>> ps;
+  vector<pair<uint64_t, int>> ps;
   const auto& processor = [&ps](uint64_t p, int e) { ps.emplace_back(p, e); };
 
   ps.clear();
