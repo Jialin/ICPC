@@ -51,10 +51,10 @@ cc_test(
 )
 
 cc_test(
-    name = "miller_rabin_test",
-    srcs = ["miller_rabin_test.cpp"],
+    name = "miller_rabin64_test",
+    srcs = ["miller_rabin64_test.cpp"],
     deps = [
-        "//math/prime:miller_rabin",
+        "//math/prime:miller_rabin64",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -75,6 +75,16 @@ cc_test(
     srcs = ["min_prime_tagger_test.cpp"],
     deps = [
         "//math/prime:min_prime_tagger",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "phi_all_test",
+    srcs = ["phi_all_test.cpp"],
+    deps = [
+        "//math/prime:phi_all",
         "@gtest",
         "@gtest//:gtest_main",
     ],

@@ -2,10 +2,10 @@
 
 #include <functional>
 
-using namespace std;
-
 #include "math/prime/miller_rabin128.h"
 #include "math/prime/rho128.h"
+
+using namespace std;
 
 namespace math {
 

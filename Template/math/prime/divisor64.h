@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "math/prime/miller_rabin.h"
+#include "math/prime/miller_rabin64.h"
 #include "math/prime/rho64.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ inline bool divisorIterator64Dfs_(
   }
   uint64_t p, nxtRemN;
   int cnt;
-  if (millerRabin(remN)) {
+  if (millerRabin64(remN)) {
     p = remN;
     cnt = 1;
     nxtRemN = 1;
@@ -38,7 +38,7 @@ inline bool divisorIterator64Dfs_(
     p = remN;
     do {
       p = rho64(p, false);
-    } while (p == n || !millerRabin(p));
+    } while (p == n || !millerRabin64(p));
     for (cnt = 1, nxtRemN = remN / p; !(nxtRemN % p); ++cnt, nxtRemN /= p) {}
   }
   if (!divisorIterator64Dfs_(x, nxtRemN, n, processor)) {

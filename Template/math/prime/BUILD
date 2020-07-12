@@ -14,7 +14,7 @@ cc_library(
     name = "divisor64",
     hdrs = ["divisor64.h"],
     deps = [
-        ":miller_rabin",
+        ":miller_rabin64",
         ":rho64",
     ],
 )
@@ -31,7 +31,7 @@ cc_library(
     name = "factorize64",
     hdrs = ["factorize64.h"],
     deps = [
-        ":miller_rabin",
+        ":miller_rabin64",
         ":rho64",
     ],
 )
@@ -46,8 +46,8 @@ cc_library(
 )
 
 cc_library(
-    name = "miller_rabin",
-    hdrs = ["miller_rabin.h"],
+    name = "miller_rabin64",
+    hdrs = ["miller_rabin64.h"],
     deps = [
         "//math/mod:exp",
         "//math/mod:mul_inline",
@@ -67,6 +67,11 @@ cc_library(
 cc_library(
     name = "min_prime_tagger",
     hdrs = ["min_prime_tagger.h"],
+)
+
+cc_library(
+    name = "phi_all",
+    hdrs = ["phi_all.h"],
 )
 
 cc_library(
