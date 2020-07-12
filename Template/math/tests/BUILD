@@ -31,6 +31,16 @@ cc_test(
 )
 
 cc_test(
+    name = "gcd32_test",
+    srcs = ["gcd32_test.cpp"],
+    deps = [
+        "//math:gcd32",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "gcd64_test",
     srcs = ["gcd64_test.cpp"],
     deps = [
