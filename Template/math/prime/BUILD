@@ -93,6 +93,14 @@ cc_library(
 )
 
 cc_library(
+    name = "phi32",
+    hdrs = ["phi32.h"],
+    deps = [
+        ":prime_iterator",
+    ],
+)
+
+cc_library(
     name = "prime_checker",
     hdrs = ["prime_checker.h"],
 )
