@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/ext_gcd.h"
+#include "math/gcd/ext_gcd.h"
 #include "math/mod/slight_fix_inline.h"
 
 namespace math {

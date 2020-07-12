@@ -34,7 +34,7 @@ cc_library(
     hdrs = ["pisano_period.h"],
     deps = [
         ":fib",
-        "//math:gcd",
+        "//math/gcd:gcd32",
         "//math/prime:divisor",
         "//math/prime:min_prime_tagger",
     ],
@@ -45,7 +45,7 @@ cc_library(
     hdrs = ["pisano_period64.h"],
     deps = [
         ":pisano_period",
-        "//math:gcd64",
+        "//math/gcd:gcd64",
         "//math/prime:divisor64",
         "//math/prime:factorize64",
     ],

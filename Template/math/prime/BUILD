@@ -106,7 +106,7 @@ cc_library(
     name = "rho32",
     hdrs = ["rho32.h"],
     deps = [
-        "//math:gcd32",
+        "//math/gcd:gcd32",
         "//math/mod:add",
         "//math/mod:mul_inline",
     ],
@@ -116,7 +116,7 @@ cc_library(
     name = "rho64",
     hdrs = ["rho64.h"],
     deps = [
-        "//math:gcd64",
+        "//math/gcd:gcd64",
         "//math/mod:add",
         "//math/mod:mul_inline",
     ],
@@ -126,8 +126,8 @@ cc_library(
     name = "rho128",
     hdrs = ["rho128.h"],
     deps = [
-        "//math:gcd128",
         "//math:montgomery_mul",
+        "//math/gcd:gcd128",
         "//math/mod:add",
     ],
 )

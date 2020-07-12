@@ -11,56 +11,6 @@ cc_test(
 )
 
 cc_test(
-    name = "ext_gcd_test",
-    srcs = ["ext_gcd_test.cpp"],
-    deps = [
-        "//math:ext_gcd",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "gcd_test",
-    srcs = ["gcd_test.cpp"],
-    deps = [
-        "//math:gcd",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "gcd32_test",
-    srcs = ["gcd32_test.cpp"],
-    deps = [
-        "//math:gcd32",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "gcd64_test",
-    srcs = ["gcd64_test.cpp"],
-    deps = [
-        "//math:gcd64",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "gcd128_test",
-    srcs = ["gcd128_test.cpp"],
-    deps = [
-        "//math:gcd128",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
     name = "linear_diophantine_test",
     srcs = ["linear_diophantine_test.cpp"],
     deps = [

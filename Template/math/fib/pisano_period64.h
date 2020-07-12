@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "math/fib/pisano_period.h"
-#include "math/gcd64.h"
+#include "math/gcd/gcd64.h"
 #include "math/prime/divisor64.h"
 #include "math/prime/factorize64.h"
 

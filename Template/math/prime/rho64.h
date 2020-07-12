@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "math/gcd64.h"
+#include "math/gcd/gcd64.h"
 #include "math/mod/add.h"
 #include "math/mod/mul_inline.h"
 

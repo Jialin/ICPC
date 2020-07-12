@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/gcd64.h"
+#include "math/gcd/gcd64.h"
 
 namespace math {
 

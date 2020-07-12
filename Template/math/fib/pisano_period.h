@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "math/fib/fib.h"
-#include "math/gcd.h"
+#include "math/gcd/gcd32.h"
 #include "math/prime/divisor.h"
 #include "math/prime/min_prime_tagger.h"
 
@@ -62,7 +62,7 @@ public:
     }
     res1 *= calcPrime(p);
     int res2 = calc(nxtN);
-    res = res1 / gcd(res1, res2) * res2;
+    res = res1 / gcd32(res1, res2) * res2;
     return res;
   }
 

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "math/gcd128.h"
+#include "math/gcd/gcd128.h"
 #include "math/mod/add.h"
 #include "math/montgomery_mul.h"
 

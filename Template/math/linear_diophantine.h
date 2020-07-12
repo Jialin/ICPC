@@ -1,4 +1,6 @@
-#include "math/ext_gcd.h"
+#pragma once
+
+#include "math/gcd/ext_gcd.h"
 
 namespace math {
 
