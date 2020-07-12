@@ -23,7 +23,7 @@ factorize64(uint64_t n, const function<void(uint64_t, int)>& processor) {
     }
     uint64_t p = n;
     do {
-      p = rho64(p, false);
+      p = rho64(p);
     } while (p == n || !millerRabin(p));
     int cnt = 1;
     for (n /= p; !(n % p); n /= p, ++cnt) {}

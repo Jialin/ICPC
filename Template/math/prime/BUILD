@@ -3,16 +3,36 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "factorize_all",
-    hdrs = ["factorize_all.h"],
+    name = "divisor",
+    hdrs = ["divisor.h"],
+    deps = [
+        ":min_prime_tagger",
+    ],
+)
+
+cc_library(
+    name = "divisor64",
+    hdrs = ["divisor64.h"],
+    deps = [
+        ":miller_rabin",
+        ":rho64",
+    ],
+)
+
+cc_library(
+    name = "factorize",
+    hdrs = ["factorize.h"],
+    deps = [
+        ":min_prime_tagger",
+    ],
 )
 
 cc_library(
     name = "factorize64",
     hdrs = ["factorize64.h"],
     deps = [
-        "//math/prime:miller_rabin",
-        "//math/prime:rho64",
+        ":miller_rabin",
+        ":rho64",
     ],
 )
 
@@ -20,8 +40,8 @@ cc_library(
     name = "factorize128",
     hdrs = ["factorize128.h"],
     deps = [
-        "//math/prime:miller_rabin128",
-        "//math/prime:rho128",
+        ":miller_rabin128",
+        ":rho128",
     ],
 )
 

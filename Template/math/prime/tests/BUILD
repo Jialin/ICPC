@@ -1,10 +1,30 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "factorize_all_test",
-    srcs = ["factorize_all_test.cpp"],
+    name = "divisor_test",
+    srcs = ["divisor_test.cpp"],
     deps = [
-        "//math/prime:factorize_all",
+        "//math/prime:divisor",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "divisor64_test",
+    srcs = ["divisor64_test.cpp"],
+    deps = [
+        "//math/prime:divisor64",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "factorize_test",
+    srcs = ["factorize_test.cpp"],
+    deps = [
+        "//math/prime:factorize",
         "@gtest",
         "@gtest//:gtest_main",
     ],

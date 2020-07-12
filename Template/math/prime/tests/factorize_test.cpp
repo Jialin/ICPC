@@ -1,11 +1,11 @@
 #include "gtest/gtest.h"
 
-#include "math/prime/factorize_all.h"
+#include "math/prime/factorize.h"
 
 namespace math {
 
-TEST(FactorizeAll, test) {
-  FactorizeAll fa(1024 + 1);
+TEST(Factorize, test) {
+  MinPrimeTagger mpt(1024 + 1);
   vector<int> ps;
   vector<int> es;
   const auto& processor = [&ps, &es](int p, int e) {
@@ -14,7 +14,7 @@ TEST(FactorizeAll, test) {
     return true;
   };
 
-  fa.factorize(2, processor);
+  factorize(2, mpt, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 2);
@@ -22,7 +22,7 @@ TEST(FactorizeAll, test) {
 
   ps.clear();
   es.clear();
-  fa.factorize(1024, processor);
+  factorize(1024, mpt, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 2);
@@ -30,7 +30,7 @@ TEST(FactorizeAll, test) {
 
   ps.clear();
   es.clear();
-  fa.factorize(10, processor);
+  factorize(10, mpt, processor);
   EXPECT_EQ(ps.size(), 2);
   EXPECT_EQ(es.size(), 2);
   EXPECT_EQ(ps[0], 2);
@@ -40,7 +40,7 @@ TEST(FactorizeAll, test) {
 
   ps.clear();
   es.clear();
-  fa.factorize(27, processor);
+  factorize(27, mpt, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 3);
@@ -48,7 +48,7 @@ TEST(FactorizeAll, test) {
 
   ps.clear();
   es.clear();
-  fa.factorize(840, processor);
+  factorize(840, mpt, processor);
   EXPECT_EQ(ps.size(), 4);
   EXPECT_EQ(es.size(), 4);
   EXPECT_EQ(ps[0], 2);
@@ -62,7 +62,7 @@ TEST(FactorizeAll, test) {
 
   ps.clear();
   es.clear();
-  fa.factorize(1009, processor);
+  factorize(1009, mpt, processor);
   EXPECT_EQ(ps.size(), 1);
   EXPECT_EQ(es.size(), 1);
   EXPECT_EQ(ps[0], 1009);
