@@ -4,6 +4,8 @@
 
 using namespace std;
 
+namespace math {
+
 class PhiAll {
 public:
   inline PhiAll(int n) {
@@ -38,3 +40,5 @@ public:
 private:
   vector<int> phi_;
 };
+
+} // namespace math
