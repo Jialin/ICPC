@@ -111,6 +111,16 @@ cc_test(
 )
 
 cc_test(
+    name = "phi_inv64_test",
+    srcs = ["phi_inv64_test.cpp"],
+    deps = [
+        "//math/prime:phi_inv64",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "phi32_test",
     srcs = ["phi32_test.cpp"],
     deps = [

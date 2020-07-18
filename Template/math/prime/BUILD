@@ -93,6 +93,14 @@ cc_library(
 )
 
 cc_library(
+    name = "phi_inv64",
+    hdrs = ["phi_inv64.h"],
+    deps = [
+        ":divisor64",
+    ],
+)
+
+cc_library(
     name = "phi32",
     hdrs = ["phi32.h"],
     deps = [
