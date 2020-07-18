@@ -106,6 +106,14 @@ cc_library(
 )
 
 cc_library(
+    name = "prime_generator",
+    hdrs = ["prime_generator.h"],
+    deps = [
+        ":prime_iterator",
+    ],
+)
+
+cc_library(
     name = "prime_iterator",
     hdrs = ["prime_iterator.h"],
 )

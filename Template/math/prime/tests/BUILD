@@ -131,6 +131,16 @@ cc_test(
 )
 
 cc_test(
+    name = "prime_generator_test",
+    srcs = ["prime_generator_test.cpp"],
+    deps = [
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "prime_iterator_test",
     srcs = ["prime_iterator_test.cpp"],
     deps = [
