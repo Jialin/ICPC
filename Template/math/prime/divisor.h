@@ -54,4 +54,4 @@ inline void divisorIterator(
   divisorIteratorDfs_(1, n, n, tagger, processor);
 }
 
-}; // namespace math
+} // namespace math
