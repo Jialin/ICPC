@@ -55,8 +55,7 @@ public:
     }
   }
 
-  inline void
-  iterate(int n, const std::function<bool(uint32_t)>& processor) const {
+  inline void iterate(int n, const std::function<bool(int)>& processor) const {
     for (int p : PRIME_WHEEL) {
       if (p < n) {
         if (!processor(p)) {

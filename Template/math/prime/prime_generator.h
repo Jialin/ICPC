@@ -26,7 +26,7 @@ public:
     });
   }
 
-  vector<uint32_t> primes;
+  vector<int> primes;
 
 private:
   PrimeIterator pi;
