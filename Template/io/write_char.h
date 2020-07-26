@@ -22,11 +22,16 @@ inline void writeChar(char x) {
 }
 
 struct Flusher {
-  inline ~Flusher() {
+  inline void flush() {
     if (writePos) {
       fwrite(writeBuffer, 1, writePos, stdout);
       writePos = 0;
     }
+    fflush(stdout);
+  }
+
+  inline ~Flusher() {
+    flush();
   }
 } flusher;
 
