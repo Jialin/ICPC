@@ -16,6 +16,14 @@ TEST(PhiInv64Test, basic) {
   EXPECT_EQ(vs[1], 2);
 
   vs.clear();
+  phiInv.calc(2, processor);
+  sort(vs.begin(), vs.end());
+  ASSERT_EQ(vs.size(), 3);
+  EXPECT_EQ(vs[0], 3);
+  EXPECT_EQ(vs[1], 4);
+  EXPECT_EQ(vs[2], 6);
+
+  vs.clear();
   phiInv.calc(15, processor);
   EXPECT_TRUE(vs.empty());
 
