@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include <cstring>
 #include <functional>
@@ -70,7 +72,7 @@ public:
     V lb = lower / PRIME_LCM;
     V ub = (upper + PRIME_LCM - 1) / PRIME_LCM;
     V offset = lb * PRIME_LCM;
-    int size = ub - lb;
+    int size = static_cast<int>(ub - lb);
     segmentedSieve_.assign(size, 0);
     if (!lb) {
       segmentedSieve_[0] = 1;
