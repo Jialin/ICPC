@@ -9,3 +9,13 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "unique_counter_test",
+    srcs = ["unique_counter_test.cpp"],
+    deps = [
+        "//collections:unique_counter",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

@@ -6,3 +6,8 @@ cc_library(
     name = "bitset",
     hdrs = ["bitset.h"],
 )
+
+cc_library(
+    name = "unique_counter",
+    hdrs = ["unique_counter.h"],
+)
