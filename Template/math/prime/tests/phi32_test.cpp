@@ -1,11 +1,12 @@
 #include "gtest/gtest.h"
 
 #include "math/prime/phi32.h"
+#include "math/prime/prime_iterator.h"
 
 namespace math {
 
 TEST(Phi32, testSmall) {
-  vector<uint32_t> primes{2, 3};
+  vector<int> primes{2, 3};
   EXPECT_EQ(phi32(0, primes), 0);
   EXPECT_EQ(phi32(1, primes), 1);
   EXPECT_EQ(phi32(2, primes), 1);
@@ -17,9 +18,9 @@ TEST(Phi32, testSmall) {
 }
 
 TEST(Phi32, testLarge) {
-  vector<uint32_t> primes;
+  vector<int> primes;
   PrimeIterator pi(10000);
-  pi.iterate(1000, [&primes](uint32_t prime) {
+  pi.iterate(1000, [&primes](int prime) {
     primes.push_back(prime);
     return true;
   });

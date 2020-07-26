@@ -125,6 +125,7 @@ cc_test(
     srcs = ["phi32_test.cpp"],
     deps = [
         "//math/prime:phi32",
+        "//math/prime:prime_iterator",
         "@gtest",
         "@gtest//:gtest_main",
     ],
