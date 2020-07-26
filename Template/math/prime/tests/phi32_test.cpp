@@ -20,7 +20,7 @@ TEST(Phi32, testSmall) {
 TEST(Phi32, testLarge) {
   vector<int> primes;
   PrimeIterator pi(10000);
-  pi.iterate(1000, [&primes](int prime) {
+  pi.iterate(3000, [&primes](int prime) {
     primes.push_back(prime);
     return true;
   });
