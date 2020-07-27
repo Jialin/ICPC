@@ -11,6 +11,11 @@ cc_library(
 )
 
 cc_library(
+    name = "divisor32",
+    hdrs = ["divisor32.h"],
+)
+
+cc_library(
     name = "divisor64",
     hdrs = ["divisor64.h"],
     deps = [
@@ -90,6 +95,15 @@ cc_library(
 cc_library(
     name = "phi_all",
     hdrs = ["phi_all.h"],
+)
+
+cc_library(
+    name = "phi_inv32",
+    hdrs = ["phi_inv32.h"],
+    deps = [
+        ":divisor32",
+        ":miller_rabin32",
+    ],
 )
 
 cc_library(

@@ -11,6 +11,17 @@ cc_test(
 )
 
 cc_test(
+    name = "divisor32_test",
+    srcs = ["divisor32_test.cpp"],
+    deps = [
+        "//math/prime:divisor32",
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "divisor64_test",
     srcs = ["divisor64_test.cpp"],
     deps = [
@@ -105,6 +116,17 @@ cc_test(
     srcs = ["phi_all_test.cpp"],
     deps = [
         "//math/prime:phi_all",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "phi_inv32_test",
+    srcs = ["phi_inv32_test.cpp"],
+    deps = [
+        "//math/prime:phi_inv32",
+        "//math/prime:prime_generator",
         "@gtest",
         "@gtest//:gtest_main",
     ],
