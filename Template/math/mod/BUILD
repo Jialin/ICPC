@@ -87,7 +87,7 @@ cc_library(
     name = "power_tower",
     hdrs = ["power_tower.h"],
     deps = [
-        ":exp_safe",
+        ":exp",
         ":fix",
     ],
 )

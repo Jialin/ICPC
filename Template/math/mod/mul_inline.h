@@ -1,3 +1,5 @@
+#pragma once
+
 namespace math {
 
 template<typename V = int32_t, typename V_SQR = int64_t>

@@ -1,6 +1,8 @@
+#pragma once
+
 #include <vector>
 
-#include "math/mod/exp_safe.h"
+#include "math/mod/exp.h"
 #include "math/mod/fix.h"
 
 using namespace std;
@@ -21,14 +23,20 @@ inline bool exceed(T base, EXP exp, T bound, T& res) {
 template<typename T>
 inline T powerTowerDfs_(
     int depth, int size, const vector<T>& bases, const vector<T>& phis) {
-  if (depth >= size || bases[depth] == 1 || phis[depth] == 1) {
+  if (depth >= size) {
+    return 1;
+  }
+  if (bases[depth] <= 1) {
+    return bases[depth];
+  }
+  if (phis[depth] == 1) {
     return 1;
   }
   T subRes = powerTowerDfs_(depth + 1, size, bases, phis), res;
   if (!exceed(bases[depth], subRes, phis[depth], res)) {
     return res;
   }
-  return expModSafe(fixMod(bases[depth], phis[depth]), subRes, phis[depth]) +
+  return expMod(fixMod(bases[depth], phis[depth]), subRes, phis[depth]) +
          phis[depth];
 }
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "math/mod/mul_inline.h"
 
 namespace math {

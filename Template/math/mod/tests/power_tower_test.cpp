@@ -32,4 +32,10 @@ TEST(PowerTowerTest, large) {
       0);
 }
 
+TEST(PowerTowerTest, zero) {
+  vector<int> phis{4, 2, 1};
+  EXPECT_EQ(powerTower({2, 2, 0}, phis), 2);
+  EXPECT_EQ(powerTower({2, 3, 0}, phis), 2);
+}
+
 } // namespace math
