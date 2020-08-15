@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "math/mod/fix_inline.h"
-#include "math/mod/mul_inline.h"
+#include "math/mod/mul_inline_safe.h"
 
 namespace math {
 
@@ -15,9 +15,9 @@ inline V expModSafe(V base, EXP exp, const V& mod) {
   fixModInline<V>(res, mod);
   for (; exp > 0; exp >>= 1) {
     if (exp & 1) {
-      mulModInline<V, V_SQR>(res, base, mod);
+      mulModInlineSafe<V, V_SQR>(res, base, mod);
     }
-    mulModInline<V, V_SQR>(base, base, mod);
+    mulModInlineSafe<V, V_SQR>(base, base, mod);
   }
   return res;
 }

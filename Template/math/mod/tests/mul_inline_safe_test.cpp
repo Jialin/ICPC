@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod/mul_inline.h"
+#include "math/mod/mul_inline_safe.h"
 
 namespace math {
 
@@ -8,11 +8,11 @@ TEST(MulModInline, testSmall) {
   int32_t res;
 
   res = 2;
-  mulModInline(res, 3, 7);
+  mulModInlineSafe(res, 3, 7);
   EXPECT_EQ(res, 6);
 
   res = 2;
-  mulModInline(res, 3, 5);
+  mulModInlineSafe(res, 3, 5);
   EXPECT_EQ(res, 1);
 }
 
@@ -20,7 +20,7 @@ TEST(MulMod, testLarge) {
   int32_t res;
 
   res = 999999991;
-  mulModInline(res, 123123123, 1000000007);
+  mulModInlineSafe(res, 123123123, 1000000007);
   EXPECT_EQ(res, 30030046);
 }
 
@@ -28,7 +28,7 @@ TEST(MulMod, testOverflow) {
   int32_t res;
 
   res = 999999991;
-  mulModInline<int32_t, int32_t>(res, 123123123, 1000000007);
+  mulModInlineSafe<int32_t, int32_t>(res, 123123123, 1000000007);
   EXPECT_EQ(res, 30030046);
 }
 

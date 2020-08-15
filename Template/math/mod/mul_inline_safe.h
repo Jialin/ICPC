@@ -8,7 +8,7 @@ using namespace std;
 namespace math {
 
 template<typename V = int32_t, typename V_SQR = int64_t>
-inline void mulModInline(V& res, V x, const V& mod) {
+inline void mulModInlineSafe(V& res, V x, const V& mod) {
   fixModInline<V>(res, mod);
   fixModInline<V>(x, mod);
   if (!res || !x) {

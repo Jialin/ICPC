@@ -15,7 +15,7 @@ cc_library(
     hdrs = ["exp_safe.h"],
     deps = [
         ":fix_inline",
-        ":mul_inline",
+        ":mul_inline_safe",
     ],
 )
 
@@ -53,13 +53,13 @@ cc_library(
     hdrs = ["mod_exp_utils.h"],
     deps = [
         ":fix_inline",
-        ":mul_inline",
+        ":mul_inline_safe",
     ],
 )
 
 cc_library(
-    name = "mul_inline",
-    hdrs = ["mul_inline.h"],
+    name = "mul_inline_safe",
+    hdrs = ["mul_inline_safe.h"],
     deps = [
         ":add",
         ":fix_inline",
@@ -78,7 +78,7 @@ cc_library(
 cc_library(
     name = "mul",
     hdrs = ["mul.h"],
-    deps = [":mul_inline"],
+    deps = [":mul_inline_safe"],
 )
 
 cc_library(

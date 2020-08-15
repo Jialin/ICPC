@@ -4,7 +4,7 @@
 
 #include "math/gcd/gcd64.h"
 #include "math/mod/add.h"
-#include "math/mod/mul_inline.h"
+#include "math/mod/mul_inline_safe.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ namespace {
 const int RHO_STEP_64 = 128;
 
 inline uint64_t rhoF64(uint64_t x, uint64_t c, uint64_t mod) {
-  mulModInline<uint64_t, __uint128_t>(x, x, mod);
+  mulModInlineSafe<uint64_t, __uint128_t>(x, x, mod);
   return addMod(x, c, mod);
 }
 
@@ -41,7 +41,7 @@ inline uint64_t rho64(uint64_t n, uint64_t x = 0, uint64_t c = 0) {
       xs = x;
       for (int i = min(l - k, RHO_STEP_64); i > 0; --i) {
         x = rhoF64(x, c, n);
-        mulModInline<uint64_t, __uint128_t>(q, y > x ? y - x : x - y, n);
+        mulModInlineSafe<uint64_t, __uint128_t>(q, y > x ? y - x : x - y, n);
       }
       g = gcd64(q, n);
     }

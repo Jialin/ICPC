@@ -14,7 +14,7 @@ inline bool checkComposite64(uint64_t n, uint64_t a, uint64_t d, int s) {
     return false;
   }
   for (int i = 1; i < s; ++i) {
-    mulModInline<uint64_t, __uint128_t>(x, x, n);
+    mulModInlineSafe<uint64_t, __uint128_t>(x, x, n);
     if (x == n - 1) {
       return false;
     }

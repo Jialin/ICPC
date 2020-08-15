@@ -64,7 +64,7 @@ cc_library(
     hdrs = ["miller_rabin32.h"],
     deps = [
         "//math/mod:exp_safe",
-        "//math/mod:mul_inline",
+        "//math/mod:mul_inline_safe",
     ],
 )
 
@@ -73,7 +73,7 @@ cc_library(
     hdrs = ["miller_rabin64.h"],
     deps = [
         "//math/mod:exp_safe",
-        "//math/mod:mul_inline",
+        "//math/mod:mul_inline_safe",
     ],
 )
 
@@ -143,7 +143,7 @@ cc_library(
     deps = [
         "//math/gcd:gcd32",
         "//math/mod:add",
-        "//math/mod:mul_inline",
+        "//math/mod:mul_inline_safe",
     ],
 )
 
@@ -153,7 +153,7 @@ cc_library(
     deps = [
         "//math/gcd:gcd64",
         "//math/mod:add",
-        "//math/mod:mul_inline",
+        "//math/mod:mul_inline_safe",
     ],
 )
 

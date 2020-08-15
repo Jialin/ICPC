@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "math/mod/fix_inline.h"
-#include "math/mod/mul_inline.h"
+#include "math/mod/mul_inline_safe.h"
 
 using namespace std;
 
@@ -37,9 +37,9 @@ public:
       }
       while (i >= pows_.size()) {
         pows_.emplace_back(pows_.back());
-        mulModInline<V, V_SQR>(pows_.back(), pows_.back(), mod_);
+        mulModInlineSafe<V, V_SQR>(pows_.back(), pows_.back(), mod_);
       }
-      mulModInline<V, V_SQR>(res, pows_[i], mod_);
+      mulModInlineSafe<V, V_SQR>(res, pows_[i], mod_);
     }
     return res;
   }

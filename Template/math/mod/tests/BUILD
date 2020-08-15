@@ -71,10 +71,10 @@ cc_test(
 )
 
 cc_test(
-    name = "mul_inline_test",
-    srcs = ["mul_inline_test.cpp"],
+    name = "mul_inline_safe_test",
+    srcs = ["mul_inline_safe_test.cpp"],
     deps = [
-        "//math/mod:mul_inline",
+        "//math/mod:mul_inline_safe",
         "@gtest",
         "@gtest//:gtest_main",
     ],

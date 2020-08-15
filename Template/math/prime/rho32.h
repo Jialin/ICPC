@@ -4,7 +4,7 @@
 
 #include "math/gcd/gcd32.h"
 #include "math/mod/add.h"
-#include "math/mod/mul_inline.h"
+#include "math/mod/mul_inline_safe.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ namespace {
 const int RHO_STEP_32 = 128;
 
 inline uint32_t rhoF32(uint32_t x, uint32_t c, uint32_t mod) {
-  mulModInline<uint32_t, uint64_t>(x, x, mod);
+  mulModInlineSafe<uint32_t, uint64_t>(x, x, mod);
   return addMod(x, c, mod);
 }
 
@@ -41,7 +41,7 @@ inline uint32_t rho32(uint32_t n, uint32_t x = 0, uint32_t c = 0) {
       xs = x;
       for (int i = min(l - k, RHO_STEP_32); i > 0; --i) {
         x = rhoF32(x, c, n);
-        mulModInline<uint32_t, uint64_t>(q, y > x ? y - x : x - y, n);
+        mulModInlineSafe<uint32_t, uint64_t>(q, y > x ? y - x : x - y, n);
       }
       g = gcd32(q, n);
     }
