@@ -11,10 +11,10 @@ cc_test(
 )
 
 cc_test(
-    name = "exp_test",
-    srcs = ["exp_test.cpp"],
+    name = "exp_safe_test",
+    srcs = ["exp_safe_test.cpp"],
     deps = [
-        "//math/mod:exp",
+        "//math/mod:exp_safe",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -85,6 +85,16 @@ cc_test(
     srcs = ["mul_test.cpp"],
     deps = [
         "//math/mod:mul",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "power_tower_test",
+    srcs = ["power_tower_test.cpp"],
+    deps = [
+        "//math/mod:power_tower",
         "@gtest",
         "@gtest//:gtest_main",
     ],

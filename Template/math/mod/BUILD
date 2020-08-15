@@ -11,8 +11,8 @@ cc_library(
 )
 
 cc_library(
-    name = "exp",
-    hdrs = ["exp.h"],
+    name = "exp_safe",
+    hdrs = ["exp_safe.h"],
     deps = [
         ":fix_inline",
         ":mul_inline",
@@ -63,6 +63,15 @@ cc_library(
     deps = [
         ":add",
         ":fix_inline",
+    ],
+)
+
+cc_library(
+    name = "power_tower",
+    hdrs = ["power_tower.h"],
+    deps = [
+        ":exp_safe",
+        ":fix",
     ],
 )
 

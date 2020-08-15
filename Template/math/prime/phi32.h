@@ -10,7 +10,7 @@ namespace math {
 uint32_t phi32(uint32_t n, const vector<int>& primes) {
   uint32_t res = n;
   for (int prime : primes) {
-    if (prime > n / prime) {
+    if (prime > static_cast<int>(n / prime)) {
       break;
     }
     if (n % prime) {
