@@ -4,7 +4,7 @@
 
 namespace math {
 
-TEST(MulModInline, testSmall) {
+TEST(MulModSafeTest, small) {
   int32_t res;
 
   res = 2;
@@ -16,7 +16,7 @@ TEST(MulModInline, testSmall) {
   EXPECT_EQ(res, 1);
 }
 
-TEST(MulMod, testLarge) {
+TEST(MulModSafeTest, large) {
   int32_t res;
 
   res = 999999991;
@@ -24,7 +24,7 @@ TEST(MulMod, testLarge) {
   EXPECT_EQ(res, 30030046);
 }
 
-TEST(MulMod, testOverflow) {
+TEST(MulModSafeTest, overflow) {
   int32_t res;
 
   res = 999999991;

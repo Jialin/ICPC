@@ -11,6 +11,12 @@ cc_library(
 )
 
 cc_library(
+    name = "exp",
+    hdrs = ["exp.h"],
+    deps = [":mul_inline"],
+)
+
+cc_library(
     name = "exp_safe",
     hdrs = ["exp_safe.h"],
     deps = [
@@ -58,6 +64,17 @@ cc_library(
 )
 
 cc_library(
+    name = "mul",
+    hdrs = ["mul.h"],
+    deps = [":mul_inline_safe"],
+)
+
+cc_library(
+    name = "mul_inline",
+    hdrs = ["mul_inline.h"],
+)
+
+cc_library(
     name = "mul_inline_safe",
     hdrs = ["mul_inline_safe.h"],
     deps = [
@@ -73,12 +90,6 @@ cc_library(
         ":exp_safe",
         ":fix",
     ],
-)
-
-cc_library(
-    name = "mul",
-    hdrs = ["mul.h"],
-    deps = [":mul_inline_safe"],
 )
 
 cc_library(

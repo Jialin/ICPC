@@ -21,6 +21,16 @@ cc_test(
 )
 
 cc_test(
+    name = "exp_test",
+    srcs = ["exp_test.cpp"],
+    deps = [
+        "//math/mod:exp",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "exp128_test",
     srcs = ["exp128_test.cpp"],
     deps = [
@@ -65,6 +75,16 @@ cc_test(
     srcs = ["mod_exp_utils_test.cpp"],
     deps = [
         "//math/mod:mod_exp_utils",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "mul_inline_test",
+    srcs = ["mul_inline_test.cpp"],
+    deps = [
+        "//math/mod:mul_inline",
         "@gtest",
         "@gtest//:gtest_main",
     ],
