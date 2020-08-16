@@ -111,6 +111,16 @@ cc_test(
 )
 
 cc_test(
+    name = "mul_test",
+    srcs = ["mul_test.cpp"],
+    deps = [
+        "//math/mod:mul",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "power_tower_test",
     srcs = ["power_tower_test.cpp"],
     deps = [
