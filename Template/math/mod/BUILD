@@ -64,8 +64,8 @@ cc_library(
 )
 
 cc_library(
-    name = "mul",
-    hdrs = ["mul.h"],
+    name = "mul_safe",
+    hdrs = ["mul_safe.h"],
     deps = [":mul_inline_safe"],
 )
 

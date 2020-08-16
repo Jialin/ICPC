@@ -101,10 +101,10 @@ cc_test(
 )
 
 cc_test(
-    name = "mul_test",
-    srcs = ["mul_test.cpp"],
+    name = "mul_safe_test",
+    srcs = ["mul_safe_test.cpp"],
     deps = [
-        "//math/mod:mul",
+        "//math/mod:mul_safe",
         "@gtest",
         "@gtest//:gtest_main",
     ],

@@ -2,7 +2,7 @@
 
 #include "math/matrix/matrix.h"
 #include "math/mod/add.h"
-#include "math/mod/mul.h"
+#include "math/mod/mul_safe.h"
 
 namespace math {
 
@@ -17,7 +17,7 @@ inline void matrixMulModInline(
       subRes = 0;
       for (int k = a.m() - 1; k >= 0; --k) {
         subRes = addMod<V>(
-            subRes, mulMod<V, V_SQR>(a.at(i, k), b.at(k, j), mod), mod);
+            subRes, mulModSafe<V, V_SQR>(a.at(i, k), b.at(k, j), mod), mod);
       }
     }
   }

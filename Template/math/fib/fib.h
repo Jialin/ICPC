@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "math/mod/add.h"
-#include "math/mod/mul.h"
+#include "math/mod/mul_safe.h"
 #include "math/mod/slight_fix.h"
 #include "math/mod/sub.h"
 
@@ -21,9 +21,9 @@ inline pair<V, V> fib(IDX n, const V& mod) {
   }
   V a, b;
   tie(a, b) = fib<V, IDX, V_SQR>(n >> 1, mod);
-  V c = mulMod<V, V_SQR>(a, subMod<V>(addMod<V>(b, b, mod), a, mod), mod);
-  V d =
-      addMod<V>(mulMod<V, V_SQR>(a, a, mod), mulMod<V, V_SQR>(b, b, mod), mod);
+  V c = mulModSafe<V, V_SQR>(a, subMod<V>(addMod<V>(b, b, mod), a, mod), mod);
+  V d = addMod<V>(
+      mulModSafe<V, V_SQR>(a, a, mod), mulModSafe<V, V_SQR>(b, b, mod), mod);
   if (n & 1) {
     return {d, addMod<V>(c, d, mod)};
   } else {

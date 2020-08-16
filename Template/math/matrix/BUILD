@@ -29,7 +29,7 @@ cc_library(
         ":matrix",
         ":matrix_fix_inline",
         "//math/mod:add",
-        "//math/mod:mul",
+        "//math/mod:mul_safe",
     ],
 )
 

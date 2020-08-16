@@ -23,7 +23,7 @@ cc_library(
     hdrs = ["fib.h"],
     deps = [
         "//math/mod:add",
-        "//math/mod:mul",
+        "//math/mod:mul_safe",
         "//math/mod:slight_fix",
         "//math/mod:sub",
     ],
