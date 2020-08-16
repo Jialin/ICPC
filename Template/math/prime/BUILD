@@ -72,8 +72,8 @@ cc_library(
     name = "miller_rabin64",
     hdrs = ["miller_rabin64.h"],
     deps = [
-        "//math/mod:exp_safe",
-        "//math/mod:mul_inline_safe",
+        "//math/mod:exp",
+        "//math/mod:fix",
     ],
 )
 
@@ -152,8 +152,8 @@ cc_library(
     hdrs = ["rho64.h"],
     deps = [
         "//math/gcd:gcd64",
-        "//math/mod:add",
-        "//math/mod:mul_inline_safe",
+        "//math/mod:fix",
+        "//math/mod:mul_inline",
     ],
 )
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "math/mod/exp_safe.h"
+#include "math/mod/exp.h"
+#include "math/mod/fix.h"
 
 using namespace std;
 
@@ -9,12 +10,12 @@ namespace math {
 namespace {
 
 inline bool checkComposite64(uint64_t n, uint64_t a, uint64_t d, int s) {
-  uint64_t x = expModSafe<uint64_t, uint64_t, __uint128_t>(a, d, n);
+  uint64_t x = expMod<uint64_t, uint64_t, __uint128_t>(fixMod(a, n), d, n);
   if (x == 1 || x == n - 1) {
     return false;
   }
   for (int i = 1; i < s; ++i) {
-    mulModInlineSafe<uint64_t, __uint128_t>(x, x, n);
+    mulModInline<uint64_t, __uint128_t>(x, x, n);
     if (x == n - 1) {
       return false;
     }

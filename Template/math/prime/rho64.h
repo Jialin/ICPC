@@ -3,8 +3,8 @@
 #include <algorithm>
 
 #include "math/gcd/gcd64.h"
-#include "math/mod/add.h"
-#include "math/mod/mul_inline_safe.h"
+#include "math/mod/fix.h"
+#include "math/mod/mul_inline.h"
 
 using namespace std;
 
@@ -15,8 +15,8 @@ namespace {
 const int RHO_STEP_64 = 128;
 
 inline uint64_t rhoF64(uint64_t x, uint64_t c, uint64_t mod) {
-  mulModInlineSafe<uint64_t, __uint128_t>(x, x, mod);
-  return addMod(x, c, mod);
+  mulModInline<uint64_t, __uint128_t>(x, x, mod);
+  return fixMod(x + c, mod);
 }
 
 } // namespace
@@ -26,12 +26,12 @@ inline uint64_t rho64(uint64_t n, uint64_t x = 0, uint64_t c = 0) {
     return 2;
   }
   if (!x) {
-    x = rand();
+    x = fixMod<uint64_t>(rand(), n);
   }
   if (!c) {
-    c = rand();
+    c = fixMod<uint64_t>(rand(), n);
   }
-  uint64_t g = 1, q = 1, xs = 0, y = 0;
+  uint64_t g = 1, q = fixMod<uint64_t>(1, n), xs = 0, y = 0;
   for (int l = 1; g == 1; l <<= 1) {
     y = x;
     for (int i = 1; i < l; ++i) {
@@ -41,7 +41,7 @@ inline uint64_t rho64(uint64_t n, uint64_t x = 0, uint64_t c = 0) {
       xs = x;
       for (int i = min(l - k, RHO_STEP_64); i > 0; --i) {
         x = rhoF64(x, c, n);
-        mulModInlineSafe<uint64_t, __uint128_t>(q, y > x ? y - x : x - y, n);
+        mulModInline<uint64_t, __uint128_t>(q, y > x ? y - x : x - y, n);
       }
       g = gcd64(q, n);
     }
