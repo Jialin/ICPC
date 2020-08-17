@@ -64,6 +64,12 @@ cc_library(
 )
 
 cc_library(
+    name = "inv_all",
+    hdrs = ["inv_all.h"],
+    deps = [":mul"],
+)
+
+cc_library(
     name = "mod_exp_utils",
     hdrs = ["mod_exp_utils.h"],
     deps = [

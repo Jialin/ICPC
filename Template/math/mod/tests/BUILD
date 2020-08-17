@@ -71,6 +71,16 @@ cc_test(
 )
 
 cc_test(
+    name = "inv_all_test",
+    srcs = ["inv_all_test.cpp"],
+    deps = [
+        "//math/mod:inv_all",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "inv_test",
     srcs = ["inv_test.cpp"],
     deps = [
