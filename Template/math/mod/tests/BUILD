@@ -171,6 +171,16 @@ cc_test(
 )
 
 cc_test(
+    name = "stirling_first_test",
+    srcs = ["stirling_first_test.cpp"],
+    deps = [
+        "//math/mod:stirling_first",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "sub_test",
     srcs = ["sub_test.cpp"],
     deps = [
