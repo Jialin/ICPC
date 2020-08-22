@@ -1,10 +1,10 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "fib_partial_sum_test",
-    srcs = ["fib_partial_sum_test.cpp"],
+    name = "fib_sum_test",
+    srcs = ["fib_sum_test.cpp"],
     deps = [
-        "//math/fib:fib_partial_sum",
+        "//math/fib:fib_sum",
         "@gtest",
         "@gtest//:gtest_main",
     ],

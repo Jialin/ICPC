@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/fib/fib_partial_sum.h"
+#include "math/fib/fib_sum.h"
 
 namespace math {
 

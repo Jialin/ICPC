@@ -3,8 +3,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "fib_partial_sum",
-    hdrs = ["fib_partial_sum.h"],
+    name = "fib_sum",
+    hdrs = ["fib_sum.h"],
     deps = [
         ":fib",
     ],
