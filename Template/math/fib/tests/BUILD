@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "fib_power_sum_test",
+    srcs = ["fib_power_sum_test.cpp"],
+    deps = [
+        "//math/fib:fib_power_sum",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "fib_sum_test",
     srcs = ["fib_sum_test.cpp"],
     deps = [

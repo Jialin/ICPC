@@ -10,6 +10,8 @@ namespace math {
 
 // Computes C(a, b) where a<=n and b<=n
 struct CombinationMod {
+  inline CombinationMod() {}
+
   inline CombinationMod(int n, int mod) {
     init(n, mod);
   }

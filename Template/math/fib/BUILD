@@ -3,6 +3,30 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "fib",
+    hdrs = ["fib.h"],
+    deps = [
+        "//math/mod:add",
+        "//math/mod:mul_safe",
+        "//math/mod:slight_fix",
+        "//math/mod:sub",
+    ],
+)
+
+cc_library(
+    name = "fib_power_sum",
+    hdrs = ["fib_power_sum.h"],
+    deps = [
+        "//math/mod:add",
+        "//math/mod:combination",
+        "//math/mod:exp",
+        "//math/mod:fix",
+        "//math/mod:mul",
+        "//math/mod:sub",
+    ],
+)
+
+cc_library(
     name = "fib_sum",
     hdrs = ["fib_sum.h"],
     deps = [
@@ -15,17 +39,6 @@ cc_library(
     hdrs = ["fib_utils.h"],
     deps = [
         "//math/matrix:matrix_mod_exp_utils",
-    ],
-)
-
-cc_library(
-    name = "fib",
-    hdrs = ["fib.h"],
-    deps = [
-        "//math/mod:add",
-        "//math/mod:mul_safe",
-        "//math/mod:slight_fix",
-        "//math/mod:sub",
     ],
 )
 
