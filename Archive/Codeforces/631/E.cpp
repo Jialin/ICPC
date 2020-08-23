@@ -45,16 +45,15 @@ inline char nextChar(bool advance = true) {
 
 } // namespace
 
-template <typename T> void readInt(T &res) {
-  for (; isspace(nextChar(false)); nextChar()) {
-  }
+template<typename T>
+void readInt(T& res) {
+  for (; isspace(nextChar(false)); nextChar()) {}
   bool negative = nextChar(false) == '-';
   if (negative) {
     nextChar();
   }
   res = 0;
-  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {
-  }
+  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {}
   if (negative) {
     res = -res;
   }
@@ -76,8 +75,8 @@ inline bool isProductOverflow(MAX_UINT_T a, MAX_UINT_T b) {
   return a > numeric_limits<MAX_UINT_T>::max() / b;
 }
 
-inline void product(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T &high,
-                    MAX_UINT_T &low) {
+inline void
+product(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T& high, MAX_UINT_T& low) {
   int halfL = numeric_limits<MAX_UINT_T>::digits >> 1;
   MAX_UINT_T halfMask = numeric_limits<MAX_UINT_T>::max() >> halfL;
   MAX_UINT_T aHigh = a >> halfL, aLow = a & halfMask;
@@ -98,8 +97,8 @@ inline int sgn(MAX_UINT_T a, MAX_UINT_T b) {
 } // namespace
 
 /** sgn(a*b-c*d) */
-inline int sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c,
-                              MAX_UINT_T d) {
+inline int
+sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c, MAX_UINT_T d) {
   bool overflowAB = isProductOverflow(a, b);
   bool overflowCD = isProductOverflow(c, d);
   if (overflowAB) {
@@ -122,7 +121,8 @@ inline int sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c,
 }
 
 /** sgn(a*b-c*d) */
-template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
+template<typename T>
+inline int sgnProduct(T a, T b, T c, T d) {
   if (b < 0) {
     a = -a;
     b = -b;
@@ -147,7 +147,8 @@ template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
 }
 
 /** sgn(a/b-c/d) */
-template <typename T> inline int sgnFraction(T a, T b, T c, T d) {
+template<typename T>
+inline int sgnFraction(T a, T b, T c, T d) {
   assert(b && d);
   if (b < 0) {
     a = -a;
@@ -176,7 +177,8 @@ template <typename T> inline int sgnFraction(T a, T b, T c, T d) {
 
 namespace collections {
 
-template <typename T> class ConvexHullTricksMonoAdd {
+template<typename T>
+class ConvexHullTricksMonoAdd {
 public:
   inline void initMax(bool calcMax_) {
     this->calcMax = calcMax_;
@@ -263,14 +265,22 @@ public:
     }
   }
 
-  inline T frontA() { return as.front(); }
+  inline T frontA() {
+    return as.front();
+  }
 
-  inline T backA() { return as.back(); }
+  inline T backA() {
+    return as.back();
+  }
 
 private:
-  inline T topA_(bool addFront) { return addFront ? frontA() : backA(); }
+  inline T topA_(bool addFront) {
+    return addFront ? frontA() : backA();
+  }
 
-  inline T topB_(bool addFront) { return addFront ? bs.front() : bs.back(); }
+  inline T topB_(bool addFront) {
+    return addFront ? bs.front() : bs.back();
+  }
 
   inline void pop_(bool addFront) {
     if (addFront) {
@@ -304,7 +314,6 @@ private:
 
 } // namespace collections
 
-#define DEBUG(args...) fprintf(stderr, args)
 #define I64 int64_t
 #define FOR(i, a, b) for (int i = a; i < b; ++i)
 #define FORBACK(i, a, b) for (int i = b - 1; i >= a; --i)

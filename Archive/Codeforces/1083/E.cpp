@@ -28,7 +28,6 @@ using namespace std;
 #define GET1 get<1>
 #define GET2 get<2>
 #define CASTI64 static_cast<int64_t>
-#define DEBUG(...) fprintf(stderr, __VA_ARGS__)
 
 #define CAST static_cast
 #define I64 int64_t
@@ -58,16 +57,15 @@ inline char nextChar(bool advance = true) {
 
 } // namespace
 
-template <typename T> void readInt(T &res) {
-  for (; isspace(nextChar(false)); nextChar()) {
-  }
+template<typename T>
+void readInt(T& res) {
+  for (; isspace(nextChar(false)); nextChar()) {}
   bool negative = nextChar(false) == '-';
   if (negative) {
     nextChar();
   }
   res = 0;
-  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {
-  }
+  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {}
   if (negative) {
     res = -res;
   }
@@ -88,8 +86,8 @@ inline bool isProductOverflow(MAX_UINT_T a, MAX_UINT_T b) {
   return a > numeric_limits<MAX_UINT_T>::max() / b;
 }
 
-inline void product(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T &high,
-                    MAX_UINT_T &low) {
+inline void
+product(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T& high, MAX_UINT_T& low) {
   int halfL = numeric_limits<MAX_UINT_T>::digits >> 1;
   MAX_UINT_T halfMask = numeric_limits<MAX_UINT_T>::max() >> halfL;
   MAX_UINT_T aHigh = a >> halfL, aLow = a & halfMask;
@@ -110,8 +108,8 @@ inline int sgn(MAX_UINT_T a, MAX_UINT_T b) {
 } // namespace
 
 /** sgn(a*b-c*d) */
-inline int sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c,
-                              MAX_UINT_T d) {
+inline int
+sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c, MAX_UINT_T d) {
   bool overflowAB = isProductOverflow(a, b);
   bool overflowCD = isProductOverflow(c, d);
   if (overflowAB) {
@@ -134,7 +132,8 @@ inline int sgnUnsignedProduct(MAX_UINT_T a, MAX_UINT_T b, MAX_UINT_T c,
 }
 
 /** sgn(a*b-c*d) */
-template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
+template<typename T>
+inline int sgnProduct(T a, T b, T c, T d) {
   if (b < 0) {
     a = -a;
     b = -b;
@@ -159,7 +158,8 @@ template <typename T> inline int sgnProduct(T a, T b, T c, T d) {
 }
 
 /** sgn(a/b-c/d) */
-template <typename T> inline int sgnFraction(T a, T b, T c, T d) {
+template<typename T>
+inline int sgnFraction(T a, T b, T c, T d) {
   assert(b && d);
   if (b < 0) {
     a = -a;
@@ -188,7 +188,8 @@ template <typename T> inline int sgnFraction(T a, T b, T c, T d) {
 
 namespace collections {
 
-template <typename T> class ConvexHullTricksMonoAddQuery {
+template<typename T>
+class ConvexHullTricksMonoAddQuery {
 public:
   inline void initQueryMaxAndIncreasing(bool queryMax_, bool queryIncreasing_) {
     this->queryMax = queryMax_;
@@ -240,8 +241,7 @@ public:
              math::sgnFraction<T>(nums.front(), dens.front(), x, 1) <= 0) ||
             (!queryIncreasing &&
              math::sgnFraction<T>(x, 1, nums.back(), dens.back()) <= 0));
-         pop_(queryIncreasing)) {
-    }
+         pop_(queryIncreasing)) {}
     return queryIncreasing ? 0 : static_cast<int>(nums.size());
   }
 
@@ -269,14 +269,22 @@ public:
     }
   }
 
-  inline T frontA() { return as.front(); }
+  inline T frontA() {
+    return as.front();
+  }
 
-  inline T backA() { return as.back(); }
+  inline T backA() {
+    return as.back();
+  }
 
 private:
-  inline T topA_(bool addFront) { return addFront ? frontA() : backA(); }
+  inline T topA_(bool addFront) {
+    return addFront ? frontA() : backA();
+  }
 
-  inline T topB_(bool addFront) { return addFront ? bs.front() : bs.back(); }
+  inline T topB_(bool addFront) {
+    return addFront ? bs.front() : bs.back();
+  }
 
   inline void pop_(bool addFront) {
     if (addFront) {

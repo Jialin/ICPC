@@ -23,7 +23,6 @@
 #include <vector>
 using namespace std;
 
-#define DEBUG(args...) fprintf(stderr, args)
 #define SIZE(vs) static_cast<int>(vs.size())
 
 namespace io {
@@ -56,16 +55,15 @@ inline char nextChar(bool advance = true) {
 
 } // namespace
 
-template <typename T> void readInt(T &res) {
-  for (; isspace(nextChar(false)); nextChar()) {
-  }
+template<typename T>
+void readInt(T& res) {
+  for (; isspace(nextChar(false)); nextChar()) {}
   bool negative = nextChar(false) == '-';
   if (negative) {
     nextChar();
   }
   res = 0;
-  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {
-  }
+  for (; isdigit(nextChar(false)); res = res * 10 + (nextChar() - '0')) {}
   if (negative) {
     res = -res;
   }
@@ -79,7 +77,8 @@ namespace collections {
 namespace {
 
 /** floor(num/den) */
-template <typename T> inline T floorDiv(T num, T den) {
+template<typename T>
+inline T floorDiv(T num, T den) {
   assert(den);
   T res = num / den;
   return (num ^ den) >= 0 ? res : res - static_cast<bool>(num % den);
@@ -87,7 +86,8 @@ template <typename T> inline T floorDiv(T num, T den) {
 
 } // namespace
 
-template <typename T> class MinConvexHullTricksAddDecreasingQueryIncreasing {
+template<typename T>
+class MinConvexHullTricksAddDecreasingQueryIncreasing {
 private:
   class Line {
   public:
@@ -125,7 +125,7 @@ public:
       push(a, b, inf);
       return;
     }
-    const auto &lastLine = lines.back();
+    const auto& lastLine = lines.back();
     if (lastLine.a == a) {
       if (b < lastLine.b) {
         pop();
@@ -135,7 +135,7 @@ public:
     }
     T x = inf;
     while (!empty()) {
-      const auto &line = lines.back();
+      const auto& line = lines.back();
       x = floorDiv(b - line.b, line.a - a);
       if (lines.size() == 1 || line.x < x) {
         break;
@@ -145,10 +145,8 @@ public:
     push(a, b, x);
   }
 
-  inline const Line &queryLine(T x) {
-
-    for (; head + 1 < tail && lines[head + 1].x < x; ++head) {
-    }
+  inline const Line& queryLine(T x) {
+    for (; head + 1 < tail && lines[head + 1].x < x; ++head) {}
     return lines[head];
   }
 
@@ -157,18 +155,24 @@ public:
       static T inf = numeric_limits<T>::max();
       return inf;
     }
-    const auto &line = queryLine(x);
+    const auto& line = queryLine(x);
     return line.a * x + line.b;
   }
 
-  inline bool empty() const { return head >= tail; }
+  inline bool empty() const {
+    return head >= tail;
+  }
 
-  inline int size() const { return static_cast<int>(lines.size()); }
+  inline int size() const {
+    return static_cast<int>(lines.size());
+  }
 
   inline typename vector<Line>::iterator begin() {
     return lines.begin() + head;
   }
-  inline typename vector<Line>::iterator end() { return lines.end(); }
+  inline typename vector<Line>::iterator end() {
+    return lines.end();
+  }
   inline typename vector<Line>::reverse_iterator rbegin() {
     return lines.rbegin();
   }
@@ -182,7 +186,9 @@ public:
 namespace collections {
 
 class IntervalTreeNoUpdateBase {
-  inline bool isValid(int nodeIdx) { return lowers[nodeIdx] < uppers[nodeIdx]; }
+  inline bool isValid(int nodeIdx) {
+    return lowers[nodeIdx] < uppers[nodeIdx];
+  }
 
   int n;
 
@@ -216,8 +222,8 @@ public:
     }
   }
 
-  inline void queryRange(int lower, int upper,
-                         const function<void(int nodeIdx)> &queryProcessor) {
+  inline void queryRange(
+      int lower, int upper, const function<void(int nodeIdx)>& queryProcessor) {
     for (lower += n, upper += n; lower < upper; lower >>= 1, upper >>= 1) {
       if (lower & 1) {
         if (isValid(lower)) {
@@ -248,7 +254,10 @@ vector<int> xs, ps;
 
 constexpr int64_t kMaxI64 = numeric_limits<int64_t>::max();
 
-template <typename T> inline T sqr(T x) { return x * x; }
+template<typename T>
+inline T sqr(T x) {
+  return x * x;
+}
 
 struct Query {
   int idx, x;
@@ -271,7 +280,9 @@ struct Query {
     SORTUNIQUE(blackouts);
   }
 
-  inline bool operator<(const Query &o) const { return x < o.x; }
+  inline bool operator<(const Query& o) const {
+    return x < o.x;
+  }
 };
 
 vector<Query> queries;
@@ -286,13 +297,15 @@ public:
   vector<collections::MinConvexHullTricksAddDecreasingQueryIncreasing<I64>>
       chts;
 
-  inline I64 query(const Query &query) {
+  inline I64 query(const Query& query) {
     I64 res = kMaxI64;
     FOR(i, 1, SIZE(query.blackouts)) {
-      queryRange(query.blackouts[i - 1] + 1, query.blackouts[i],
-                 [this, &res, &query](int nodeIdx) {
-                   res = min(res, this->chts[nodeIdx].query(query.x));
-                 });
+      queryRange(
+          query.blackouts[i - 1] + 1,
+          query.blackouts[i],
+          [this, &res, &query](int nodeIdx) {
+            res = min(res, this->chts[nodeIdx].query(query.x));
+          });
     }
     return res + sqr<I64>(query.x);
   }
@@ -300,22 +313,24 @@ public:
 
 ChtIntervalTree::~ChtIntervalTree() {}
 
-void ChtIntervalTree::createNodes(int capacity) { chts.resize(capacity); }
+void ChtIntervalTree::createNodes(int capacity) {
+  chts.resize(capacity);
+}
 
 void ChtIntervalTree::initLeaf(int nodeIdx, int idx) {
-  auto &cht = chts[nodeIdx];
+  auto& cht = chts[nodeIdx];
   cht.init(1);
   I64 x = xs[idx];
   cht.add(-(x << 1), ps[idx] + sqr(x));
 }
 
 void ChtIntervalTree::merge(int idx, int leftIdx, int rightIdx) {
-  auto &cht = chts[idx];
-  auto &left = chts[leftIdx];
-  auto &right = chts[rightIdx];
+  auto& cht = chts[idx];
+  auto& left = chts[leftIdx];
+  auto& right = chts[rightIdx];
   cht.init(left.size() + right.size());
   auto rightI = right.begin();
-  for (auto &leftLine : left) {
+  for (auto& leftLine : left) {
     for (; rightI != right.end() && leftLine.a < rightI->a; ++rightI) {
       cht.add(rightI->a, rightI->b);
     }
@@ -344,12 +359,16 @@ int main() {
   }
   itree.initLeafsAndRollup(n);
   queries.resize(m);
-  FOR(i, 0, m) { queries[i].init(i); }
+  FOR(i, 0, m) {
+    queries[i].init(i);
+  }
   SORT(queries);
   answers.resize(m);
-  for (const auto &query : queries) {
+  for (const auto& query : queries) {
     answers[query.idx] = itree.query(query);
   }
-  FOR(i, 0, m) { printf("%lld\n", answers[i]); }
+  FOR(i, 0, m) {
+    printf("%lld\n", answers[i]);
+  }
   return 0;
 }
