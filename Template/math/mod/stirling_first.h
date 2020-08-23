@@ -34,12 +34,12 @@ struct StirlingFirst {
     }
   }
 
-  inline int getUnsigned(int n, int k) {
+  inline int calcUnsigned(int n, int k) {
     return n >= k ? _us[n][k] : 0;
   }
 
-  inline int getSigned(int n, int k) {
-    int res = getUnsigned(n, k);
+  inline int calcSigned(int n, int k) {
+    int res = calcUnsigned(n, k);
     if (res && ((n - k) & 1)) {
       res = _mod - res;
     }
