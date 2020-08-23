@@ -36,6 +36,9 @@ TEST(FibPowerSumTest, large) {
   EXPECT_EQ(sum.calc(100, 199), 287138516);
   EXPECT_EQ(sum.calc(1000, 199), 830126095);
   EXPECT_EQ(sum.calc(10000, 199), 910048127);
+  EXPECT_EQ(sum.calc(10000000000000ULL, 1), 236227569);
+  EXPECT_EQ(sum.calc(10000000000000ULL, 2), 588860823);
+  EXPECT_EQ(sum.calc(10000000000000ULL, 199), 837039937);
 }
 
 } // namespace math

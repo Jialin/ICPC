@@ -44,8 +44,8 @@ struct _FibPartMod {
     b = addMod(b, o.b, _mod);
   }
 
-  inline void operator+=(const int delta) {
-    a = addMod(a, fixMod(delta, _mod), _mod);
+  inline void operator-=(int delta) {
+    a = subMod(a, fixMod(delta, _mod), _mod);
   }
 
   inline void operator*=(const _FibPartMod& o) {
@@ -75,6 +75,10 @@ struct FibPowerSum {
   }
 
   inline void init(int mod, int expBound = -1) {
+    _five = fixMod(5, mod);
+    _inv5 = invMod(_five, mod);
+    _zeroPart.init(0, 0, mod);
+    _onePart.init(fixMod(1, mod), 0, mod);
     int inv2 = invMod(2, mod);
     _mod = mod;
     if (expBound >= 0) {
@@ -83,8 +87,8 @@ struct FibPowerSum {
     }
     as_.clear();
     bs_.clear();
-    as_.emplace_back(1, 0, mod);
-    bs_.emplace_back(1, 0, mod);
+    as_.emplace_back(_onePart);
+    bs_.emplace_back(_onePart);
     as_.emplace_back(inv2, inv2, mod);
     bs_.emplace_back(inv2, inv2 ? mod - inv2 : 0, mod);
     for (int i = 2; i < expBound; ++i) {
@@ -94,47 +98,51 @@ struct FibPowerSum {
       bs_.back() *= bs_[1];
     }
     _comb.init(expBound, mod);
-    _inv5 = invMod(fixMod(5, mod), mod);
   }
 
   // Computes sum{F(i)^<exp> where i from 0 to n}
   template<typename T>
   inline int calc(T n, int exp) {
-    ++n;
-    _FibPartMod res(0, 0, _mod), base, mul, subRes, subRes2;
+    _res.init(_zeroPart);
     for (int i = 0; i <= exp; ++i) {
-      T mask = 1;
-      for (; mask <= n; mask <<= 1) {}
-      base.init(as_[i]);
-      base *= bs_[exp - i];
-      mul.init(base);
-      subRes.init(as_[0]);
-      for (mask >>= 2; mask; mask >>= 1) {
-        subRes2.init(subRes);
-        subRes2 *= mul;
-        subRes2 += subRes;
-        mul *= mul;
-        if (n & mask) {
-          subRes2 *= base;
-          subRes2 += 1;
-          mul *= base;
-        }
-        subRes.init(subRes2);
-      }
-      subRes *= _comb.calc(exp, i);
-      if ((exp - i) & 1) {
-        res -= subRes;
+      _base.init(as_[i]);
+      _base *= bs_[exp - i];
+      if (_base.a == 1 && !_base.b) {
+        _subRes.init(static_cast<int>(fixMod<T>(n + 1, _mod)), 0, _mod);
       } else {
-        res += subRes;
+        _mul.init(_base);
+        _subRes.init(_onePart);
+        for (T tmpN = n + 1; tmpN; tmpN >>= 1) {
+          if (tmpN & 1) {
+            _subRes *= _mul;
+          }
+          _mul *= _mul;
+        }
+        _subRes -= 1;
+        _base -= 1;
+        int scale = subMod(
+            mulMod(_base.a, _base.a, _mod),
+            mulMod(mulMod(_base.b, _base.b, _mod), _five, _mod),
+            _mod);
+        _subRes *= invMod(scale, _mod);
+        _base.b = _base.b ? _mod - _base.b : 0;
+        _subRes *= _base;
+      }
+      _subRes *= _comb.calc(exp, i);
+      if ((exp - i) & 1) {
+        _res -= _subRes;
+      } else {
+        _res += _subRes;
       }
     }
     return mulMod(
-        (exp & 1) ? res.b : res.a, expMod(_inv5, exp >> 1, _mod), _mod);
+        (exp & 1) ? _res.b : _res.a, expMod(_inv5, exp >> 1, _mod), _mod);
   }
 
   vector<_FibPartMod> as_, bs_;
   CombinationMod _comb;
-  int _inv5, _mod;
+  _FibPartMod _zeroPart, _onePart, _res, _base, _mul, _subRes;
+  int _inv5, _five, _mod;
 };
 
 } // namespace math
