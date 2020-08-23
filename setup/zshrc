@@ -62,7 +62,8 @@ function CPP-compile {
       -Wno-padded \
       -Wno-sign-conversion \
       -Wno-unused-macros \
-      -Wno-variadic-macros
+      -Wno-variadic-macros \
+      -Wno-format-nonliteral
   if [[ ! $? -eq 0 ]]; then
     echo -e "\033[1;31m... Failed to compile $1.\033[0m"
     return 1
