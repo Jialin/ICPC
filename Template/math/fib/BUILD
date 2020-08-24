@@ -17,8 +17,8 @@ cc_library(
     name = "fib_power_sum",
     hdrs = ["fib_power_sum.h"],
     deps = [
+        "//math/combination",
         "//math/mod:add",
-        "//math/mod:combination",
         "//math/mod:exp",
         "//math/mod:fix",
         "//math/mod:mul",

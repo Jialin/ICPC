@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod/combination.h"
+#include "math/combination/combination.h"
 
 namespace math {
 

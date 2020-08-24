@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/mod/stirling_first.h"
+#include "math/combination/stirling_first.h"
 
 namespace math {
 

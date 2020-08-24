@@ -11,16 +11,6 @@ cc_test(
 )
 
 cc_test(
-    name = "combination_test",
-    srcs = ["combination_test.cpp"],
-    deps = [
-        "//math/mod:combination",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
     name = "exp_safe_test",
     srcs = ["exp_safe_test.cpp"],
     deps = [
@@ -165,16 +155,6 @@ cc_test(
     srcs = ["slight_fix_test.cpp"],
     deps = [
         "//math/mod:slight_fix",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
-    name = "stirling_first_test",
-    srcs = ["stirling_first_test.cpp"],
-    deps = [
-        "//math/mod:stirling_first",
         "@gtest",
         "@gtest//:gtest_main",
     ],
