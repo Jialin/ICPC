@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <vector>
 
@@ -8,7 +10,7 @@ using namespace std;
 
 namespace math {
 
-// Computes C(a, b) where a<=n and b<=n
+// Computes C(a, b) % <mod> where a<n, b<n, n<=mod
 struct CombinationMod {
   inline CombinationMod() {}
 

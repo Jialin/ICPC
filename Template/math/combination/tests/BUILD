@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "combination_safe_test",
+    srcs = ["combination_safe_test.cpp"],
+    deps = [
+        "//math/combination:combination_safe",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "combination_test",
     srcs = ["combination_test.cpp"],
     deps = [

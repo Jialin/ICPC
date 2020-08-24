@@ -115,16 +115,6 @@ cc_library(
 )
 
 cc_library(
-    name = "stirling_first",
-    hdrs = ["stirling_first.h"],
-    deps = [
-        ":add",
-        ":fix",
-        ":mul",
-    ],
-)
-
-cc_library(
     name = "sub",
     hdrs = ["sub.h"],
     deps = [
