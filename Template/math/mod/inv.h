@@ -8,7 +8,7 @@ namespace math {
 template<typename V = int32_t>
 inline V invMod(V a, const V& mod) {
   V x0, x1, gcd = extGcd(a, mod, x0, x1);
-  assert(gcd == 1);
+  DEBUG_EQ(gcd, 1);
   slightFixModInline(x0, mod);
   return x0;
 }
