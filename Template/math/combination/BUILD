@@ -12,8 +12,8 @@ cc_library(
 )
 
 cc_library(
-    name = "combination_safe",
-    hdrs = ["combination_safe.h"],
+    name = "combination_prime",
+    hdrs = ["combination_prime.h"],
     deps = [
         "//math/mod:fix",
         "//math/mod:inv",
