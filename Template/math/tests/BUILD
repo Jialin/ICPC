@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "chinese_remainder_test",
+    srcs = ["chinese_remainder_test.cpp"],
+    deps = [
+        "//math:chinese_remainder",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "ctz128_test",
     srcs = ["ctz128_test.cpp"],
     deps = [

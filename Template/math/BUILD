@@ -3,6 +3,17 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "chinese_remainder",
+    hdrs = ["chinese_remainder.h"],
+    deps = [
+        "//math/gcd:ext_gcd",
+        "//math/mod:add",
+        "//math/mod:fix",
+        "//math/mod:mul",
+    ],
+)
+
+cc_library(
     name = "ctz128",
     hdrs = ["ctz128.h"],
 )

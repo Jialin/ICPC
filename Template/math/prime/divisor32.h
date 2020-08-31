@@ -3,6 +3,8 @@
 #include <functional>
 #include <vector>
 
+#include "debug/debug.h"
+
 using namespace std;
 
 namespace math {
@@ -67,6 +69,11 @@ inline void divisorIterator32(
     uint32_t n,
     const vector<int>& primes,
     const std::function<bool(uint32_t)>& processor) {
+  DEBUG_TRUE(
+      primes.back() >= n / primes.back(),
+      "Square of largest prime (%lu) should larger than %lu\n",
+      primes.back(),
+      n);
   divisorIterator32Dfs_(0, primes, 1, n, n, processor);
 }
 

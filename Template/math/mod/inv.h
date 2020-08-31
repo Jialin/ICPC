@@ -1,5 +1,6 @@
 #pragma once
 
+#include "debug/debug.h"
 #include "math/gcd/ext_gcd.h"
 #include "math/mod/slight_fix_inline.h"
 

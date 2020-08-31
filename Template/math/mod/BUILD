@@ -50,6 +50,7 @@ cc_library(
     hdrs = ["inv.h"],
     deps = [
         ":slight_fix_inline",
+        "//debug",
         "//math/gcd:ext_gcd",
     ],
 )

@@ -13,6 +13,9 @@ cc_library(
 cc_library(
     name = "divisor32",
     hdrs = ["divisor32.h"],
+    deps = [
+        "//debug",
+    ],
 )
 
 cc_library(

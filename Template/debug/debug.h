@@ -3,9 +3,8 @@
 #ifndef LOCAL
 
 #define DEBUG(fmt, args...)
-
 #define DEBUG_EQ(x, y)
-
+#define DEBUG_FALSE(statement, fmt, args...)
 #define DEBUG_TRUE(statement, fmt, args...)
 
 #else
@@ -23,8 +22,14 @@
     DEBUG("%d != %d\n", x, y);                                                 \
   }
 
-#define DEBUG_TRUE(statement, fmt, args...)                                    \
+#define DEBUG_FALSE(statement, fmt, args...)                                   \
   if (statement) {                                                             \
     DEBUG(fmt, args);                                                          \
   }
+
+#define DEBUG_TRUE(statement, fmt, args...)                                    \
+  if (!statement) {                                                            \
+    DEBUG(fmt, args);                                                          \
+  }
+
 #endif
