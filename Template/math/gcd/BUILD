@@ -5,6 +5,9 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "ext_gcd",
     hdrs = ["ext_gcd.h"],
+    deps = [
+        "//debug",
+    ],
 )
 
 cc_library(

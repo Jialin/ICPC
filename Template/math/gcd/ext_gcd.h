@@ -1,4 +1,8 @@
+#pragma once
+
 #include <tuple>
+
+#include "debug/debug.h"
 
 using namespace std;
 
@@ -8,8 +12,11 @@ namespace math {
 // - value is non-negative
 // - x, y satisfy:
 //   - abs(x)+abs(y) is minimum, if multiple minimum solutions, x <= y
+//
+// NOTE: DO NOT use unsigned type
 template<typename V = int32_t>
 inline V extGcd(V a, V b, V& x, V& y) {
+  DEBUG_FALSE(is_unsigned<V>::value, "DO NOT use unsigned type in extGcd");
   bool negativeA = false;
   if (a < 0) {
     negativeA = true;
