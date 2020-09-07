@@ -36,6 +36,15 @@ cc_library(
 )
 
 cc_library(
+    name = "factorize_use_primes",
+    hdrs = ["factorize_use_primes.h"],
+    deps = [
+        "//debug",
+        "//math/bit:ctz",
+    ],
+)
+
+cc_library(
     name = "factorize32",
     hdrs = ["factorize32.h"],
     deps = [

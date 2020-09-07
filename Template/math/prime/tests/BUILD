@@ -42,6 +42,17 @@ cc_test(
 )
 
 cc_test(
+    name = "factorize_use_primes_test",
+    srcs = ["factorize_use_primes_test.cpp"],
+    deps = [
+        "//math/prime:factorize_use_primes",
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "factorize32_test",
     srcs = ["factorize32_test.cpp"],
     deps = [
