@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "debug/debug.h"
-#include "math/bit/ctz.h"
 
 using namespace std;
 
@@ -20,19 +19,17 @@ inline void factorizeUsePrimes(
       "Square of largest prime (%lu) should larger than %lu\n",
       primes.back(),
       n);
-  if (!(n & 1)) {
-    int shift = ctz<T>(n);
-    n >>= shift;
-    processor(2, shift);
-  }
-  for (int i = 1; primes[i] <= n / primes[i]; ++i) {
-    if (n % primes[i]) {
+  for (PRIME prime : primes) {
+    if (prime > n / prime) {
+      break;
+    }
+    if (n % prime) {
       continue;
     }
-    n /= primes[i];
+    n /= prime;
     int cnt = 1;
-    for (; !(n % primes[i]); n /= primes[i], ++cnt) {}
-    processor(primes[i], cnt);
+    for (; !(n % prime); n /= prime, ++cnt) {}
+    processor(prime, cnt);
   }
   if (n > 1) {
     processor(n, 1);
