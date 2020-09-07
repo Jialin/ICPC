@@ -4,7 +4,7 @@
 
 #include "math/fib/fib.h"
 #include "math/gcd/gcd32.h"
-#include "math/prime/divisor.h"
+#include "math/prime/divisor_use_tagger.h"
 #include "math/prime/min_prime_tagger.h"
 
 using namespace std;
@@ -45,7 +45,7 @@ public:
     };
     int remP = p % 10;
     res = remP == 1 || remP == 9 ? p - 1 : (p + 1) << 1;
-    divisorIterator(res >> 1, *tagger_, processor);
+    divisorIteratorUseTagger(res >> 1, *tagger_, processor);
     return res;
   }
 

@@ -10,7 +10,7 @@ namespace math {
 
 namespace {
 
-inline bool divisorIteratorDfs_(
+inline bool _divisorIteratorUseTagger(
     int x,
     int remN,
     int n,
@@ -30,7 +30,7 @@ inline bool divisorIteratorDfs_(
   }
   int p, cnt, nxtRemN;
   tagger.process(remN, p, cnt, nxtRemN);
-  if (!divisorIteratorDfs_(x, nxtRemN, n, tagger, processor)) {
+  if (!_divisorIteratorUseTagger(x, nxtRemN, n, tagger, processor)) {
     return false;
   }
   for (int i = cnt; i > 0; --i) {
@@ -38,7 +38,7 @@ inline bool divisorIteratorDfs_(
     if (x > n / x) {
       break;
     }
-    if (!divisorIteratorDfs_(x, nxtRemN, n, tagger, processor)) {
+    if (!_divisorIteratorUseTagger(x, nxtRemN, n, tagger, processor)) {
       return false;
     }
   }
@@ -47,11 +47,11 @@ inline bool divisorIteratorDfs_(
 
 } // namespace
 
-inline void divisorIterator(
+inline void divisorIteratorUseTagger(
     int n,
     const MinPrimeTagger& tagger,
     const std::function<bool(int)>& processor) {
-  divisorIteratorDfs_(1, n, n, tagger, processor);
+  _divisorIteratorUseTagger(1, n, n, tagger, processor);
 }
 
 } // namespace math

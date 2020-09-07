@@ -3,8 +3,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "divisor",
-    hdrs = ["divisor.h"],
+    name = "divisor_use_tagger",
+    hdrs = ["divisor_use_tagger.h"],
     deps = [
         ":min_prime_tagger",
     ],

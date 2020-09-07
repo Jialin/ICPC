@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 
-#include "math/prime/divisor.h"
+#include "math/prime/divisor_use_tagger.h"
 
 namespace math {
 
-TEST(DivisorIterator, testSmall) {
+TEST(DivisorIteratorUseTaggerTest, small) {
   MinPrimeTagger mpt(12);
   vector<int> ds;
   auto processor = [&ds](int d) {
@@ -12,7 +12,13 @@ TEST(DivisorIterator, testSmall) {
     return true;
   };
 
-  divisorIterator(4, mpt, processor);
+  divisorIteratorUseTagger(1, mpt, processor);
+  sort(ds.begin(), ds.end());
+  ASSERT_EQ(ds.size(), 1);
+  EXPECT_EQ(ds[0], 1);
+
+  ds.clear();
+  divisorIteratorUseTagger(4, mpt, processor);
   sort(ds.begin(), ds.end());
   ASSERT_EQ(ds.size(), 3);
   EXPECT_EQ(ds[0], 1);
@@ -20,21 +26,32 @@ TEST(DivisorIterator, testSmall) {
   EXPECT_EQ(ds[2], 4);
 
   ds.clear();
-  divisorIterator(5, mpt, processor);
+  divisorIteratorUseTagger(12, mpt, processor);
+  sort(ds.begin(), ds.end());
+  ASSERT_EQ(ds.size(), 6);
+  EXPECT_EQ(ds[0], 1);
+  EXPECT_EQ(ds[1], 2);
+  EXPECT_EQ(ds[2], 3);
+  EXPECT_EQ(ds[3], 4);
+  EXPECT_EQ(ds[4], 6);
+  EXPECT_EQ(ds[5], 12);
+
+  ds.clear();
+  divisorIteratorUseTagger(5, mpt, processor);
   sort(ds.begin(), ds.end());
   ASSERT_EQ(ds.size(), 2);
   EXPECT_EQ(ds[0], 1);
   EXPECT_EQ(ds[1], 5);
 
   ds.clear();
-  divisorIterator(11, mpt, processor);
+  divisorIteratorUseTagger(11, mpt, processor);
   sort(ds.begin(), ds.end());
   ASSERT_EQ(ds.size(), 2);
   EXPECT_EQ(ds[0], 1);
   EXPECT_EQ(ds[1], 11);
 }
 
-TEST(DivisorIterator, testLarge) {
+TEST(DivisorIteratorUseTaggerTest, large) {
   MinPrimeTagger mpt(987655);
   vector<int> ds;
   auto processor = [&ds](int d) {
@@ -42,7 +59,7 @@ TEST(DivisorIterator, testLarge) {
     return true;
   };
 
-  divisorIterator(123456, mpt, processor);
+  divisorIteratorUseTagger(123456, mpt, processor);
   sort(ds.begin(), ds.end());
   ASSERT_EQ(ds.size(), 28);
   EXPECT_EQ(ds[0], 1);
@@ -75,7 +92,7 @@ TEST(DivisorIterator, testLarge) {
   EXPECT_EQ(ds[27], 123456);
 
   ds.clear();
-  divisorIterator(987654, mpt, processor);
+  divisorIteratorUseTagger(987654, mpt, processor);
   sort(ds.begin(), ds.end());
   ASSERT_EQ(ds.size(), 16);
   EXPECT_EQ(ds[0], 1);

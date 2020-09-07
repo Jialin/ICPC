@@ -1,10 +1,10 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "divisor_test",
-    srcs = ["divisor_test.cpp"],
+    name = "divisor_use_tagger_test",
+    srcs = ["divisor_use_tagger_test.cpp"],
     deps = [
-        "//math/prime:divisor",
+        "//math/prime:divisor_use_tagger",
         "@gtest",
         "@gtest//:gtest_main",
     ],

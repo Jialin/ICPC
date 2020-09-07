@@ -48,7 +48,7 @@ cc_library(
     deps = [
         ":fib",
         "//math/gcd:gcd32",
-        "//math/prime:divisor",
+        "//math/prime:divisor_use_tagger",
         "//math/prime:min_prime_tagger",
     ],
 )
