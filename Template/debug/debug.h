@@ -28,7 +28,7 @@
   }
 
 #define DEBUG_TRUE(statement, fmt, args...)                                    \
-  if (!statement) {                                                            \
+  if (!(statement)) {                                                          \
     DEBUG(fmt, args);                                                          \
   }
 
