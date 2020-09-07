@@ -12,6 +12,16 @@ cc_library(
 )
 
 cc_library(
+    name = "combination_full",
+    hdrs = ["combination_full.h"],
+    deps = [
+        ":combination_prime",
+        "//math:chinese_remainder",
+        "//math/prime:factorize_use_primes",
+    ],
+)
+
+cc_library(
     name = "combination_prime",
     hdrs = ["combination_prime.h"],
     deps = [

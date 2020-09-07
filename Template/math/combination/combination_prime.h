@@ -25,6 +25,7 @@ struct CombinationModPrime {
       _modPrimePower[i] = _modPrimePower[i - 1] * modPrime;
     }
     _mod = _modPrimePower[modExp];
+    _modExp = modExp;
     _facs.clear();
     _facs.reserve(n);
     _cnts.clear();
@@ -47,7 +48,7 @@ struct CombinationModPrime {
     }
   }
 
-  inline int calc(int n, int m) {
+  inline int calc(int n, int m) const {
     if (n < m) {
       return 0;
     }
