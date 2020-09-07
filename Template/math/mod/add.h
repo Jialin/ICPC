@@ -4,7 +4,7 @@
 
 namespace math {
 
-template<typename V = int>
+template<typename V = int32_t>
 inline V addMod(const V& a, V b, const V& mod) {
   V res = a;
   fixModInline<V>(res, mod);

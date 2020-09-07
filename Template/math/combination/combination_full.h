@@ -12,33 +12,38 @@ using namespace std;
 namespace math {
 
 // Computes C(a, b) % <mod>
+template<
+    typename MOD = int32_t,
+    typename MOD_SQR = int64_t,
+    typename MOD_DOUBLE = MOD>
 struct CombinationModFull {
   inline CombinationModFull() {}
 
-  inline CombinationModFull(int n, int mod, const vector<int>& primes) {
+  inline CombinationModFull(int n, MOD mod, const vector<int>& primes) {
     init(n, mod, primes);
   }
 
-  inline void init(int n, int mod, const vector<int>& primes) {
+  inline void init(int n, MOD mod, const vector<int>& primes) {
     _combs.reserve(10);
     _combs.clear();
-    factorizeUsePrimes<int, int>(mod, primes, [this, n](int prime, int cnt) {
+    factorizeUsePrimes<MOD, int>(mod, primes, [this, n](MOD prime, int cnt) {
       _combs.emplace_back(n, prime, cnt);
     });
   }
 
-  inline int calc(int n, int m) const {
+  inline MOD calc(int n, int m) const {
     if (n < m) {
       return 0;
     }
-    int res = 0, resMod = 1;
+    MOD res = 0, resMod = 1;
     for (const auto& comb : _combs) {
-      chineseRemainder(res, resMod, comb.calc(n, m), comb._mod, res, resMod);
+      chineseRemainder<MOD, MOD_SQR, MOD_DOUBLE>(
+          res, resMod, comb.calc(n, m), comb._mod, res, resMod);
     }
     return res;
   }
 
-  vector<CombinationModPrime> _combs;
+  vector<CombinationModPrime<MOD, MOD_SQR>> _combs;
 };
 
 } // namespace math

@@ -11,14 +11,15 @@ using namespace std;
 namespace math {
 
 // Computes C(a, b) % (<modPrime> ^ <modExp>)
+template<typename MOD = int32_t, typename MOD_SQR = int64_t>
 struct CombinationModPrime {
   inline CombinationModPrime() {}
 
-  inline CombinationModPrime(int n, int modPrime, int modExp) {
+  inline CombinationModPrime(int n, MOD modPrime, int modExp) {
     init(n, modPrime, modExp);
   }
 
-  inline void init(int n, int modPrime, int modExp) {
+  inline void init(int n, MOD modPrime, int modExp) {
     _modPrimePower.resize(modExp + 1);
     _modPrimePower[0] = 1;
     for (int i = 1; i <= modExp; ++i) {
@@ -35,20 +36,22 @@ struct CombinationModPrime {
     for (int i = 1; i < n; ++i) {
       int cnt = 0, tmpI = i;
       for (; tmpI >= modPrime && !(tmpI % modPrime); tmpI /= modPrime, ++cnt) {}
-      _facs.push_back(mulMod(_facs.back(), fixMod(tmpI, _mod), _mod));
+      _facs.push_back(
+          mulMod<MOD, MOD_SQR>(_facs.back(), fixMod<MOD>(tmpI, _mod), _mod));
       _cnts.push_back(_cnts.back() + cnt);
     }
     _invFacs.reserve(n);
     _invFacs.resize(n);
-    _invFacs[n - 1] = invMod(_facs[n - 1], _mod);
+    _invFacs[n - 1] = invMod<MOD>(_facs[n - 1], _mod);
     for (int i = n - 1; i > 0; --i) {
       int tmpI = i;
       for (; tmpI >= modPrime && !(tmpI % modPrime); tmpI /= modPrime) {}
-      _invFacs[i - 1] = mulMod(_invFacs[i], fixMod(tmpI, _mod), _mod);
+      _invFacs[i - 1] =
+          mulMod<MOD, MOD_SQR>(_invFacs[i], fixMod<MOD>(tmpI, _mod), _mod);
     }
   }
 
-  inline int calc(int n, int m) const {
+  inline MOD calc(int n, int m) const {
     if (n < m) {
       return 0;
     }
@@ -56,14 +59,18 @@ struct CombinationModPrime {
     if (cntDiff >= _modExp) {
       return 0;
     }
-    return mulMod(
-        mulMod(mulMod(_facs[n], _invFacs[m], _mod), _invFacs[n - m], _mod),
+    return mulMod<MOD, MOD_SQR>(
+        mulMod<MOD, MOD_SQR>(
+            mulMod<MOD, MOD_SQR>(_facs[n], _invFacs[m], _mod),
+            _invFacs[n - m],
+            _mod),
         _modPrimePower[cntDiff],
         _mod);
   }
 
-  int _modPrime, _modExp, _mod;
-  vector<int> _facs, _invFacs, _modPrimePower;
+  MOD _modPrime, _mod;
+  int _modExp;
+  vector<MOD> _facs, _invFacs, _modPrimePower;
   vector<int> _cnts;
 };
 

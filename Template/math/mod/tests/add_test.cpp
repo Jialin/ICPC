@@ -13,8 +13,11 @@ TEST(AddMod, test) {
 }
 
 TEST(AddMod, testOverflow) {
-  long long res = addMod<long long>(2147483647, 2147483647, 1000000007);
-  EXPECT_EQ(res, 294967266);
+  int res = addMod<uint32_t>(2147483645, 2147483646, 2147483647);
+  EXPECT_EQ(res, 2147483644);
+
+  long long res64 = addMod<long long>(2147483647, 2147483647, 1000000007);
+  EXPECT_EQ(res64, 294967266);
 }
 
 } // namespace math

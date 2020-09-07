@@ -7,7 +7,7 @@ namespace math {
 
 TEST(CombinationModFullTest, mod2) {
   PrimeGenerator pg(100);
-  CombinationModFull comb(6, 2, pg.primes);
+  CombinationModFull<> comb(6, 2, pg.primes);
   EXPECT_EQ(comb.calc(0, 0), 1);
   EXPECT_EQ(comb.calc(1, 1), 1);
   EXPECT_EQ(comb.calc(1, 2), 0);
@@ -33,7 +33,7 @@ TEST(CombinationModFullTest, mod2) {
 
 TEST(CombinationModFullTest, mod3) {
   PrimeGenerator pg(100);
-  CombinationModFull comb(6, 3, pg.primes);
+  CombinationModFull<> comb(6, 3, pg.primes);
   EXPECT_EQ(comb.calc(0, 0), 1);
   EXPECT_EQ(comb.calc(1, 1), 1);
   EXPECT_EQ(comb.calc(1, 2), 0);
@@ -59,7 +59,7 @@ TEST(CombinationModFullTest, mod3) {
 
 TEST(CombinationModFullTest, mod4) {
   PrimeGenerator pg(100);
-  CombinationModFull comb(6, 4, pg.primes);
+  CombinationModFull<> comb(6, 4, pg.primes);
   EXPECT_EQ(comb.calc(0, 0), 1);
   EXPECT_EQ(comb.calc(1, 1), 1);
   EXPECT_EQ(comb.calc(1, 2), 0);
@@ -85,7 +85,7 @@ TEST(CombinationModFullTest, mod4) {
 
 TEST(CombinationModFullTest, mod6) {
   PrimeGenerator pg(100);
-  CombinationModFull comb(6, 6, pg.primes);
+  CombinationModFull<> comb(6, 6, pg.primes);
   EXPECT_EQ(comb.calc(0, 0), 1);
   EXPECT_EQ(comb.calc(1, 1), 1);
   EXPECT_EQ(comb.calc(1, 2), 0);
@@ -111,7 +111,7 @@ TEST(CombinationModFullTest, mod6) {
 
 TEST(CombinationModFullTest, largePrime) {
   PrimeGenerator pg(100000);
-  CombinationModFull comb(6, 100007, pg.primes);
+  CombinationModFull<> comb(6, 100007, pg.primes);
   EXPECT_EQ(comb.calc(0, 0), 1);
   EXPECT_EQ(comb.calc(1, 1), 1);
   EXPECT_EQ(comb.calc(1, 2), 0);
@@ -141,10 +141,18 @@ TEST(CombinationModFullTest, largePrime) {
 
 TEST(CombinationModFullTest, largeComposite) {
   PrimeGenerator pg(100000);
-  CombinationModFull comb(100000, 3818213, pg.primes);
+  CombinationModFull<> comb(100000, 3818213, pg.primes);
   EXPECT_EQ(comb.calc(1231, 300), 912415);
   EXPECT_EQ(comb.calc(99999, 44454), 707077);
   EXPECT_EQ(comb.calc(42311, 17371), 394219);
+
+  CombinationModFull<int64_t> comb64(100000, 2147483647, pg.primes);
+  EXPECT_EQ(comb64.calc(1231, 300), 1924759492);
+  EXPECT_EQ(comb64.calc(99999, 44454), 255651975);
+
+  comb64.init(100000, 2147483645, pg.primes);
+  EXPECT_EQ(comb64.calc(1231, 300), 1461459556);
+  EXPECT_EQ(comb64.calc(99999, 44454), 1836286920);
 }
 
 } // namespace math

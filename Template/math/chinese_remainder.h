@@ -12,7 +12,7 @@ namespace math {
 //   x = a2 (mod n2)
 // to
 //   x = r (mod lcm(n1, n2))
-template<typename V = int32_t, typename V_SQR = int64_t>
+template<typename V = int32_t, typename V_SQR = int64_t, typename V_DOUBLE = V>
 inline void chineseRemainder(V a1, V n1, V a2, V n2, V& r, V& lcm) {
   a1 = fixMod<V>(a1, n1);
   a2 = fixMod<V>(a2, n2);
@@ -21,7 +21,7 @@ inline void chineseRemainder(V a1, V n1, V a2, V n2, V& r, V& lcm) {
   x1 = mulMod<V, V_SQR>(fixMod<V>(x1, lcm), n1 / gcd, lcm);
   x2 = mulMod<V, V_SQR>(fixMod<V>(x2, lcm), n2 / gcd, lcm);
   lcm = n1 / gcd * n2;
-  r = addMod<V>(
+  r = addMod<V_DOUBLE>(
       mulMod<V, V_SQR>(a1, x2, lcm), mulMod<V, V_SQR>(a2, x1, lcm), lcm);
 }
 

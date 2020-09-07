@@ -11,9 +11,7 @@ namespace math {
 
 template<typename T, typename PRIME>
 inline void factorizeUsePrimes(
-    T n,
-    const vector<PRIME>& primes,
-    const function<void(PRIME, int)>& processor) {
+    T n, const vector<PRIME>& primes, const function<void(T, int)>& processor) {
   DEBUG_TRUE(
       primes.back() >= n / primes.back(),
       "Square of largest prime (%lu) should larger than %lu\n",
