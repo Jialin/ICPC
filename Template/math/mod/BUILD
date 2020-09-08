@@ -62,6 +62,25 @@ cc_library(
 )
 
 cc_library(
+    name = "log",
+    hdrs = ["log.h"],
+    deps = [
+        ":log_coprime",
+        "//math/gcd",
+    ],
+)
+
+cc_library(
+    name = "log_coprime",
+    hdrs = ["log_coprime.h"],
+    deps = [
+        ":exp",
+        ":fix",
+        ":mul",
+    ],
+)
+
+cc_library(
     name = "mod_exp_utils",
     hdrs = ["mod_exp_utils.h"],
     deps = [

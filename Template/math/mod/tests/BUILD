@@ -81,6 +81,26 @@ cc_test(
 )
 
 cc_test(
+    name = "log_coprime_test",
+    srcs = ["log_coprime_test.cpp"],
+    deps = [
+        "//math/mod:log_coprime",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "log_test",
+    srcs = ["log_test.cpp"],
+    deps = [
+        "//math/mod:log",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "mod_exp_utils_test",
     srcs = ["mod_exp_utils_test.cpp"],
     deps = [
