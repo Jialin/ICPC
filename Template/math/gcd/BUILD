@@ -11,6 +11,14 @@ cc_library(
 )
 
 cc_library(
+    name = "gcd",
+    hdrs = ["gcd.h"],
+    deps = [
+        "//math/bit:ctz",
+    ],
+)
+
+cc_library(
     name = "gcd32",
     hdrs = ["gcd32.h"],
 )
