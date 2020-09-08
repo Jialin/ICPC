@@ -9,7 +9,6 @@ TEST(Gcd128, testSmall) {
   EXPECT_EQ(gcd128(17, 101), 1);
   EXPECT_EQ(gcd128(34, 202), 2);
   EXPECT_EQ(gcd128(59528151, 4245384), 3711);
-  EXPECT_EQ(gcd128(59528151, 4245384), 3711);
 }
 
 TEST(Gcd128, testLarge) {

@@ -9,7 +9,6 @@ TEST(Gcd64, testSmall) {
   EXPECT_EQ(gcd64(17, 101), 1);
   EXPECT_EQ(gcd64(34, 202), 2);
   EXPECT_EQ(gcd64(59528151, 4245384), 3711);
-  EXPECT_EQ(gcd64(59528151, 4245384), 3711);
 }
 
 TEST(Gcd64, testLarge) {
