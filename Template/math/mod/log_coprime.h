@@ -1,12 +1,11 @@
 #pragma once
 
-#include <unordered_map>
+#include <cmath>
 
+#include "collections/hashmap.h"
 #include "math/mod/exp.h"
 #include "math/mod/fix.h"
 #include "math/mod/mul.h"
-
-using namespace std;
 
 namespace math {
 
@@ -14,25 +13,43 @@ namespace math {
 //
 // Returns whether x exists
 template<typename V = int32_t, typename V_SQR = int64_t>
-inline bool logModCoPrime(V a, V b, V mod, V& res, V k = 1) {
-  fixModInline(a, mod);
-  fixModInline(b, mod);
-  V n = static_cast<V>(sqrt(mod) + 1);
-  unordered_map<V, V> vals;
-  for (int q = 0, cur = b; q <= n; ++q) {
-    vals[cur] = q;
-    cur = mulMod<V, V_SQR>(cur, a, mod);
+struct LogModCoPrime {
+  inline LogModCoPrime() {}
+
+  inline LogModCoPrime(int hashMapSize, int keyCap = -1) {
+    init(hashMapSize, keyCap);
   }
-  V an = expMod<V, V, V_SQR>(a, n, mod);
-  for (int p = 1, cur = fixMod(k, mod); p <= n; ++p) {
-    cur = mulMod<V, V_SQR>(cur, an, mod);
-    auto it = vals.find(cur);
-    if (it != vals.end()) {
-      res = n * p - it->second;
-      return true;
+
+  inline void init(int hashMapSize, int keyCap = -1) {
+    _hashMapSize = hashMapSize;
+    _keyCap = keyCap;
+  }
+
+  inline bool calc(V a, V b, V mod, V& res, V k = 1) {
+    fixModInline(a, mod);
+    fixModInline(b, mod);
+    V n = static_cast<V>(sqrt(mod) + 1);
+    _vals.init(_hashMapSize, _keyCap);
+    int q = 0;
+    for (V cur = b; q <= n; ++q) {
+      _vals.set(cur, q, true /* forceEmplaceBack */);
+      cur = mulMod<V, V_SQR>(cur, a, mod);
     }
+    V an = expMod<V, V, V_SQR>(a, n, mod);
+    int p = 1;
+    for (V cur = fixMod(k, mod); p <= n; ++p) {
+      cur = mulMod<V, V_SQR>(cur, an, mod);
+      auto* pos = _vals.getPtr(cur);
+      if (pos) {
+        res = n * p - *pos;
+        return true;
+      }
+    }
+    return false;
   }
-  return false;
-}
+
+  collections::Hashmap<V, int> _vals;
+  int _hashMapSize, _keyCap;
+};
 
 } // namespace math

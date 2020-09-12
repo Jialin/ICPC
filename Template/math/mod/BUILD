@@ -77,6 +77,7 @@ cc_library(
         ":exp",
         ":fix",
         ":mul",
+        "//collections:hashmap",
     ],
 )
 
