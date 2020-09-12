@@ -11,7 +11,7 @@ inline int ctz(T n) {
   if (!n) {
     return numeric_limits<T>::digits + numeric_limits<T>::is_signed;
   }
-  for (int res = 0; n; res += 32, n >>= 32) {
+  for (int res = 0; n; res += 32, n >>= 16, n >>= 16) {
     uint32_t part = static_cast<uint32_t>(n & 0xFFFFFFFFU);
     if (part) {
       return res + __builtin_ctz(part);
