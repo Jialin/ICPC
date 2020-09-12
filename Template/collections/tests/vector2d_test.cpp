@@ -11,8 +11,8 @@ TEST(Vector2DTest, basic) {
   EXPECT_EQ(vs.lastOut[1], -1);
   EXPECT_EQ(vs.lastOut[2], -1);
 
-  vs.add(0, 10);
-  vs.add(2, 20);
+  vs.emplaceBack(0, 10);
+  vs.emplaceBack(2, 20);
   EXPECT_EQ(vs._edgeIdx, 2);
   EXPECT_EQ(vs.values[0], 10);
   EXPECT_EQ(vs.values[1], 20);
@@ -22,8 +22,8 @@ TEST(Vector2DTest, basic) {
   EXPECT_EQ(vs.lastOut[1], -1);
   EXPECT_EQ(vs.lastOut[2], 1);
 
-  vs.add(0, 30);
-  vs.add(1, 40);
+  vs.emplaceBack(0, 30);
+  vs.emplaceBack(1, 40);
   EXPECT_EQ(vs._edgeIdx, 4);
   EXPECT_EQ(vs.values[0], 10);
   EXPECT_EQ(vs.values[1], 20);

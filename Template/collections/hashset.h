@@ -20,7 +20,7 @@ struct Hashset {
   inline void add(T v, bool forceAdd = false) {
     int idx = math::fixMod<T>(v, _vs._n);
     if (forceAdd || !contains(v)) {
-      _vs.add(idx, v);
+      _vs.emplaceBack(idx, v);
     }
   }
 

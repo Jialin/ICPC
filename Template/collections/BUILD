@@ -8,6 +8,15 @@ cc_library(
 )
 
 cc_library(
+    name = "hashmap",
+    hdrs = ["hashmap.h"],
+    deps = [
+        ":vector2d",
+        "//math/mod:fix",
+    ],
+)
+
+cc_library(
     name = "hashset",
     hdrs = ["hashset.h"],
     deps = [

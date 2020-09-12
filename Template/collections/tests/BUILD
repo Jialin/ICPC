@@ -11,6 +11,16 @@ cc_test(
 )
 
 cc_test(
+    name = "hashmap_test",
+    srcs = ["hashmap_test.cpp"],
+    deps = [
+        "//collections:hashmap",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "hashset_test",
     srcs = ["hashset_test.cpp"],
     deps = [

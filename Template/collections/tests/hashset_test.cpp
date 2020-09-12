@@ -17,6 +17,7 @@ TEST(HashsetTest, basic) {
   EXPECT_TRUE(hset.contains(2));
   EXPECT_TRUE(hset.contains(3));
   EXPECT_FALSE(hset.contains(4));
+  EXPECT_FALSE(hset.contains(7));
 
   hset.add(1);
   hset.add(2);
@@ -32,6 +33,7 @@ TEST(HashsetTest, basic) {
   EXPECT_TRUE(hset.contains(2));
   EXPECT_TRUE(hset.contains(3));
   EXPECT_FALSE(hset.contains(4));
+  EXPECT_FALSE(hset.contains(7));
 
   hset.add(0);
   hset.add(4);

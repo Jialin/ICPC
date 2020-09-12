@@ -17,19 +17,20 @@ struct Vector2D {
   inline void init(int n, int valueCap = -1) {
     _n = n;
     lastOut.assign(n, -1);
-    nxtOut.clear();
-    values.clear();
     if (valueCap > 0) {
       nxtOut.reserve(valueCap);
       values.reserve(valueCap);
     }
+    nxtOut.clear();
+    values.clear();
     _edgeIdx = 0;
   }
 
-  inline void add(int x, T v) {
+  template<class... Args>
+  inline void emplaceBack(int x, Args&&... args) {
     nxtOut.push_back(lastOut[x]);
     lastOut[x] = _edgeIdx++;
-    values.push_back(v);
+    values.emplace_back(forward<Args>(args)...);
   }
 
   vector<int> lastOut, nxtOut;
