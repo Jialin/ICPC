@@ -36,7 +36,10 @@ cc_library(
 cc_library(
     name = "fix_inline",
     hdrs = ["fix_inline.h"],
-    deps = [":slight_fix_inline"],
+    deps = [
+        ":slight_fix_inline",
+        "//debug",
+    ],
 )
 
 cc_library(

@@ -26,6 +26,10 @@ struct LogModCoPrime {
   }
 
   inline bool calc(V a, V b, V mod, V& res, V k = 1) {
+    DEBUG_TRUE(
+        _hashMapSize > 0,
+        "We should initialize hashMapSize to positive. Currently, it's %d.\n",
+        _hashMapSize);
     fixModInline(a, mod);
     fixModInline(b, mod);
     V n = static_cast<V>(sqrt(mod) + 1);

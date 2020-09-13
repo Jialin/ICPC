@@ -9,8 +9,8 @@ namespace graphs {
 struct UnweightedForwardStar {
   inline UnweightedForwardStar() {}
 
-  inline UnweightedForwardStar(int n, int edgeCap = -1) {
-    init(n, edgeCap);
+  inline UnweightedForwardStar(int n_, int edgeCap = -1) {
+    init(n_, edgeCap);
   }
 
   inline void init(int n_, int edgeCap = -1) {
