@@ -6,10 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"gencpp_*.cpp": "plaintext",
 			"gendebug-*.cpp": "plaintext",
-			"gencpp-*.cpp": "plaintext",
-			"*.tcc": "cpp"
+			"gencpp-*.cpp": "plaintext"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
