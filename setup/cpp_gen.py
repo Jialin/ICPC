@@ -16,6 +16,7 @@ INCLUDES = [
     "functional",
     "iostream",
     "map",
+    "queue",
     "set",
     "string",
     "tuple",
@@ -23,6 +24,11 @@ INCLUDES = [
     "unordered_set",
     "utility",
     "vector",
+]
+
+DEBUG_LINES = [
+    "#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED",
+    "#include <boost/stacktrace.hpp>",
 ]
 DUMMY_LINE_PATTERN = re.compile(r"^\s*;$")
 COMMENT_PATTERN = re.compile(r"^\s*//.*$")
@@ -32,7 +38,7 @@ def default_includes():
     return ["#include <{}>".format(include) for include in INCLUDES]
 
 
-def gen_file(prefix, info, additional_args=None):
+def gen_file(prefix, info, additional_contents=None, additional_args=None):
     proc = subprocess.Popen(
         [
             "g++",
@@ -64,7 +70,13 @@ def gen_file(prefix, info, additional_args=None):
             clean_lines.append(utf8_line)
     gen_file_name = prefix + file_name
     file = open(gen_file_name, "w")
-    file.write("\n".join(default_includes() + clean_lines))
+    file.write(
+        "\n".join(
+            default_includes()
+            + (additional_contents if additional_contents else [])
+            + clean_lines
+        )
+    )
     file.close()
     subprocess.Popen(["clang-format", "-i", gen_file_name]).wait()
     with open(gen_file_name, "r") as input_file:
@@ -92,5 +104,10 @@ if not file_name.endswith(".cpp"):
 if not os.path.exists(file_name):
     print("{} not found.".format(file_name))
     sys.exit(1)
-gen_file(prefix="gendebug-", info="is generated", additional_args=["-DLOCAL"])
+gen_file(
+    prefix="gendebug-",
+    info="is generated",
+    additional_contents=DEBUG_LINES,
+    additional_args=["-DLOCAL"],
+)
 gen_file(prefix="gencpp-", info="is generated and copied to clipboard")
