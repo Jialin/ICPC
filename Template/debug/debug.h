@@ -1,11 +1,5 @@
 #pragma once
 
-#include <iostream>
-
-#include <boost/stacktrace.hpp>
-
-using namespace std;
-
 #ifndef LOCAL
 
 #define DEBUG(fmt, args...)
@@ -14,6 +8,8 @@ using namespace std;
 #define DEBUG_TRUE(statement, fmt, args...)
 
 #else
+
+#include <boost/stacktrace.hpp>
 
 #define DEBUG_STACKTRACE(fmt, args...)                                         \
   fprintf(                                                                     \
