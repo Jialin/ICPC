@@ -127,8 +127,11 @@ cc_library(
 )
 
 cc_library(
-    name = "phi32",
-    hdrs = ["phi32.h"],
+    name = "phi_use_primes",
+    hdrs = ["phi_use_primes.h"],
+    deps = [
+        "//debug",
+    ],
 )
 
 cc_library(

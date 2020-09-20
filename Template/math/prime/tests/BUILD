@@ -154,10 +154,10 @@ cc_test(
 )
 
 cc_test(
-    name = "phi32_test",
-    srcs = ["phi32_test.cpp"],
+    name = "phi_use_primes_test",
+    srcs = ["phi_use_primes_test.cpp"],
     deps = [
-        "//math/prime:phi32",
+        "//math/prime:phi_use_primes",
         "//math/prime:prime_iterator",
         "@gtest",
         "@gtest//:gtest_main",
