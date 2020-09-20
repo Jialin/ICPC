@@ -11,7 +11,7 @@ namespace math {
 
 // Calculates minimum non-negative x where k*a^x=b (% mod), a and m are coprime
 //
-// Returns whether x exists
+// The bool reference indicates whether the root exists
 template<typename V = int32_t, typename V_SQR = int64_t>
 struct LogModCoPrime {
   inline LogModCoPrime() {}
@@ -25,11 +25,12 @@ struct LogModCoPrime {
     _keyCap = keyCap;
   }
 
-  inline bool calc(V a, V b, V mod, V& res, V k = 1) {
+  inline V calc(V a, V b, V mod, bool& exist, V k = 1) {
     DEBUG_TRUE(
         _hashMapSize > 0,
         "We should initialize hashMapSize to positive. Currently, it's %d.\n",
         _hashMapSize);
+    exist = false;
     fixModInline(a, mod);
     fixModInline(b, mod);
     V n = static_cast<V>(sqrt(mod) + 1);
@@ -45,11 +46,11 @@ struct LogModCoPrime {
       cur = mulMod<V, V_SQR>(cur, an, mod);
       auto* pos = _vals.getPtr(cur);
       if (pos) {
-        res = n * p - *pos;
-        return true;
+        exist = true;
+        return n * p - *pos;
       }
     }
-    return false;
+    return 0;
   }
 
   collections::Hashmap<V, int> _vals;

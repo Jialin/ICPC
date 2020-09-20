@@ -7,7 +7,7 @@ namespace math {
 
 // Calculates minimum non-negative x where a^x=b (% mod)
 //
-// Returns whether x exists
+// The bool reference indicates whether the log exists
 template<typename V = int32_t, typename V_SQR = int64_t>
 struct LogMod {
   inline LogMod(int hashMapSize, int keyCap = -1) {
@@ -18,7 +18,8 @@ struct LogMod {
     _logMod.init(hashMapSize, keyCap);
   }
 
-  inline bool calc(V a, V b, V mod, V& res) {
+  inline V calc(V a, V b, V mod, bool& exist) {
+    exist = false;
     fixModInline(a, mod);
     fixModInline(b, mod);
     V k = fixMod(1, mod);
@@ -29,22 +30,19 @@ struct LogMod {
         break;
       }
       if (b == k) {
-        res = delta;
-        return true;
+        exist = true;
+        return delta;
       }
       if (b % g) {
-        return false;
+        return 0;
       }
       b /= g;
       mod /= g;
       ++delta;
       k = mulMod<V, V_SQR>(fixMod(k, mod), fixMod(a / g, mod), mod);
     }
-    if (_logMod.calc(a, b, mod, res, k)) {
-      res += delta;
-      return true;
-    }
-    return false;
+    V res = _logMod.calc(a, b, mod, exist, k);
+    return exist ? res + delta : 0;
   }
 
   LogModCoPrime<V, V_SQR> _logMod;

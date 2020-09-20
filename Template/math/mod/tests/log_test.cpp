@@ -4,24 +4,34 @@
 
 namespace math {
 
-TEST(LogModTest, basic) {
+TEST(LogModTest, exist) {
   LogMod<> logMod(100003);
-  int res;
+  bool exist;
 
-  EXPECT_TRUE(logMod.calc(5, 33, 58, res));
-  EXPECT_EQ(res, 9);
+  EXPECT_EQ(logMod.calc(5, 33, 58, exist), 9);
+  EXPECT_TRUE(exist);
 
-  EXPECT_TRUE(logMod.calc(3, 13, 17, res));
-  EXPECT_EQ(res, 4);
+  EXPECT_EQ(logMod.calc(3, 13, 17, exist), 4);
+  EXPECT_TRUE(exist);
 
-  EXPECT_TRUE(logMod.calc(3, 1, 17, res));
-  EXPECT_EQ(res, 0);
+  EXPECT_EQ(logMod.calc(3, 1, 17, exist), 0);
+  EXPECT_TRUE(exist);
 
-  EXPECT_TRUE(logMod.calc(6, 36, 218, res));
-  EXPECT_EQ(res, 2);
+  EXPECT_EQ(logMod.calc(6, 36, 218, exist), 2);
+  EXPECT_TRUE(exist);
+}
 
-  EXPECT_FALSE(logMod.calc(2, 3, 4, res));
-  EXPECT_FALSE(logMod.calc(2, 3, 7, res));
+TEST(LogModTest, notExist) {
+  LogMod<> logMod(100003);
+  bool exist;
+
+  exist = true;
+  logMod.calc(2, 3, 4, exist);
+  EXPECT_FALSE(exist);
+
+  exist = true;
+  logMod.calc(2, 3, 7, exist);
+  EXPECT_FALSE(exist);
 }
 
 } // namespace math

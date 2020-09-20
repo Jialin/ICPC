@@ -18,26 +18,26 @@ struct PrimitiveRootUsePrimes {
   }
 
   template<typename PRIME>
-  inline bool calc(T n, const vector<PRIME>& primes, T& res) {
+  inline T calc(T n, const vector<PRIME>& primes, bool& exist) {
+    exist = false;
     if (n == 1 || n == 2 || n == 4) {
-      res = n - 1;
-      return true;
+      exist = true;
+      return n - 1;
     }
     if (!(n & 3)) {
-      return false;
+      return 0;
     }
     bool two = !(n & 1);
     _factors.clear();
     factorizeUsePrimes<T, PRIME>((n & 1) ? n : n >> 1, primes, processor);
     if (_factors.size() > 1) {
-      return false;
+      return 0;
     }
     T prime = _factors.front();
     T phi = phiUsePrimes<T, PRIME>(n, primes);
     _factors.clear();
     factorizeUsePrimes<T, PRIME>(phi, primes, processor);
-    res = 1;
-    for (; res < n; ++res) {
+    for (T res = 1; res < n; ++res) {
       for (int i = 1; i < prime; ++i, ++res) {
         if (res == 1 || (two && !(res & 1))) {
           continue;
@@ -50,11 +50,12 @@ struct PrimitiveRootUsePrimes {
           }
         }
         if (valid) {
-          return true;
+          exist = true;
+          return res;
         }
       }
     }
-    return false;
+    return 0;
   }
 
   vector<T> _factors;

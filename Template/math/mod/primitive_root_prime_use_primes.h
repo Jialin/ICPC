@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "debug/debug.h"
 #include "math/mod/exp.h"
 #include "math/prime/factorize_use_primes.h"
 
@@ -17,15 +18,14 @@ struct PrimitiveRootPrimeUsePrimes {
   }
 
   template<typename PRIME>
-  inline bool calc(T n, const vector<PRIME>& primes, T& res) {
+  inline T calc(T n, const vector<PRIME>& primes) {
     if (n == 2) {
-      res = n - 1;
-      return true;
+      return 1;
     }
     T phi = n - 1;
     _factors.clear();
     factorizeUsePrimes<T, PRIME>(phi, primes, processor);
-    for (res = 2; res < n; ++res) {
+    for (T res = 2; res < n; ++res) {
       bool valid = true;
       for (T factor : _factors) {
         if (expMod(res, phi / factor, n) == 1) {
@@ -34,10 +34,14 @@ struct PrimitiveRootPrimeUsePrimes {
         }
       }
       if (valid) {
-        return true;
+        return res;
       }
     }
-    return false;
+    DEBUG(
+        "We should never hit here, all primes should have primitive root. "
+        "n:%d\n",
+        n);
+    return 0;
   }
 
   vector<T> _factors;

@@ -6,18 +6,23 @@ namespace math {
 
 TEST(LogModCoprimeTest, basic) {
   LogModCoPrime<> logMod(100003);
-  int res;
+  bool exist;
 
-  EXPECT_TRUE(logMod.calc(5, 33, 58, res));
-  EXPECT_EQ(res, 9);
+  exist = false;
+  EXPECT_EQ(logMod.calc(5, 33, 58, exist), 9);
+  EXPECT_TRUE(exist);
 
-  EXPECT_TRUE(logMod.calc(3, 13, 17, res));
-  EXPECT_EQ(res, 4);
+  exist = false;
+  EXPECT_EQ(logMod.calc(3, 13, 17, exist), 4);
+  EXPECT_TRUE(exist);
 
-  EXPECT_TRUE(logMod.calc(3, 1, 17, res));
-  EXPECT_EQ(res, 0);
+  exist = false;
+  EXPECT_EQ(logMod.calc(3, 1, 17, exist), 0);
+  EXPECT_TRUE(exist);
 
-  EXPECT_FALSE(logMod.calc(2, 3, 7, res));
+  exist = true;
+  logMod.calc(2, 3, 7, exist);
+  EXPECT_FALSE(exist);
 }
 
 } // namespace math
