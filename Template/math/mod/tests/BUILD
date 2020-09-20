@@ -161,6 +161,28 @@ cc_test(
 )
 
 cc_test(
+    name = "primitive_root_prime_use_primes_test",
+    srcs = ["primitive_root_prime_use_primes_test.cpp"],
+    deps = [
+        "//math/mod:primitive_root_prime_use_primes",
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "primitive_root_use_primes_test",
+    srcs = ["primitive_root_use_primes_test.cpp"],
+    deps = [
+        "//math/mod:primitive_root_use_primes",
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "slight_fix_inline_test",
     srcs = ["slight_fix_inline_test.cpp"],
     deps = [

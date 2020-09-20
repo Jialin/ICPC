@@ -129,6 +129,25 @@ cc_library(
 )
 
 cc_library(
+    name = "primitive_root_prime_use_primes",
+    hdrs = ["primitive_root_prime_use_primes.h"],
+    deps = [
+        ":exp",
+        "//math/prime:factorize_use_primes",
+    ],
+)
+
+cc_library(
+    name = "primitive_root_use_primes",
+    hdrs = ["primitive_root_use_primes.h"],
+    deps = [
+        ":exp",
+        "//math/prime:factorize_use_primes",
+        "//math/prime:phi_use_primes",
+    ],
+)
+
+cc_library(
     name = "slight_fix_inline",
     hdrs = ["slight_fix_inline.h"],
 )
