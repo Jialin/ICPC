@@ -183,6 +183,18 @@ cc_test(
 )
 
 cc_test(
+    name = "root_test",
+    srcs = ["root_test.cpp"],
+    deps = [
+        "//math/mod:primitive_root_use_primes",
+        "//math/mod:root",
+        "//math/prime:prime_generator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "slight_fix_inline_test",
     srcs = ["slight_fix_inline_test.cpp"],
     deps = [

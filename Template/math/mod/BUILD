@@ -148,6 +148,15 @@ cc_library(
 )
 
 cc_library(
+    name = "root",
+    hdrs = ["root.h"],
+    deps = [
+        ":exp",
+        ":log_coprime",
+    ],
+)
+
+cc_library(
     name = "slight_fix_inline",
     hdrs = ["slight_fix_inline.h"],
 )
