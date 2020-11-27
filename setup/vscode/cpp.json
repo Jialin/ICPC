@@ -1,0 +1,92 @@
+{
+    "For loop": {
+        "prefix": "FOR",
+        "body": [
+            "for (int $1 = $2; $1 < $3; ++$1) {",
+            "  $4",
+            "}"
+        ],
+        "description": "For loop"
+    },
+    "For loop size": {
+        "prefix": "FORSIZE",
+        "body": [
+            "for (int $1 = $2; $1 < (int)$3.size(); ++$1) {",
+            "  $4",
+            "}"
+        ],
+        "description": "For loop size"
+    },
+    "Multiple Test Cases Template": {
+        "prefix": "GCJ",
+        "body": [
+            "#include <algorithm>",
+            "#include <bitset>",
+            "#include <cassert>",
+            "#include <cctype>",
+            "#include <cmath>",
+            "#include <cstddef>",
+            "#include <cstdint>",
+            "#include <cstdio>",
+            "#include <cstring>",
+            "#include <functional>",
+            "#include <iostream>",
+            "#include <map>",
+            "#include <set>",
+            "#include <string>",
+            "#include <tuple>",
+            "#include <unordered_map>",
+            "#include <unordered_set>",
+            "#include <utility>",
+            "#include <vector>",
+            "",
+            "using namespace std;",
+            "",
+            "#include \"debug/debug.h\"",
+            "",
+            "int main() {",
+            "  int taskNumber;",
+            "  scanf(\"%d\", &taskNumber);",
+            "  for (int taskIdx = 0; taskIdx < taskNumber; ++taskIdx) {",
+            "    $1;",
+            "    printf(\"Case #%d: \\n\", taskIdx);",
+            "  }",
+            "  return 0;",
+            "}"
+        ],
+        "description": "Multiple Test Cases Template"
+    },
+    "Single Test Case Template": {
+        "prefix": "GCJ",
+        "body": [
+            "#include <algorithm>",
+            "#include <bitset>",
+            "#include <cassert>",
+            "#include <cctype>",
+            "#include <cmath>",
+            "#include <cstddef>",
+            "#include <cstdint>",
+            "#include <cstdio>",
+            "#include <cstring>",
+            "#include <functional>",
+            "#include <iostream>",
+            "#include <map>",
+            "#include <set>",
+            "#include <string>",
+            "#include <tuple>",
+            "#include <unordered_map>",
+            "#include <unordered_set>",
+            "#include <utility>",
+            "#include <vector>",
+            "",
+            "using namespace std;",
+            "",
+            "#include \"debug/debug.h\"",
+            "",
+            "int main() {",
+            "  $1;",
+            "}"
+        ],
+        "description": "Single Test Case Template"
+    }
+}
