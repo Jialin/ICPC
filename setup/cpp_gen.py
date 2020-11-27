@@ -32,6 +32,7 @@ DEBUG_LINES = [
 ]
 DUMMY_LINE_PATTERN = re.compile(r"^\s*;$")
 COMMENT_PATTERN = re.compile(r"^\s*//.*$")
+ANCHOR_LINES = ["// BEGIN KAWIGIEDIT TESTING", "// END KAWIGIEDIT TESTING"]
 
 
 def default_includes():
@@ -65,7 +66,9 @@ def gen_file(prefix, info, additional_contents=None, additional_args=None):
                 if using_std:
                     continue
                 using_std = True
-            if DUMMY_LINE_PATTERN.match(utf8_line) or COMMENT_PATTERN.match(utf8_line):
+            if utf8_line not in ANCHOR_LINES and (
+                DUMMY_LINE_PATTERN.match(utf8_line) or COMMENT_PATTERN.match(utf8_line)
+            ):
                 continue
             clean_lines.append(utf8_line)
     gen_file_name = prefix + file_name
