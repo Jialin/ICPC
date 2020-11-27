@@ -5,11 +5,27 @@
 #include "collections/hashmap.h"
 #include "math/mod/exp.h"
 #include "math/mod/fix.h"
+#include "math/mod/inv.h"
 #include "math/mod/mul.h"
 
+/////////////////////////////// Example Usage ////////////////////////////////
+// #include "math/mod/log_coprime.h"
+//
+// logMod = math::LogModCoPrime();
+// logMod.init(100003);
+// res = logMod.calc(base, remainder, mod, exist);
+//
+// logMod = math::LogModCoPrime(hashMapSize, keyCap);
+// res = logMod.calc(base, remainder, mod, exist);
+//
+// logMod = math::LogModCoPrime(hashMapSize, keyCap);
+// logMod.precomputeFixedBaseMod(base, mod, static_cast<int>(sqrt(mod) + 1));
+// res = logMod.calcFixedBaseMod(remainder, exist);
+//////////////////////////////////////////////////////////////////////////////
 namespace math {
 
-// Calculates minimum non-negative x where k*a^x=b (% mod), a and m are coprime
+// Calculates minimum non-negative x where
+//   k*base^x=remainder (% mod), base and mod are coprime
 //
 // The bool reference indicates whether the root exists
 template<typename V = int32_t, typename V_SQR = int64_t>
@@ -25,36 +41,48 @@ struct LogModCoPrime {
     _keyCap = keyCap;
   }
 
-  inline V calc(V a, V b, V mod, bool& exist, V k = 1) {
+  inline void precomputeFixedBaseMod(V base, V mod, int step, V k = 1) {
+    _mod = mod;
+    _step = step;
+    _maxStepCnt = _mod / _step + 5;
     DEBUG_TRUE(
         _hashMapSize > 0,
         "We should initialize hashMapSize to positive. Currently, it's %d.\n",
         _hashMapSize);
-    exist = false;
-    fixModInline(a, mod);
-    fixModInline(b, mod);
-    V n = static_cast<V>(sqrt(mod) + 1);
+    fixModInline(base, mod);
+    _invBase = invMod<V>(base, mod);
+    _invBasePowStep = expMod<V, V, V_SQR>(_invBase, step, mod);
     _vals.init(_hashMapSize, _keyCap);
-    int q = 0;
-    for (V cur = b; q <= n; ++q) {
+    V cur = fixMod<V>(k, mod);
+    for (int q = 0; q <= _step; ++q) {
       _vals.set(cur, q, true /* forceEmplaceBack */);
-      cur = mulMod<V, V_SQR>(cur, a, mod);
+      cur = mulMod<V, V_SQR>(cur, _invBase, mod);
     }
-    V an = expMod<V, V, V_SQR>(a, n, mod);
-    int p = 1;
-    for (V cur = fixMod(k, mod); p <= n; ++p) {
-      cur = mulMod<V, V_SQR>(cur, an, mod);
+  }
+
+  inline V calcFixedBaseMod(V remainder, bool& exist) {
+    exist = false;
+    fixModInline(remainder, _mod);
+    V cur = remainder;
+    for (int p = 1; p <= _maxStepCnt; ++p) {
+      cur = mulMod<V, V_SQR>(cur, _invBasePowStep, _mod);
       auto* pos = _vals.getPtr(cur);
       if (pos) {
         exist = true;
-        return n * p - *pos;
+        return _step * p - *pos;
       }
     }
     return 0;
   }
 
+  inline V calc(V base, V remainder, V mod, bool& exist, V k = 1) {
+    precomputeFixedBaseMod(base, mod, static_cast<int>(sqrt(mod) + 1), k);
+    return calcFixedBaseMod(remainder, exist);
+  }
+
   collections::Hashmap<V, int> _vals;
-  int _hashMapSize, _keyCap;
+  int _hashMapSize, _keyCap, _step, _maxStepCnt;
+  V _invBase, _invBasePowStep, _mod;
 };
 
 } // namespace math

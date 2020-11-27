@@ -80,6 +80,7 @@ cc_library(
         ":exp",
         ":fix",
         ":mul",
+        ":inv",
         "//collections:hashmap",
     ],
 )
