@@ -8,16 +8,16 @@ TEST(LogModTest, exist) {
   LogMod<> logMod(100003);
   bool exist;
 
-  EXPECT_EQ(logMod.calc(5, 33, 58, exist), 9);
+  EXPECT_EQ(9, logMod.calc(5, 33, 58, exist));
   EXPECT_TRUE(exist);
 
-  EXPECT_EQ(logMod.calc(3, 13, 17, exist), 4);
+  EXPECT_EQ(4, logMod.calc(3, 13, 17, exist));
   EXPECT_TRUE(exist);
 
-  EXPECT_EQ(logMod.calc(3, 1, 17, exist), 0);
+  EXPECT_EQ(0, logMod.calc(3, 1, 17, exist));
   EXPECT_TRUE(exist);
 
-  EXPECT_EQ(logMod.calc(6, 36, 218, exist), 2);
+  EXPECT_EQ(2, logMod.calc(6, 36, 218, exist));
   EXPECT_TRUE(exist);
 }
 

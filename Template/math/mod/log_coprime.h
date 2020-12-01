@@ -32,12 +32,15 @@ template<typename V = int32_t, typename V_SQR = int64_t>
 struct LogModCoPrime {
   inline LogModCoPrime() {}
 
-  inline LogModCoPrime(int hashMapSize, int keyCap = -1) {
-    init(hashMapSize, keyCap);
+  inline LogModCoPrime(
+      int hashMapSize, bool positiveResultOnly = false, int keyCap = -1) {
+    init(hashMapSize, positiveResultOnly, keyCap);
   }
 
-  inline void init(int hashMapSize, int keyCap = -1) {
+  inline void
+  init(int hashMapSize, bool positiveResultOnly = false, int keyCap = -1) {
     _hashMapSize = hashMapSize;
+    _positiveResultOnly = positiveResultOnly;
     _keyCap = keyCap;
   }
 
@@ -54,7 +57,8 @@ struct LogModCoPrime {
     _invBasePowStep = expMod<V, V, V_SQR>(_invBase, step, mod);
     _vals.init(_hashMapSize, _keyCap);
     V cur = fixMod<V>(k, mod);
-    for (int q = 0; q <= _step; ++q) {
+    int totalStep = _step + !_positiveResultOnly;
+    for (int q = 0; q < totalStep; ++q) {
       _vals.set(cur, q, true /* forceEmplaceBack */);
       cur = mulMod<V, V_SQR>(cur, _invBase, mod);
     }
@@ -82,6 +86,7 @@ struct LogModCoPrime {
 
   collections::Hashmap<V, int> _vals;
   int _hashMapSize, _keyCap, _step, _maxStepCnt;
+  bool _positiveResultOnly;
   V _invBase, _invBasePowStep, _mod;
 };
 
