@@ -2,7 +2,7 @@
 
 #ifndef LOCAL
 
-#define DEBUG(fmt, args...)
+#define DEBUGF(fmt, args...)
 #define DEBUGV(v)
 #define DEBUG_EQ(x, y)
 #define DEBUG_FALSE(statement, fmt, args...)
@@ -15,6 +15,22 @@
 #define DEBUG_BEGIN(function, line)                                            \
   fprintf(stderr, "\033[94m[%s][L%d]\n\t", prettyFunction.c_str(), line)
 #define DEBUG_END fprintf(stderr, "\n\033[0m")
+
+void debugv(int v, const string& name, const string& prettyFunction, int line) {
+  DEBUG_BEGIN(prettyFunction, line);
+  fprintf(stderr, "int`%s`= %d", name.c_str(), v);
+  DEBUG_END;
+}
+
+void debugv(
+    const string& v,
+    const string& name,
+    const string& prettyFunction,
+    int line) {
+  DEBUG_BEGIN(prettyFunction, line);
+  fprintf(stderr, "string`%s`= %s", name.c_str(), v.c_str());
+  DEBUG_END;
+}
 
 void debugv(
     const vector<int>& vs,
@@ -33,16 +49,6 @@ void debugv(
   DEBUG_END;
 }
 
-void debugv(
-    const string& v,
-    const string& name,
-    const string& prettyFunction,
-    int line) {
-  DEBUG_BEGIN(prettyFunction, line);
-  fprintf(stderr, "string`%s`= %s", name.c_str(), v.c_str());
-  DEBUG_END;
-}
-
 #define DEBUG_STACKTRACE(fmt, args...)                                         \
   fprintf(                                                                     \
       stderr,                                                                  \
@@ -54,7 +60,7 @@ void debugv(
 
 #define DEBUGV(v) debugv(v, #v, __PRETTY_FUNCTION__, __LINE__)
 
-#define DEBUG(fmt, args...)                                                    \
+#define DEBUGF(fmt, args...)                                                   \
   fprintf(                                                                     \
       stderr,                                                                  \
       ("\033[94m[%s][L%d] " + string(fmt) + "\033[0m").c_str(),                \

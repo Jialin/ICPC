@@ -8,6 +8,14 @@
 
 using namespace std;
 
+/////////////////////////////// Example Usage ////////////////////////////////
+// #include "math/mod/primitive_root_prime_use_primes.h"
+// #include "math/prime/prime_generator.h"
+//
+// math::PrimeGenerator pg(100000);
+// math::PrimitiveRootPrimeUsePrimes<int> root;
+// root.calc(998244353, pg.primes);
+//////////////////////////////////////////////////////////////////////////////
 namespace math {
 
 template<typename T>
@@ -37,7 +45,7 @@ struct PrimitiveRootPrimeUsePrimes {
         return res;
       }
     }
-    DEBUG(
+    DEBUGF(
         "We should never hit here, all primes should have primitive root. "
         "n:%d\n",
         n);
