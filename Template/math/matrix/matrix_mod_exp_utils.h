@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "math/matrix/matrix.h"
+#include "debug/debug.h"
 #include "math/matrix/matrix_fix_inline.h"
 #include "math/matrix/matrix_mul_inline.h"
 #include "math/mod/slight_fix.h"
@@ -11,55 +11,53 @@ using namespace std;
 
 namespace math {
 
-template<typename V = int, typename V_SQR = long long>
-class MatrixModExpUtils {
-public:
+template<typename MATRIX, typename V = int, typename V_SQR = int64_t>
+struct MatrixModExpUtils {
   inline MatrixModExpUtils() {}
 
   inline MatrixModExpUtils(
-      const Matrix<V>& base, const V& mod, const int& capacity = -1) {
+      const MATRIX& base, const V& mod, int capacity = -1) {
     init(base, mod, capacity);
   }
 
-  inline void
-  init(const Matrix<V>& base, const V& mod, const int& capacity = -1) {
-    assert(base.n() == base.m());
-    n_ = base.n();
-    mod_ = mod;
-    pows_.clear();
+  inline void init(const MATRIX& base, const V& mod, int capacity = -1) {
+    DEBUG_EQ(base._n, base._m);
+    _n = base._n;
+    _mod = mod;
+    _pows.clear();
     if (capacity > 0) {
-      pows_.reserve(capacity);
+      _pows.reserve(capacity);
     }
-    pows_.emplace_back(base);
-    matrixFixModInline<V>(pows_.back(), mod_);
+    _pows.emplace_back(base);
+    matrixFixModInline<MATRIX, V>(_pows.back(), _mod);
   }
 
   template<typename EXP = int32_t>
-  inline void exp(Matrix<V>& res, EXP e) {
-    assert(e >= 0);
-    res.init(n_, n_);
-    for (int i = 0; i < n_; ++i) {
-      res.at(i, i) = slightFixMod(1, mod_);
+  inline void calc(MATRIX& res, EXP e) {
+    DEBUG_TRUE(e >= 0, "e(%d) should be non-negative.", e);
+    res.init(_n, _n);
+    for (int i = 0; i < _n; ++i) {
+      res._vs[i][i] = slightFixMod<V>(1, _mod);
     }
     for (int i = 0; e > 0; e >>= 1, ++i) {
       if (!(e & 1)) {
         continue;
       }
-      while (i >= static_cast<int>(pows_.size())) {
-        Matrix<V> subRes;
-        matrixMulModInline<V, V_SQR>(subRes, pows_.back(), pows_.back(), mod_);
-        pows_.emplace_back(std::move(subRes));
+      while (i >= static_cast<int>(_pows.size())) {
+        MATRIX subRes;
+        matrixMulModInline<MATRIX, V, V_SQR>(
+            subRes, _pows.back(), _pows.back(), _mod);
+        _pows.emplace_back(move(subRes));
       }
-      matrixMulModInline<V, V_SQR>(tmpMat_, res, pows_[i], mod_);
-      swap(res, tmpMat_);
+      matrixMulModInline<MATRIX, V, V_SQR>(_tmpMat, res, _pows[i], _mod);
+      swap(res, _tmpMat);
     }
   }
 
-private:
-  int n_;
-  V mod_;
-  vector<Matrix<V>> pows_;
-  Matrix<V> tmpMat_;
+  int _n;
+  V _mod;
+  vector<MATRIX> _pows;
+  MATRIX _tmpMat;
 };
 
 } // namespace math

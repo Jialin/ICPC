@@ -38,6 +38,7 @@ cc_library(
     name = "fib_utils",
     hdrs = ["fib_utils.h"],
     deps = [
+        "//math/matrix:matrix_array",
         "//math/matrix:matrix_mod_exp_utils",
     ],
 )
