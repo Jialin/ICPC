@@ -12,7 +12,9 @@
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
 		"files.trimTrailingWhitespace": true,
-		"editor.scrollBeyondLastLine": false
+		"files.exclude": {
+			"**/boost**boost/**": true
+		}
 	},
 	"C_Cpp.default.forcedInclude": []
 }
