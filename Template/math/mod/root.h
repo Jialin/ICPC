@@ -3,6 +3,13 @@
 #include "math/mod/exp.h"
 #include "math/mod/log_coprime.h"
 
+//////////////////////////////////////////////////////////////////////
+// #include "math/mod/root.h"
+//
+// math::LogModCoPrime<> logMod;
+// logMod.init(100003, false, 100000);
+// math::rootMod(exp, remainder, MOD, PRIMITIVE_ROOT, logMod, exist);
+//////////////////////////////////////////////////////////////////////
 namespace math {
 
 // Calculates x where x^exp=remainder (% mod)
