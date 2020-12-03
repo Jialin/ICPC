@@ -5,6 +5,38 @@
             "static_cast<$1>($2)"
         ]
     },
+    "Single Test Case Template": {
+        "prefix": "CF",
+        "body": [
+            "#include <algorithm>",
+            "#include <bitset>",
+            "#include <cassert>",
+            "#include <cctype>",
+            "#include <cmath>",
+            "#include <cstddef>",
+            "#include <cstdint>",
+            "#include <cstdio>",
+            "#include <cstring>",
+            "#include <functional>",
+            "#include <iostream>",
+            "#include <map>",
+            "#include <set>",
+            "#include <string>",
+            "#include <tuple>",
+            "#include <unordered_map>",
+            "#include <unordered_set>",
+            "#include <utility>",
+            "#include <vector>",
+            "",
+            "using namespace std;",
+            "",
+            "#include \"debug/debug.h\"",
+            "",
+            "int main() {",
+            "  $1;",
+            "}"
+        ]
+    },
     "For loop": {
         "prefix": "FOR",
         "body": [
@@ -59,36 +91,10 @@
             "}"
         ]
     },
-    "Single Test Case Template": {
-        "prefix": "CF",
+    "Size": {
+        "prefix": "SIZE",
         "body": [
-            "#include <algorithm>",
-            "#include <bitset>",
-            "#include <cassert>",
-            "#include <cctype>",
-            "#include <cmath>",
-            "#include <cstddef>",
-            "#include <cstdint>",
-            "#include <cstdio>",
-            "#include <cstring>",
-            "#include <functional>",
-            "#include <iostream>",
-            "#include <map>",
-            "#include <set>",
-            "#include <string>",
-            "#include <tuple>",
-            "#include <unordered_map>",
-            "#include <unordered_set>",
-            "#include <utility>",
-            "#include <vector>",
-            "",
-            "using namespace std;",
-            "",
-            "#include \"debug/debug.h\"",
-            "",
-            "int main() {",
-            "  $1;",
-            "}"
+            "static_cast<int>($1.size())"
         ]
     },
     "Sort": {
