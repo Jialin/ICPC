@@ -19,6 +19,16 @@ cc_library(
 )
 
 cc_library(
+    name = "gray_code",
+    hdrs = ["gray_code.h"],
+)
+
+cc_library(
+    name = "inv_gray_code",
+    hdrs = ["inv_gray_code.h"],
+)
+
+cc_library(
     name = "linear_diophantine",
     hdrs = ["linear_diophantine.h"],
     deps = [

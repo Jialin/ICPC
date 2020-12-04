@@ -21,6 +21,26 @@ cc_test(
 )
 
 cc_test(
+    name = "gray_code_test",
+    srcs = ["gray_code_test.cpp"],
+    deps = [
+        "//math:gray_code",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "inv_gray_code_test",
+    srcs = ["inv_gray_code_test.cpp"],
+    deps = [
+        "//math:inv_gray_code",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "linear_diophantine_test",
     srcs = ["linear_diophantine_test.cpp"],
     deps = [
