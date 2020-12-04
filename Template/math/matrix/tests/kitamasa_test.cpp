@@ -17,9 +17,6 @@ TEST(Kitamasa, testOne) {
   EXPECT_EQ(16, kitamasa.calc({1}, 4));
   EXPECT_EQ(32, kitamasa.calc({1}, 5));
   EXPECT_EQ(976371285, kitamasa.calc({1}, 100));
-
-  for (auto& pow : kitamasa._pows)
-    DEBUGV(pow);
 }
 
 TEST(Kitamasa, testFib) {
