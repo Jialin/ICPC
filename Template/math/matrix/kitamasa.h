@@ -80,7 +80,7 @@ struct Kitamasa {
     res.resize(_n);
   }
 
-  int _n, _n2;
+  int _n;
   V _mod;
   vector<V> _coef, _res, _tmpRes;
   vector<vector<V>> _pows;

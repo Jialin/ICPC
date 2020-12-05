@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "accumulator_test",
+    srcs = ["accumulator_test.cpp"],
+    deps = [
+        "//math/mod:accumulator",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "add_test",
     srcs = ["add_test.cpp"],
     deps = [

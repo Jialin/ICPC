@@ -3,6 +3,16 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "accumulator",
+    hdrs = ["accumulator.h"],
+    deps = [
+        ":add",
+        ":fix",
+        "//debug",
+    ],
+)
+
+cc_library(
     name = "add",
     hdrs = ["add.h"],
     deps = [
@@ -79,8 +89,8 @@ cc_library(
     deps = [
         ":exp",
         ":fix",
-        ":mul",
         ":inv",
+        ":mul",
         "//collections:hashmap",
     ],
 )

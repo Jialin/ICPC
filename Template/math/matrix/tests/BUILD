@@ -1,6 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "kitamasa_once_test",
+    srcs = ["kitamasa_once_test.cpp"],
+    deps = [
+        "//math/matrix:kitamasa_once",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "kitamasa_test",
     srcs = ["kitamasa_test.cpp"],
     deps = [
