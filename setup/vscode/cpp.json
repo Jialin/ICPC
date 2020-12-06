@@ -1,4 +1,10 @@
 {
+    "All": {
+        "prefix": "ALL",
+        "body": [
+            "$1.begin(), $1.end()"
+        ]
+    },
     "Cast": {
         "prefix": "CAST",
         "body": [
