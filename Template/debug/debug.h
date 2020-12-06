@@ -2,8 +2,12 @@
 
 #ifndef LOCAL
 
+#define DEBUG_BEGIN
+#define DEBUG_END
+
 #define DEBUGF(fmt, args...)
 #define DEBUGV(v)
+#define DEBUGBIT(v)
 #define DEBUG_EQ(x, y)
 #define DEBUG_FALSE(statement, fmt, args...)
 #define DEBUG_TRUE(statement, fmt, args...)
@@ -15,6 +19,10 @@
 #include "debug/debug_basic.h"
 #include "debug/debug_matrix.h"
 
+#define DEBUG_BEGIN                                                            \
+  fprintf(stderr, "\033[94m==[%s][L%d]==\n", __PRETTY_FUNCTION__, __LINE__)
+#define DEBUG_END fprintf(stderr, "\n\033[0m")
+
 #define DEBUG_STACKTRACE(fmt, args...)                                         \
   fprintf(                                                                     \
       stderr,                                                                  \
@@ -24,7 +32,15 @@
       args,                                                                    \
       boost::stacktrace::to_string(boost::stacktrace::stacktrace()).c_str())
 
-#define DEBUGV(v) debugv(v, #v, __PRETTY_FUNCTION__, __LINE__)
+#define DEBUGV(v)                                                              \
+  DEBUG_BEGIN;                                                                 \
+  debugv(v, #v);                                                               \
+  DEBUG_END
+
+#define DEBUGBIT(v)                                                            \
+  DEBUG_BEGIN;                                                                 \
+  debugBit(v, #v);                                                             \
+  DEBUG_END
 
 #define DEBUGF(fmt, args...)                                                   \
   fprintf(                                                                     \
