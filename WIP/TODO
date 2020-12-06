@@ -1,10 +1,10 @@
-- Discrete Root
-  - Codeforces - Lunar New Year and a Recursive Sequence
-    - https://codeforces.com/contest/1106/problem/F
-
 - Factorization
   - Quadratic sieve: https://en.wikipedia.org/wiki/Quadratic_sieve
   - Lenstra elliptic-curve factorization: https://pan.baidu.com/s/1GyzysqQUVuUyI8Bsqs9O-g
 
 - Modula alternative
   - http://homepage.cs.uiowa.edu/~jones/bcd/mod.shtml
+
+- Kitamasa
+  - Fast template (using FFT): https://atcoder.jp/contests/tdpc/submissions/16528484
+  - Problem: https://atcoder.jp/contests/tdpc/tasks/tdpc_fibonacci
