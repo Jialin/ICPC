@@ -39,3 +39,13 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "submasks_test",
+    srcs = ["submasks_test.cpp"],
+    deps = [
+        "//math/bit:submasks",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

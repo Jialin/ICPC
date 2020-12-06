@@ -21,3 +21,8 @@ cc_library(
     name = "inv_gray_code",
     hdrs = ["inv_gray_code.h"],
 )
+
+cc_library(
+    name = "submasks",
+    hdrs = ["submasks.h"],
+)
