@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/ctz128.h"
+#include "math/bit/ctz128.h"
 #include "math/mod/exp128.h"
 #include "math/montgomery_mul.h"
 

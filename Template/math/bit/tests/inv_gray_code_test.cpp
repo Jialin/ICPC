@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/inv_gray_code.h"
+#include "math/bit/inv_gray_code.h"
 
 namespace math {
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "math/ctz128.h"
+#include "math/bit/ctz128.h"
 
 namespace math {
 

@@ -6,3 +6,18 @@ cc_library(
     name = "ctz",
     hdrs = ["ctz.h"],
 )
+
+cc_library(
+    name = "ctz128",
+    hdrs = ["ctz128.h"],
+)
+
+cc_library(
+    name = "gray_code",
+    hdrs = ["gray_code.h"],
+)
+
+cc_library(
+    name = "inv_gray_code",
+    hdrs = ["inv_gray_code.h"],
+)

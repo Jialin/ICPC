@@ -93,8 +93,8 @@ cc_library(
     name = "miller_rabin128",
     hdrs = ["miller_rabin128.h"],
     deps = [
-        "//math:ctz128",
         "//math:montgomery_mul",
+        "//math/bit:ctz128",
         "//math/mod:exp128",
     ],
 )

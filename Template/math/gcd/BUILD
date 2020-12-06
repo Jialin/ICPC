@@ -32,6 +32,6 @@ cc_library(
     name = "gcd128",
     hdrs = ["gcd128.h"],
     deps = [
-        "//math:ctz128",
+        "//math/bit:ctz128",
     ],
 )

@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-using namespace std;
+#include "math/bit/ctz128.h"
 
-#include "math/ctz128.h"
+using namespace std;
 
 namespace math {
 
