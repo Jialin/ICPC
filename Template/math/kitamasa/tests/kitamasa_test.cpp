@@ -1,7 +1,7 @@
 
 #include "gtest/gtest.h"
 
-#include "math/matrix/kitamasa.h"
+#include "math/kitamasa/kitamasa.h"
 
 namespace math {
 
