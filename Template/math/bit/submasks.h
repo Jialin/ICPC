@@ -6,10 +6,14 @@ namespace math {
 
 // Computes the n-th gray code
 template<typename V = int>
-inline void submasks(V mask, const function<void(int)>& processor) {
-  processor(0);
+inline void submasks(V mask, const function<bool(int)>& processor) {
+  if (!processor(0)) {
+    return;
+  }
   for (int submask = mask; submask; submask = (submask - 1) & mask) {
-    processor(submask);
+    if (!processor(submask)) {
+      return;
+    }
   }
 }
 
