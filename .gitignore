@@ -4,8 +4,8 @@ output*
 answer*
 *.o
 *.pyc
-gencpp-
-gendebug-
+gencpp-*
+gendebug-*
 
 .*.swp
 .DS_Store
