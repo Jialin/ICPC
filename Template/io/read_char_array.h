@@ -19,6 +19,9 @@ inline bool readCharArray(char* s) {
   *s++ = readChar(false);
   while (true) {
     ch = readChar(false);
+    if (!ch) {
+      return false;
+    }
     if (isspace(ch)) {
       break;
     }
