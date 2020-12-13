@@ -3,6 +3,14 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "bigint",
+    hdrs = ["bigint.h"],
+    deps = [
+        ":pow10",
+    ],
+)
+
+cc_library(
     name = "chinese_remainder",
     hdrs = ["chinese_remainder.h"],
     deps = [
@@ -27,6 +35,11 @@ cc_library(
     deps = [
         ":uint256",
     ],
+)
+
+cc_library(
+    name = "pow10",
+    hdrs = ["pow10.h"],
 )
 
 cc_library(
