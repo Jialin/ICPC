@@ -1,7 +1,8 @@
+import collections
 import os
+import re
 import subprocess
 import sys
-import re
 
 INCLUDES = [
     "algorithm",
@@ -30,13 +31,62 @@ DEBUG_LINES = [
     "#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED",
     "#include <boost/stacktrace.hpp>",
 ]
-DUMMY_LINE_PATTERN = re.compile(r"^\s*;$")
-COMMENT_PATTERN = re.compile(r"^\s*//.*$")
-ANCHOR_LINES = ["// BEGIN KAWIGIEDIT TESTING", "// END KAWIGIEDIT TESTING"]
+USING_NAMESPACE_STD = "using namespace std;"
 
 
-def default_includes():
-    return ["#include <{}>".format(include) for include in INCLUDES]
+def generate_includes():
+    return ["#include <{}>".format(include) for include in INCLUDES] + [
+        USING_NAMESPACE_STD
+    ]
+
+
+def generate_clean_lines(lines):
+    DUMMY_LINE_PATTERN = re.compile(r"^\s*;*$")
+    COMMENT_PATTERN = re.compile(r"^\s*//.*$")
+    ANCHOR_LINES = ["// BEGIN KAWIGIEDIT TESTING", "// END KAWIGIEDIT TESTING"]
+
+    res = []
+    for line in lines:
+        if line.startswith(b"#"):
+            continue
+        utf8_line = line.decode("utf-8")
+        if utf8_line == USING_NAMESPACE_STD:
+            continue
+        if utf8_line not in ANCHOR_LINES and (
+            DUMMY_LINE_PATTERN.match(utf8_line) or COMMENT_PATTERN.match(utf8_line)
+        ):
+            continue
+        res.append(utf8_line)
+    return res
+
+
+def merge_namespaces(lines):
+    NAMESPACE_START = re.compile(r"^namespace (\S+) {")
+    NAMESPACE_END = re.compile(r"^} // namespace (\S+)")
+
+    outter_lines = []
+    in_namespace = None
+    lines_per_namespace = collections.defaultdict(list)
+    for line in lines:
+        match = NAMESPACE_START.match(line)
+        if match:
+            in_namespace = match.group(1)
+            continue
+        match = NAMESPACE_END.match(line)
+        if match:
+            in_namespace = None
+            continue
+        if in_namespace:
+            lines_per_namespace[in_namespace].append(line)
+        else:
+            outter_lines.append(line)
+    res = []
+    for namespace, lines in lines_per_namespace.items():
+        res.append("namespace %s {" % namespace)
+        res.extend(lines)
+        res.append("} // %s" % namespace)
+    res.extend(outter_lines)
+    return res
 
 
 def gen_file(prefix, info, additional_contents=None, additional_args=None):
@@ -57,27 +107,15 @@ def gen_file(prefix, info, additional_contents=None, additional_args=None):
         stdout=subprocess.PIPE,
     )
     proc.wait()
-    clean_lines = []
-    using_std = False
-    for line in proc.stdout.read().split(b"\n"):
-        if not line.startswith(b"#"):
-            utf8_line = line.decode("utf-8")
-            if utf8_line == "using namespace std;":
-                if using_std:
-                    continue
-                using_std = True
-            if utf8_line not in ANCHOR_LINES and (
-                DUMMY_LINE_PATTERN.match(utf8_line) or COMMENT_PATTERN.match(utf8_line)
-            ):
-                continue
-            clean_lines.append(utf8_line)
+    lines = generate_clean_lines(proc.stdout.read().split(b"\n"))
+    lines = merge_namespaces(lines)
     gen_file_name = prefix + file_name
     file = open(gen_file_name, "w")
     file.write(
         "\n".join(
-            default_includes()
+            generate_includes()
             + (additional_contents if additional_contents else [])
-            + clean_lines
+            + lines
         )
     )
     file.close()
