@@ -6,7 +6,10 @@ namespace math {
 
 TEST(Submasks, basic) {
   vector<int> vs;
-  submasks(7, [&vs](int v) { vs.emplace_back(v); });
+  submasks(7, [&vs](int v) {
+    vs.emplace_back(v);
+    return true;
+  });
   sort(vs.begin(), vs.end());
   ASSERT_EQ(8, vs.size());
   EXPECT_EQ(0, vs[0]);
@@ -21,7 +24,10 @@ TEST(Submasks, basic) {
 
 TEST(Submasks, large) {
   vector<int> vs;
-  submasks(262184, [&vs](int v) { vs.emplace_back(v); });
+  submasks(262184, [&vs](int v) {
+    vs.emplace_back(v);
+    return true;
+  });
   sort(vs.begin(), vs.end());
   ASSERT_EQ(8, vs.size());
   EXPECT_EQ(0, vs[0]);
@@ -36,7 +42,10 @@ TEST(Submasks, large) {
 
 TEST(Submasks, zero) {
   vector<int> vs;
-  submasks(0, [&vs](int v) { vs.emplace_back(v); });
+  submasks(0, [&vs](int v) {
+    vs.emplace_back(v);
+    return true;
+  });
   ASSERT_EQ(1, vs.size());
   EXPECT_EQ(0, vs[0]);
 }
