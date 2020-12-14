@@ -175,6 +175,23 @@ TEST(BigInt, addInline) {
   EXPECT_EQ(2469, c._vs[4]);
 }
 
+TEST(BigInt, addInlineInt) {
+  BigInt<> v;
+  v = "12345678901234567890";
+
+  v += 0;
+  ASSERT_EQ(3, v._vs.size());
+  EXPECT_EQ(234567890, v._vs[0]);
+  EXPECT_EQ(345678901, v._vs[1]);
+  EXPECT_EQ(12, v._vs[2]);
+
+  v += 1838810371747142948LL;
+  ASSERT_EQ(3, v._vs.size());
+  EXPECT_EQ(981710838, v._vs[0]);
+  EXPECT_EQ(184489272, v._vs[1]);
+  EXPECT_EQ(14, v._vs[2]);
+}
+
 TEST(BigInt, mulInlineInt) {
   BigInt<> v;
 

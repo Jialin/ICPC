@@ -2,6 +2,7 @@
 
 #ifdef BIGINT_ALL
 #define BIGINT_ADD_INLINE
+#define BIGINT_ADD_INLINE_INT
 #define BIGINT_ASSIGN
 #define BIGINT_ASSIGN_CHAR_ARRAY
 #define BIGINT_ASSIGN_INT
@@ -20,10 +21,10 @@
 #define BIGINT_PRINT
 #endif
 
-#if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ASSIGN_INT) ||                \
-    defined(BIGINT_COMPARE_INT) || defined(BIGINT_INIT_INT) ||                 \
-    defined(BIGINT_INIT_MUL) || defined(BIGINT_LENGTH) ||                      \
-    defined(BIGINT_MUL_INLINE_INT)
+#if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
+    defined(BIGINT_ASSIGN_INT) || defined(BIGINT_COMPARE_INT) ||               \
+    defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
+    defined(BIGINT_LENGTH) || defined(BIGINT_MUL_INLINE_INT)
 #include "math/pow10.h"
 #endif
 
@@ -154,6 +155,29 @@ struct BigInt {
         _vs.push_back(0);
       }
       _vs[i] += carry + (i < o._vs.size() ? o._vs[i] : 0);
+      carry = _vs[i] >= POW10[GROUP];
+      if (carry) {
+        _vs[i] -= POW10[GROUP];
+      }
+    }
+  }
+#endif
+
+#ifdef BIGINT_ADD_INLINE_INT
+  template<typename T>
+  inline void operator+=(T v) {
+    bool carry = false;
+    for (size_t i = 0; i < _vs.size() || v || carry; ++i) {
+      if (i == _vs.size()) {
+        _vs.push_back(0);
+      }
+      if (v) {
+        _vs[i] += v % POW10[GROUP];
+        v /= POW10[GROUP];
+      }
+      if (carry) {
+        ++_vs[i];
+      }
       carry = _vs[i] >= POW10[GROUP];
       if (carry) {
         _vs[i] -= POW10[GROUP];
