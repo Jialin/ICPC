@@ -7,6 +7,7 @@ cc_library(
     hdrs = ["bigint.h"],
     deps = [
         ":pow10",
+        "//debug:debug_basic",
     ],
 )
 

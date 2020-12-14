@@ -9,7 +9,7 @@ using namespace std;
 namespace math {
 
 TEST(BigInt, initCharArray) {
-  BigInt<> v;
+  BigInt<4, int> v;
 
   string small("1234567890");
   v.initCharArray(small.c_str());
@@ -34,7 +34,7 @@ TEST(BigInt, initCharArray) {
 }
 
 TEST(BigInt, initInt) {
-  BigInt<> v;
+  BigInt<4, int> v;
 
   v.initInt(0);
   ASSERT_EQ(1, v._vs.size());
@@ -55,12 +55,55 @@ TEST(BigInt, initInt) {
   EXPECT_EQ(1000, v._vs[4]);
 }
 
+TEST(BigInt, initMul) {
+  BigInt<4, int> a, b, res;
+
+  a = 12;
+  b = 12;
+  res.initMul(a, b);
+  ASSERT_EQ(1, res._vs.size());
+  EXPECT_EQ(144, res._vs[0]);
+
+  a = 2;
+  b = "2222222222222222";
+  res.initMul(a, b);
+  ASSERT_EQ(4, res._vs.size());
+  EXPECT_EQ(4444, res._vs[0]);
+  EXPECT_EQ(4444, res._vs[1]);
+  EXPECT_EQ(4444, res._vs[2]);
+  EXPECT_EQ(4444, res._vs[3]);
+
+  a = "12838183401841";
+  b = "2222222222222222";
+  res.initMul(a, b);
+  ASSERT_EQ(8, res._vs.size());
+  EXPECT_EQ(702, res._vs[0]);
+  EXPECT_EQ(2591, res._vs[1]);
+  EXPECT_EQ(7026, res._vs[2]);
+  EXPECT_EQ(5552, res._vs[3]);
+  EXPECT_EQ(4853, res._vs[4]);
+  EXPECT_EQ(2964, res._vs[5]);
+  EXPECT_EQ(8529, res._vs[6]);
+  EXPECT_EQ(2, res._vs[7]);
+
+  BigInt<9, int64_t> a9, b9, res9;
+  a9 = "999999999999999999999";
+  b9 = "8123881931004020101941";
+  res9.initMul(a9, b9);
+  ASSERT_EQ(5, res9._vs.size());
+  EXPECT_EQ(979898059, res9._vs[0]);
+  EXPECT_EQ(118068995, res9._vs[1]);
+  EXPECT_EQ(101932876, res9._vs[2]);
+  EXPECT_EQ(931004020, res9._vs[3]);
+  EXPECT_EQ(8123881, res9._vs[4]);
+}
+
 TEST(BigInt, assign) {
-  BigInt<> a;
+  BigInt<4, int> a;
   string aStr("12345678901234567890");
   a.initCharArray(aStr.c_str(), aStr.size());
 
-  BigInt<> b = a;
+  BigInt<4, int> b = a;
   ASSERT_EQ(5, b._vs.size());
   EXPECT_EQ(7890, b._vs[0]);
   EXPECT_EQ(3456, b._vs[1]);
@@ -70,7 +113,7 @@ TEST(BigInt, assign) {
 }
 
 TEST(BigInt, assignCharArray) {
-  BigInt<> v;
+  BigInt<4, int> v;
   v = "12387576124950030100";
 
   ASSERT_EQ(5, v._vs.size());
@@ -82,7 +125,7 @@ TEST(BigInt, assignCharArray) {
 }
 
 TEST(BigInt, assignString) {
-  BigInt<> v;
+  BigInt<4, int> v;
   v = string("13412413566103931");
 
   ASSERT_EQ(5, v._vs.size());
@@ -94,7 +137,7 @@ TEST(BigInt, assignString) {
 }
 
 TEST(BigInt, assignInt) {
-  BigInt<> v;
+  BigInt<4, int> v;
   v = 12351491204118411LL;
 
   ASSERT_EQ(5, v._vs.size());
@@ -106,15 +149,15 @@ TEST(BigInt, assignInt) {
 }
 
 TEST(BigInt, addInline) {
-  BigInt<> a;
+  BigInt<4, int> a;
   string aStr("12345678901234567890");
   a.initCharArray(aStr.c_str(), aStr.size());
 
-  BigInt<> b;
+  BigInt<4, int> b;
   string bStr("12384813");
   b.initCharArray(bStr.c_str(), bStr.size());
 
-  BigInt<> c = a;
+  BigInt<4, int> c = a;
   c += b;
   ASSERT_EQ(5, c._vs.size());
   EXPECT_EQ(2703, c._vs[0]);
@@ -130,6 +173,26 @@ TEST(BigInt, addInline) {
   EXPECT_EQ(8024, c._vs[2]);
   EXPECT_EQ(1357, c._vs[3]);
   EXPECT_EQ(2469, c._vs[4]);
+}
+
+TEST(BigInt, mulInlineInt) {
+  BigInt<> v;
+
+  v = "182378471831341";
+  v *= 2;
+  ASSERT_EQ(2, v._vs.size());
+  EXPECT_EQ(943662682, v._vs[0]);
+  EXPECT_EQ(364756, v._vs[1]);
+
+  v *= 128348578;
+  ASSERT_EQ(3, v._vs.size());
+  EXPECT_EQ(346366196, v._vs[0]);
+  EXPECT_EQ(35034731, v._vs[1]);
+  EXPECT_EQ(46816, v._vs[2]);
+
+  v *= 0;
+  ASSERT_EQ(1, v._vs.size());
+  EXPECT_EQ(0, v._vs[0]);
 }
 
 TEST(BigInt, cmp) {
@@ -159,7 +222,7 @@ TEST(BigInt, cmp) {
 }
 
 TEST(BigInt, cmpInt) {
-  BigInt<> v;
+  BigInt<4, int> v;
   v = "12345678901234";
 
   EXPECT_EQ(1, v.cmp(0));
@@ -167,11 +230,11 @@ TEST(BigInt, cmpInt) {
   EXPECT_EQ(0, v.cmp(12345678901234LL));
   EXPECT_EQ(-1, v.cmp(12345678901235LL));
   EXPECT_EQ(-1, v.cmp(123456789012351241LL));
-  EXPECT_EQ(-1, v.cmp(12345678901235124112LL));
+  EXPECT_EQ(-1, v.cmp(12345678901235124112ULL));
 }
 
 TEST(BigInt, length) {
-  BigInt<> v;
+  BigInt<4, int> v;
 
   v = "00000";
   EXPECT_EQ(1, v.length());

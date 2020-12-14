@@ -14,20 +14,26 @@
 #define BIGINT_INIT_CAPACITY
 #define BIGINT_INIT_CHAR_ARRAY
 #define BIGINT_INIT_INT
+#define BIGINT_INIT_MUL
 #define BIGINT_LENGTH
+#define BIGINT_MUL_INLINE_INT
+#define BIGINT_PRINT
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ASSIGN_INT) ||                \
     defined(BIGINT_COMPARE_INT) || defined(BIGINT_INIT_INT) ||                 \
-    defined(BIGINT_LENGTH)
+    defined(BIGINT_INIT_MUL) || defined(BIGINT_LENGTH) ||                      \
+    defined(BIGINT_MUL_INLINE_INT)
 #include "math/pow10.h"
 #endif
+
+#include "debug/debug_basic.h"
 
 using namespace std;
 
 namespace math {
 
-template<int GROUP = 4>
+template<int GROUP = 9, typename BASE_SQR = uint64_t>
 struct BigInt {
 #ifdef BIGINT_CONSTRUCT_EMPTY
   inline BigInt() {}
@@ -49,7 +55,7 @@ struct BigInt {
 #endif
 
 #if defined(BIGINT_ASSIGN_CHAR_ARRAY) || defined(BIGINT_ASSIGN_STRING) ||      \
-    defined(BIGINT_INIT_CHAR_ARRAY)
+    defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_MUL_INLINE_INT)
   inline void initCharArray(const char* s, int size = -1) {
     _vs.clear();
     for (int i = (size >= 0 ? size : strlen(s)) - 1; i >= 0; i -= GROUP) {
@@ -77,14 +83,45 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_CLEAN) || defined(BIGINT_INIT_CHAR_ARRAY)
+#ifdef BIGINT_INIT_MUL
+  inline void
+  initMul(const BigInt<GROUP, BASE_SQR>& x, const BigInt<GROUP, BASE_SQR>& y) {
+    DEBUG_TRUE(
+        this != &x,
+        "in `a.initMul(b,c)`, a and b should not reference to the same "
+        "instance",
+        nullptr);
+    DEBUG_TRUE(
+        this != &y,
+        "in `a.initMul(b,c)`, a and b should not reference to the same "
+        "instance",
+        nullptr);
+    _vs.resize(x._vs.size() + y._vs.size());
+    fill(_vs.begin(), _vs.end(), 0);
+    for (int i = static_cast<int>(x._vs.size()) - 1; i >= 0; --i) {
+      for (int j = 0, carry = 0; j < static_cast<int>(y._vs.size()) || carry;
+           ++j) {
+        BASE_SQR v = _vs[i + j] + carry;
+        if (j < static_cast<int>(y._vs.size())) {
+          v += static_cast<BASE_SQR>(x._vs[i]) * y._vs[j];
+        }
+        _vs[i + j] = static_cast<int>(v % POW10[GROUP]);
+        carry = static_cast<int>(v / POW10[GROUP]);
+      }
+    }
+    clean();
+  }
+#endif
+
+#if defined(BIGINT_CLEAN) || defined(BIGINT_INIT_CHAR_ARRAY) ||                \
+    defined(BIGINT_INIT_MUL)
   inline void clean() {
     for (; _vs.size() > 1 && !_vs.back(); _vs.pop_back()) {}
   }
 #endif
 
 #ifdef BIGINT_ASSIGN
-  inline void operator=(const BigInt<GROUP>& o) {
+  inline void operator=(const BigInt<GROUP, BASE_SQR>& o) {
     _vs.clear();
     _vs.insert(_vs.begin(), o._vs.begin(), o._vs.end());
   }
@@ -110,7 +147,7 @@ struct BigInt {
 #endif
 
 #ifdef BIGINT_ADD_INLINE
-  inline void operator+=(const BigInt<GROUP>& o) {
+  inline void operator+=(const BigInt<GROUP, BASE_SQR>& o) {
     bool carry = false;
     for (size_t i = 0; i < _vs.size() || i < o._vs.size() || carry; ++i) {
       if (i == _vs.size()) {
@@ -125,8 +162,24 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_MUL_INLINE_INT
+  inline void operator*=(BASE_SQR v) {
+    DEBUG_TRUE(v < POW10[GROUP], "v(%d) should be less than 10^%d.", v, GROUP);
+    int carry = 0;
+    for (size_t i = 0; i < _vs.size() || carry; ++i) {
+      if (i == _vs.size()) {
+        _vs.push_back(0);
+      }
+      BASE_SQR cur = _vs[i] * v + carry;
+      _vs[i] = static_cast<int>(cur % POW10[GROUP]);
+      carry = static_cast<int>(cur / POW10[GROUP]);
+    }
+    clean();
+  }
+#endif
+
 #ifdef BIGINT_COMPARE
-  inline int cmp(const BigInt<GROUP>& o) const {
+  inline int cmp(const BigInt<GROUP, BASE_SQR>& o) const {
     if (_vs.size() != o._vs.size()) {
       return _vs.size() < o._vs.size() ? -1 : 1;
     }
@@ -172,6 +225,16 @@ struct BigInt {
     int res = (static_cast<int>(_vs.size()) - 1) * GROUP + 1;
     for (int v = _vs.back() / 10; v; v /= 10, ++res) {}
     return res;
+  }
+#endif
+
+#ifdef BIGINT_PRINT
+  inline void print() const {
+    int idx = static_cast<int>(_vs.size()) - 1;
+    printf("%d", _vs[idx]);
+    for (int i = idx - 1; i >= 0; --i) {
+      printf("%0*d", GROUP, _vs[i]);
+    }
   }
 #endif
 
