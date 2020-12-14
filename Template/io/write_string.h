@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "io/write_char_array.h"
 
 using namespace std;

@@ -14,7 +14,7 @@ inline bool readCharArray(char* s) {
     if (!isspace(ch)) {
       break;
     }
-    ++readPos;
+    ++_readPos;
   }
   *s++ = readChar(false);
   while (true) {
@@ -26,7 +26,7 @@ inline bool readCharArray(char* s) {
       break;
     }
     *s++ = ch;
-    ++readPos;
+    ++_readPos;
   }
   *s = '\0';
   return true;

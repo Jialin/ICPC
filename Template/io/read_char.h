@@ -5,34 +5,30 @@
 
 namespace io {
 
-namespace {
+const int _kReadBufferSize = 1 << 15;
+char _readBuffer[_kReadBufferSize];
+int _readPos;
+int _readLength;
+bool _ended = false;
 
-const int kReadBufferSize = 1 << 15;
-char readBuffer[kReadBufferSize];
-int readPos;
-int readLength;
-bool ended = false;
-
-inline void loadBuffer() {
-  readLength =
-      static_cast<int>(fread(readBuffer, sizeof(char), kReadBufferSize, stdin));
-  readPos = 0;
+inline void _loadBuffer() {
+  _readLength = static_cast<int>(
+      fread(_readBuffer, sizeof(char), _kReadBufferSize, stdin));
+  _readPos = 0;
 }
 
-} // namespace
-
 inline char readChar(bool advance = true) {
-  if (ended) {
+  if (_ended) {
     return 0;
   }
-  if (readPos >= readLength) {
-    loadBuffer();
-    if (readLength == 0) {
-      ended = true;
+  if (_readPos >= _readLength) {
+    _loadBuffer();
+    if (_readLength == 0) {
+      _ended = true;
       return 0;
     }
   }
-  return readBuffer[advance ? readPos++ : readPos];
+  return _readBuffer[advance ? _readPos++ : _readPos];
 }
 
 } // namespace io

@@ -4,35 +4,31 @@
 
 namespace io {
 
-namespace {
+const int _kWriteBufferSize = 1 << 15;
 
-const int kWriteBufferSize = 1 << 15;
-
-int writePos = 0;
-char writeBuffer[kWriteBufferSize];
-
-} // namespace
+int _writePos = 0;
+char _writeBuffer[_kWriteBufferSize];
 
 inline void writeChar(char x) {
-  if (writePos == kWriteBufferSize) {
-    fwrite(writeBuffer, 1, kWriteBufferSize, stdout);
-    writePos = 0;
+  if (_writePos == _kWriteBufferSize) {
+    fwrite(_writeBuffer, 1, _kWriteBufferSize, stdout);
+    _writePos = 0;
   }
-  writeBuffer[writePos++] = x;
+  _writeBuffer[_writePos++] = x;
 }
 
-struct Flusher {
+struct _Flusher {
   inline void flush() {
-    if (writePos) {
-      fwrite(writeBuffer, 1, writePos, stdout);
-      writePos = 0;
+    if (_writePos) {
+      fwrite(_writeBuffer, 1, _writePos, stdout);
+      _writePos = 0;
     }
     fflush(stdout);
   }
 
-  inline ~Flusher() {
+  inline ~_Flusher() {
     flush();
   }
-} flusher;
+} _flusher;
 
 } // namespace io

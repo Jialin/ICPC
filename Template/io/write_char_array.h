@@ -2,8 +2,6 @@
 
 #include "io/write_char.h"
 
-using namespace std;
-
 namespace io {
 
 inline void writeCharArray(const char* s) {

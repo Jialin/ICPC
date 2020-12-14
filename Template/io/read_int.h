@@ -15,12 +15,12 @@ inline bool readInt(T& res) {
     if (!isspace(ch)) {
       break;
     }
-    ++readPos;
+    ++_readPos;
   }
   ch = readChar(false);
   bool negative = ch == '-';
   if (negative) {
-    ++readPos;
+    ++_readPos;
   }
   res = 0;
   while (true) {
@@ -29,7 +29,7 @@ inline bool readInt(T& res) {
       break;
     }
     res = (res << 3) + (res << 1) + (ch & 15);
-    ++readPos;
+    ++_readPos;
   }
   if (negative) {
     res = -res;
