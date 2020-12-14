@@ -22,6 +22,7 @@
 #define BIGINT_PRINT
 #define BIGINT_PRINT_CHAR_ARRAY
 #define BIGINT_PRINT_QUICK
+#define BIGINT_SUB_INLINE
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
@@ -62,7 +63,7 @@ struct BigInt {
 #endif
 
 #if defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_ASSIGN_CHAR_ARRAY) ||    \
-    defined(BIGINT_ASSIGN_STRING) || defined(BIGINT_MUL_INLINE_INT)
+    defined(BIGINT_ASSIGN_STRING)
   inline void initCharArray(const char* s, int size = -1) {
     _vs.clear();
     for (int i = (size >= 0 ? size : strlen(s)) - 1; i >= 0; i -= GROUP) {
@@ -138,8 +139,10 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_CLEAN) || defined(BIGINT_INIT_CHAR_ARRAY) ||                \
-    defined(BIGINT_INIT_MUL)
+#if defined(BIGINT_CLEAN) || defined(BIGINT_ASSIGN_CHAR_ARRAY) ||              \
+    defined(BIGINT_ASSIGN_STRING) || defined(BIGINT_INIT_CHAR_ARRAY) ||        \
+    defined(BIGINT_INIT_MUL) || defined(BIGINT_MUL_INLINE_INT) ||              \
+    defined(BIGINT_SUB_INLINE)
   inline void clean() {
     for (; _vs.size() > 1 && !_vs.back(); _vs.pop_back()) {}
   }
@@ -184,6 +187,24 @@ struct BigInt {
         _vs[i] -= POW10[GROUP];
       }
     }
+  }
+#endif
+
+#if defined(BIGINT_SUB_INLINE)
+  inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
+    DEBUG_TRUE(
+        this->cmp(o) >= 0,
+        "Should only subtract bigint that's not larger than o",
+        nullptr);
+    bool carry = false;
+    for (size_t i = 0; i < o._vs.size() || carry; ++i) {
+      _vs[i] -= carry + (i < o._vs.size() ? o._vs[i] : 0);
+      carry = _vs[i] < 0;
+      if (carry) {
+        _vs[i] += POW10[GROUP];
+      }
+    }
+    clean();
   }
 #endif
 
