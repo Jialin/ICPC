@@ -8,6 +8,7 @@ cc_library(
     deps = [
         ":pow10",
         "//debug:debug_basic",
+        "//io:write_int",
     ],
 )
 

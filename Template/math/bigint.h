@@ -12,6 +12,7 @@
 #define BIGINT_COMPARE_INT
 #define BIGINT_CONSTRUCT_EMPTY
 #define BIGINT_CONSTRUCT_INT
+#define BIGINT_INIT_ADD
 #define BIGINT_INIT_CAPACITY
 #define BIGINT_INIT_CHAR_ARRAY
 #define BIGINT_INIT_INT
@@ -19,6 +20,8 @@
 #define BIGINT_LENGTH
 #define BIGINT_MUL_INLINE_INT
 #define BIGINT_PRINT
+#define BIGINT_PRINT_CHAR_ARRAY
+#define BIGINT_PRINT_QUICK
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
@@ -26,6 +29,9 @@
     defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
     defined(BIGINT_LENGTH) || defined(BIGINT_MUL_INLINE_INT)
 #include "math/pow10.h"
+#endif
+#ifdef BIGINT_PRINT_QUICK
+#include "io/write_int.h"
 #endif
 
 #include "debug/debug_basic.h"
@@ -55,8 +61,8 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_ASSIGN_CHAR_ARRAY) || defined(BIGINT_ASSIGN_STRING) ||      \
-    defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_MUL_INLINE_INT)
+#if defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_ASSIGN_CHAR_ARRAY) ||    \
+    defined(BIGINT_ASSIGN_STRING) || defined(BIGINT_MUL_INLINE_INT)
   inline void initCharArray(const char* s, int size = -1) {
     _vs.clear();
     for (int i = (size >= 0 ? size : strlen(s)) - 1; i >= 0; i -= GROUP) {
@@ -70,8 +76,8 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_ASSIGN_INT) || defined(BIGINT_CONSTRUCT_INT) ||             \
-    defined(BIGINT_INIT_INT)
+#if defined(BIGINT_INIT_INT) || defined(BIGINT_ASSIGN_INT) ||                  \
+    defined(BIGINT_CONSTRUCT_INT)
   template<typename T>
   inline void initInt(T v) {
     _vs.clear();
@@ -81,6 +87,24 @@ struct BigInt {
     if (_vs.empty()) {
       _vs.push_back(0);
     }
+  }
+#endif
+
+#ifdef BIGINT_INIT_ADD
+  inline void
+  initAdd(const BigInt<GROUP, BASE_SQR>& x, const BigInt<GROUP, BASE_SQR>& y) {
+    DEBUG_TRUE(
+        this != &x,
+        "in `a.initMul(b,c)`, a and b should not reference to the same "
+        "instance",
+        nullptr);
+    DEBUG_TRUE(
+        this != &y,
+        "in `a.initMul(b,c)`, a and b should not reference to the same "
+        "instance",
+        nullptr);
+    *this = x;
+    *this += y;
   }
 #endif
 
@@ -121,7 +145,7 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_ASSIGN
+#if defined(BIGINT_ASSIGN) || defined(BIGINT_INIT_ADD)
   inline void operator=(const BigInt<GROUP, BASE_SQR>& o) {
     _vs.clear();
     _vs.insert(_vs.begin(), o._vs.begin(), o._vs.end());
@@ -147,7 +171,7 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_ADD_INLINE
+#if defined(BIGINT_ADD_INLINE) || defined(BIGINT_INIT_ADD)
   inline void operator+=(const BigInt<GROUP, BASE_SQR>& o) {
     bool carry = false;
     for (size_t i = 0; i < _vs.size() || i < o._vs.size() || carry; ++i) {
@@ -259,6 +283,42 @@ struct BigInt {
     for (int i = idx - 1; i >= 0; --i) {
       printf("%0*d", GROUP, _vs[i]);
     }
+  }
+#endif
+
+#ifdef BIGINT_PRINT_QUICK
+  inline void printQuick() const {
+    int idx = static_cast<int>(_vs.size()) - 1;
+    io::writeInt(_vs[idx]);
+    for (int i = idx - 1; i >= 0; --i) {
+      io::writeInt(_vs[i], GROUP);
+    }
+  }
+#endif
+
+#ifdef BIGINT_PRINT_CHAR_ARRAY
+  inline void printCharArray(char* res) const {
+    int idx = static_cast<int>(_vs.size()) - 1;
+    res += _printInt(_vs[idx], res);
+    for (int i = idx - 1; i >= 0; --i) {
+      res += _printInt(_vs[i], res, GROUP);
+    }
+    *res = '\0';
+  }
+
+  inline int _printInt(int x, char* res, int padding = 0) const {
+    static char s[10];
+    int n = 0;
+    for (; x || !n; x /= 10) {
+      s[n++] = '0' + x % 10;
+    }
+    for (int i = n; i < padding; ++i) {
+      *(res++) = '0';
+    }
+    for (int i = n - 1; i >= 0; --i) {
+      *(res++) = s[i];
+    }
+    return max(padding, n);
   }
 #endif
 

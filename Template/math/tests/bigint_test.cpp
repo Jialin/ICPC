@@ -260,4 +260,21 @@ TEST(BigInt, length) {
   EXPECT_EQ(14, v.length());
 }
 
+TEST(BigInt, printCharArray) {
+  BigInt<> v;
+  char s[100];
+
+  v = "0000";
+  v.printCharArray(s);
+  EXPECT_EQ("0", static_cast<string>(s));
+
+  v = "1834388473749184733871841";
+  v.printCharArray(s);
+  EXPECT_EQ("1834388473749184733871841", static_cast<string>(s));
+
+  v = "100020300000310000300000000100002020";
+  v.printCharArray(s);
+  EXPECT_EQ("100020300000310000300000000100002020", static_cast<string>(s));
+}
+
 } // namespace math
