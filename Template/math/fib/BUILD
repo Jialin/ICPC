@@ -3,13 +3,13 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "fib",
-    hdrs = ["fib.h"],
+    name = "fib_general",
+    hdrs = ["fib_general.h"],
     deps = [
+        ":fib",
         "//math/mod:add",
-        "//math/mod:mul_safe",
-        "//math/mod:slight_fix",
-        "//math/mod:sub",
+        "//math/mod:fix",
+        "//math/mod:mul",
     ],
 )
 
@@ -40,6 +40,17 @@ cc_library(
     deps = [
         "//math/matrix:matrix_array",
         "//math/matrix:matrix_mod_exp_utils",
+    ],
+)
+
+cc_library(
+    name = "fib",
+    hdrs = ["fib.h"],
+    deps = [
+        "//math/mod:add",
+        "//math/mod:mul_safe",
+        "//math/mod:slight_fix",
+        "//math/mod:sub",
     ],
 )
 
