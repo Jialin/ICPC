@@ -60,32 +60,34 @@ def generate_clean_lines(lines):
     return res
 
 
-def merge_namespaces(lines):
+def merge_adjacent_same_namespaces(lines):
     NAMESPACE_START = re.compile(r"^namespace (\S+) {")
     NAMESPACE_END = re.compile(r"^} // namespace (\S+)")
 
-    outter_lines = []
-    in_namespace = None
-    lines_per_namespace = collections.defaultdict(list)
+    named_lines = []
+    current_namespace = None
     for line in lines:
         match = NAMESPACE_START.match(line)
         if match:
-            in_namespace = match.group(1)
+            current_namespace = match.group(1)
             continue
         match = NAMESPACE_END.match(line)
         if match:
-            in_namespace = None
+            current_namespace = None
             continue
-        if in_namespace:
-            lines_per_namespace[in_namespace].append(line)
+        if len(named_lines) > 0 and named_lines[-1][0] == current_namespace:
+            named_lines[-1][1].append(line)
         else:
-            outter_lines.append(line)
+            named_lines.append((current_namespace, [line]))
+
     res = []
-    for namespace, lines in lines_per_namespace.items():
-        res.append("namespace %s {" % namespace)
-        res.extend(lines)
-        res.append("} // %s" % namespace)
-    res.extend(outter_lines)
+    for namespace, lines in named_lines:
+        if namespace:
+            res.append("namespace %s {" % namespace)
+            res.extend(lines)
+            res.append("} // %s" % namespace)
+        else:
+            res.extend(lines)
     return res
 
 
@@ -108,7 +110,7 @@ def gen_file(prefix, info, additional_contents=None, additional_args=None):
     )
     proc.wait()
     lines = generate_clean_lines(proc.stdout.read().split(b"\n"))
-    lines = merge_namespaces(lines)
+    lines = merge_adjacent_same_namespaces(lines)
     gen_file_name = prefix + file_name
     file = open(gen_file_name, "w")
     file.write(
