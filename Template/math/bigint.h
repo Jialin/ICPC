@@ -12,6 +12,8 @@
 #define BIGINT_COMPARE_INT
 #define BIGINT_CONSTRUCT_EMPTY
 #define BIGINT_CONSTRUCT_INT
+#define BIGINT_DIV_INLINE_INT
+#define BIGINT_DIV_REMAINDER_INLINE_INT
 #define BIGINT_INIT_ADD
 #define BIGINT_INIT_CAPACITY
 #define BIGINT_INIT_CHAR_ARRAY
@@ -25,10 +27,33 @@
 #define BIGINT_SUB_INLINE
 #endif
 
+#ifdef BIGINT_DIV_INLINE_INT
+#define BIGINT_DIV_REMAINDER_INLINE_INT
+#endif
+
+#ifdef BIGINT_INIT_ADD
+#define BIGINT_ADD_INLINE
+#define BIGINT_ASSIGN
+#endif
+
+#if defined(BIGINT_ASSIGN_INT) || defined(BIGINT_CONSTRUCT_INT)
+#define BIGINT_INIT_INT
+#endif
+
+#if defined(BIGINT_DIV_REMAINDER_INLINE_INT) ||                                \
+    defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_INIT_MUL) ||             \
+    defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
+#define BIGINT_CLEAN
+#endif
+
+#if defined(BIGINT_ASSIGN_CHAR_ARRAY) || defined(BIGINT_ASSIGN_STRING)
+#define BIGINT_INIT_CHAR_ARRAY
+#endif
+
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
-    defined(BIGINT_ASSIGN_INT) || defined(BIGINT_COMPARE_INT) ||               \
+    defined(BIGINT_COMPARE_INT) || defined(BIGINT_DIV_REMAINDER_INLINE_INT) || \
     defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
-    defined(BIGINT_LENGTH) || defined(BIGINT_MUL_INLINE_INT)
+    defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
 #include "math/pow10.h"
 #endif
 #ifdef BIGINT_PRINT_QUICK
@@ -62,8 +87,7 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_ASSIGN_CHAR_ARRAY) ||    \
-    defined(BIGINT_ASSIGN_STRING)
+#ifdef BIGINT_INIT_CHAR_ARRAY
   inline void initCharArray(const char* s, int size = -1) {
     _vs.clear();
     for (int i = (size >= 0 ? size : strlen(s)) - 1; i >= 0; i -= GROUP) {
@@ -77,8 +101,7 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_INIT_INT) || defined(BIGINT_ASSIGN_INT) ||                  \
-    defined(BIGINT_CONSTRUCT_INT)
+#ifdef BIGINT_INIT_INT
   template<typename T>
   inline void initInt(T v) {
     _vs.clear();
@@ -139,16 +162,13 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_CLEAN) || defined(BIGINT_ASSIGN_CHAR_ARRAY) ||              \
-    defined(BIGINT_ASSIGN_STRING) || defined(BIGINT_INIT_CHAR_ARRAY) ||        \
-    defined(BIGINT_INIT_MUL) || defined(BIGINT_MUL_INLINE_INT) ||              \
-    defined(BIGINT_SUB_INLINE)
+#ifdef BIGINT_CLEAN
   inline void clean() {
     for (; _vs.size() > 1 && !_vs.back(); _vs.pop_back()) {}
   }
 #endif
 
-#if defined(BIGINT_ASSIGN) || defined(BIGINT_INIT_ADD)
+#ifdef BIGINT_ASSIGN
   inline void operator=(const BigInt<GROUP, BASE_SQR>& o) {
     _vs.clear();
     _vs.insert(_vs.begin(), o._vs.begin(), o._vs.end());
@@ -174,7 +194,7 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_ADD_INLINE) || defined(BIGINT_INIT_ADD)
+#ifdef BIGINT_ADD_INLINE
   inline void operator+=(const BigInt<GROUP, BASE_SQR>& o) {
     bool carry = false;
     for (size_t i = 0; i < _vs.size() || i < o._vs.size() || carry; ++i) {
@@ -190,7 +210,7 @@ struct BigInt {
   }
 #endif
 
-#if defined(BIGINT_SUB_INLINE)
+#ifdef BIGINT_SUB_INLINE
   inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
     DEBUG_TRUE(
         this->cmp(o) >= 0,
@@ -244,6 +264,31 @@ struct BigInt {
       carry = static_cast<int>(cur / POW10[GROUP]);
     }
     clean();
+  }
+#endif
+
+#ifdef BIGINT_DIV_INLINE_INT
+  inline void operator/=(BASE_SQR v) {
+    div(v);
+  }
+#endif
+
+#ifdef BIGINT_DIV_REMAINDER_INLINE_INT
+  inline BASE_SQR div(BASE_SQR v) {
+    DEBUG_TRUE(
+        v - 1 <= numeric_limits<BASE_SQR>::max() / POW10[GROUP],
+        "Divisor is too big, might run into overflow. "
+        "%lld should not exceed %lld",
+        v - 1,
+        numeric_limits<BASE_SQR>::max() / POW10[GROUP]);
+    BASE_SQR remainder = 0;
+    for (int i = static_cast<int>(_vs.size()) - 1; i >= 0; --i) {
+      BASE_SQR cur = _vs[i] + remainder * POW10[GROUP];
+      _vs[i] = cur / v;
+      remainder = cur % v;
+    }
+    clean();
+    return remainder;
   }
 #endif
 
