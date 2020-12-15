@@ -16,7 +16,7 @@ template<typename V = uint32_t>
 struct KitamasaAndXor {
   template<typename K = int>
   inline V calc(const vector<V>& coefs, const vector<V>& xs, K k) {
-    DEBUG_TRUE(k >= 0, "k(%d) should be non-negative.", k);
+    DEBUG_GE(k, 0);
     _n = static_cast<int>(coefs.size());
     _n21 = (_n << 1) - 1;
     _tmpRes.resize(_n21);

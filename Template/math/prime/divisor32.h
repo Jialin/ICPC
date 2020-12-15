@@ -69,7 +69,7 @@ inline void divisorIterator32(
     uint32_t n,
     const vector<int>& primes,
     const std::function<bool(uint32_t)>& processor) {
-  DEBUG_TRUE(
+  DEBUGF_TRUE(
       primes.back() >= n / primes.back(),
       "Square of largest prime (%lu) should larger than %lu\n",
       primes.back(),

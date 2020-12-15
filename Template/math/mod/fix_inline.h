@@ -11,7 +11,7 @@ template<typename V = int>
 inline void fixModInline(V& v, const V& mod) {
   slightFixModInline<V>(v, mod);
   if (v < 0 || mod <= v) {
-    DEBUG_TRUE(mod > 0, "fixModInline mod should be positive (%d).", mod);
+    DEBUG_GT(mod, 0);
     v %= mod;
     slightFixModInline<V>(v, mod);
   }

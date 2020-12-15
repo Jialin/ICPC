@@ -15,8 +15,10 @@ struct MatrixArray {
   }
 
   inline void init(int n, int m) {
-    DEBUG_TRUE(0 < n && n <= N, "n(%d) should be in range [1,%d].", n, N);
-    DEBUG_TRUE(0 < m && m <= M, "m(%d) should be in range [1,%d].", m, M);
+    DEBUG_GT(n, 0);
+    DEBUG_LE(n, N);
+    DEBUG_GT(m, 0);
+    DEBUG_LE(m, M);
     _n = n;
     _m = m;
     for (int i = 0; i < n; ++i) {

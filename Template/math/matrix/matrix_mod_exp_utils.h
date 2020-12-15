@@ -34,7 +34,7 @@ struct MatrixModExpUtils {
 
   template<typename EXP = int32_t>
   inline void calc(MATRIX& res, EXP e) {
-    DEBUG_TRUE(e >= 0, "e(%d) should be non-negative.", e);
+    DEBUG_GE(e, 0);
     res.init(_n, _n);
     for (int i = 0; i < _n; ++i) {
       res._vs[i][i] = slightFixMod<V>(1, _mod);

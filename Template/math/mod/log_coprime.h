@@ -48,10 +48,7 @@ struct LogModCoPrime {
     _mod = mod;
     _step = step;
     _maxStepCnt = _mod / _step + 5;
-    DEBUG_TRUE(
-        _hashMapSize > 0,
-        "We should initialize hashMapSize to positive. Currently, it's %d.\n",
-        _hashMapSize);
+    DEBUG_GT(_hashMapSize, 0);
     fixModInline(base, mod);
     _invBase = invMod<V>(base, mod);
     _invBasePowStep = expMod<V, V, V_SQR>(_invBase, step, mod);

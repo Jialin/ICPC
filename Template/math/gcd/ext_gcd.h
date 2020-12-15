@@ -16,10 +16,7 @@ namespace math {
 // NOTE: DO NOT use unsigned type
 template<typename V = int32_t>
 inline V extGcd(V a, V b, V& x, V& y) {
-  DEBUG_TRUE(
-      is_signed<V>::value,
-      "DO NOT use unsigned type in extGcd (%s)",
-      typeid(V).name());
+  DEBUG_TRUE(is_signed<V>::value);
   bool negativeA = false;
   if (a < 0) {
     negativeA = true;

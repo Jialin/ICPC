@@ -27,7 +27,7 @@ struct AccumulatorMod {
   }
 
   inline void add(V delta) {
-    DEBUG_TRUE(delta >= 0, "{} should be non-negative", delta);
+    DEBUG_GE(delta, 0);
     if (_invV >= delta) {
       _invV -= delta;
     } else {

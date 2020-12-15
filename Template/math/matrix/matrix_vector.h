@@ -17,7 +17,8 @@ struct MatrixVector {
   }
 
   inline void init(int n, int m) {
-    DEBUG_TRUE(n > 0 && m > 0, "n(%d) and (%d) should be positive.", n, m);
+    DEBUG_GT(n, 0);
+    DEBUG_GT(m, 0);
     _n = n;
     _m = m;
     _vs.resize(n);

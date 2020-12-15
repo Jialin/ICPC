@@ -10,7 +10,7 @@ namespace math {
 
 template<typename T, typename PRIME>
 inline T phiUsePrimes(T n, const vector<PRIME>& primes) {
-  DEBUG_TRUE(
+  DEBUGF_TRUE(
       primes.back() >= n / primes.back(),
       "Square of largest prime (%lu) should larger than %lu\n",
       primes.back(),

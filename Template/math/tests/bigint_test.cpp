@@ -234,25 +234,25 @@ TEST(BigInt, mulInlineInt) {
   EXPECT_EQ(0, v._vs[0]);
 }
 
-TEST(BigInt, divRemainderInline) {
+TEST(BigInt, divInt) {
   BigInt<> v;
   v = "182378471831341231241";
-  EXPECT_EQ(2, v.div(3));
+  EXPECT_EQ(2, v.divInt(3));
   ASSERT_EQ(3, v._vs.size());
   EXPECT_EQ(780410413, v._vs[0]);
   EXPECT_EQ(792823943, v._vs[1]);
   EXPECT_EQ(60, v._vs[2]);
 
-  EXPECT_EQ(11173, v.div(18284));
+  EXPECT_EQ(11173, v.divInt(18284));
   ASSERT_EQ(2, v._vs.size());
   EXPECT_EQ(270607110, v._vs[0]);
   EXPECT_EQ(3324919, v._vs[1]);
 
-  EXPECT_EQ(970607110, v.div(1100000000));
+  EXPECT_EQ(970607110, v.divInt(1100000000));
   ASSERT_EQ(1, v._vs.size());
   EXPECT_EQ(3022653, v._vs[0]);
 
-  EXPECT_EQ(3022653, v.div(1100000000));
+  EXPECT_EQ(3022653, v.divInt(1100000000));
   ASSERT_EQ(1, v._vs.size());
   EXPECT_EQ(0, v._vs[0]);
 }
