@@ -24,13 +24,29 @@
 
 #else
 
+#ifdef DEBUG_STACKTRACE
 #include <boost/stacktrace.hpp>
+#endif
 
 using namespace std;
 
-#define DEBUG_BEGIN                                                            \
-  fprintf(stderr, "\033[94m==[%s][L%d]==\n", __PRETTY_FUNCTION__, __LINE__)
-#define DEBUG_END fprintf(stderr, "\n\033[0m")
+#define DEBUG_BEGIN fprintf(stderr, "\033[94m")
+#ifdef DEBUG_STACKTRACE
+#define DEBUG_END                                                              \
+  fprintf(                                                                     \
+      stderr,                                                                  \
+      "\033[0m\n\033[92m^^^^^ %s @ %d ^^^^^\n%s\033[0m\n",                     \
+      __PRETTY_FUNCTION__,                                                     \
+      __LINE__,                                                                \
+      boost::stacktrace::to_string(boost::stacktrace::stacktrace()).c_str())
+#else
+#define DEBUG_END                                                              \
+  fprintf(                                                                     \
+      stderr,                                                                  \
+      "\033[0m\n\033[92m^^^^^ %s @ %d ^^^^^\033[0m\n",                         \
+      __PRETTY_FUNCTION__,                                                     \
+      __LINE__)
+#endif
 
 // TODO: Potential simplification:
 //   https://www.geeksforgeeks.org/variable-length-arguments-for-macros/
@@ -53,10 +69,10 @@ using namespace std;
     DEBUGF(fmt, __VA_ARGS__);                                                  \
   }
 
-#define DEBUGF_NE(x, y, statement, fmt, ...)
-if (x == y) {
-  DEBUGF(fmt, __VA_ARGS__);
-}
+#define DEBUGF_NE(x, y, statement, fmt, ...)                                   \
+  if (x == y) {                                                                \
+    DEBUGF(fmt, __VA_ARGS__);                                                  \
+  }
 
 #define DEBUGF_TRUE(statement, fmt, ...)                                       \
   if (!(statement)) {                                                          \
@@ -75,7 +91,11 @@ if (x == y) {
 
 #define DEBUG_EQ(x, y)                                                         \
   if (x != y) {                                                                \
-    DEBUG_STACKTRACE("%d != %d\n", x, y);                                      \
+    DEBUG_BEGIN;                                                               \
+    debugv(x, #x);                                                             \
+    fprintf(stderr, " should be equal to ");                                   \
+    debugv(y, #y);                                                             \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_FALSE(statement, fmt, ...)                                       \
@@ -85,72 +105,74 @@ if (x == y) {
 
 #define DEBUG_LE(x, y, fmt, ...)                                               \
   if (x > y) {                                                                 \
-    DEBUG_BEGIN                                                                \
+    DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be greater than ");                           \
     debugv(y, #y);                                                             \
-    DEBUG_END                                                                  \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_LT(x, y)                                                         \
   if (x >= y) {                                                                \
-    DEBUG_BEGIN                                                                \
+    DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should be less than ");                                  \
-    debugv(y, #y) DEBUG_END                                                    \
+    debugv(y, #y);                                                             \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_GE(x, y, ...)                                                    \
   if (x < y) {                                                                 \
-    DEBUG_BEGIN                                                                \
+    DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be less than ");                              \
-    debugv(y, #y) DEBUG_END                                                    \
+    debugv(y, #y);                                                             \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_GT(x, y, ...)                                                    \
   if (x <= y) {                                                                \
-    DEBUG_BEGIN                                                                \
+    DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should be greater than ");                               \
     debugv(y, #y);                                                             \
-    DEBUG_END                                                                  \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_NE(x, y, ...)                                                    \
   if (x == y) {                                                                \
-    DEBUG_BEGIN                                                                \
+    DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be equal to ");                               \
     debugv(y, #y);                                                             \
-    DEBUG_END                                                                  \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_TRUE(statement)                                                  \
   if (!(statement)) {                                                          \
     DEBUG_BEGIN;                                                               \
-    fprintf(stderr, "%s", #statement);                                         \
-    DEBUG_END                                                                  \
+    fprintf(stderr, "%s should be true.", #statement);                         \
+    DEBUG_END;                                                                 \
   }
 
 void debugv(int64_t v, const string& name) {
-  fprintf(stderr, "int64_t`%s`[%lld]", name.c_str(), v);
+  fprintf(stderr, "int64_t`%s`:(%lld)", name.c_str(), v);
 }
 
 void debugv(int v, const string& name) {
-  fprintf(stderr, "int`%s`[%d]", name.c_str(), v);
+  fprintf(stderr, "int`%s`:(%d)", name.c_str(), v);
 }
 
 void debugv(const char* v, const string& name) {
-  fprintf(stderr, "char*`%s`[%s]", name.c_str(), v);
+  fprintf(stderr, "char*`%s`:(%s)", name.c_str(), v);
 }
 
 void debugv(const string& v, const string& name) {
-  fprintf(stderr, "string`%s`[%s]", name.c_str(), v.c_str());
+  fprintf(stderr, "string`%s`:(%s)", name.c_str(), v.c_str());
 }
 
 void debugv(const vector<int>& vs, const string& name) {
-  fprintf(stderr, "vector<int>`%s`(size:%lu)[", name.c_str(), vs.size());
+  fprintf(stderr, "vector<int>`%s`(size:%lu):[", name.c_str(), vs.size());
   if (!vs.empty()) {
     fprintf(stderr, "%d", vs.front());
     for (int i = 1; i < (int)vs.size(); ++i) {
