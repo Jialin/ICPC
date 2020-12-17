@@ -4,6 +4,7 @@
 #define BIGINT_ADD
 #define BIGINT_ADD_INLINE
 #define BIGINT_ADD_INLINE_INT
+#define BIGINT_ADD_INT
 #define BIGINT_ASSIGN
 #define BIGINT_ASSIGN_CHAR_ARRAY
 #define BIGINT_ASSIGN_INT
@@ -29,12 +30,18 @@
 #define BIGINT_MOD_DIV_INLINE
 #define BIGINT_MOD_INLINE
 #define BIGINT_MOD_INT
+#define BIGINT_MUL
+#define BIGINT_MUL_INLINE
 #define BIGINT_MUL_INLINE_INT
 #define BIGINT_MUL_INT
 #define BIGINT_PRINT
 #define BIGINT_PRINT_CHAR_ARRAY
 #define BIGINT_PRINT_QUICK
 #define BIGINT_SUB_INLINE
+#endif
+
+#ifdef BIGINT_ADD_INT
+#define BIGINT_ADD_INLINE_INT
 #endif
 
 #if defined(BIGINT_GCD_INLINE) || defined(BIGINT_LT)
@@ -50,7 +57,6 @@
 #endif
 
 #ifdef BIGINT_MUL_INT
-#define BIGINT_ASSIGN
 #define BIGINT_MUL_INLINE_INT
 #endif
 
@@ -58,9 +64,17 @@
 #define BIGINT_INIT_ADD
 #endif
 
+#if defined(BIGINT_ADD_INT) || defined(BIGINT_INIT_ADD) ||                     \
+    defined(BIGINT_MUL_INLINE) || defined(BIGINT_MUL_INT)
+#define BIGINT_ASSIGN
+#endif
+
 #ifdef BIGINT_INIT_ADD
 #define BIGINT_ADD_INLINE
-#define BIGINT_ASSIGN
+#endif
+
+#if defined(BIGINT_MUL) || defined(BIGINT_MUL_INLINE)
+#define BIGINT_INIT_MUL
 #endif
 
 #if defined(BIGINT_ASSIGN_INT) || defined(BIGINT_CONSTRUCT_INT)
@@ -82,10 +96,11 @@
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
-    defined(BIGINT_CMP_INT) || defined(BIGINT_DIV_MOD_INLINE_INT) ||           \
-    defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
-    defined(BIGINT_MOD_DIV_INLINE) || defined(BIGINT_MOD_INT) ||               \
-    defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
+    defined(BIGINT_CMP_INT) || defined(BIGINT_DIGIT_COUNT) ||                  \
+    defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_INT) ||          \
+    defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
+    defined(BIGINT_MOD_INT) || defined(BIGINT_MUL_INLINE_INT) ||               \
+    defined(BIGINT_SUB_INLINE)
 #include "math/pow10.h"
 #endif
 
@@ -224,9 +239,20 @@ struct BigInt {
 #endif
 
 #ifdef BIGINT_ADD
-  inline BigInt<GROUP, BASE_SQR> operator+(const BigInt<GROUP, BASE_SQR>& o) {
+  inline BigInt<GROUP, BASE_SQR>
+  operator+(const BigInt<GROUP, BASE_SQR>& o) const {
     BigInt<GROUP, BASE_SQR> res;
     res.initAdd(*this, o);
+    return res;
+  }
+#endif
+
+#ifdef BIGINT_ADD_INT
+  template<typename T>
+  inline BigInt<GROUP, BASE_SQR> operator+(T v) const {
+    BigInt<GROUP, BASE_SQR> res;
+    res = *this;
+    res += v;
     return res;
   }
 #endif
@@ -288,12 +314,29 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_MUL
+  inline BigInt<GROUP, BASE_SQR>
+  operator*(const BigInt<GROUP, BASE_SQR>& o) const {
+    BigInt<GROUP, BASE_SQR> res;
+    res.initMul(*this, o);
+    return res;
+  }
+#endif
+
 #ifdef BIGINT_MUL_INT
-  inline BigInt<GROUP, BASE_SQR> operator*(BASE_SQR v) {
+  inline BigInt<GROUP, BASE_SQR> operator*(BASE_SQR v) const {
     BigInt<GROUP, BASE_SQR> res;
     res = *this;
     res *= v;
     return res;
+  }
+#endif
+
+#ifdef BIGINT_MUL_INLINE
+  inline void operator*=(const BigInt<GROUP, BASE_SQR>& o) {
+    BigInt<GROUP, BASE_SQR> res;
+    res.initMul(*this, o);
+    *this = res;
   }
 #endif
 
@@ -503,7 +546,7 @@ struct BigInt {
 #ifdef BIGINT_DIGIT_COUNT
   inline int digitCount() const {
     int res = (static_cast<int>(_vs.size()) - 1) * GROUP + 1;
-    for (int v = _vs.back() / 10; v; v /= 10, ++res) {}
+    for (int i = 1; i < GROUP && _vs.back() >= POW10[i]; ++i, ++res) {}
     return res;
   }
 #endif

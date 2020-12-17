@@ -355,12 +355,22 @@ TEST(BigInt, cmpInt) {
 
 TEST(BigInt, digitCount) {
   BigInt<4, int> v;
-
   v = "00000";
   EXPECT_EQ(1, v.digitCount());
-
+  v = "9";
+  EXPECT_EQ(1, v.digitCount());
+  v = "10";
+  EXPECT_EQ(2, v.digitCount());
   v = "12345678901234";
   EXPECT_EQ(14, v.digitCount());
+  v = "123456789012345";
+  EXPECT_EQ(15, v.digitCount());
+  v = "12345678901234567";
+  EXPECT_EQ(17, v.digitCount());
+  v = "123456789012345678";
+  EXPECT_EQ(18, v.digitCount());
+  v = "1234567890123456789";
+  EXPECT_EQ(19, v.digitCount());
 }
 
 TEST(BigInt, digitSum) {
