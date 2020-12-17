@@ -234,27 +234,85 @@ TEST(BigInt, mulInlineInt) {
   EXPECT_EQ(0, v._vs[0]);
 }
 
-TEST(BigInt, divInt) {
+TEST(BigInt, modInline) {
+  BigInt<> x, y, divRes;
+
+  x = "1827461738161";
+  y = "1";
+  x.modDivInline(y, divRes);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(0, x._vs[0]);
+  ASSERT_EQ(2, divRes._vs.size());
+  EXPECT_EQ(461738161, divRes._vs[0]);
+  EXPECT_EQ(1827, divRes._vs[1]);
+
+  x = "1827461738161";
+  y = "5938372";
+  x.modDivInline(y, divRes);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(4953997, x._vs[0]);
+  ASSERT_EQ(1, divRes._vs.size());
+  EXPECT_EQ(307737, divRes._vs[0]);
+
+  x = "1827461738161";
+  y = "1313344566778333010284";
+  x.modDivInline(y, divRes);
+  ASSERT_EQ(2, x._vs.size());
+  EXPECT_EQ(461738161, x._vs[0]);
+  EXPECT_EQ(1827, x._vs[1]);
+  ASSERT_EQ(1, divRes._vs.size());
+  EXPECT_EQ(0, divRes._vs[0]);
+
+  x = "131334456677838183333010284";
+  y = "1827461738161";
+  x.modDivInline(y, divRes);
+  ASSERT_EQ(2, x._vs.size());
+  EXPECT_EQ(232549430, x._vs[0]);
+  EXPECT_EQ(692, x._vs[1]);
+  ASSERT_EQ(2, divRes._vs.size());
+  EXPECT_EQ(144430614, divRes._vs[0]);
+  EXPECT_EQ(71867, divRes._vs[1]);
+
+  x = "4061190159652342805";
+  y = "1014607205739078075";
+  x.modDivInline(y, divRes);
+  ASSERT_EQ(2, x._vs.size());
+  EXPECT_EQ(696030505, x._vs[0]);
+  EXPECT_EQ(2761336, x._vs[1]);
+  ASSERT_EQ(1, divRes._vs.size());
+  EXPECT_EQ(4, divRes._vs[0]);
+}
+
+TEST(BigInt, divModInlineInt) {
   BigInt<> v;
   v = "182378471831341231241";
-  EXPECT_EQ(2, v.divInt(3));
+  EXPECT_EQ(2, v.divModInlineInt(3));
   ASSERT_EQ(3, v._vs.size());
   EXPECT_EQ(780410413, v._vs[0]);
   EXPECT_EQ(792823943, v._vs[1]);
   EXPECT_EQ(60, v._vs[2]);
 
-  EXPECT_EQ(11173, v.divInt(18284));
+  EXPECT_EQ(11173, v.divModInlineInt(18284));
   ASSERT_EQ(2, v._vs.size());
   EXPECT_EQ(270607110, v._vs[0]);
   EXPECT_EQ(3324919, v._vs[1]);
 
-  EXPECT_EQ(970607110, v.divInt(1100000000));
+  EXPECT_EQ(970607110, v.divModInlineInt(1100000000));
   ASSERT_EQ(1, v._vs.size());
   EXPECT_EQ(3022653, v._vs[0]);
 
-  EXPECT_EQ(3022653, v.divInt(1100000000));
+  EXPECT_EQ(3022653, v.divModInlineInt(1100000000));
   ASSERT_EQ(1, v._vs.size());
   EXPECT_EQ(0, v._vs[0]);
+}
+
+TEST(BigInt, modInt) {
+  BigInt<> v;
+  v = "182378471831341231241";
+  EXPECT_EQ(0, v % 1);
+  EXPECT_EQ(1, v % 2);
+  EXPECT_EQ(1, v % 10);
+  EXPECT_EQ(62673313, v % 123837817);
 }
 
 TEST(BigInt, cmp) {
@@ -295,14 +353,27 @@ TEST(BigInt, cmpInt) {
   EXPECT_EQ(-1, v.cmp(12345678901235124112ULL));
 }
 
-TEST(BigInt, length) {
+TEST(BigInt, digitCount) {
   BigInt<4, int> v;
 
   v = "00000";
-  EXPECT_EQ(1, v.length());
+  EXPECT_EQ(1, v.digitCount());
 
   v = "12345678901234";
-  EXPECT_EQ(14, v.length());
+  EXPECT_EQ(14, v.digitCount());
+}
+
+TEST(BigInt, digitSum) {
+  BigInt<4, int> v;
+
+  v = "00000";
+  EXPECT_EQ(0, v.digitSum());
+
+  v = "12345678901234";
+  EXPECT_EQ(55, v.digitSum());
+
+  v = "123456789012349";
+  EXPECT_EQ(64, v.digitSum());
 }
 
 TEST(BigInt, printCharArray) {
@@ -320,6 +391,24 @@ TEST(BigInt, printCharArray) {
   v = "100020300000310000300000000100002020";
   v.printCharArray(s);
   EXPECT_EQ("100020300000310000300000000100002020", static_cast<string>(s));
+}
+
+TEST(BigInt, gcdInline) {
+  BigInt<> x, y;
+  x = "45100439945872875162588853040";
+  y = "262846577632689827002596945105";
+  x.gcdInline(y);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(5, x._vs[0]);
+
+  x = "43797171767909538775377586789912267051678004886825696794901";
+  y = "824115863980304742029251596393600152537089467162";
+  x.gcdInline(y);
+  ASSERT_EQ(4, x._vs.size());
+  EXPECT_EQ(727483821, x._vs[0]);
+  EXPECT_EQ(473738383, x._vs[1]);
+  EXPECT_EQ(383747178, x._vs[2]);
+  EXPECT_EQ(1838, x._vs[3]);
 }
 
 } // namespace math

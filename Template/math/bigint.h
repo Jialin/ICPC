@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef BIGINT_ALL
+#define BIGINT_ADD
 #define BIGINT_ADD_INLINE
 #define BIGINT_ADD_INLINE_INT
 #define BIGINT_ASSIGN
@@ -8,27 +9,53 @@
 #define BIGINT_ASSIGN_INT
 #define BIGINT_ASSIGN_STRING
 #define BIGINT_CLEAN
-#define BIGINT_COMPARE
-#define BIGINT_COMPARE_INT
+#define BIGINT_CMP
+#define BIGINT_CMP_INT
 #define BIGINT_CONSTRUCT_EMPTY
 #define BIGINT_CONSTRUCT_INT
+#define BIGINT_DIGIT_COUNT
+#define BIGINT_DIGIT_SUM
+#define BIGINT_DIV_INLINE
 #define BIGINT_DIV_INLINE_INT
-#define BIGINT_DIV_REMAINDER_INLINE_INT
+#define BIGINT_DIV_MOD_INLINE_INT
+#define BIGINT_GCD_INLINE
+#define BIGINT_GT_INT
 #define BIGINT_INIT_ADD
 #define BIGINT_INIT_CAPACITY
 #define BIGINT_INIT_CHAR_ARRAY
 #define BIGINT_INIT_INT
 #define BIGINT_INIT_MUL
-#define BIGINT_LENGTH
+#define BIGINT_LT
+#define BIGINT_MOD_DIV_INLINE
+#define BIGINT_MOD_INLINE
+#define BIGINT_MOD_INT
 #define BIGINT_MUL_INLINE_INT
+#define BIGINT_MUL_INT
 #define BIGINT_PRINT
 #define BIGINT_PRINT_CHAR_ARRAY
 #define BIGINT_PRINT_QUICK
 #define BIGINT_SUB_INLINE
 #endif
 
-#ifdef BIGINT_DIV_INLINE_INT
-#define BIGINT_DIV_REMAINDER_INLINE_INT
+#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_LT)
+#define BIGINT_CMP
+#endif
+
+#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_GT_INT)
+#define BIGINT_CMP_INT
+#endif
+
+#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_DIV_INLINE_INT)
+#define BIGINT_DIV_MOD_INLINE_INT
+#endif
+
+#ifdef BIGINT_MUL_INT
+#define BIGINT_ASSIGN
+#define BIGINT_MUL_INLINE_INT
+#endif
+
+#ifdef BIGINT_ADD
+#define BIGINT_INIT_ADD
 #endif
 
 #ifdef BIGINT_INIT_ADD
@@ -40,8 +67,12 @@
 #define BIGINT_INIT_INT
 #endif
 
-#if defined(BIGINT_DIV_REMAINDER_INLINE_INT) ||                                \
-    defined(BIGINT_INIT_CHAR_ARRAY) || defined(BIGINT_INIT_MUL) ||             \
+#if defined(BIGINT_DIV_INLINE) || defined(BIGINT_MOD_INLINE)
+#define BIGINT_MOD_DIV_INLINE
+#endif
+
+#if defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_CHAR_ARRAY) ||   \
+    defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
     defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
 #define BIGINT_CLEAN
 #endif
@@ -51,11 +82,13 @@
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
-    defined(BIGINT_COMPARE_INT) || defined(BIGINT_DIV_REMAINDER_INLINE_INT) || \
+    defined(BIGINT_CMP_INT) || defined(BIGINT_DIV_MOD_INLINE_INT) ||           \
     defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
+    defined(BIGINT_MOD_DIV_INLINE) || defined(BIGINT_MOD_INT) ||               \
     defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
 #include "math/pow10.h"
 #endif
+
 #ifdef BIGINT_PRINT_QUICK
 #include "io/write_int.h"
 #endif
@@ -66,7 +99,7 @@ using namespace std;
 
 namespace math {
 
-template<int GROUP = 9, typename BASE_SQR = uint64_t>
+template<int GROUP = 9, typename BASE_SQR = int64_t>
 struct BigInt {
 #ifdef BIGINT_CONSTRUCT_EMPTY
   inline BigInt() {}
@@ -117,16 +150,14 @@ struct BigInt {
 #ifdef BIGINT_INIT_ADD
   inline void
   initAdd(const BigInt<GROUP, BASE_SQR>& x, const BigInt<GROUP, BASE_SQR>& y) {
-    DEBUG_TRUE(
-        this != &x,
-        "in `a.initMul(b,c)`, a and b should not reference to the same "
-        "instance",
-        nullptr);
-    DEBUG_TRUE(
-        this != &y,
-        "in `a.initMul(b,c)`, a and b should not reference to the same "
-        "instance",
-        nullptr);
+    DEBUGF_NE(
+        this,
+        &x,
+        "in a.initAdd(b,c), a and b should not reference to the same instance");
+    DEBUGF_NE(
+        this,
+        &y,
+        "in a.initAdd(b,c), a and c should not reference to the same instance");
     *this = x;
     *this += y;
   }
@@ -135,16 +166,14 @@ struct BigInt {
 #ifdef BIGINT_INIT_MUL
   inline void
   initMul(const BigInt<GROUP, BASE_SQR>& x, const BigInt<GROUP, BASE_SQR>& y) {
-    DEBUG_TRUE(
-        this != &x,
-        "in `a.initMul(b,c)`, a and b should not reference to the same "
-        "instance",
-        nullptr);
-    DEBUG_TRUE(
-        this != &y,
-        "in `a.initMul(b,c)`, a and b should not reference to the same "
-        "instance",
-        nullptr);
+    DEBUGF_NE(
+        this,
+        &x,
+        "in a.initMul(b,c), a and b should not reference to the same instance");
+    DEBUGF_NE(
+        this,
+        &y,
+        "in a.initMul(b,c), a and c should not reference to the same instance");
     _vs.resize(x._vs.size() + y._vs.size());
     fill(_vs.begin(), _vs.end(), 0);
     for (int i = static_cast<int>(x._vs.size()) - 1; i >= 0; --i) {
@@ -194,6 +223,14 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_ADD
+  inline BigInt<GROUP, BASE_SQR> operator+(const BigInt<GROUP, BASE_SQR>& o) {
+    BigInt<GROUP, BASE_SQR> res;
+    res.initAdd(*this, o);
+    return res;
+  }
+#endif
+
 #ifdef BIGINT_ADD_INLINE
   inline void operator+=(const BigInt<GROUP, BASE_SQR>& o) {
     bool carry = false;
@@ -207,24 +244,6 @@ struct BigInt {
         _vs[i] -= POW10[GROUP];
       }
     }
-  }
-#endif
-
-#ifdef BIGINT_SUB_INLINE
-  inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
-    DEBUG_TRUE(
-        this->cmp(o) >= 0,
-        "Should only subtract bigint that's not larger than o",
-        nullptr);
-    bool carry = false;
-    for (size_t i = 0; i < o._vs.size() || carry; ++i) {
-      _vs[i] -= carry + (i < o._vs.size() ? o._vs[i] : 0);
-      carry = _vs[i] < 0;
-      if (carry) {
-        _vs[i] += POW10[GROUP];
-      }
-    }
-    clean();
   }
 #endif
 
@@ -251,9 +270,36 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_SUB_INLINE
+  inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
+    DEBUGF_GE(
+        this->cmp(o),
+        0,
+        "Should only subtract bigint that's not larger than o");
+    bool carry = false;
+    for (size_t i = 0; i < o._vs.size() || carry; ++i) {
+      _vs[i] -= carry + (i < o._vs.size() ? o._vs[i] : 0);
+      carry = _vs[i] < 0;
+      if (carry) {
+        _vs[i] += POW10[GROUP];
+      }
+    }
+    clean();
+  }
+#endif
+
+#ifdef BIGINT_MUL_INT
+  inline BigInt<GROUP, BASE_SQR> operator*(BASE_SQR v) {
+    BigInt<GROUP, BASE_SQR> res;
+    res = *this;
+    res *= v;
+    return res;
+  }
+#endif
+
 #ifdef BIGINT_MUL_INLINE_INT
   inline void operator*=(BASE_SQR v) {
-    DEBUG_TRUE(v < POW10[GROUP], "v(%d) should be less than 10^%d.", v, GROUP);
+    DEBUG_LT(v, POW10[GROUP]);
     int carry = 0;
     for (size_t i = 0; i < _vs.size() || carry; ++i) {
       if (i == _vs.size()) {
@@ -267,32 +313,139 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_DIV_INLINE
+  inline void operator/=(const BigInt<GROUP, BASE_SQR>& o) {
+    BigInt<GROUP, BASE_SQR> divRes;
+    modDivInline(o, divRes);
+    *this = move(divRes);
+  }
+#endif
+
 #ifdef BIGINT_DIV_INLINE_INT
   inline void operator/=(BASE_SQR v) {
-    div(v);
+    divInt(v);
   }
 #endif
 
-#ifdef BIGINT_DIV_REMAINDER_INLINE_INT
-  inline BASE_SQR div(BASE_SQR v) {
-    DEBUG_TRUE(
-        v - 1 <= numeric_limits<BASE_SQR>::max() / POW10[GROUP],
-        "Divisor is too big, might run into overflow. "
-        "%lld should not exceed %lld",
-        v - 1,
-        numeric_limits<BASE_SQR>::max() / POW10[GROUP]);
-    BASE_SQR remainder = 0;
+#ifdef BIGINT_MOD_INLINE
+  inline void operator%=(const BigInt<GROUP, BASE_SQR>& o) {
+    BigInt<GROUP, BASE_SQR> divRes;
+    modDivInline(o, divRes);
+  }
+#endif
+
+#ifdef BIGINT_MOD_INT
+  inline BASE_SQR operator%(BASE_SQR v) {
+    DEBUG_GT(v, 0);
+    DEBUG_LE(v - 1, numeric_limits<BASE_SQR>::max() / POW10[GROUP]);
+    BASE_SQR mod = 0;
     for (int i = static_cast<int>(_vs.size()) - 1; i >= 0; --i) {
-      BASE_SQR cur = _vs[i] + remainder * POW10[GROUP];
-      _vs[i] = cur / v;
-      remainder = cur % v;
+      mod = (_vs[i] + mod * POW10[GROUP]) % v;
+    }
+    return mod;
+  }
+#endif
+
+#ifdef BIGINT_LT
+  inline bool operator<(const BigInt<GROUP, BASE_SQR>& o) const {
+    return cmp(o) < 0;
+  }
+#endif
+
+#ifdef BIGINT_GT_INT
+  template<typename T>
+  inline bool operator>(T v) const {
+    return cmp<T>(v) > 0;
+  }
+#endif
+
+#ifdef BIGINT_MOD_DIV_INLINE
+  inline void modDivInline(
+      const BigInt<GROUP, BASE_SQR>& o, BigInt<GROUP, BASE_SQR>& divRes) {
+    divRes._vs.resize(max(
+        static_cast<int>(_vs.size()) - static_cast<int>(o._vs.size()) + 1, 1));
+    fill(divRes._vs.begin(), divRes._vs.end(), 0);
+    for (int i = static_cast<int>(divRes._vs.size()) - 1; i >= 0; --i) {
+      int res = 0;
+      for (int lower = 1, upper = POW10[GROUP] - 1; lower <= upper;) {
+        int medium = (lower + upper) >> 1;
+        if (isLessThanShiftCmp(o, medium, i)) {
+          upper = medium - 1;
+        } else {
+          res = medium;
+          lower = medium + 1;
+        }
+      }
+      divRes._vs[i] = res;
+      shiftSubInline(o, res, i);
     }
     clean();
-    return remainder;
+    divRes.clean();
+  }
+
+  inline void
+  shiftSubInline(const BigInt<GROUP, BASE_SQR>& o, BASE_SQR mul, int shift) {
+    BASE_SQR carry = 0;
+    for (size_t i = 0, j = shift; i < o._vs.size(); ++i, ++j) {
+      BASE_SQR delta = carry + o._vs[i] * mul;
+      if (_vs[j] >= delta) {
+        _vs[j] -= delta;
+        carry = 0;
+      } else {
+        carry = (delta - _vs[j] + POW10[GROUP] - 1) / POW10[GROUP];
+        _vs[j] -= delta - carry * POW10[GROUP];
+      }
+    }
+    for (size_t i = o._vs.size() + shift; i < _vs.size(); ++i) {
+      if (_vs[i] >= carry) {
+        _vs[i] -= carry;
+        break;
+      }
+      BASE_SQR delta = carry;
+      carry = (carry - _vs[i] + POW10[GROUP] + 1) / POW10[GROUP];
+      _vs[i] -= delta - carry * POW10[GROUP];
+    }
+    clean();
+  }
+
+  inline bool isLessThanShiftCmp(
+      const BigInt<GROUP, BASE_SQR>& o, BASE_SQR mul, int shift) {
+    if (mul && _vs.size() < o._vs.size() + shift) {
+      return true;
+    }
+    BASE_SQR carry = 0;
+    for (int i = static_cast<int>(_vs.size()) - 1, j = i - shift; i >= 0;
+         --i, --j) {
+      carry = carry * POW10[GROUP] + _vs[i];
+      if (0 <= j && j < o._vs.size()) {
+        if (carry < mul * o._vs[j]) {
+          return true;
+        }
+        carry -= mul * o._vs[j];
+      }
+      if (carry > POW10[GROUP] << 1) {
+        return false;
+      }
+    }
+    return false;
   }
 #endif
 
-#ifdef BIGINT_COMPARE
+#ifdef BIGINT_DIV_MOD_INLINE_INT
+  inline BASE_SQR divModInlineInt(BASE_SQR v) {
+    DEBUG_LE(v - 1, numeric_limits<BASE_SQR>::max() / POW10[GROUP]);
+    BASE_SQR mod = 0;
+    for (int i = static_cast<int>(_vs.size()) - 1; i >= 0; --i) {
+      BASE_SQR cur = _vs[i] + mod * POW10[GROUP];
+      _vs[i] = cur / v;
+      mod = cur % v;
+    }
+    clean();
+    return mod;
+  }
+#endif
+
+#ifdef BIGINT_CMP
   inline int cmp(const BigInt<GROUP, BASE_SQR>& o) const {
     if (_vs.size() != o._vs.size()) {
       return _vs.size() < o._vs.size() ? -1 : 1;
@@ -306,7 +459,7 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_COMPARE_INT
+#ifdef BIGINT_CMP_INT
   template<typename T>
   inline int cmp(T o, size_t idx = 0) const {
     if (!o) {
@@ -326,18 +479,43 @@ struct BigInt {
     if (res) {
       return res;
     }
-    int remainder = o % POW10[GROUP];
-    if (_vs[idx] != remainder) {
-      return _vs[idx] < remainder ? -1 : 1;
+    int mod = o % POW10[GROUP];
+    if (_vs[idx] != mod) {
+      return _vs[idx] < mod ? -1 : 1;
     }
     return 0;
   }
 #endif
 
-#ifdef BIGINT_LENGTH
-  inline int length() const {
+#ifdef BIGINT_GCD_INLINE
+  inline void gcdInline(BigInt<GROUP, BASE_SQR>& o) {
+    if (cmp(o) < 0) {
+      swap(*this, o);
+    }
+    BigInt<GROUP, BASE_SQR> divRes;
+    while (o.cmp(0) > 0) {
+      modDivInline(o, divRes);
+      swap(*this, o);
+    }
+  }
+#endif
+
+#ifdef BIGINT_DIGIT_COUNT
+  inline int digitCount() const {
     int res = (static_cast<int>(_vs.size()) - 1) * GROUP + 1;
     for (int v = _vs.back() / 10; v; v /= 10, ++res) {}
+    return res;
+  }
+#endif
+
+#ifdef BIGINT_DIGIT_SUM
+  inline int digitSum() const {
+    int res = 0;
+    for (int v : _vs) {
+      for (; v; v /= 10) {
+        res += v % 10;
+      }
+    }
     return res;
   }
 #endif
