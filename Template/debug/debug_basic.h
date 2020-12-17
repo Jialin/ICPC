@@ -20,7 +20,8 @@
 #define DEBUG_TRUE(statement)
 
 #define DEBUGF_TRUE(statement, fmt, ...)
-#define DEBUGF_NE(statement, fmt, ...)
+#define DEBUGF_NE(x, y, fmt, ...)
+#define DEBUGF_GE(x, y, fmt, ...)
 
 #else
 
@@ -61,22 +62,27 @@ using namespace std;
 
 #define DEBUGF(fmt, ...)                                                       \
   DEBUG_BEGIN;                                                                 \
-  fprintf(stderr, fmt, __VA_ARGS__);                                           \
+  fprintf(stderr, fmt, ##__VA_ARGS__);                                         \
   DEBUG_END
 
 #define DEBUGF_LT(x, y, fmt, ...)                                              \
   if (x >= y) {                                                                \
-    DEBUGF(fmt, __VA_ARGS__);                                                  \
+    DEBUGF(fmt, ##__VA_ARGS__);                                                \
   }
 
-#define DEBUGF_NE(x, y, statement, fmt, ...)                                   \
+#define DEBUGF_GE(x, y, fmt, ...)                                              \
+  if (x < 0) {                                                                 \
+    DEBUGF(fmt, ##__VA_ARGS__);                                                \
+  }
+
+#define DEBUGF_NE(x, y, fmt, ...)                                              \
   if (x == y) {                                                                \
-    DEBUGF(fmt, __VA_ARGS__);                                                  \
+    DEBUGF(fmt, ##__VA_ARGS__);                                                \
   }
 
 #define DEBUGF_TRUE(statement, fmt, ...)                                       \
   if (!(statement)) {                                                          \
-    DEBUGF(fmt, __VA_ARGS__);                                                  \
+    DEBUGF(fmt, ##__VA_ARGS__);                                                \
   }
 
 #define DEBUGV(v)                                                              \
@@ -100,10 +106,10 @@ using namespace std;
 
 #define DEBUG_FALSE(statement, fmt, ...)                                       \
   if (statement) {                                                             \
-    DEBUG_STACKTRACE(fmt, __VA_ARGS__);                                        \
+    DEBUG_STACKTRACE(fmt, ##__VA_ARGS__);                                      \
   }
 
-#define DEBUG_LE(x, y, fmt, ...)                                               \
+#define DEBUG_LE(x, y)                                                         \
   if (x > y) {                                                                 \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
@@ -165,6 +171,16 @@ void debugv(int v, const string& name) {
 
 void debugv(const char* v, const string& name) {
   fprintf(stderr, "char*`%s`:(%s)", name.c_str(), v);
+}
+
+template<typename T>
+void debugv(const T* v, const string& name) {
+  fprintf(
+      stderr,
+      "%s*`%s`:(%ld)",
+      typeid(T).name(),
+      name.c_str(),
+      reinterpret_cast<intptr_t>(v));
 }
 
 void debugv(const string& v, const string& name) {
