@@ -16,7 +16,7 @@ inline bool readCharArray(char* s) {
     }
     ++_readPos;
   }
-  *s++ = readChar(false);
+  *s++ = readChar(true);
   while (true) {
     ch = readChar(false);
     if (!ch) {
