@@ -19,6 +19,7 @@
 #define BIGINT_DIV_INLINE
 #define BIGINT_DIV_INLINE_INT
 #define BIGINT_DIV_MOD_INLINE_INT
+#define BIGINT_EQ_INT
 #define BIGINT_GCD_INLINE
 #define BIGINT_GT_INT
 #define BIGINT_INIT_ADD
@@ -34,9 +35,15 @@
 #define BIGINT_MUL_INLINE
 #define BIGINT_MUL_INLINE_INT
 #define BIGINT_MUL_INT
+#define BIGINT_NE_INT
 #define BIGINT_PRINT
 #define BIGINT_PRINT_CHAR_ARRAY
 #define BIGINT_PRINT_QUICK
+#define BIGINT_SUB
+#define BIGINT_SUB_INLINE
+#endif
+
+#ifdef BIGINT_SUB
 #define BIGINT_SUB_INLINE
 #endif
 
@@ -48,7 +55,8 @@
 #define BIGINT_CMP
 #endif
 
-#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_GT_INT)
+#if defined(BIGINT_EQ_INT) || defined(BIGINT_GCD_INLINE) ||                    \
+    defined(BIGINT_GT_INT) || defined(BIGINT_NE_INT)
 #define BIGINT_CMP_INT
 #endif
 
@@ -65,7 +73,8 @@
 #endif
 
 #if defined(BIGINT_ADD_INT) || defined(BIGINT_INIT_ADD) ||                     \
-    defined(BIGINT_MUL_INLINE) || defined(BIGINT_MUL_INT)
+    defined(BIGINT_MUL_INLINE) || defined(BIGINT_MUL_INT) ||                   \
+    defined(BIGINT_SUB)
 #define BIGINT_ASSIGN
 #endif
 
@@ -212,6 +221,20 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_EQ_INT
+  template<typename T>
+  inline bool operator==(T v) const {
+    return !cmp<T>(v);
+  }
+#endif
+
+#ifdef BIGINT_NE_INT
+  template<typename T>
+  inline bool operator!=(T v) const {
+    return cmp<T>(v);
+  }
+#endif
+
 #ifdef BIGINT_ASSIGN
   inline void operator=(const BigInt<GROUP, BASE_SQR>& o) {
     _vs.clear();
@@ -296,6 +319,16 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_SUB
+  inline BigInt<GROUP, BASE_SQR>
+  operator-(const BigInt<GROUP, BASE_SQR>& o) const {
+    BigInt<GROUP, BASE_SQR> res;
+    res = *this;
+    res -= o;
+    return res;
+  }
+#endif
+
 #ifdef BIGINT_SUB_INLINE
   inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
     DEBUGF_GE(
@@ -366,7 +399,7 @@ struct BigInt {
 
 #ifdef BIGINT_DIV_INLINE_INT
   inline void operator/=(BASE_SQR v) {
-    divInt(v);
+    divModInlineInt(v);
   }
 #endif
 
