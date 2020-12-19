@@ -23,7 +23,10 @@ cc_library(
 cc_library(
     name = "exp",
     hdrs = ["exp.h"],
-    deps = [":mul_inline"],
+    deps = [
+        ":fix",
+        ":mul_inline",
+    ],
 )
 
 cc_library(

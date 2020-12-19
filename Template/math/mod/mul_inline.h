@@ -3,7 +3,7 @@
 namespace math {
 
 template<typename V = int32_t, typename V_SQR = int64_t>
-inline void mulModInline(V& res, V x, const V& mod) {
+inline void mulModInline(V& res, V x, V mod) {
   if (!res || !x) {
     res = 0;
   } else if (res < mod / x) {

@@ -24,6 +24,11 @@ public:
       primes.push_back(prime);
       return true;
     });
+    DEBUGF_TRUE(
+        primes.size() >= capacity,
+        "Set primes capacity? primes.size():%lu capacity:%d\n",
+        primes.size(),
+        capacity);
   }
 
   vector<int> primes;
