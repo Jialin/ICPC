@@ -41,6 +41,16 @@ cc_test(
 )
 
 cc_test(
+    name = "next_pow2_32_test",
+    srcs = ["next_pow2_32_test.cpp"],
+    deps = [
+        "//math/bit:next_pow2_32",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "submasks_test",
     srcs = ["submasks_test.cpp"],
     deps = [

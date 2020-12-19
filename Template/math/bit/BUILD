@@ -23,6 +23,11 @@ cc_library(
 )
 
 cc_library(
+    name = "next_pow2_32",
+    hdrs = ["next_pow2_32.h"],
+)
+
+cc_library(
     name = "submasks",
     hdrs = ["submasks.h"],
 )
