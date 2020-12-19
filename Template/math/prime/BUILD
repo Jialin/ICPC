@@ -13,9 +13,7 @@ cc_library(
 cc_library(
     name = "divisor32",
     hdrs = ["divisor32.h"],
-    deps = [
-        "//debug",
-    ],
+    deps = ["//debug"],
 )
 
 cc_library(
@@ -144,6 +142,7 @@ cc_library(
     hdrs = ["prime_generator.h"],
     deps = [
         ":prime_iterator",
+        "//debug",
     ],
 )
 
