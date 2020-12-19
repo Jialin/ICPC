@@ -11,7 +11,7 @@
 #define DEBUGBIT(v)
 
 #define DEBUG_EQ(x, y)
-#define DEBUG_FALSE(statement, fmt, ...)
+#define DEBUG_FALSE(statement)
 #define DEBUG_GE(x, y)
 #define DEBUG_GT(x, y)
 #define DEBUG_LE(x, y)
@@ -104,9 +104,11 @@ using namespace std;
     DEBUG_END;                                                                 \
   }
 
-#define DEBUG_FALSE(statement, fmt, ...)                                       \
+#define DEBUG_FALSE(statement)                                                 \
   if (statement) {                                                             \
-    DEBUG_STACKTRACE(fmt, ##__VA_ARGS__);                                      \
+    DEBUG_BEGIN;                                                               \
+    fprintf(stderr, "%s should be false.", #statement);                        \
+    DEBUG_END;                                                                 \
   }
 
 #define DEBUG_LE(x, y)                                                         \
