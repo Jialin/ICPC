@@ -21,6 +21,8 @@
 #define BIGINT_DIV_MOD_INLINE_INT
 #define BIGINT_EQ_INT
 #define BIGINT_GCD_INLINE
+#define BIGINT_GE
+#define BIGINT_GE_INT
 #define BIGINT_GT_INT
 #define BIGINT_INIT_ADD
 #define BIGINT_INIT_CAPACITY
@@ -28,6 +30,7 @@
 #define BIGINT_INIT_INT
 #define BIGINT_INIT_MUL
 #define BIGINT_LT
+#define BIGINT_LT_INT
 #define BIGINT_MOD_DIV_INLINE
 #define BIGINT_MOD_INLINE
 #define BIGINT_MOD_INT
@@ -51,12 +54,13 @@
 #define BIGINT_ADD_INLINE_INT
 #endif
 
-#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_LT)
+#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_GE) || defined(BIGINT_LT)
 #define BIGINT_CMP
 #endif
 
 #if defined(BIGINT_EQ_INT) || defined(BIGINT_GCD_INLINE) ||                    \
-    defined(BIGINT_GT_INT) || defined(BIGINT_NE_INT)
+    defined(BIGINT_GE_INT) || defined(BIGINT_GT_INT) ||                        \
+    defined(BIGINT_LT_INT) || defined(BIGINT_NE_INT)
 #define BIGINT_CMP_INT
 #endif
 
@@ -109,7 +113,7 @@
     defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_INT) ||          \
     defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
     defined(BIGINT_MOD_INT) || defined(BIGINT_MUL_INLINE_INT) ||               \
-    defined(BIGINT_SUB_INLINE)
+    defined(BIGINT_SUB_INLINE) || defined(BIGINT_SUB_INLINE_INT)
 #include "math/pow10.h"
 #endif
 
@@ -347,6 +351,30 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_SUB_INLINE_INT
+  template<typename T>
+  inline void operator-=(T v) {
+    bool carry = false;
+    for (size_t i = 0; i < _vs.size() || v; ++i) {
+      if (i == _vs.size()) {
+        _vs.push_back(0);
+      }
+      if (v) {
+        _vs[i] -= v % POW10[GROUP];
+        v /= POW10[GROUP];
+      }
+      if (carry) {
+        --_vs[i];
+      }
+      carry = _vs[i] < 0;
+      if (carry) {
+        _vs[i] += POW10[GROUP];
+      }
+    }
+    DEBUG_FALSE(carry);
+  }
+#endif
+
 #ifdef BIGINT_MUL
   inline BigInt<GROUP, BASE_SQR>
   operator*(const BigInt<GROUP, BASE_SQR>& o) const {
@@ -428,10 +456,30 @@ struct BigInt {
   }
 #endif
 
+#ifdef BIGINT_LT_INT
+  template<typename T>
+  inline bool operator<(T v) const {
+    return cmp<T>(v) < 0;
+  }
+#endif
+
 #ifdef BIGINT_GT_INT
   template<typename T>
   inline bool operator>(T v) const {
     return cmp<T>(v) > 0;
+  }
+#endif
+
+#ifdef BIGINT_GE
+  inline bool operator>=(const BigInt<GROUP, BASE_SQR>& o) const {
+    return cmp(o) >= 0;
+  }
+#endif
+
+#ifdef BIGINT_GE_INT
+  template<typename T>
+  inline bool operator>=(T v) const {
+    return cmp<T>(v) >= 0;
   }
 #endif
 
@@ -617,13 +665,15 @@ struct BigInt {
 #endif
 
 #ifdef BIGINT_PRINT_CHAR_ARRAY
-  inline void printCharArray(char* res) const {
+  inline int printCharArray(char* res) const {
+    char* resStart = res;
     int idx = static_cast<int>(_vs.size()) - 1;
     res += _printInt(_vs[idx], res);
     for (int i = idx - 1; i >= 0; --i) {
       res += _printInt(_vs[i], res, GROUP);
     }
     *res = '\0';
+    return res - resStart;
   }
 
   inline int _printInt(int x, char* res, int padding = 0) const {
