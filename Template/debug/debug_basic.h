@@ -163,12 +163,16 @@ using namespace std;
     DEBUG_END;                                                                 \
   }
 
-void debugv(int64_t v, const string& name) {
-  fprintf(stderr, "int64_t`%s`:(%lld)", name.c_str(), v);
-}
-
 void debugv(int v, const string& name) {
   fprintf(stderr, "int`%s`:(%d)", name.c_str(), v);
+}
+
+void debugv(int64_t v, const string& name) {
+  fprintf(stderr, "int`%s`:(%lld)", name.c_str(), v);
+}
+
+void debugv(double v, const string& name) {
+  fprintf(stderr, "double`%s`:(%lf)", name.c_str(), v);
 }
 
 void debugv(const char* v, const string& name) {
