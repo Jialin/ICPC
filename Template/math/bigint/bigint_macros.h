@@ -46,6 +46,10 @@
 #define BIGINT_SUB_INLINE
 #endif
 
+#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
+#define COMPLEX_INIT
+#endif
+
 #ifdef BIGINT_SUB
 #define BIGINT_SUB_INLINE
 #endif

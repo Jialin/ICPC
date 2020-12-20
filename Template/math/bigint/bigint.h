@@ -1,7 +1,11 @@
 #pragma once
 
-#include "debug/debug_basic.h"
+// clang-format off
+#include "math/complex/complex_macros.h"
 #include "math/bigint/bigint_macros.h"
+// clang-format on
+
+#include "debug/debug_basic.h"
 #include "math/complex/complex.h"
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
