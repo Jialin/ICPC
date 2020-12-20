@@ -1,5 +1,10 @@
 #pragma once
 
+// clang-format off
+#include "math/fft/fft_utils_macros.h"
+#include "math/complex/complex_macros.h"
+// clang-format on
+
 #include <unordered_map>
 
 #include "math/complex/complex.h"
