@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "debug/debug_basic.h"
-#include "math/bigint_macros.h"
+#include "math/bigint/bigint_macros.h"
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
     defined(BIGINT_ASSIGN_COMPLEX_VECTOR) || defined(BIGINT_CMP_INT) ||        \

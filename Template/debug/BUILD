@@ -12,7 +12,7 @@ cc_library(
     hdrs = ["debug_bigint.h"],
     deps = [
         ":debug_basic",
-        "//math:bigint",
+        "//math/bigint",
     ],
 )
 

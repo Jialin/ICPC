@@ -6,7 +6,7 @@
 #include "math/fft/fft_utils_macros.h"
 
 #ifdef FFT_UTILS_MUL_BIGINT
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 #endif
 
 #if defined(FFT_UTILS_MUL_COMPLEX_VECTOR) ||                                   \

@@ -2,7 +2,7 @@
 
 #define BIGINT_ALL
 
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 using namespace std;
 

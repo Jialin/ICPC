@@ -12,7 +12,7 @@ cc_library(
     hdrs = ["fft_utils.h"],
     deps = [
         ":fft_utils_macros",
-        "//math:bigint",
+        "//math/bigint",
         "//math/bit:next_pow2_32",
     ],
 )

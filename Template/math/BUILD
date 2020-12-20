@@ -3,22 +3,6 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "bigint",
-    hdrs = ["bigint.h"],
-    deps = [
-        ":bigint_macros",
-        ":pow10",
-        "//debug:debug_basic",
-        "//io:write_int",
-    ],
-)
-
-cc_library(
-    name = "bigint_macros",
-    hdrs = ["bigint_macros.h"],
-)
-
-cc_library(
     name = "chinese_remainder",
     hdrs = ["chinese_remainder.h"],
     deps = [
