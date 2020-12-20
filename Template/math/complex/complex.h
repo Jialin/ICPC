@@ -16,6 +16,14 @@ struct Complex {
   }
 #endif
 
+#ifdef COMPLEX_MUL_INLINE
+  inline void operator*=(const Complex<T>& o) {
+    T originalReal = real;
+    real = originalReal * o.real - imag * o.imag;
+    imag = originalReal * o.imag + imag * o.real;
+  }
+#endif
+
 #ifdef COMPLEX_DIV_INLINE_DOUBLE
   inline void operator/=(T scale) {
     real /= scale;
