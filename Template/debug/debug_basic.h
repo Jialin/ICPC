@@ -200,6 +200,21 @@ void debugv(const vector<int>& vs, const string& name) {
   fprintf(stderr, "]");
 }
 
+void debugv(const vector<complex<double>>& vs, const string& name) {
+  fprintf(
+      stderr,
+      "vector<complex<double>>`%s`(size:%lu):[",
+      name.c_str(),
+      vs.size());
+  if (!vs.empty()) {
+    fprintf(stderr, "(%lf)+(%lf)i", vs.front().real(), vs.front().imag());
+    for (int i = 1; i < (int)vs.size(); ++i) {
+      fprintf(stderr, ",(%lf)+(%lf)i", vs[i].real(), vs[i].imag());
+    }
+  }
+  fprintf(stderr, "]");
+}
+
 template<typename V>
 void debugBit(V v, const string& name) {
   fprintf(stderr, "bit`%s`[", name.c_str());
