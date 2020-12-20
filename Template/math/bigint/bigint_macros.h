@@ -68,6 +68,10 @@
 #define BIGINT_DIV_MOD_INLINE_INT
 #endif
 
+#if defined(LOCAL) && defined(BIGINT_SUB_INLINE)
+#define BIGINT_COMPARE
+#endif
+
 #ifdef BIGINT_MUL_INT
 #define BIGINT_MUL_INLINE_INT
 #endif

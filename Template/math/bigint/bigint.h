@@ -250,10 +250,12 @@ struct BigInt {
 
 #ifdef BIGINT_SUB_INLINE
   inline void operator-=(const BigInt<GROUP, BASE_SQR>& o) {
+#ifdef LOCAL
     DEBUGF_GE(
         this->cmp(o),
         0,
         "Should only subtract bigint that's not larger than o");
+#endif
     bool carry = false;
     for (size_t i = 0; i < o._vs.size() || carry; ++i) {
       _vs[i] -= carry + (i < o._vs.size() ? o._vs[i] : 0);
@@ -611,7 +613,7 @@ struct BigInt {
   template<typename T>
   inline void outputComplexVector(vector<Complex<T>>& res) const {
 #ifdef LOCAL
-    int limit = is_same<T, long double>::value ? 13 : 10;
+    int limit = is_same<T, long double>::value ? 12 : 9;
     DEBUGF_TRUE(
         log10(_vs.size()) + (GROUP << 1) <= limit,
         "GROUP might be too large for FFT multiplication. size:%lu GROUP:%d\n",
