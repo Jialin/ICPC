@@ -6,10 +6,16 @@ cc_library(
     name = "bigint",
     hdrs = ["bigint.h"],
     deps = [
+        ":bigint_macros",
         ":pow10",
         "//debug:debug_basic",
         "//io:write_int",
     ],
+)
+
+cc_library(
+    name = "bigint_macros",
+    hdrs = ["bigint_macros.h"],
 )
 
 cc_library(

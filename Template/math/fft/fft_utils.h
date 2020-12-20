@@ -3,22 +3,14 @@
 #include <complex>
 #include <unordered_map>
 
-#ifdef FFT_UTILS_ALL
-#define FFT_UTILS_MUL_BIGINT
-#define FFT_UTILS_MUL_COMPLEX_VECTOR
-#endif
-
-#ifdef FFT_UTILS_MUL_BIGINT
-#define BIGINT_ASSIGN_COMPLEX_VECTOR
-#define BIGINT_OUTPUT_COMPLEX_VECTOR
-#define FFT_UTILS_MUL_COMPLEX_VECTOR
-#endif
+#include "math/fft/fft_utils_macros.h"
 
 #ifdef FFT_UTILS_MUL_BIGINT
 #include "math/bigint.h"
 #endif
 
-#ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
+#if defined(FFT_UTILS_MUL_COMPLEX_VECTOR) ||                                   \
+    defined(_FFT_UTILS_COMPLEX_VECTOR_3)
 #include "math/bit/next_pow2_32.h"
 #endif
 
@@ -28,9 +20,23 @@ namespace math {
 
 template<typename T = double>
 struct FFTUtils {
-  inline FFTUtils()
-      : _ws(unordered_map<int, vector<complex<T>>>(32)),
-        _revs(unordered_map<int, vector<int>>(32)) {}
+#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
+  inline FFTUtils(int capacity = -1) {
+    _ws.reserve(32);
+    _revs.reserve(32);
+    if (capacity > 0) {
+      capacity = nextPow2_32(capacity);
+      _cs1.reserve(capacity);
+      _cs2.reserve(capacity);
+      _cs3.reserve(capacity);
+    }
+  }
+#elif
+  inline FFTUtils() {
+    _ws.reserve(32);
+    _revs.reserve(32);
+  }
+#endif
 
 #ifdef FFT_UTILS_MUL_BIGINT
   template<int GROUP, typename BASE_SQR>
@@ -38,14 +44,10 @@ struct FFTUtils {
   mul(const BigInt<GROUP, BASE_SQR>& x,
       const BigInt<GROUP, BASE_SQR>& y,
       BigInt<GROUP, BASE_SQR>& res) {
-    vector<complex<T>> xs, ys, zs;
-    x.outputComplexVector(xs);
-    DEBUGV(xs);
-    y.outputComplexVector(ys);
-    DEBUGV(ys);
-    mul(xs, ys, zs);
-    DEBUGV(zs);
-    res = zs;
+    x.outputComplexVector(_cs1);
+    y.outputComplexVector(_cs2);
+    mul(_cs1, _cs2, _cs3);
+    res = _cs3;
   }
 #endif
 
@@ -79,9 +81,9 @@ struct FFTUtils {
       for (int i = 0, l2 = l << 1, step = pow2 / l2; i < pow2; i += l2) {
         for (int j = 0, wIdx = invert ? pow2 : 0; j < l;
              ++j, wIdx += invert ? -step : step) {
-          _tmpC = cs[i + j + l] * w[wIdx];
-          cs[i + j + l] = cs[i + j] - _tmpC;
-          cs[i + j] += _tmpC;
+          _c = cs[i + j + l] * w[wIdx];
+          cs[i + j + l] = cs[i + j] - _c;
+          cs[i + j] += _c;
         }
       }
     }
@@ -102,10 +104,10 @@ struct FFTUtils {
     auto& rev = _revs[pow2];
     rev.reserve(pow2);
     T angle = acos(static_cast<T>(-1)) * 2 / pow2;
-    _tmpC = complex<T>(cos(angle), sin(angle));
+    _c = complex<T>(cos(angle), sin(angle));
     int logN = __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
-      w.push_back(w.back() * _tmpC);
+      w.push_back(w.back() * _c);
       rev[i] = 0;
       for (int j = i; j; j &= j - 1) {
         rev[i] |= 1 << (logN - 1 - __builtin_ctz(j));
@@ -125,7 +127,10 @@ struct FFTUtils {
 
   unordered_map<int, vector<complex<T>>> _ws;
   unordered_map<int, vector<int>> _revs;
-  complex<T> _tmpC;
+  complex<T> _c;
+#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
+  vector<complex<T>> _cs1, _cs2, _cs3;
+#endif
 };
 
 } // namespace math
