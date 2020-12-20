@@ -1,10 +1,8 @@
 #pragma once
 
-#include <complex>
-#include <type_traits>
-
 #include "debug/debug_basic.h"
 #include "math/bigint/bigint_macros.h"
+#include "math/complex/complex.h"
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
     defined(BIGINT_ASSIGN_COMPLEX_VECTOR) || defined(BIGINT_CMP_INT) ||        \
@@ -150,7 +148,7 @@ struct BigInt {
 
 #ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
   template<typename T>
-  inline void operator=(const vector<complex<T>>& o) {
+  inline void operator=(const vector<Complex<T>>& o) {
     _vs.reserve(o.size() + 1);
     _vs.clear();
     BASE_SQR carry = 0;
@@ -159,7 +157,7 @@ struct BigInt {
         _vs.push_back(0);
       }
       if (i < o.size()) {
-        carry += o[i].real() + 0.5;
+        carry += o[i].real + 0.5;
       }
       _vs[i] = carry % POW10[GROUP];
       carry /= POW10[GROUP];
@@ -611,7 +609,7 @@ struct BigInt {
 
 #ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
   template<typename T>
-  inline void outputComplexVector(vector<complex<T>>& res) const {
+  inline void outputComplexVector(vector<Complex<T>>& res) const {
 #ifdef LOCAL
     int limit = is_same<T, long double>::value ? 13 : 10;
     DEBUGF_TRUE(
@@ -622,7 +620,7 @@ struct BigInt {
 #endif
     res.resize(_vs.size());
     for (size_t i = 0; i < _vs.size(); ++i) {
-      res[i] = complex<T>(_vs[i], 0);
+      res[i].init(_vs[i], 0);
     }
   }
 #endif

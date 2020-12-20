@@ -1,8 +1,8 @@
 #pragma once
 
-#include <complex>
 #include <unordered_map>
 
+#include "math/complex/complex.h"
 #include "math/fft/fft_utils_macros.h"
 
 #ifdef FFT_UTILS_MUL_BIGINT
@@ -53,7 +53,7 @@ struct FFTUtils {
 
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
   inline void
-  mul(vector<complex<T>>& x, vector<complex<T>>& y, vector<complex<T>>& res) {
+  mul(vector<Complex<T>>& x, vector<Complex<T>>& y, vector<Complex<T>>& res) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _expand(pow2, x);
     _expand(pow2, y);
@@ -61,14 +61,14 @@ struct FFTUtils {
     fft(pow2, y, false);
     res.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
-      res[i] = x[i] * y[i];
+      res[i].initMul(x[i], y[i]);
     }
     fft(pow2, res, true);
     _shrink(res);
   }
 #endif
 
-  inline void fft(int pow2, vector<complex<T>>& cs, bool invert) {
+  inline void fft(int pow2, vector<Complex<T>>& cs, bool invert) {
     _initSize(pow2);
     const auto& rev = _revs[pow2];
     for (int i = 0; i < pow2; ++i) {
@@ -81,8 +81,8 @@ struct FFTUtils {
       for (int i = 0, l2 = l << 1, step = pow2 / l2; i < pow2; i += l2) {
         for (int j = 0, wIdx = invert ? pow2 : 0; j < l;
              ++j, wIdx += invert ? -step : step) {
-          _c = cs[i + j + l] * w[wIdx];
-          cs[i + j + l] = cs[i + j] - _c;
+          _c.initMul(cs[i + j + l], w[wIdx]);
+          cs[i + j + l].initSub(cs[i + j], _c);
           cs[i + j] += _c;
         }
       }
@@ -99,15 +99,15 @@ struct FFTUtils {
       return;
     }
     auto& w = _ws[pow2];
-    w.reserve(pow2 + 1);
-    w.emplace_back(1, 0);
+    w.resize(pow2 + 1);
+    w[0].init(1, 0);
     auto& rev = _revs[pow2];
-    rev.reserve(pow2);
+    rev.resize(pow2);
     T angle = acos(static_cast<T>(-1)) * 2 / pow2;
-    _c = complex<T>(cos(angle), sin(angle));
+    _c.initPolar(1, angle);
     int logN = __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
-      w.push_back(w.back() * _c);
+      w[i + 1].initMul(w[i], _c);
       rev[i] = 0;
       for (int j = i; j; j &= j - 1) {
         rev[i] |= 1 << (logN - 1 - __builtin_ctz(j));
@@ -115,21 +115,21 @@ struct FFTUtils {
     }
   }
 
-  inline void _expand(int n, vector<complex<T>>& cs) {
+  inline void _expand(int n, vector<Complex<T>>& cs) {
     for (int i = cs.size(); i < n; ++i) {
       cs.emplace_back(0, 0);
     }
   }
 
-  inline void _shrink(vector<complex<T>>& cs) {
-    for (; cs.size() > 1 && cs.back().real() < 0.5; cs.pop_back()) {}
+  inline void _shrink(vector<Complex<T>>& cs) {
+    for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
   }
 
-  unordered_map<int, vector<complex<T>>> _ws;
+  unordered_map<int, vector<Complex<T>>> _ws;
   unordered_map<int, vector<int>> _revs;
-  complex<T> _c;
+  Complex<T> _c;
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
-  vector<complex<T>> _cs1, _cs2, _cs3;
+  vector<Complex<T>> _cs1, _cs2, _cs3;
 #endif
 };
 

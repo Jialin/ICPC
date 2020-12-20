@@ -5,8 +5,15 @@
 
 using namespace std;
 
-template<int GROUP>
-void debugv(const math::BigInt<GROUP>& v, const string& name) {
+namespace math {
+
+template<int GROUP, typename BASE_SQR>
+struct BigInt;
+
+} // namespace math
+
+template<int GROUP, typename BASE_SQR>
+void debugv(const math::BigInt<GROUP, BASE_SQR>& v, const string& name) {
   fprintf(stderr, "Bigint<%d>`%s`: \n", GROUP, name.c_str());
   int idx = static_cast<int>(v._vs.size()) - 1;
   fprintf(stderr, "%d", v._vs[idx]);

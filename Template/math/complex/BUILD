@@ -10,5 +10,8 @@ cc_library(
 cc_library(
     name = "complex",
     hdrs = ["complex.h"],
-    deps = [":complex_macros"],
+    deps = [
+        ":complex_macros",
+        "//debug:debug_basic",
+    ],
 )

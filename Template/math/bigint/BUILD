@@ -10,6 +10,7 @@ cc_library(
         "//debug:debug_basic",
         "//io:write_int",
         "//math:pow10",
+        "//math/complex",
     ],
 )
 

@@ -14,5 +14,6 @@ cc_library(
         ":fft_utils_macros",
         "//math/bigint",
         "//math/bit:next_pow2_32",
+        "//math/complex",
     ],
 )
