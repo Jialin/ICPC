@@ -7,6 +7,7 @@
 #define BIGINT_ADD_INT
 #define BIGINT_ASSIGN
 #define BIGINT_ASSIGN_CHAR_ARRAY
+#define BIGINT_ASSIGN_COMPLEX_VECTOR
 #define BIGINT_ASSIGN_INT
 #define BIGINT_ASSIGN_STRING
 #define BIGINT_CLEAN
@@ -39,9 +40,10 @@
 #define BIGINT_MUL_INLINE_INT
 #define BIGINT_MUL_INT
 #define BIGINT_NE_INT
-#define BIGINT_PRINT
-#define BIGINT_PRINT_CHAR_ARRAY
-#define BIGINT_PRINT_QUICK
+#define BIGINT_OUTPUT
+#define BIGINT_OUTPUT_CHAR_ARRAY
+#define BIGINT_OUTPUT_COMPLEX_VECTOR
+#define BIGINT_OUTPUT_FAST
 #define BIGINT_SUB
 #define BIGINT_SUB_INLINE
 #endif
@@ -98,7 +100,8 @@
 #define BIGINT_MOD_DIV_INLINE
 #endif
 
-#if defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_CHAR_ARRAY) ||   \
+#if defined(BIGINT_ASSIGN_COMPLEX_VECTOR) ||                                   \
+    defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_CHAR_ARRAY) ||   \
     defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
     defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
 #define BIGINT_CLEAN
@@ -109,17 +112,21 @@
 #endif
 
 #if defined(BIGINT_ADD_INLINE) || defined(BIGINT_ADD_INLINE_INT) ||            \
-    defined(BIGINT_CMP_INT) || defined(BIGINT_DIGIT_COUNT) ||                  \
-    defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_INT) ||          \
-    defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
-    defined(BIGINT_MOD_INT) || defined(BIGINT_MUL_INLINE_INT) ||               \
-    defined(BIGINT_SUB_INLINE) || defined(BIGINT_SUB_INLINE_INT)
+    defined(BIGINT_ASSIGN_COMPLEX_VECTOR) || defined(BIGINT_CMP_INT) ||        \
+    defined(BIGINT_DIGIT_COUNT) || defined(BIGINT_DIV_MOD_INLINE_INT) ||       \
+    defined(BIGINT_INIT_INT) || defined(BIGINT_INIT_MUL) ||                    \
+    defined(BIGINT_MOD_DIV_INLINE) || defined(BIGINT_MOD_INT) ||               \
+    defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE) ||            \
+    defined(BIGINT_SUB_INLINE_INT)
 #include "math/pow10.h"
 #endif
 
-#ifdef BIGINT_PRINT_QUICK
+#ifdef BIGINT_OUTPUT_FAST
 #include "io/write_int.h"
 #endif
+
+#include <complex>
+#include <type_traits>
 
 #include "debug/debug_basic.h"
 
@@ -225,20 +232,6 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_EQ_INT
-  template<typename T>
-  inline bool operator==(T v) const {
-    return !cmp<T>(v);
-  }
-#endif
-
-#ifdef BIGINT_NE_INT
-  template<typename T>
-  inline bool operator!=(T v) const {
-    return cmp<T>(v);
-  }
-#endif
-
 #ifdef BIGINT_ASSIGN
   inline void operator=(const BigInt<GROUP, BASE_SQR>& o) {
     _vs.clear();
@@ -262,6 +255,37 @@ struct BigInt {
   template<typename T>
   inline void operator=(T o) {
     initInt<T>(o);
+  }
+#endif
+
+#ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+  template<typename T>
+  inline void operator=(const vector<complex<T>>& o) {
+    _vs.resize(o.size() + 1);
+    T carry = 0;
+    for (size_t i = 0; i < o.size() || carry > 0.5; ++i) {
+      if (i == _vs.size()) {
+        _vs.push_back(0);
+      }
+      carry += o[i].real();
+      _vs[i] = fmod(carry, POW10[GROUP]) + 0.5;
+      carry = (carry - _vs[i]) / POW10[GROUP];
+    }
+    clean();
+  }
+#endif
+
+#ifdef BIGINT_EQ_INT
+  template<typename T>
+  inline bool operator==(T v) const {
+    return !cmp<T>(v);
+  }
+#endif
+
+#ifdef BIGINT_NE_INT
+  template<typename T>
+  inline bool operator!=(T v) const {
+    return cmp<T>(v);
   }
 #endif
 
@@ -644,8 +668,8 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_PRINT
-  inline void print() const {
+#ifdef BIGINT_OUTPUT
+  inline void output() const {
     int idx = static_cast<int>(_vs.size()) - 1;
     printf("%d", _vs[idx]);
     for (int i = idx - 1; i >= 0; --i) {
@@ -654,8 +678,8 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_PRINT_QUICK
-  inline void printQuick() const {
+#ifdef BIGINT_OUTPUT_FAST
+  inline void outputFast() const {
     int idx = static_cast<int>(_vs.size()) - 1;
     io::writeInt(_vs[idx]);
     for (int i = idx - 1; i >= 0; --i) {
@@ -664,19 +688,19 @@ struct BigInt {
   }
 #endif
 
-#ifdef BIGINT_PRINT_CHAR_ARRAY
-  inline int printCharArray(char* res) const {
+#ifdef BIGINT_OUTPUT_CHAR_ARRAY
+  inline int outputCharArray(char* res) const {
     char* resStart = res;
     int idx = static_cast<int>(_vs.size()) - 1;
-    res += _printInt(_vs[idx], res);
+    res += _outputInt(_vs[idx], res);
     for (int i = idx - 1; i >= 0; --i) {
-      res += _printInt(_vs[i], res, GROUP);
+      res += _outputInt(_vs[i], res, GROUP);
     }
     *res = '\0';
     return res - resStart;
   }
 
-  inline int _printInt(int x, char* res, int padding = 0) const {
+  inline int _outputInt(int x, char* res, int padding = 0) const {
     static char s[10];
     int n = 0;
     for (; x || !n; x /= 10) {
@@ -689,6 +713,24 @@ struct BigInt {
       *(res++) = s[i];
     }
     return max(padding, n);
+  }
+#endif
+
+#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
+  template<typename T>
+  inline void outputComplexVector(vector<complex<T>>& res) const {
+#ifdef LOCAL
+    int limit = is_same<T, long double>::value ? 13 : 10;
+    DEBUGF_TRUE(
+        log10(_vs.size()) + (GROUP << 1) <= limit,
+        "GROUP might be too large for FFT multiplication. size:%lu GROUP:%d\n",
+        _vs.size(),
+        GROUP);
+#endif
+    res.resize(_vs.size());
+    for (size_t i = 0; i < _vs.size(); ++i) {
+      res[i] = complex<T>(_vs[i], 0);
+    }
   }
 #endif
 
