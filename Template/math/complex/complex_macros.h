@@ -5,4 +5,5 @@
 #define COMPLEX_INIT_MUL
 #define COMPLEX_INIT_POLAR
 #define COMPLEX_INIT_SUB
+#define COMPLEX_MUL_INLINE
 #endif
