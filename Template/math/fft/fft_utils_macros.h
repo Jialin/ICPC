@@ -15,16 +15,10 @@
 #define COMPLEX_MUL
 #define COMPLEX_SUB
 #define _FFT_UTILS_COMPLEX_VECTOR_1
-#define _FFT_UTILS_COMPLEX_2
 #endif
 
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
 #define _FFT_UTILS_COMPLEX_VECTOR_3
-#define _FFT_UTILS_COMPLEX_1
-#endif
-
-#ifdef _FFT_UTILS_COMPLEX_2
-#define _FFT_UTILS_COMPLEX_1
 #endif
 
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
@@ -37,6 +31,7 @@
 #define COMPLEX_INIT_MUL
 #define COMPLEX_INIT_POLAR
 #define COMPLEX_INIT_SUB
+#define COMPLEX_MUL_INLINE
 
 #include "math/bigint/bigint_macros.h"
 #include "math/complex/complex_macros.h"

@@ -19,5 +19,6 @@ cc_library(
         "//math/bigint",
         "//math/bit:next_pow2_32",
         "//math/complex",
+        "//math/constants:pi",
     ],
 )

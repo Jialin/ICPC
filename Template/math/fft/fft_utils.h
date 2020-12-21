@@ -2,8 +2,10 @@
 
 #include <unordered_map>
 
-#include "math/complex/complex.h"
 #include "math/fft/fft_utils_macros.h"
+
+#include "math/complex/complex.h"
+#include "math/constants/pi.h"
 
 #ifdef FFT_UTILS_MUL_BIGINT
 #include "math/bigint/bigint.h"
@@ -22,8 +24,6 @@ template<typename T = double>
 struct FFTUtils {
 #if defined(_FFT_UTILS_COMPLEX_VECTOR_1) || defined(_FFT_UTILS_COMPLEX_VECTOR_3)
   inline FFTUtils(int capacity = -1) {
-    _ws.reserve(32);
-    _revs.reserve(32);
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
       _cs.reserve(capacity);
@@ -32,11 +32,6 @@ struct FFTUtils {
       _cs3.reserve(capacity);
 #endif
     }
-  }
-#else
-  inline FFTUtils() {
-    _ws.reserve(32);
-    _revs.reserve(32);
   }
 #endif
 
@@ -99,21 +94,25 @@ struct FFTUtils {
 #endif
 
   inline void fft(int pow2, vector<Complex<T>>& cs, bool invert) {
-    _initSize(pow2);
-    const auto& rev = _revs[pow2];
-    for (int i = 0; i < pow2; ++i) {
-      if (i < rev[i]) {
-        swap(cs[i], cs[rev[i]]);
+    for (int i = 1, j = 0; i < pow2; ++i) {
+      int bit = pow2 >> 1;
+      for (; j & bit; bit >>= 1) {
+        j ^= bit;
+      }
+      j ^= bit;
+      if (i < j) {
+        swap(cs[i], cs[j]);
       }
     }
-    const auto& w = _ws[pow2];
     for (int l = 1; l < pow2; l <<= 1) {
-      for (int i = 0, l2 = l << 1, step = pow2 / l2; i < pow2; i += l2) {
-        for (int j = 0, wIdx = invert ? pow2 : 0; j < l;
-             ++j, wIdx += invert ? -step : step) {
-          _c.initMul(cs[i + j + l], w[wIdx]);
-          cs[i + j + l].initSub(cs[i + j], _c);
-          cs[i + j] += _c;
+      _c.initPolar(1, invert ? -PI / l : PI / l);
+      for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
+        _c2.init(1, 0);
+        for (int j = 0; j < l; ++j) {
+          _c3.initMul(cs[i + j + l], _c2);
+          cs[i + j + l].initSub(cs[i + j], _c3);
+          cs[i + j] += _c3;
+          _c2 *= _c;
         }
       }
     }
@@ -124,44 +123,11 @@ struct FFTUtils {
     }
   }
 
-  inline void _initSize(int pow2) {
-    if (_ws.count(pow2)) {
-      return;
-    }
-    auto& w = _ws[pow2];
-    w.resize(pow2 + 1);
-    w[0].init(1, 0);
-    auto& rev = _revs[pow2];
-    rev.resize(pow2);
-    T angle = acos(static_cast<T>(-1)) * 2 / pow2;
-    _c.initPolar(1, angle);
-    for (int i = 0, j = 0; i < pow2; ++i) {
-      w[i + 1].initMul(w[i], _c);
-      if (i) {
-        int bit = pow2 >> 1;
-        for (; j & bit; bit >>= 1) {
-          j ^= bit;
-        }
-        j ^= bit;
-        rev[i] = j;
-      } else {
-        rev[i] = 0;
-      }
-    }
-  }
-
   inline void _shrink(vector<Complex<T>>& cs) {
     for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
   }
 
-  unordered_map<int, vector<Complex<T>>> _ws;
-  unordered_map<int, vector<int>> _revs;
-#ifdef _FFT_UTILS_COMPLEX_1
-  Complex<T> _c;
-#endif
-#ifdef _FFT_UTILS_COMPLEX_2
-  Complex<T> _c2;
-#endif
+  Complex<T> _c, _c2, _c3;
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_1
   vector<Complex<T>> _cs;
 #endif
