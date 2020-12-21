@@ -116,3 +116,5 @@
 #if defined(BIGINT_ASSIGN_CHAR_ARRAY) || defined(BIGINT_ASSIGN_STRING)
 #define BIGINT_INIT_CHAR_ARRAY
 #endif
+
+#include "math/complex/complex_macros.h"

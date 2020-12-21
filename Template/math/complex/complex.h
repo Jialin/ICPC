@@ -16,6 +16,23 @@ struct Complex {
   }
 #endif
 
+#ifdef COMPLEX_SUB
+  inline Complex<T> operator-(const Complex<T>& o) {
+    Complex<T> res;
+    res.initSub(*this, o);
+    return res;
+  }
+#endif
+
+#ifdef COMPLEX_MUL
+  inline Complex<T> operator*(const Complex<T>& o) {
+    Complex<T> res;
+    res.initMul(*this, o);
+    return res;
+  }
+
+#endif
+
 #ifdef COMPLEX_MUL_INLINE
   inline void operator*=(const Complex<T>& o) {
     T originalReal = real;
@@ -35,6 +52,13 @@ struct Complex {
   inline void init(T _real = 0, T _imag = 0) {
     real = _real;
     imag = _imag;
+  }
+#endif
+
+#ifdef COMPLEX_INIT_CONJ
+  inline void initConj(const Complex<T>& o) {
+    real = o.real;
+    imag = -o.imag;
   }
 #endif
 
@@ -64,6 +88,12 @@ struct Complex {
   inline void initSub(const Complex<T>& x, const Complex<T>& y) {
     real = x.real - y.real;
     imag = x.imag - y.imag;
+  }
+#endif
+
+#ifdef COMPLEX_CONJ
+  inline Complex<T> conj() {
+    return Complex<T>(real, -imag);
   }
 #endif
 

@@ -1,9 +1,6 @@
 #pragma once
 
-// clang-format off
-#include "math/complex/complex_macros.h"
 #include "math/bigint/bigint_macros.h"
-// clang-format on
 
 #include "debug/debug_basic.h"
 #include "math/complex/complex.h"
@@ -163,8 +160,9 @@ struct BigInt {
       if (i < o.size()) {
         carry += o[i].real + 0.5;
       }
-      _vs[i] = carry % POW10[GROUP];
-      carry /= POW10[GROUP];
+      BASE_SQR newCarry = carry / POW10[GROUP];
+      _vs[i] = carry - newCarry * POW10[GROUP];
+      carry = newCarry;
     }
     clean();
   }
