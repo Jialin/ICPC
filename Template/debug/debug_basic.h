@@ -29,6 +29,8 @@
 #include <boost/stacktrace.hpp>
 #endif
 
+#include <complex>
+
 using namespace std;
 
 #define DEBUG_BEGIN fprintf(stderr, "\033[94m")
