@@ -4,12 +4,12 @@
 
 namespace io {
 
-inline bool readCharArray(char* s) {
+inline int readCharArray(char* s) {
   char ch;
   while (true) {
     ch = readChar(false);
     if (!ch) {
-      return false;
+      return 0;
     }
     if (!isspace(ch)) {
       break;
@@ -17,19 +17,21 @@ inline bool readCharArray(char* s) {
     ++_readPos;
   }
   *s++ = readChar(true);
+  int res = 1;
   while (true) {
     ch = readChar(false);
     if (!ch) {
-      return false;
+      return res;
     }
     if (isspace(ch)) {
       break;
     }
     *s++ = ch;
+    ++res;
     ++_readPos;
   }
   *s = '\0';
-  return true;
+  return res;
 }
 
 } // namespace io
