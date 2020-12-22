@@ -17,6 +17,15 @@ cc_library(
 )
 
 cc_library(
+    name = "debug_complex",
+    hdrs = ["debug_complex.h"],
+    deps = [
+        ":debug_basic",
+        "//math/complex",
+    ],
+)
+
+cc_library(
     name = "debug_matrix",
     hdrs = ["debug_matrix.h"],
     deps = [
@@ -30,6 +39,7 @@ cc_library(
     deps = [
         ":debug_basic",
         ":debug_bigint",
+        ":debug_complex",
         ":debug_matrix",
         "@boost//:stacktrace",
     ],

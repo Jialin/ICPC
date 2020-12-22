@@ -5,6 +5,7 @@
 #ifdef LOCAL
 
 #include "debug/debug_bigint.h"
+#include "debug/debug_complex.h"
 #include "debug/debug_matrix.h"
 
 #endif

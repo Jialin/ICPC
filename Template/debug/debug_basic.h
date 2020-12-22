@@ -163,6 +163,10 @@ using namespace std;
     DEBUG_END;                                                                 \
   }
 
+void debugv(char v, const string& name) {
+  fprintf(stderr, "char`%s`:(%c)", name.c_str(), v);
+}
+
 void debugv(int v, const string& name) {
   fprintf(stderr, "int`%s`:(%d)", name.c_str(), v);
 }
