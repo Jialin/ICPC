@@ -22,18 +22,26 @@ namespace math {
 
 template<typename T = double>
 struct FFTUtils {
-#if defined(_FFT_UTILS_COMPLEX_VECTOR_1) || defined(_FFT_UTILS_COMPLEX_VECTOR_3)
   inline FFTUtils(int capacity = -1) {
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
-      _cs.reserve(capacity);
-#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
-      _cs2.reserve(capacity);
-      _cs3.reserve(capacity);
-#endif
     }
-  }
+    capacity = max(capacity, 2);
+    _revs.reserve(capacity);
+    _revs.resize(2);
+    _revs[0] = 0;
+    _revs[1] = 1;
+    _roots.reserve(capacity);
+    _roots.resize(2);
+    _roots[0].init(0, 0);
+    _roots[1].init(1, 0);
+    _initCapacity(capacity);
+    _cs.reserve(capacity);
+#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
+    _cs2.reserve(capacity);
+    _cs3.reserve(capacity);
 #endif
+  }
 
 #ifdef FFT_UTILS_MUL_BIGINT
   template<int GROUP, typename BASE_SQR>
@@ -95,25 +103,20 @@ struct FFTUtils {
 
   inline void fft(int pow2, vector<Complex<T>>& cs, bool invert) {
     DEBUG_EQ(__builtin_popcount(pow2), 1);
-    for (int i = 1, j = 0; i < pow2; ++i) {
-      int bit = pow2 >> 1;
-      for (; j & bit; bit >>= 1) {
-        j ^= bit;
-      }
-      j ^= bit;
+    _initCapacity(pow2);
+    int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
+    for (int i = 0; i < pow2; ++i) {
+      int j = _revs[i] >> shift;
       if (i < j) {
         swap(cs[i], cs[j]);
       }
     }
     for (int l = 1; l < pow2; l <<= 1) {
-      _c.initPolar(1, invert ? -PI / l : PI / l);
-      for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
-        _c2.init(1, 0);
+      for (int i = 0; i < pow2; i += l << 1) {
         for (int j = 0; j < l; ++j) {
-          _c3.initMul(cs[i + j + l], _c2);
-          cs[i + j + l].initSub(cs[i + j], _c3);
-          cs[i + j] += _c3;
-          _c2 *= _c;
+          _c.initMul(cs[i + j + l], _roots[j + l]);
+          cs[i + j + l].initSub(cs[i + j], _c);
+          cs[i + j] += _c;
         }
       }
     }
@@ -128,10 +131,33 @@ struct FFTUtils {
     for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
   }
 
-  Complex<T> _c, _c2, _c3;
-#ifdef _FFT_UTILS_COMPLEX_VECTOR_1
-  vector<Complex<T>> _cs;
+  inline void _initCapacity(int pow2) {
+    if (_revs.size() >= pow2) {
+      return;
+    }
+    int lgN = __builtin_ctz(pow2);
+    _revs.resize(pow2);
+    for (int i = 0; i < pow2; ++i) {
+      _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
+    }
+    int oldPow2 = _roots.size();
+    _roots.resize(pow2);
+    for (int i = oldPow2; i < pow2; i <<= 1) {
+      T angle = PI / i, baseAngle = angle * 2;
+      for (int j = i; j < i << 1; j += 2, angle += baseAngle) {
+        _roots[j] = _roots[j >> 1];
+        _roots[j | 1].initPolar(1, angle);
+      }
+    }
+  }
+
+  vector<int> _revs;
+  vector<Complex<T>> _roots;
+  Complex<T> _c;
+#ifdef _FFT_UTILS_COMPLEX_2
+  Complex<T> _c2;
 #endif
+  vector<Complex<T>> _cs;
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
   vector<Complex<T>> _cs2, _cs3;
 #endif

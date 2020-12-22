@@ -43,6 +43,12 @@ TEST(FFTUtilsTest, bigint) {
   EXPECT_EQ(8267, res._vs[1]);
   EXPECT_EQ(3873, res._vs[2]);
   EXPECT_EQ(3, res._vs[3]);
+
+  x = "12";
+  y = "77";
+  fft.mul(x, y, res);
+  ASSERT_EQ(1, res._vs.size());
+  EXPECT_EQ(924, res._vs[0]);
 }
 
 } // namespace math
