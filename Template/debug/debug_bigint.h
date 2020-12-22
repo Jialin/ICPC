@@ -1,16 +1,9 @@
 #pragma once
 
 #include "debug/debug_basic.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 using namespace std;
-
-namespace math {
-
-template<int GROUP, typename BASE_SQR>
-struct BigInt;
-
-} // namespace math
 
 template<int GROUP, typename BASE_SQR>
 void debugv(const math::BigInt<GROUP, BASE_SQR>& v, const string& name) {
