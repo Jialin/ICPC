@@ -94,6 +94,7 @@ struct FFTUtils {
 #endif
 
   inline void fft(int pow2, vector<Complex<T>>& cs, bool invert) {
+    DEBUG_EQ(__builtin_popcount(pow2), 1);
     for (int i = 1, j = 0; i < pow2; ++i) {
       int bit = pow2 >> 1;
       for (; j & bit; bit >>= 1) {
