@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-
 #include "math/fft/fft_utils_macros.h"
 
 #include "math/complex/complex.h"

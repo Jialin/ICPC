@@ -9,6 +9,13 @@ template<typename T = double>
 struct Complex {
   inline Complex(T _real = 0, T _imag = 0) : real(_real), imag(_imag) {}
 
+#ifdef COMPLEX_ASSIGN
+  inline void operator=(const Complex<T>& o) {
+    real = o.real;
+    imag = o.imag;
+  }
+#endif
+
 #ifdef COMPLEX_ADD_INLINE
   inline void operator+=(const Complex<T>& o) {
     real += o.real;
