@@ -183,7 +183,5 @@ cc_library(
 cc_library(
     name = "sub",
     hdrs = ["sub.h"],
-    deps = [
-        ":fix_inline",
-    ],
+    deps = [":slight_fix_inline"],
 )

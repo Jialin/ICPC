@@ -1,14 +1,12 @@
 #pragma once
 
-#include "math/mod/fix_inline.h"
+#include "math/mod/slight_fix_inline.h"
 
 namespace math {
 
 template<typename V = int>
 inline V subMod(V a, V b, V mod) {
   V res = a;
-  fixModInline<V>(res, mod);
-  fixModInline<V>(b, mod);
   if (res >= b) {
     res -= b;
   } else {
