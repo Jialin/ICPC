@@ -19,7 +19,7 @@ namespace math {
 // Example setups:
 // |  mod    |root|  format   |
 // | 7340033 | 5  | (7<<20)+1 |
-// |998244353| 3? |(119<<23)+1|
+// |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
 template<typename V = int, typename V_SQR = int64_t>
 struct NTTUtils {
