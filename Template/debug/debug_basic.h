@@ -98,7 +98,7 @@ using namespace std;
   DEBUG_END
 
 #define DEBUG_EQ(x, y)                                                         \
-  if (x != y) {                                                                \
+  if ((x) != (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should be equal to ");                                   \
@@ -114,7 +114,7 @@ using namespace std;
   }
 
 #define DEBUG_LE(x, y)                                                         \
-  if (x > y) {                                                                 \
+  if ((x) > (y)) {                                                             \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be greater than ");                           \
@@ -123,7 +123,7 @@ using namespace std;
   }
 
 #define DEBUG_LT(x, y)                                                         \
-  if (x >= y) {                                                                \
+  if ((x) >= (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should be less than ");                                  \
@@ -132,7 +132,7 @@ using namespace std;
   }
 
 #define DEBUG_GE(x, y, ...)                                                    \
-  if (x < y) {                                                                 \
+  if ((x) < (y)) {                                                             \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be less than ");                              \
@@ -141,7 +141,7 @@ using namespace std;
   }
 
 #define DEBUG_GT(x, y, ...)                                                    \
-  if (x <= y) {                                                                \
+  if ((x) <= (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should be greater than ");                               \
@@ -150,7 +150,7 @@ using namespace std;
   }
 
 #define DEBUG_NE(x, y, ...)                                                    \
-  if (x == y) {                                                                \
+  if ((x) == (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
     debugv(x, #x);                                                             \
     fprintf(stderr, " should NOT be equal to ");                               \
