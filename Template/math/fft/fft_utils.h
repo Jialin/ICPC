@@ -2,6 +2,7 @@
 
 #include "math/fft/fft_utils_macros.h"
 
+#include "debug/debug.h"
 #include "math/complex/complex.h"
 #include "math/constants/pi.h"
 
@@ -29,7 +30,7 @@ struct FFTUtils {
     _revs.resize(2);
     _revs[0] = 0;
     _revs[1] = 1;
-    _roots.reserve(capacity);
+    _roots.reserve(capacity | 1);
     _roots.resize(2);
     _roots[0].init(0, 0);
     _roots[1].init(1, 0);
@@ -81,8 +82,8 @@ struct FFTUtils {
   mul(vector<Complex<T>>& x, vector<Complex<T>>& y, vector<Complex<T>>& res) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _expand(pow2, x);
-    _expand(pow2, y);
     fft(pow2, x, false);
+    _expand(pow2, y);
     fft(pow2, y, false);
     res.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
@@ -92,8 +93,8 @@ struct FFTUtils {
     _shrink(res);
   }
 
-  inline void _expand(int n, vector<Complex<T>>& cs) {
-    for (int i = cs.size(); i < n; ++i) {
+  inline void _expand(int pow2, vector<Complex<T>>& cs) {
+    for (size_t i = cs.size(); i < pow2; ++i) {
       cs.emplace_back(0, 0);
     }
   }
@@ -111,8 +112,12 @@ struct FFTUtils {
     }
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0; i < pow2; i += l << 1) {
-        for (int j = 0; j < l; ++j) {
-          _c.initMul(cs[i + j + l], _roots[j + l]);
+        int step = invert ? -1 : 1;
+        for (int j = 0, k = invert ? (l << 1) : l; j < l; ++j, k += step) {
+          _c.initMul(cs[i + j + l], _roots[k]);
+          if (invert && j) {
+            _c.flip();
+          }
           cs[i + j + l].initSub(cs[i + j], _c);
           cs[i + j] += _c;
         }
@@ -125,21 +130,22 @@ struct FFTUtils {
     }
   }
 
+#ifdef _FFT_UTILS_SHRINK
   inline void _shrink(vector<Complex<T>>& cs) {
     for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
   }
+#endif
 
   inline void _initCapacity(int pow2) {
     if (_revs.size() >= pow2) {
       return;
     }
-    int lgN = __builtin_ctz(pow2);
+    int oldPow2 = _revs.size(), lgN = __builtin_ctz(pow2);
     _revs.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
-    int oldPow2 = _roots.size();
-    _roots.resize(pow2);
+    _roots.resize(pow2 | 1);
     for (int i = oldPow2; i < pow2; i <<= 1) {
       T angle = PI / i, baseAngle = angle * 2;
       for (int j = i; j < i << 1; j += 2, angle += baseAngle) {
@@ -147,15 +153,15 @@ struct FFTUtils {
         _roots[j | 1].initPolar(1, angle);
       }
     }
+    _roots[pow2] = _roots[pow2 >> 1];
   }
 
   vector<int> _revs;
-  vector<Complex<T>> _roots;
+  vector<Complex<T>> _roots, _cs;
   Complex<T> _c;
 #ifdef _FFT_UTILS_COMPLEX_2
   Complex<T> _c2;
 #endif
-  vector<Complex<T>> _cs;
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
   vector<Complex<T>> _cs2, _cs3;
 #endif
