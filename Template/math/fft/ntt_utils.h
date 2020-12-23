@@ -2,6 +2,7 @@
 
 #include "math/fft/ntt_utils_macros.h"
 
+#include "math/bit/next_pow2_32.h"
 #include "math/mod/add.h"
 #include "math/mod/exp.h"
 #include "math/mod/fix.h"
@@ -10,14 +11,16 @@
 #include "math/mod/mul_inline.h"
 #include "math/mod/sub.h"
 
-#ifdef NTT_UTILS_MUL_MODIFY
-#include "math/bit/next_pow2_32.h"
-#endif
-
 using namespace std;
 
 namespace math {
 
+////////////////////////////////
+// Example setups:
+// |  mod    |root|  format   |
+// | 7340033 | 5  | (7<<20)+1 |
+// |998244353| 3? |(119<<23)+1|
+////////////////////////////////
 template<typename V = int, typename V_SQR = int64_t>
 struct NTTUtils {
   inline NTTUtils(V mod, V root, int capacity = -1) {
@@ -29,6 +32,9 @@ struct NTTUtils {
     _root = root;
     _invRoot = invMod(root, mod);
     _rootPow = 1 << __builtin_ctz(mod - 1);
+    if (capacity > 0) {
+      capacity = nextPow2_32(capacity);
+    }
     capacity = max(capacity, 2);
     _revs.reserve(capacity);
     _revs.resize(2);
@@ -46,24 +52,33 @@ struct NTTUtils {
   inline const vector<V>& mulModify(vector<V>& x, vector<V>& y) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _fix(x);
-    _expand(pow2, x);
-    ntt(pow2, x, false);
+    ntt(x, false, pow2);
     _fix(y);
-    _expand(pow2, y);
-    ntt(pow2, y, false);
+    ntt(y, false, pow2);
     _vs.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       _vs[i] = mulMod<V, V_SQR>(x[i], y[i], _mod);
     }
-    ntt(pow2, _vs, true);
+    ntt(_vs, true, pow2);
     _shrink(_vs);
     return _vs;
   }
+
+  inline void _fix(vector<V>& x) {
+    for (size_t i = 0; i < x.size(); ++i) {
+      fixModInline<V>(x[i], _mod);
+    }
+  }
+
+  inline void _shrink(vector<V>& vs) {
+    for (; vs.size() > 1 && !vs.back(); vs.pop_back()) {}
+  }
 #endif
 
-  inline void ntt(int pow2, vector<V>& vs, bool invert) {
-    DEBUG_EQ(__builtin_popcount(pow2), 1);
+  inline void ntt(vector<V>& vs, bool invert, int n = -1) {
+    int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     _initCapacity(pow2);
+    _expand(pow2, vs);
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = _revs[i] >> shift;
@@ -97,8 +112,7 @@ struct NTTUtils {
       return;
     }
     DEBUG_GE(_rootPow, pow2);
-    int oldPow2 = _revs.size();
-    int lgN = __builtin_ctz(pow2);
+    int oldPow2 = _revs.size(), lgN = __builtin_ctz(pow2);
     _revs.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
@@ -116,27 +130,11 @@ struct NTTUtils {
     _roots[pow2] = _roots[pow2 >> 1];
   }
 
-#ifdef _NTT_UTILS_FIX
-  inline void _fix(vector<V>& x) {
-    for (size_t i = 0; i < x.size(); ++i) {
-      fixModInline<V>(x[i], _mod);
-    }
-  }
-#endif
-
-#ifdef _NTT_UTILS_EXPAND
   inline void _expand(int pow2, vector<V>& vs) {
     for (size_t i = vs.size(); i < pow2; ++i) {
       vs.push_back(0);
     }
   }
-#endif
-
-#ifdef _NTT_UTILS_SHRINK
-  inline void _shrink(vector<V>& vs) {
-    for (; vs.size() > 1 && !vs.back(); vs.pop_back()) {}
-  }
-#endif
 
   vector<V> _revs, _roots, _vs;
   V _mod, _root, _invRoot;
