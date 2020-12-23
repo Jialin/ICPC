@@ -100,7 +100,7 @@ struct FFTUtils {
       }
     }
     for (int l = 1; l < pow2; l <<= 1) {
-      for (int i = 0; i < pow2; i += l << 1) {
+      for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
         int step = invert ? -1 : 1;
         for (int j = 0, k = invert ? (l << 1) : l; j < l; ++j, k += step) {
           _c.initMul(cs[i + j + l], _roots[k]);
