@@ -3,16 +3,12 @@
 #include "math/fft/fft_utils_macros.h"
 
 #include "debug/debug.h"
+#include "math/bit/next_pow2_32.h"
 #include "math/complex/complex.h"
 #include "math/constants/pi.h"
 
 #ifdef FFT_UTILS_MUL_BIGINT
 #include "math/bigint/bigint.h"
-#endif
-
-#if defined(FFT_UTILS_MUL_COMPLEX_VECTOR) || defined(FFT_UTILS_MUL_INT) ||     \
-    defined(_FFT_UTILS_COMPLEX_VECTOR_3)
-#include "math/bit/next_pow2_32.h"
 #endif
 
 using namespace std;
@@ -60,7 +56,7 @@ struct FFTUtils {
     for (size_t i = 0; i < pow2; ++i) {
       _cs[i].init(i < x.size() ? x[i] : 0, i < y.size() ? y[i] : 0);
     }
-    fft(pow2, _cs, false);
+    fft(_cs, false, pow2);
     _c.init(0, -0.25);
     for (int i = 0; i <= (pow2 >> 1); ++i) {
       int j = (pow2 - i) & (pow2 - 1);
@@ -68,7 +64,7 @@ struct FFTUtils {
       _cs[i].initConj(_c2);
       _cs[j] = _c2;
     }
-    fft(pow2, _cs, false);
+    fft(_cs, false, pow2);
     _shrink(_cs);
     for (auto& c : _cs) {
       c /= pow2;
@@ -81,28 +77,21 @@ struct FFTUtils {
   inline void
   mul(vector<Complex<T>>& x, vector<Complex<T>>& y, vector<Complex<T>>& res) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
-    _expand(pow2, x);
-    fft(pow2, x, false);
-    _expand(pow2, y);
-    fft(pow2, y, false);
+    fft(x, false, pow2);
+    fft(y, false, pow2);
     res.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       res[i].initMul(x[i], y[i]);
     }
-    fft(pow2, res, true);
+    fft(res, true, pow2);
     _shrink(res);
-  }
-
-  inline void _expand(int pow2, vector<Complex<T>>& cs) {
-    for (size_t i = cs.size(); i < pow2; ++i) {
-      cs.emplace_back(0, 0);
-    }
   }
 #endif
 
-  inline void fft(int pow2, vector<Complex<T>>& cs, bool invert) {
-    DEBUG_EQ(__builtin_popcount(pow2), 1);
+  inline void fft(vector<Complex<T>>& cs, bool invert, int n = -1) {
+    int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
     _initCapacity(pow2);
+    _expand(pow2, cs);
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = _revs[i] >> shift;
@@ -127,6 +116,12 @@ struct FFTUtils {
       for (int i = 0; i < pow2; ++i) {
         cs[i] /= pow2;
       }
+    }
+  }
+
+  inline void _expand(int pow2, vector<Complex<T>>& cs) {
+    for (size_t i = cs.size(); i < pow2; ++i) {
+      cs.emplace_back(0, 0);
     }
   }
 

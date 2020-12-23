@@ -31,7 +31,6 @@
 #define COMPLEX_INIT_MUL
 #define COMPLEX_INIT_POLAR
 #define COMPLEX_INIT_SUB
-#define COMPLEX_MUL_INLINE
 
 #include "math/bigint/bigint_macros.h"
 #include "math/complex/complex_macros.h"
