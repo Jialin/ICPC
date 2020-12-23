@@ -6,13 +6,13 @@
 
 namespace math {
 
-template<typename V = int32_t>
-inline V invMod(V a, const V& mod) {
+template<typename V = int>
+inline V invMod(V a, V mod) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
   V x0, x1, gcd = extGcd(a, mod, x0, x1);
 #pragma clang diagnostic pop
-  DEBUG_NE(gcd, 1);
+  DEBUG_EQ(gcd, 1);
   slightFixModInline(x0, mod);
   return x0;
 }
