@@ -8,6 +8,11 @@ cc_library(
 )
 
 cc_library(
+    name = "disjoint_set",
+    hdrs = ["disjoint_set.h"],
+)
+
+cc_library(
     name = "hashmap",
     hdrs = ["hashmap.h"],
     deps = [

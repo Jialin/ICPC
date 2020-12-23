@@ -11,6 +11,16 @@ cc_test(
 )
 
 cc_test(
+    name = "disjoint_set_test",
+    srcs = ["disjoint_set_test.cpp"],
+    deps = [
+        "//collections:disjoint_set",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "hashmap_test",
     srcs = ["hashmap_test.cpp"],
     deps = [
