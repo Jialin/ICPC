@@ -165,6 +165,10 @@ using namespace std;
     DEBUG_END;                                                                 \
   }
 
+void debugv(bool v, const string& name) {
+  fprintf(stderr, "bool`%s`:(%s)", name.c_str(), v ? "true" : "false");
+}
+
 void debugv(char v, const string& name) {
   fprintf(stderr, "char`%s`:(%c)", name.c_str(), v);
 }
