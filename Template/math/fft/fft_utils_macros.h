@@ -15,11 +15,13 @@
 #define COMPLEX_MUL
 #define COMPLEX_SUB
 #define _FFT_UTILS_COMPLEX_2
-#define _FFT_UTILS_SHRINK
 #endif
 
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
 #define _FFT_UTILS_COMPLEX_VECTOR_3
+#endif
+
+#if defined(FFT_UTILS_MUL_COMPLEX_VECTOR) || defined(FFT_UTILS_MUL_INT)
 #define _FFT_UTILS_SHRINK
 #endif
 
