@@ -27,9 +27,10 @@ struct FFTUtils {
     _revs[0] = 0;
     _revs[1] = 1;
     _roots.reserve(capacity | 1);
-    _roots.resize(2);
+    _roots.resize(3);
     _roots[0].init(0, 0);
     _roots[1].init(1, 0);
+    _roots[2].init(1, 0);
     _initCapacity(capacity);
     _cs.reserve(capacity);
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
@@ -50,11 +51,8 @@ struct FFTUtils {
 
 #ifdef FFT_UTILS_MUL_INT
   inline const vector<Complex<T>>&
-  mul(const vector<int>& x, const vector<int>& y, int n = -1) {
-    if (n < 0) {
-      n = max(static_cast<int>(x.size() + y.size()) - 1, 1);
-    }
-    int pow2 = nextPow2_32(n);
+  mul(const vector<int>& x, const vector<int>& y) {
+    int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _cs.resize(pow2);
     for (size_t i = 0; i < pow2; ++i) {
       _cs[i].init(i < x.size() ? x[i] : 0, i < y.size() ? y[i] : 0);
@@ -68,10 +66,10 @@ struct FFTUtils {
       _cs[j] = _c2;
     }
     fft(_cs, false, pow2);
-    _shrink(_cs);
     for (auto& c : _cs) {
       c /= pow2;
     }
+    _shrink(_cs);
     return _cs;
   }
 #endif
