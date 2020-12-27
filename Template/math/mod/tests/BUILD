@@ -121,6 +121,16 @@ cc_test(
 )
 
 cc_test(
+    name = "mod_int_test",
+    srcs = ["mod_int_test.cpp"],
+    deps = [
+        "//math/mod:mod_int",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "mul_inline_test",
     srcs = ["mul_inline_test.cpp"],
     deps = [

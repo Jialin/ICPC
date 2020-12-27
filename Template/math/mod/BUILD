@@ -108,6 +108,26 @@ cc_library(
 )
 
 cc_library(
+    name = "mod_int_macros",
+    hdrs = ["mod_int_macros.h"],
+    deps = [
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "mod_int",
+    hdrs = ["mod_int.h"],
+    deps = [
+        ":mod_int_macros",
+        "//math/gcd:ext_gcd",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "mul",
     hdrs = ["mul.h"],
     deps = [":mul_inline"],
