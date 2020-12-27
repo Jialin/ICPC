@@ -27,10 +27,9 @@ struct FFTUtils {
     _revs[0] = 0;
     _revs[1] = 1;
     _roots.reserve(capacity | 1);
-    _roots.resize(3);
+    _roots.resize(2);
     _roots[0].init(0, 0);
     _roots[1].init(1, 0);
-    _roots[2].init(1, 0);
     _initCapacity(capacity);
     _cs.reserve(capacity);
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
@@ -76,7 +75,10 @@ struct FFTUtils {
 
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
   inline void
-  mul(vector<Complex<T>>& x, vector<Complex<T>>& y, vector<Complex<T>>& res) {
+  mul(vector<Complex<T>>& x,
+      vector<Complex<T>>& y,
+      vector<Complex<T>>& res,
+      bool shrink = false) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     fft(x, false, pow2);
     fft(y, false, pow2);
@@ -85,7 +87,71 @@ struct FFTUtils {
       res[i].initMul(x[i], y[i]);
     }
     fft(res, true, pow2);
-    _shrink(res);
+    if (shrink) {
+      _shrink(res);
+    }
+  }
+#endif
+
+#ifdef FFT_UTILS_MUL_INLINE_COMPLEX_VECTOR
+  inline void
+  mulInline(vector<Complex<T>>& x, vector<Complex<T>>& y, bool shrink = false) {
+    int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
+    fft(x, false, pow2);
+    fft(y, false, pow2);
+    for (int i = 0; i < pow2; ++i) {
+      x[i] *= y[i];
+    }
+    fft(x, true, pow2);
+    if (shrink) {
+      _shrink(x);
+    }
+  }
+#endif
+
+#ifdef FFT_UTILS_MUL_INLINE_COMPLEX_MATRIX
+  inline void mulInline(
+      vector<vector<Complex<T>>>& x,
+      vector<vector<Complex<T>>>& y,
+      bool cyclic = false) {
+    if (x.empty() || y.empty() || x[0].empty() || y[0].empty()) {
+      x.clear();
+      return;
+    }
+    int n = cyclic ? max(max(x.size(), y.size()), max(x[0].size(), y[0].size()))
+                   : max(x.size() + y.size(), x[0].size() + y[0].size()) - 1;
+    int pow2 = nextPow2_32(n);
+    fft(x, false, pow2);
+    fft(y, false, pow2);
+    for (int i = 0; i < pow2; ++i) {
+      for (int j = 0; j < pow2; ++j) {
+        x[i][j] *= y[i][j];
+      }
+    }
+    fft(x, true, pow2);
+  }
+
+#endif
+
+#ifdef FFT_UTILS_FFT_COMPLEX_MATRIX
+  inline void fft(vector<vector<Complex<T>>>& cs, bool invert, int n = -1) {
+    int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
+    cs.reserve(pow2);
+    for (size_t i = 0; i < pow2; ++i) {
+      if (i < cs.size()) {
+        fft(cs[i], invert, pow2);
+      } else {
+        cs.push_back(vector<Complex<T>>(pow2));
+      }
+    }
+    for (int i = 0; i < pow2; ++i) {
+      for (int j = i + 1; j < pow2; ++j) {
+        swap(cs[i][j], cs[j][i]);
+      }
+    }
+    for (size_t i = 0; i < pow2; ++i) {
+      fft(cs[i], invert, pow2);
+    }
   }
 #endif
 
@@ -93,6 +159,12 @@ struct FFTUtils {
     int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
     _initCapacity(pow2);
     _expand(pow2, cs);
+    if (invert) {
+      reverse(cs.begin() + 1, cs.begin() + pow2);
+      for (int i = 0; i < pow2; ++i) {
+        cs[i] /= pow2;
+      }
+    }
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = _revs[i] >> shift;
@@ -102,20 +174,11 @@ struct FFTUtils {
     }
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
-        int step = invert ? -1 : 1;
-        for (int j = 0, k = invert ? (l << 1) : l; j < l; ++j, k += step) {
+        for (int j = 0, k = l; j < l; ++j, ++k) {
           _c.initMul(cs[i + j + l], _roots[k]);
-          if (invert && j) {
-            _c.flip();
-          }
           cs[i + j + l].initSub(cs[i + j], _c);
           cs[i + j] += _c;
         }
-      }
-    }
-    if (invert) {
-      for (int i = 0; i < pow2; ++i) {
-        cs[i] /= pow2;
       }
     }
   }
@@ -141,7 +204,7 @@ struct FFTUtils {
     for (int i = 0; i < pow2; ++i) {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
-    _roots.resize(pow2 | 1);
+    _roots.resize(pow2);
     for (int i = oldPow2; i < pow2; i <<= 1) {
       T angle = PI / i, baseAngle = angle * 2;
       for (int j = i; j < i << 1; j += 2, angle += baseAngle) {
@@ -149,7 +212,6 @@ struct FFTUtils {
         _roots[j | 1].initPolar(1, angle);
       }
     }
-    _roots[pow2] = _roots[pow2 >> 1];
   }
 
   vector<int> _revs;

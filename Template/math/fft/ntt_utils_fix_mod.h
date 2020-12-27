@@ -43,7 +43,7 @@ struct NTTUtilsFixMod {
     _initCapacity(capacity);
   }
 
-#ifdef NTT_UTILS_FIX_MOD_MUL_INLINE_MODIFY
+#ifdef NTT_UTILS_FIX_MOD_MUL_INLINE
   inline void mulInlineModify(vector<_ModInt>& xs, vector<_ModInt>& ys) {
     int pow2 = nextPow2_32(max(static_cast<int>(xs.size() + ys.size()) - 1, 1));
     _expand(pow2, xs);
