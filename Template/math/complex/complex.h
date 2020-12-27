@@ -37,7 +37,6 @@ struct Complex {
     res.initMul(*this, o);
     return res;
   }
-
 #endif
 
 #ifdef COMPLEX_MUL_INLINE
