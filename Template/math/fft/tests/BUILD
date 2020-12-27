@@ -11,6 +11,16 @@ cc_test(
 )
 
 cc_test(
+    name = "ntt_utils_fix_mod_test",
+    srcs = ["ntt_utils_fix_mod_test.cpp"],
+    deps = [
+        "//math/fft:ntt_utils_fix_mod",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "ntt_utils_test",
     srcs = ["ntt_utils_test.cpp"],
     deps = [
