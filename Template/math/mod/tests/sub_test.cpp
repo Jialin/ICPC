@@ -5,12 +5,11 @@
 namespace math {
 
 TEST(SubMod, test) {
-  EXPECT_EQ(subMod(2, 1, 4), 1);
-  EXPECT_EQ(subMod(2, 2, 4), 0);
-  EXPECT_EQ(subMod(2, 3, 4), 3);
-  EXPECT_EQ(subMod(2, 4, 4), 2);
-  EXPECT_EQ(subMod(2, 5, 4), 1);
-  EXPECT_EQ(subMod(-1000, 2147483647, 1000000007), 852515374);
+  EXPECT_EQ(1, subMod(2, 1, 4));
+  EXPECT_EQ(0, subMod(2, 2, 4));
+  EXPECT_EQ(3, subMod(2, 3, 4));
+  EXPECT_EQ(2, subMod(2, 4, 4));
+  EXPECT_EQ(1, subMod(2, 5, 4));
 }
 
 TEST(SubMod, testUnsigned) {
