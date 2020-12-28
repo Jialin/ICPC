@@ -28,8 +28,15 @@ cc_library(
 cc_library(
     name = "debug_matrix",
     hdrs = ["debug_matrix.h"],
+    deps = [":debug_basic"],
+)
+
+cc_library(
+    name = "debug_mod_int",
+    hdrs = ["debug_mod_int.h"],
     deps = [
         ":debug_basic",
+        "//math/mod:mod_int",
     ],
 )
 
@@ -41,6 +48,7 @@ cc_library(
         ":debug_bigint",
         ":debug_complex",
         ":debug_matrix",
+        ":debug_mod_int",
         "@boost//:stacktrace",
     ],
 )
