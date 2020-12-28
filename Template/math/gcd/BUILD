@@ -6,7 +6,7 @@ cc_library(
     name = "ext_gcd",
     hdrs = ["ext_gcd.h"],
     deps = [
-        "//debug",
+        "//debug:debug_basic",
     ],
 )
 

@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-#include "debug/debug.h"
+#include "debug/debug_basic.h"
 
 using namespace std;
 
