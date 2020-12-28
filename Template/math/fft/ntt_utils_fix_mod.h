@@ -35,16 +35,15 @@ struct NTTUtilsFixMod {
     _revs.clear();
     _revs.push_back(0);
     _revs.push_back(1);
-    _roots.reserve(capacity | 1);
+    _roots.reserve(capacity);
     _roots.clear();
     _roots.emplace_back(0);
-    _roots.emplace_back(1);
     _roots.emplace_back(1);
     _initCapacity(capacity);
   }
 
 #ifdef NTT_UTILS_FIX_MOD_MUL_INLINE
-  inline void mulInlineModify(vector<_ModInt>& xs, vector<_ModInt>& ys) {
+  inline void mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys) {
     int pow2 = nextPow2_32(max(static_cast<int>(xs.size() + ys.size()) - 1, 1));
     _expand(pow2, xs);
     ntt(xs, false, pow2);
@@ -66,6 +65,13 @@ struct NTTUtilsFixMod {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     _initCapacity(pow2);
     _expand(pow2, vs);
+    if (invert) {
+      reverse(vs.begin() + 1, vs.begin() + pow2);
+      _v = _ModInt(pow2).inv();
+      for (int i = 0; i < pow2; ++i) {
+        vs[i] *= _v;
+      }
+    }
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = _revs[i] >> shift;
@@ -75,21 +81,11 @@ struct NTTUtilsFixMod {
     }
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
-        int step = invert ? -1 : 1;
-        for (int j = 0, k = invert ? l2 : l; j < l; ++j, k += step) {
-          _v.initMul(vs[i + j + l], _roots[k]);
-          if (invert && j) {
-            _v.flip();
-          }
+        for (int j = 0; j < l; ++j) {
+          _v.initMul(vs[i + j + l], _roots[j + l]);
           vs[i + j + l].initSub(vs[i + j], _v);
           vs[i + j] += _v;
         }
-      }
-    }
-    if (invert) {
-      _v = _ModInt(pow2).inv();
-      for (int i = 0; i < pow2; ++i) {
-        vs[i] *= _v;
       }
     }
   }
@@ -112,7 +108,6 @@ struct NTTUtilsFixMod {
         _roots[j | 1].initMul(_roots[j], _v);
       }
     }
-    _roots[pow2] = _roots[pow2 >> 1];
   }
 
   inline void _expand(int pow2, vector<_ModInt>& vs) {
