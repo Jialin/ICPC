@@ -178,7 +178,11 @@ void debugv(int v, const string& name) {
 }
 
 void debugv(int64_t v, const string& name) {
-  fprintf(stderr, "int`%s`:(%lld)", name.c_str(), v);
+  fprintf(stderr, "int64`%s`:(%lld)", name.c_str(), v);
+}
+
+void debugv(uint64_t v, const string& name) {
+  fprintf(stderr, "uint64`%s`:(%llu)", name.c_str(), v);
 }
 
 void debugv(double v, const string& name) {
@@ -209,6 +213,28 @@ void debugv(const vector<int>& vs, const string& name) {
     fprintf(stderr, "%d", vs.front());
     for (int i = 1; i < (int)vs.size(); ++i) {
       fprintf(stderr, ",%d", vs[i]);
+    }
+  }
+  fprintf(stderr, "]");
+}
+
+void debugv(const vector<int64_t>& vs, const string& name) {
+  fprintf(stderr, "vector<int64>`%s`(size:%lu):[", name.c_str(), vs.size());
+  if (!vs.empty()) {
+    fprintf(stderr, "%lld", vs.front());
+    for (int i = 1; i < (int)vs.size(); ++i) {
+      fprintf(stderr, ",%lld", vs[i]);
+    }
+  }
+  fprintf(stderr, "]");
+}
+
+void debugv(const vector<uint64_t>& vs, const string& name) {
+  fprintf(stderr, "vector<uint64>`%s`(size:%lu):[", name.c_str(), vs.size());
+  if (!vs.empty()) {
+    fprintf(stderr, "%llu", vs.front());
+    for (int i = 1; i < (int)vs.size(); ++i) {
+      fprintf(stderr, ",%llu", vs[i]);
     }
   }
   fprintf(stderr, "]");
