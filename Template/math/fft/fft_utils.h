@@ -96,7 +96,11 @@ struct FFTUtils {
 #ifdef FFT_UTILS_MUL_INLINE_COMPLEX_VECTOR
   inline void
   mulInline(vector<Complex<T>>& x, vector<Complex<T>>& y, bool shrink = false) {
-    int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
+    if (x.empty() || y.empty()) {
+      x.clear();
+      return;
+    }
+    int pow2 = nextPow2_32(x.size() + y.size() - 1);
     fft(x, false, pow2);
     fft(y, false, pow2);
     for (int i = 0; i < pow2; ++i) {
