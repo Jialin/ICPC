@@ -40,7 +40,7 @@ struct NTTUtils {
     _revs.resize(2);
     _revs[0] = 0;
     _revs[1] = 1;
-    _roots.reserve(capacity | 1);
+    _roots.reserve(capacity);
     _roots.resize(2);
     _roots[0] = 0;
     _roots[1] = 1;
@@ -78,7 +78,14 @@ struct NTTUtils {
   inline void ntt(vector<V>& vs, bool invert, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     _initCapacity(pow2);
-    _expand(pow2, vs);
+    _expand(vs, pow2);
+    if (invert) {
+      reverse(vs.begin() + 1, vs.begin() + pow2);
+      int invPow2 = invMod<V>(pow2, _mod);
+      for (int i = 0; i < pow2; ++i) {
+        mulModInline<V, V_SQR>(vs[i], invPow2, _mod);
+      }
+    }
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = _revs[i] >> shift;
@@ -88,21 +95,11 @@ struct NTTUtils {
     }
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
-        int step = invert ? -1 : 1;
-        for (int j = 0, k = invert ? l2 : l; j < l; ++j, k += step) {
-          V v = mulMod<V, V_SQR>(vs[i + j + l], _roots[k], _mod);
-          if (invert && j) {
-            v = fixMod<V>(_mod - v, _mod);
-          }
+        for (int j = 0; j < l; ++j) {
+          V v = mulMod<V, V_SQR>(vs[i + j + l], _roots[j + l], _mod);
           vs[i + j + l] = subMod<V>(vs[i + j], v, _mod);
           vs[i + j] = addMod<V>(vs[i + j], v, _mod);
         }
-      }
-    }
-    if (invert) {
-      int invPow2 = invMod<V>(pow2, _mod);
-      for (int i = 0; i < pow2; ++i) {
-        mulModInline<V, V_SQR>(vs[i], invPow2, _mod);
       }
     }
   }
@@ -117,7 +114,7 @@ struct NTTUtils {
     for (int i = 0; i < pow2; ++i) {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
-    _roots.resize(pow2 | 1);
+    _roots.resize(pow2);
     for (int i = oldPow2; i < pow2; i <<= 1) {
       V v = expMod<V, V_SQR>(_root, (_rootPow >> 1) / i, _mod),
         mul = mulMod<V, V_SQR>(v, v, _mod);
@@ -127,10 +124,9 @@ struct NTTUtils {
         mulModInline<V, V_SQR>(v, mul, _mod);
       }
     }
-    _roots[pow2] = _roots[pow2 >> 1];
   }
 
-  inline void _expand(int pow2, vector<V>& vs) {
+  inline void _expand(vector<V>& vs, int pow2) {
     for (size_t i = vs.size(); i < pow2; ++i) {
       vs.push_back(0);
     }

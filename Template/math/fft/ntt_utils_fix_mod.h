@@ -100,7 +100,7 @@ struct NTTUtilsFixMod {
     for (int i = 0; i < pow2; ++i) {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
-    _roots.resize(pow2 | 1);
+    _roots.resize(pow2);
     for (int i = oldPow2; i < pow2; i <<= 1) {
       _v = _root.exp((_rootPow / i) >> 1);
       for (int j = i; j < i << 1; j += 2) {
@@ -111,8 +111,10 @@ struct NTTUtilsFixMod {
   }
 
   inline void _expand(int pow2, vector<_ModInt>& vs) {
-    for (size_t i = vs.size(); i < pow2; ++i) {
-      vs.emplace_back(0);
+    int size = vs.size();
+    vs.resize(pow2);
+    for (size_t i = size; i < pow2; ++i) {
+      vs[i] = 0;
     }
   }
 
