@@ -45,9 +45,21 @@ struct ModInt {
   }
 #endif
 
+#ifdef MOD_INT_MUL
+  inline ModInt operator*(const ModInt& o) const {
+    return ModInt(fix(static_cast<V_SQR>(_v) * o._v));
+  }
+#endif
+
 #ifdef MOD_INT_MUL_INLINE
   inline void operator*=(const ModInt& o) {
     _v = fix(static_cast<V_SQR>(_v) * o._v);
+  }
+#endif
+
+#ifdef MOD_INT_DIV
+  inline ModInt operator/(const ModInt& o) const {
+    return *this * o.inv();
   }
 #endif
 
