@@ -110,7 +110,21 @@ struct Complex {
   }
 #endif
 
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const Complex<T>& v) {
+    o << tostring(v.real) << (v.imag >= 0 ? "+" : "") << tostring(v.imag) + "i";
+    return o;
+  }
+#endif
+
   T real, imag;
 };
 
 } // namespace math
+
+#ifdef LOCAL
+template<typename T>
+inline string totype(const math::Complex<T>& v) {
+  return "Complex<" + totype(v.real) + ">";
+}
+#endif

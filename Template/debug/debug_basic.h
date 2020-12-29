@@ -29,8 +29,6 @@
 #include <boost/stacktrace.hpp>
 #endif
 
-#include <complex>
-
 using namespace std;
 
 #define DEBUG_BEGIN fprintf(stderr, "\033[94m")
@@ -46,7 +44,7 @@ using namespace std;
 #define DEBUG_END                                                              \
   fprintf(                                                                     \
       stderr,                                                                  \
-      "\033[0m\n\033[92m^^^^^ %s @ %d ^^^^^\033[0m\n",                         \
+      "\033[0m\033[92m^^^^^ %s @ %d ^^^^^\033[0m\n",                           \
       __PRETTY_FUNCTION__,                                                     \
       __LINE__)
 #endif
@@ -89,7 +87,7 @@ using namespace std;
 
 #define DEBUGV(v)                                                              \
   DEBUG_BEGIN;                                                                 \
-  debugv(v, #v);                                                               \
+  fprintf(stderr, "%s`%s`:%s\n", totype(v).c_str(), #v, tostring(v).c_str());  \
   DEBUG_END
 
 #define DEBUGBIT(v)                                                            \
@@ -165,115 +163,52 @@ using namespace std;
     DEBUG_END;                                                                 \
   }
 
-void debugv(bool v, const string& name) {
-  fprintf(stderr, "bool`%s`:(%s)", name.c_str(), v ? "true" : "false");
+inline string totype(bool v) {
+  return "bool";
 }
 
-void debugv(char v, const string& name) {
-  fprintf(stderr, "char`%s`:(%c)", name.c_str(), v);
+inline string totype(const vector<bool>& vs) {
+  return "vector<bool>";
 }
 
-void debugv(int v, const string& name) {
-  fprintf(stderr, "int`%s`:(%d)", name.c_str(), v);
+inline string totype(int v) {
+  return "int";
 }
 
-void debugv(int64_t v, const string& name) {
-  fprintf(stderr, "int64`%s`:(%lld)", name.c_str(), v);
+inline string totype(int64_t v) {
+  return "int64";
 }
 
-void debugv(uint64_t v, const string& name) {
-  fprintf(stderr, "uint64`%s`:(%llu)", name.c_str(), v);
+inline string totype(uint64_t v) {
+  return "uint64";
 }
 
-void debugv(double v, const string& name) {
-  fprintf(stderr, "double`%s`:(%lf)", name.c_str(), v);
+inline string totype(double v) {
+  return "double";
 }
 
-void debugv(const char* v, const string& name) {
-  fprintf(stderr, "char*`%s`:(%s)", name.c_str(), v);
+inline string totype(long double v) {
+  return "long double";
+}
+
+inline string totype(const char* v) {
+  return "const char*";
+}
+
+inline string totype(const string& v) {
+  return "string";
 }
 
 template<typename T>
-void debugv(const T* v, const string& name) {
-  fprintf(
-      stderr,
-      "%s*`%s`:(%ld)",
-      typeid(T).name(),
-      name.c_str(),
-      reinterpret_cast<intptr_t>(v));
+inline string totype(const T& v) {
+  return typeid(decltype(v)).name();
 }
 
-void debugv(const string& v, const string& name) {
-  fprintf(stderr, "string`%s`:(%s)", name.c_str(), v.c_str());
+template<typename T>
+inline string tostring(const T& v) {
+  stringstream ss;
+  ss << boolalpha << v;
+  return ss.str();
 }
 
-void debugv(const vector<int>& vs, const string& name) {
-  fprintf(stderr, "vector<int>`%s`(size:%lu):[", name.c_str(), vs.size());
-  if (!vs.empty()) {
-    fprintf(stderr, "%d", vs.front());
-    for (int i = 1; i < (int)vs.size(); ++i) {
-      fprintf(stderr, ",%d", vs[i]);
-    }
-  }
-  fprintf(stderr, "]");
-}
-
-void debugv(const vector<int64_t>& vs, const string& name) {
-  fprintf(stderr, "vector<int64>`%s`(size:%lu):[", name.c_str(), vs.size());
-  if (!vs.empty()) {
-    fprintf(stderr, "%lld", vs.front());
-    for (int i = 1; i < (int)vs.size(); ++i) {
-      fprintf(stderr, ",%lld", vs[i]);
-    }
-  }
-  fprintf(stderr, "]");
-}
-
-void debugv(const vector<uint64_t>& vs, const string& name) {
-  fprintf(stderr, "vector<uint64>`%s`(size:%lu):[", name.c_str(), vs.size());
-  if (!vs.empty()) {
-    fprintf(stderr, "%llu", vs.front());
-    for (int i = 1; i < (int)vs.size(); ++i) {
-      fprintf(stderr, ",%llu", vs[i]);
-    }
-  }
-  fprintf(stderr, "]");
-}
-
-void debugv(const vector<complex<double>>& vs, const string& name) {
-  fprintf(
-      stderr,
-      "vector<complex<double>>`%s`(size:%lu):[",
-      name.c_str(),
-      vs.size());
-  if (!vs.empty()) {
-    fprintf(stderr, "(%lf)+(%lf)i", vs.front().real(), vs.front().imag());
-    for (int i = 1; i < (int)vs.size(); ++i) {
-      fprintf(stderr, ",(%lf)+(%lf)i", vs[i].real(), vs[i].imag());
-    }
-  }
-  fprintf(stderr, "]");
-}
-
-template<typename V>
-void debugBit(V v, const string& name) {
-  fprintf(stderr, "bit`%s`[", name.c_str());
-  if (v == 0) {
-    fprintf(stderr, "0");
-    return;
-  }
-  if (v < 0) {
-    fprintf(stderr, "-");
-    v = -v;
-  }
-  vector<int> bits;
-  for (int cnt = 0; v > 0 && cnt < 256; ++cnt, v >>= 1) {
-    bits.emplace_back(v & 1);
-  }
-  reverse(bits.begin(), bits.end());
-  for (int bit : bits) {
-    fprintf(stderr, "%d", bit);
-  }
-  fprintf(stderr, "]");
-}
 #endif
