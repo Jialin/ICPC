@@ -25,7 +25,6 @@ struct NTTUtilsFixMod {
 
   inline void init(int capacity = -1) {
     _root = _ModInt(ROOT);
-    _invRoot = _root.inv();
     _rootPow = 1 << __builtin_ctz(MOD - 1);
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
@@ -65,28 +64,36 @@ struct NTTUtilsFixMod {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     _initCapacity(pow2);
     _expand(pow2, vs);
+    int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
+    vector<V> _vs(pow2);
     if (invert) {
       reverse(vs.begin() + 1, vs.begin() + pow2);
-      _v = _ModInt(pow2).inv();
+      V_SQR v = _ModInt(pow2).inv()._v;
       for (int i = 0; i < pow2; ++i) {
-        vs[i] *= _v;
+        _vs[i] = vs[_revs[i] >> shift]._v * v % MOD;
       }
-    }
-    int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
-    for (int i = 0; i < pow2; ++i) {
-      int j = _revs[i] >> shift;
-      if (i < j) {
-        swap(vs[i], vs[j]);
+    } else {
+      for (int i = 0; i < pow2; ++i) {
+        _vs[i] = vs[_revs[i] >> shift]._v;
       }
     }
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
         for (int j = 0; j < l; ++j) {
-          _v.initMul(vs[i + j + l], _roots[j + l]);
-          vs[i + j + l].initSub(vs[i + j], _v);
-          vs[i + j] += _v;
+          V v = _vs[i + j + l] * _roots[j + l] % MOD;
+          _vs[i + j + l] = _vs[i + j] + MOD - v;
+          if (_vs[i + j + l] >= MOD) {
+            _vs[i + j + l] -= MOD;
+          }
+          _vs[i + j] += v;
+          if (_vs[i + j] >= MOD) {
+            _vs[i + j] -= MOD;
+          }
         }
       }
+    }
+    for (int i = 0; i < pow2; ++i) {
+      vs[i] = _vs[i];
     }
   }
 
@@ -105,7 +112,7 @@ struct NTTUtilsFixMod {
       _v = _root.exp((_rootPow / i) >> 1);
       for (int j = i; j < i << 1; j += 2) {
         _roots[j] = _roots[j >> 1];
-        _roots[j | 1].initMul(_roots[j], _v);
+        _roots[j | 1] = _roots[j] * _v._v % MOD;
       }
     }
   }
@@ -119,7 +126,7 @@ struct NTTUtilsFixMod {
   }
 
   vector<int> _revs;
-  vector<_ModInt> _roots;
+  vector<V_SQR> _roots;
   _ModInt _root, _invRoot, _v;
   int _rootPow;
 };
