@@ -11,10 +11,10 @@ cc_test(
 )
 
 cc_test(
-    name = "ntt_utils_fix_mod_test",
-    srcs = ["ntt_utils_fix_mod_test.cpp"],
+    name = "ntt_utils_fix_prime_test",
+    srcs = ["ntt_utils_fix_prime_test.cpp"],
     deps = [
-        "//math/fft:ntt_utils_fix_mod",
+        "//math/fft:ntt_utils_fix_prime",
         "@gtest",
         "@gtest//:gtest_main",
     ],

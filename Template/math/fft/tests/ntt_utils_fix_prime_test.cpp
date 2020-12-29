@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
 
-#define NTT_UTILS_FIX_MOD_ALL
-#include "math/fft/ntt_utils_fix_mod_macros.h"
+#define NTT_UTILS_FIX_PRIME_ALL
+#include "math/fft/ntt_utils_fix_prime_macros.h"
 
-#include "math/fft/ntt_utils_fix_mod.h"
+#include "math/fft/ntt_utils_fix_prime.h"
 
 namespace math {
 
-TEST(NTTUtilsFixModTest, bigint) {
-  NTTUtilsFixMod<int, int64_t, 7340033, 5> ntt;
+TEST(NTTUtilsFixPrimeTest, bigint) {
+  NTTUtilsFixPrime<int, int64_t, 7340033, 5> ntt;
   vector<ModInt<int, int64_t, 7340033>> x = {1, 2}, y = {3, 4};
   ntt.mulInline(x, y);
   ASSERT_EQ(3, x.size());

@@ -25,16 +25,16 @@ cc_library(
 )
 
 cc_library(
-    name = "ntt_utils_fix_mod_macros",
-    hdrs = ["ntt_utils_fix_mod_macros.h"],
+    name = "ntt_utils_fix_prime_macros",
+    hdrs = ["ntt_utils_fix_prime_macros.h"],
     deps = ["//math/mod:mod_int_macros"],
 )
 
 cc_library(
-    name = "ntt_utils_fix_mod",
-    hdrs = ["ntt_utils_fix_mod.h"],
+    name = "ntt_utils_fix_prime",
+    hdrs = ["ntt_utils_fix_prime.h"],
     deps = [
-        ":ntt_utils_fix_mod_macros",
+        ":ntt_utils_fix_prime_macros",
         "//math/bit:next_pow2_32",
         "//math/mod:mod_int",
     ],

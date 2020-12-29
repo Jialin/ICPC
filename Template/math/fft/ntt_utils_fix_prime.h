@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/fft/ntt_utils_fix_mod_macros.h"
+#include "math/fft/ntt_utils_fix_prime_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/mod/mod_int.h"
@@ -15,17 +15,17 @@ namespace math {
 // | 7340033 | 5  | (7<<20)+1 |
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
-template<typename V, typename V_SQR, V MOD, V ROOT>
-struct NTTUtilsFixMod {
-  using _ModInt = ModInt<V, V_SQR, MOD>;
+template<typename V, typename V_SQR, V PRIME, V ROOT>
+struct NTTUtilsFixPrime {
+  using _ModInt = ModInt<V, V_SQR, PRIME>;
 
-  inline NTTUtilsFixMod(int capacity = -1) {
+  inline NTTUtilsFixPrime(int capacity = -1) {
     init(capacity);
   }
 
   inline void init(int capacity = -1) {
     _root = _ModInt(ROOT);
-    _rootPow = 1 << __builtin_ctz(MOD - 1);
+    _rootPow = 1 << __builtin_ctz(PRIME - 1);
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
     }
@@ -41,7 +41,7 @@ struct NTTUtilsFixMod {
     _initCapacity(capacity);
   }
 
-#ifdef NTT_UTILS_FIX_MOD_MUL_INLINE
+#ifdef NTT_UTILS_FIX_PRIME_MUL_INLINE
   inline void mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys) {
     int pow2 = nextPow2_32(max(static_cast<int>(xs.size() + ys.size()) - 1, 1));
     _expand(pow2, xs);
@@ -70,7 +70,7 @@ struct NTTUtilsFixMod {
       reverse(vs.begin() + 1, vs.begin() + pow2);
       V_SQR v = _ModInt(pow2).inv()._v;
       for (int i = 0; i < pow2; ++i) {
-        _vs[i] = vs[_revs[i] >> shift]._v * v % MOD;
+        _vs[i] = vs[_revs[i] >> shift]._v * v % PRIME;
       }
     } else {
       for (int i = 0; i < pow2; ++i) {
@@ -80,14 +80,14 @@ struct NTTUtilsFixMod {
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
         for (int j = 0; j < l; ++j) {
-          V v = _vs[i + j + l] * _roots[j + l] % MOD;
-          _vs[i + j + l] = _vs[i + j] + MOD - v;
-          if (_vs[i + j + l] >= MOD) {
-            _vs[i + j + l] -= MOD;
+          V v = _vs[i + j + l] * _roots[j + l] % PRIME;
+          _vs[i + j + l] = _vs[i + j] + PRIME - v;
+          if (_vs[i + j + l] >= PRIME) {
+            _vs[i + j + l] -= PRIME;
           }
           _vs[i + j] += v;
-          if (_vs[i + j] >= MOD) {
-            _vs[i + j] -= MOD;
+          if (_vs[i + j] >= PRIME) {
+            _vs[i + j] -= PRIME;
           }
         }
       }
@@ -112,7 +112,7 @@ struct NTTUtilsFixMod {
       _v = _root.exp((_rootPow / i) >> 1);
       for (int j = i; j < i << 1; j += 2) {
         _roots[j] = _roots[j >> 1];
-        _roots[j | 1] = _roots[j] * _v._v % MOD;
+        _roots[j | 1] = _roots[j] * _v._v % PRIME;
       }
     }
   }
