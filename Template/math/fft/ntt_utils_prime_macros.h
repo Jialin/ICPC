@@ -1,0 +1,3 @@
+#ifdef NTT_UTILS_PRIME_ALL
+#define NTT_UTILS_PRIME_MUL_MODIFY
+#endif

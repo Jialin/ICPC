@@ -41,15 +41,15 @@ cc_library(
 )
 
 cc_library(
-    name = "ntt_utils_macros",
-    hdrs = ["ntt_utils_macros.h"],
+    name = "ntt_utils_prime_macros",
+    hdrs = ["ntt_utils_prime_macros.h"],
 )
 
 cc_library(
-    name = "ntt_utils",
-    hdrs = ["ntt_utils.h"],
+    name = "ntt_utils_prime",
+    hdrs = ["ntt_utils_prime.h"],
     deps = [
-        ":ntt_utils_macros",
+        ":ntt_utils_prime_macros",
         "//debug",
         "//math/bit:next_pow2_32",
         "//math/mod:add",

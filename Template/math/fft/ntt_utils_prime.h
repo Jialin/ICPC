@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/fft/ntt_utils_macros.h"
+#include "math/fft/ntt_utils_prime_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/mod/add.h"
@@ -17,21 +17,21 @@ namespace math {
 
 ////////////////////////////////
 // Example setups:
-// |  mod    |root|  format   |
+// |prime mod|root|  format   |
 // | 7340033 | 5  | (7<<20)+1 |
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
 template<typename V = int, typename V_SQR = int64_t>
-struct NTTUtils {
-  inline NTTUtils(V mod, V root, int capacity = -1) {
-    init(mod, root, capacity);
+struct NTTUtilsPrime {
+  inline NTTUtilsPrime(V primeMod, V root, int capacity = -1) {
+    init(primeMod, root, capacity);
   }
 
-  inline void init(V mod, V root, int capacity = -1) {
-    _mod = mod;
+  inline void init(V primeMod, V root, int capacity = -1) {
+    _mod = primeMod;
     _root = root;
-    _invRoot = invMod(root, mod);
-    _rootPow = 1 << __builtin_ctz(mod - 1);
+    _invRoot = invMod(root, _mod);
+    _rootPow = 1 << __builtin_ctz(_mod - 1);
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
     }
@@ -48,7 +48,7 @@ struct NTTUtils {
     _vs.reserve(capacity);
   }
 
-#ifdef NTT_UTILS_MUL_MODIFY
+#ifdef NTT_UTILS_PRIME_MUL_MODIFY
   inline const vector<V>& mulModify(vector<V>& x, vector<V>& y) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _fix(x);

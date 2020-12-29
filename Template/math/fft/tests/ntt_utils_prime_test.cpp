@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
 
-#define NTT_UTILS_ALL
-#include "math/fft/ntt_utils_macros.h"
+#define NTT_UTILS_PRIME_ALL
+#include "math/fft/ntt_utils_prime_macros.h"
 
-#include "math/fft/ntt_utils.h"
+#include "math/fft/ntt_utils_prime.h"
 
 namespace math {
 
-TEST(NTTUtilsTest, bigint) {
-  NTTUtils<> ntt(7340033, 5);
+TEST(NTTUtilsPrimeTest, bigint) {
+  NTTUtilsPrime<> ntt(7340033, 5);
 
   vector<int> x = {1, 2};
   vector<int> y = {3, 4};
