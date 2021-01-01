@@ -85,9 +85,12 @@ using namespace std;
     DEBUGF(fmt, ##__VA_ARGS__);                                                \
   }
 
+#define _DEBUGV(v)                                                             \
+  fprintf(stderr, "%s`%s`:%s\n", totype(v).c_str(), #v, tostring(v).c_str());
+
 #define DEBUGV(v)                                                              \
   DEBUG_BEGIN;                                                                 \
-  fprintf(stderr, "%s`%s`:%s\n", totype(v).c_str(), #v, tostring(v).c_str());  \
+  _DEBUGV(v);                                                                  \
   DEBUG_END
 
 #define DEBUGBIT(v)                                                            \
@@ -98,9 +101,9 @@ using namespace std;
 #define DEBUG_EQ(x, y)                                                         \
   if ((x) != (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should be equal to ");                                   \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
@@ -114,45 +117,45 @@ using namespace std;
 #define DEBUG_LE(x, y)                                                         \
   if ((x) > (y)) {                                                             \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should NOT be greater than ");                           \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
 #define DEBUG_LT(x, y)                                                         \
   if ((x) >= (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should be less than ");                                  \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
 #define DEBUG_GE(x, y, ...)                                                    \
   if ((x) < (y)) {                                                             \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should NOT be less than ");                              \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
 #define DEBUG_GT(x, y, ...)                                                    \
   if ((x) <= (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should be greater than ");                               \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
 #define DEBUG_NE(x, y, ...)                                                    \
   if ((x) == (y)) {                                                            \
     DEBUG_BEGIN;                                                               \
-    debugv(x, #x);                                                             \
+    _DEBUGV(x);                                                                \
     fprintf(stderr, " should NOT be equal to ");                               \
-    debugv(y, #y);                                                             \
+    _DEBUGV(y);                                                                \
     DEBUG_END;                                                                 \
   }
 
