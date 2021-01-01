@@ -2,7 +2,9 @@
 
 #include "math/mod/mod_int_macros.h"
 
+#ifdef MOD_INT_INV
 #include "math/gcd/ext_gcd.h"
+#endif
 
 using namespace std;
 
@@ -36,6 +38,18 @@ struct ModInt {
     _v = fix(v);
   }
 
+#ifdef MOD_INT_ASSIGN
+  inline void operator=(const ModInt& o) {
+    _v = o._v;
+  }
+#endif
+
+#ifdef MOD_INT_ADD
+  inline ModInt operator+(const ModInt& o) const {
+    return ModInt(_v + o._v);
+  }
+#endif
+
 #ifdef MOD_INT_ADD_INLINE
   inline void operator+=(const ModInt& o) {
     _v += o._v;
@@ -63,6 +77,12 @@ struct ModInt {
   }
 #endif
 
+#ifdef MOD_INT_DIV_INLINE
+  inline void operator/=(const ModInt& o) {
+    _v = fix(static_cast<V_SQR>(_v) * o.inv()._v);
+  }
+#endif
+
 #ifdef MOD_INT_INIT_MUL
   inline void initMul(const ModInt& x, const ModInt& y) {
     _v = fix(static_cast<V_SQR>(x._v) * y._v);
@@ -82,9 +102,9 @@ struct ModInt {
   inline ModInt inv() const {
     V x0, x1;
 #ifdef LOCAL
-    DEBUG_EQ(extGcd(_v, MOD, x0, x1), 1);
+    DEBUG_EQ(extGcd<V>(_v, MOD, x0, x1), 1);
 #else
-    extGcd(_v, MOD, x0, x1);
+    extGcd<V>(_v, MOD, x0, x1);
 #endif
     return ModInt(x0);
   }
@@ -118,7 +138,22 @@ struct ModInt {
   }
 #endif
 
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const ModInt& v) {
+    o << v._v;
+    return o;
+  }
+#endif
+
   int _v;
 };
 
 } // namespace math
+
+#ifdef LOCAL
+template<typename V, typename V_SQR, V MOD>
+inline string totype(const math::ModInt<V, V_SQR, MOD>& v) {
+  return "ModInt<" + totype(V(0)) + "," + totype(V_SQR(0)) + "," +
+         tostring(MOD) + ">";
+}
+#endif
