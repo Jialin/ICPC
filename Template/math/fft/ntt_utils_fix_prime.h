@@ -13,6 +13,7 @@ namespace math {
 // Example setups:
 // |  mod    |root|  format   |
 // | 7340033 | 5  | (7<<20)+1 |
+// |924844033|3597|(441<<21)+1|
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
 template<typename V, typename V_SQR, V PRIME, V ROOT>
@@ -42,11 +43,17 @@ struct NTTUtilsFixPrime {
   }
 
 #ifdef NTT_UTILS_FIX_PRIME_MUL_INLINE
-  inline void mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys) {
-    int pow2 = nextPow2_32(max(static_cast<int>(xs.size() + ys.size()) - 1, 1));
-    _expand(pow2, xs);
+  inline void
+  mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic = false) {
+    if (xs.empty() || ys.empty()) {
+      xs.clear();
+      return;
+    }
+    int pow2 = nextPow2_32(
+        cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
+    _expand(xs, pow2);
     ntt(xs, false, pow2);
-    _expand(pow2, ys);
+    _expand(ys, pow2);
     ntt(ys, false, pow2);
     for (int i = 0; i < pow2; ++i) {
       xs[i] *= ys[i];
@@ -60,10 +67,58 @@ struct NTTUtilsFixPrime {
   }
 #endif
 
+#ifdef NTT_UTILS_FIX_PRIME_ONLINE
+  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
+  //
+  // f(i), 0<=i<computedBound are precomputed
+  inline void online(
+      vector<_ModInt>& fs,
+      const vector<_ModInt>& gs,
+      int computedBound,
+      int toComputeBound,
+      const function<void(_ModInt& f, int idx)>& transform) {
+    int pow2 = math::nextPow2_32(toComputeBound);
+    _expand(fs, pow2);
+    _online(fs, gs, computedBound, 0, pow2, transform);
+  }
+
+  inline void _online(
+      vector<_ModInt>& fs,
+      const vector<_ModInt>& gs,
+      int computedBound,
+      int lower,
+      int upper,
+      const function<void(_ModInt& f, int idx)>& transform) {
+    if (lower + 1 == upper) {
+      if (lower >= computedBound) {
+        transform(fs[lower], lower);
+      }
+      return;
+    }
+    int medium = (lower + upper) >> 1;
+    _online(fs, gs, computedBound, lower, medium, transform);
+    size_t pow2 = upper - lower;
+    vector<_ModInt> delta(pow2);
+    for (int i = lower; i < medium; ++i) {
+      delta[i - lower] = fs[i];
+    }
+    vector<_ModInt> tmpGs(pow2);
+    for (int i = min(pow2, gs.size()) - 1; i >= 0; --i) {
+      tmpGs[i] = gs[i];
+    }
+    mulInline(delta, tmpGs, true);
+    for (size_t i = medium; i < upper; ++i) {
+      fs[i] += delta[i - lower];
+    }
+    _online(fs, gs, computedBound, medium, upper, transform);
+  }
+
+#endif
+
   inline void ntt(vector<_ModInt>& vs, bool invert, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     _initCapacity(pow2);
-    _expand(pow2, vs);
+    _expand(vs, pow2);
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     vector<V> _vs(pow2);
     if (invert) {
@@ -117,7 +172,7 @@ struct NTTUtilsFixPrime {
     }
   }
 
-  inline void _expand(int pow2, vector<_ModInt>& vs) {
+  inline void _expand(vector<_ModInt>& vs, int pow2) {
     int size = vs.size();
     vs.resize(pow2);
     for (size_t i = size; i < pow2; ++i) {
