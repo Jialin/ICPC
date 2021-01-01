@@ -27,6 +27,25 @@ struct NTTUtilsFixPrime {
   inline void init(int capacity = -1) {
     _root = _ModInt(ROOT);
     _rootPow = 1 << __builtin_ctz(PRIME - 1);
+#ifdef LOCAL
+    if (ROOT < 0 || _ModInt(ROOT).exp(_rootPow)._v != 1 ||
+        _ModInt(ROOT).exp(_rootPow >> 1)._v == 1) {
+      DEBUGF(
+          "Invalid ROOT(%d). PRIME %d = (%d << %d) + 1. Computing the right "
+          "one ...\n",
+          ROOT,
+          PRIME,
+          (PRIME - 1) / _rootPow,
+          __builtin_ctz(PRIME - 1));
+      for (V root = 2;; ++root) {
+        if (_ModInt(root).exp(_rootPow)._v == 1 &&
+            _ModInt(root).exp(_rootPow >> 1)._v != 1) {
+          DEBUGF("!!! Set ROOT as %d !!!\n", root);
+          assert(false);
+        }
+      }
+    }
+#endif
     if (capacity > 0) {
       capacity = nextPow2_32(capacity);
     }
