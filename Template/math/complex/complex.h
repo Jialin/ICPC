@@ -16,6 +16,12 @@ struct Complex {
   }
 #endif
 
+#ifdef COMPLEX_ADD
+  inline Complex<T> operator+(const Complex<T>& o) const {
+    return Complex<T>(real + o.real, imag + o.imag);
+  }
+#endif
+
 #ifdef COMPLEX_ADD_INLINE
   inline void operator+=(const Complex<T>& o) {
     real += o.real;
@@ -25,17 +31,14 @@ struct Complex {
 
 #ifdef COMPLEX_SUB
   inline Complex<T> operator-(const Complex<T>& o) const {
-    Complex<T> res;
-    res.initSub(*this, o);
-    return res;
+    return Complex<T>(real - o.real, imag - o.imag);
   }
 #endif
 
 #ifdef COMPLEX_MUL
   inline Complex<T> operator*(const Complex<T>& o) const {
-    Complex<T> res;
-    res.initMul(*this, o);
-    return res;
+    return Complex<T>(
+        real * o.real - imag * o.imag, real * o.imag + o.real * imag);
   }
 #endif
 
