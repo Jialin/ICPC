@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/fft/ntt_utils_fix_prime_macros.h"
+#include "math/fft/ntt_utils_fix_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/mod/mod_int.h"
@@ -17,10 +17,10 @@ namespace math {
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
 template<typename V, typename V_SQR, V PRIME, V ROOT>
-struct NTTUtilsFixPrime {
+struct NTTUtilsFix {
   using _ModInt = ModInt<V, V_SQR, PRIME>;
 
-  inline NTTUtilsFixPrime(int capacity = -1) {
+  inline NTTUtilsFix(int capacity = -1) {
     init(capacity);
   }
 
@@ -61,7 +61,7 @@ struct NTTUtilsFixPrime {
     _initCapacity(capacity);
   }
 
-#ifdef NTT_UTILS_FIX_PRIME_MUL_INLINE
+#ifdef NTT_UTILS_FIX_MUL_INLINE
   inline void
   mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic = false) {
     if (xs.empty() || ys.empty()) {
@@ -86,7 +86,7 @@ struct NTTUtilsFixPrime {
   }
 #endif
 
-#ifdef NTT_UTILS_FIX_PRIME_ONLINE
+#ifdef NTT_UTILS_FIX_ONLINE
   // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
   //
   // f(i), 0<=i<computedBound are precomputed

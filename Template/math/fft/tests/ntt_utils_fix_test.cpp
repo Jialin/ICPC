@@ -1,15 +1,15 @@
 #include "gtest/gtest.h"
 
-#define NTT_UTILS_FIX_PRIME_ALL
+#define NTT_UTILS_FIX_ALL
 #define MOD_INT_DIV_INLINE
-#include "math/fft/ntt_utils_fix_prime_macros.h"
+#include "math/fft/ntt_utils_fix_macros.h"
 
-#include "math/fft/ntt_utils_fix_prime.h"
+#include "math/fft/ntt_utils_fix.h"
 
 namespace math {
 
-TEST(NTTUtilsFixPrimeTest, bigint) {
-  NTTUtilsFixPrime<int, int64_t, 7340033, 5> ntt;
+TEST(NTTUtilsFixTest, bigint) {
+  NTTUtilsFix<int, int64_t, 7340033, 5> ntt;
   vector<ModInt<int, int64_t, 7340033>> x = {1, 2}, y = {3, 4};
   ntt.mulInline(x, y);
   ASSERT_EQ(3, x.size());
@@ -30,10 +30,10 @@ TEST(NTTUtilsFixPrimeTest, bigint) {
   EXPECT_EQ(4629639, x[6]._v);
 }
 
-TEST(NTTUtilsFixPrimeTest, online) {
+TEST(NTTUtilsFixTest, online) {
   // https://csacademy.com/contest/archive/task/colored-forests/statement/
   static const int MOD = 924844033;
-  NTTUtilsFixPrime<int, int64_t, MOD, 3597> ntt;
+  NTTUtilsFix<int, int64_t, MOD, 3597> ntt;
   vector<ModInt<int, int64_t, MOD>> fs(1, 1);
   ntt.online(
       fs,

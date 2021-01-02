@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/fft/ntt_utils_prime_macros.h"
+#include "math/fft/ntt_utils_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/mod/add.h"
@@ -19,11 +19,12 @@ namespace math {
 // Example setups:
 // |prime mod|root|  format   |
 // | 7340033 | 5  | (7<<20)+1 |
+// |924844033|3597|(441<<21)+1|
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
 template<typename V = int, typename V_SQR = int64_t>
-struct NTTUtilsPrime {
-  inline NTTUtilsPrime(V primeMod, V root, int capacity = -1) {
+struct NTTUtils {
+  inline NTTUtils(V primeMod, V root, int capacity = -1) {
     init(primeMod, root, capacity);
   }
 
@@ -48,7 +49,7 @@ struct NTTUtilsPrime {
     _vs.reserve(capacity);
   }
 
-#ifdef NTT_UTILS_PRIME_MUL_MODIFY
+#ifdef NTT_UTILS_MUL_MODIFY
   inline const vector<V>& mulModify(vector<V>& x, vector<V>& y) {
     int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
     _fix(x);
