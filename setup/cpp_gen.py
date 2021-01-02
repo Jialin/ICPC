@@ -1,4 +1,3 @@
-import collections
 import os
 import re
 import subprocess
@@ -33,6 +32,7 @@ DEBUG_LINES = [
     "#include <boost/stacktrace.hpp>",
 ]
 USING_NAMESPACE_STD = "using namespace std;"
+GEN_PATH = "gen"
 
 
 def generate_includes():
@@ -82,21 +82,33 @@ def merge_adjacent_same_namespaces(lines):
             named_lines.append((current_namespace, [line]))
 
     res = []
-    for namespace, lines in named_lines:
+    for namespace, namespace_lines in named_lines:
         if namespace:
             res.append("namespace %s {" % namespace)
-            res.extend(lines)
+            res.extend(namespace_lines)
             res.append("} // %s" % namespace)
         else:
-            res.extend(lines)
+            res.extend(namespace_lines)
     return res
 
 
-def gen_file(prefix, info, additional_contents=None, additional_args=None):
+def write_file(output_file_name, lines):
+    file = open(output_file_name, "w")
+    file.write("\n".join(lines))
+    file.close()
+
+
+def gen_file(
+    input_file_name,
+    output_file_name,
+    info,
+    additional_contents=None,
+    additional_args=None,
+):
     proc = subprocess.Popen(
         [
             "g++",
-            file_name,
+            input_file_name,
             "-O2",
             "-std=c++14",
             "-I",
@@ -112,46 +124,54 @@ def gen_file(prefix, info, additional_contents=None, additional_args=None):
     proc.wait()
     lines = generate_clean_lines(proc.stdout.read().split(b"\n"))
     lines = merge_adjacent_same_namespaces(lines)
-    gen_file_name = prefix + file_name
-    file = open(gen_file_name, "w")
-    file.write(
-        "\n".join(
-            generate_includes()
-            + (additional_contents if additional_contents else [])
-            + lines
-        )
+    write_file(
+        output_file_name,
+        generate_includes()
+        + (additional_contents if additional_contents else [])
+        + lines,
     )
-    file.close()
-    subprocess.Popen(["clang-format", "-i", gen_file_name]).wait()
-    with open(gen_file_name, "r") as input_file:
+    subprocess.Popen(["clang-format", "-i", output_file_name]).wait()
+    with open(output_file_name, "r") as input_file:
         subprocess.Popen(["pbcopy"], stdin=input_file).wait()
     print(
-        """\033[92m
-{separator}
-! {gen_file_name} {info} !
-{separator}
-\033[0m""".format(
-            gen_file_name=gen_file_name,
-            separator="!" * (len(gen_file_name) + len(info) + 5),
+        "\033[92m!!! {output_file_name} {info}\033[0m".format(
+            output_file_name=output_file_name,
             info=info,
         )
     )
 
 
+def gen_no_stl_include_file(input_file_name, output_file_name):
+    STL_INCLUDE_PATTERN = re.compile(r"^#include <.+>$")
+    with open(input_file_name, "r") as input_file:
+        no_include_lines = [
+            line for line in input_file if not STL_INCLUDE_PATTERN.match(line)
+        ]
+        write_file(os.path.join(GEN_PATH, output_file_name), no_include_lines)
+
+
 if len(sys.argv) < 2:
     print("Please provide C++ file as the first argument.")
     sys.exit(1)
-file_name = sys.argv[1]
-if not file_name.endswith(".cpp"):
+input_file_name = sys.argv[1]
+if not input_file_name.endswith(".cpp"):
     print("Only support cpp file.")
     sys.exit(1)
-if not os.path.exists(file_name):
-    print("{} not found.".format(file_name))
+if not os.path.exists(input_file_name):
+    print("{} not found.".format(input_file_name))
     sys.exit(1)
+if not os.path.exists(GEN_PATH):
+    os.makedirs(GEN_PATH)
+gen_no_stl_include_file(input_file_name, "gen-" + input_file_name)
 gen_file(
-    prefix="gendebug-",
+    input_file_name=os.path.join(GEN_PATH, "gen-" + input_file_name),
+    output_file_name=os.path.join(GEN_PATH, "gendebug-" + input_file_name),
     info="is generated",
     additional_contents=DEBUG_LINES,
     additional_args=["-DLOCAL"],
 )
-gen_file(prefix="gencpp-", info="is generated and copied to clipboard")
+gen_file(
+    input_file_name=os.path.join(GEN_PATH, "gen-" + input_file_name),
+    output_file_name=os.path.join(GEN_PATH, "gencpp-" + input_file_name),
+    info="is generated and copied to clipboard",
+)

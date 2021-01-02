@@ -4,6 +4,7 @@ output*
 answer*
 *.o
 *.pyc
+gen-*
 gencpp-*
 gendebug-*
 
