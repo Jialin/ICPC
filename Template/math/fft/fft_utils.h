@@ -11,6 +11,10 @@
 #include "math/bigint/bigint.h"
 #endif
 
+#ifdef FFT_UTILS_ONLINE_MOD
+#include "math/mod/mod_int.h"
+#endif
+
 using namespace std;
 
 namespace math {
@@ -186,7 +190,38 @@ struct FFTUtils {
   // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
   //
   // f(i), 0<=i<computedBound are precomputed
+  template<typename V, typename V_SQR, V MOD>
   inline void onlineMod(
+      vector<ModInt<V, V_SQR, MOD>>& fs,
+      const vector<ModInt<V, V_SQR, MOD>>& gs,
+      int mod,
+      int computedBound,
+      int toComputeBound,
+      const function<void(int& f, int idx)>& transform) {
+    vector<int> fsI(toComputeBound);
+    for (int i = min(toComputeBound, static_cast<int>(fs.size())) - 1; i >= 0;
+         --i) {
+      fsI[i] = fs[i]._v;
+    }
+    vector<int> gsI(gs.size());
+    for (size_t i = 0; i < gs.size(); ++i) {
+      gsI[i] = gs[i]._v;
+    }
+    _onlineModInt(fsI, gsI, mod, computedBound, 0, toComputeBound, transform);
+    if (fs.size() < toComputeBound) {
+      fs.resize(toComputeBound);
+    }
+    for (int i = computedBound; i < toComputeBound; ++i) {
+      fs[i] = fsI[i];
+    }
+  }
+#endif
+
+#ifdef FFT_UTILS_ONLINE_MOD_INT
+  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
+  //
+  // f(i), 0<=i<computedBound are precomputed
+  inline void onlineModInt(
       vector<int>& fs,
       const vector<int>& gs,
       int mod,
@@ -194,10 +229,10 @@ struct FFTUtils {
       int toComputeBound,
       const function<void(int& f, int idx)>& transform) {
     _expand(fs, toComputeBound);
-    _onlineMod(fs, gs, mod, computedBound, 0, toComputeBound, transform);
+    _onlineModInt(fs, gs, mod, computedBound, 0, toComputeBound, transform);
   }
 
-  inline void _onlineMod(
+  inline void _onlineModInt(
       vector<int>& fs,
       const vector<int>& gs,
       int mod,
@@ -212,7 +247,7 @@ struct FFTUtils {
       return;
     }
     int medium = (lower + upper) >> 1;
-    _onlineMod(fs, gs, mod, computedBound, lower, medium, transform);
+    _onlineModInt(fs, gs, mod, computedBound, lower, medium, transform);
     size_t pow2 = nextPow2_32(upper - lower);
     vector<int> delta(pow2);
     for (int i = lower; i < medium; ++i) {
@@ -229,7 +264,7 @@ struct FFTUtils {
         fs[i] -= mod;
       }
     }
-    _onlineMod(fs, gs, mod, computedBound, medium, upper, transform);
+    _onlineModInt(fs, gs, mod, computedBound, medium, upper, transform);
   }
 #endif
 

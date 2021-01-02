@@ -21,6 +21,7 @@ cc_library(
         "//math/bit:next_pow2_32",
         "//math/complex",
         "//math/constants:pi",
+        "//math/mod:mod_int",
     ],
 )
 
