@@ -124,7 +124,7 @@ function CPP-gen-run {
   CPP-gen $@
   if [ $? = 0 ]
   then
-    CPP-run gendebug-$1 ${@:2}
+    CPP-run gen/gendebug-$1 ${@:2}
   fi
 }
 
@@ -136,7 +136,7 @@ function CPP-gen-run03 {
   CPP-gen $@
   if [ $? = 0 ]
   then
-    CPP-run03 gendebug-$1 ${@:2}
+    CPP-run03 gen/gendebug-$1 ${@:2}
   fi
 }
 
@@ -148,7 +148,7 @@ function CPP-gen-run11 {
   CPP-gen $@
   if [ $? = 0 ]
   then
-    CPP-run11 gendebug-$1 ${@:2}
+    CPP-run11 gen/gendebug-$1 ${@:2}
   fi
 }
 
