@@ -5,7 +5,6 @@
 #ifdef LOCAL
 #include "debug/debug_bigint.h"
 #include "debug/debug_matrix.h"
-#include "debug/debug_mod_int.h"
 
 using namespace std;
 
@@ -27,5 +26,4 @@ inline string tostring(const vector<T>& vs) {
   ss << "]";
   return ss.str();
 }
-
 #endif
