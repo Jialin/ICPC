@@ -20,7 +20,12 @@ inline string tostring(const vector<T>& vs) {
   if (!vs.empty()) {
     ss << tostring(vs.front());
     for (size_t i = 1; i < vs.size(); ++i) {
-      ss << "," << tostring(vs[i]);
+      if (i < 100) {
+        ss << "," << tostring(vs[i]);
+      } else {
+        ss << ",..." << vs.size() - i << " more";
+        break;
+      }
     }
   }
   ss << "]";
