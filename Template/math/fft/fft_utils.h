@@ -73,6 +73,52 @@ struct FFTUtils {
   }
 #endif
 
+#ifdef FFT_UTILS_MUL_INLINE_MOD
+  const Complex<T> RIGHT_HALF = Complex<T>(0.5, 0);
+  const Complex<T> DOWN_HALF = Complex<T>(0, -0.5);
+  const Complex<T> UP = Complex<T>(0, 1);
+
+  inline void mulInlineMod(
+      vector<int>& xs, const vector<int>& ys, int mod, bool cyclic = false) {
+    if (xs.empty() || ys.empty()) {
+      xs.clear();
+      return;
+    }
+    int pow2 = nextPow2_32(
+        cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
+    vector<Complex<T>> as(pow2);
+    for (size_t i = 0; i < xs.size(); ++i) {
+      as[i].init(xs[i] >> 15, xs[i] & 32767);
+    }
+    fft(as, false, pow2);
+    vector<Complex<T>> bs(pow2);
+    for (size_t i = 0; i < ys.size(); ++i) {
+      bs[i].init(ys[i] >> 15, ys[i] & 32767);
+    }
+    fft(bs, false, pow2);
+    vector<Complex<T>> cs(pow2), ds(pow2);
+    for (int i = 0; i < pow2; ++i) {
+      int j = (pow2 - 1) & (pow2 - i);
+      Complex<T> v1 = (as[i] + as[j].conj()) * RIGHT_HALF;
+      Complex<T> v2 = (as[i] - as[j].conj()) * DOWN_HALF;
+      Complex<T> v3 = (bs[i] + bs[j].conj()) * RIGHT_HALF;
+      Complex<T> v4 = (bs[i] - bs[j].conj()) * DOWN_HALF;
+      cs[j] = v1 * v3 + v2 * v4 * UP;
+      ds[j] = v1 * v4 + v2 * v3;
+    }
+    fft(cs, false, pow2);
+    fft(ds, false, pow2);
+    _expand(xs, pow2);
+    for (int i = 0; i < pow2; ++i) {
+      int64_t v1 = static_cast<int64_t>(cs[i].real / pow2 + 0.5) % mod;
+      int64_t v2 = static_cast<int64_t>(ds[i].real / pow2 + 0.5) % mod;
+      int64_t v3 = static_cast<int64_t>(cs[i].imag / pow2 + 0.5) % mod;
+      xs[i] = ((((v1 << 15) + v2) << 15) + v3) % mod;
+    }
+    _shrink(xs);
+  }
+#endif
+
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
   inline void
   mul(vector<Complex<T>>& x,
@@ -134,7 +180,57 @@ struct FFTUtils {
     }
     fft(x, true, pow2);
   }
+#endif
 
+#ifdef FFT_UTILS_ONLINE_MOD
+  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
+  //
+  // f(i), 0<=i<computedBound are precomputed
+  inline void onlineMod(
+      vector<int>& fs,
+      const vector<int>& gs,
+      int mod,
+      int computedBound,
+      int toComputeBound,
+      const function<void(int& f, int idx)>& transform) {
+    _expand(fs, toComputeBound);
+    _onlineMod(fs, gs, mod, computedBound, 0, toComputeBound, transform);
+  }
+
+  inline void _onlineMod(
+      vector<int>& fs,
+      const vector<int>& gs,
+      int mod,
+      int computedBound,
+      int lower,
+      int upper,
+      const function<void(int& f, int idx)>& transform) {
+    if (lower + 1 == upper) {
+      if (lower >= computedBound) {
+        transform(fs[lower], lower);
+      }
+      return;
+    }
+    int medium = (lower + upper) >> 1;
+    _onlineMod(fs, gs, mod, computedBound, lower, medium, transform);
+    size_t pow2 = nextPow2_32(upper - lower);
+    vector<int> delta(pow2);
+    for (int i = lower; i < medium; ++i) {
+      delta[i - lower] = fs[i];
+    }
+    vector<int> tmpGs(pow2);
+    for (int i = min(pow2, gs.size()) - 1; i >= 0; --i) {
+      tmpGs[i] = gs[i];
+    }
+    mulInlineMod(delta, tmpGs, mod, true);
+    for (int i = medium; i < upper; ++i) {
+      fs[i] += delta[i - lower];
+      if (fs[i] >= mod) {
+        fs[i] -= mod;
+      }
+    }
+    _onlineMod(fs, gs, mod, computedBound, medium, upper, transform);
+  }
 #endif
 
 #ifdef FFT_UTILS_FFT_COMPLEX_MATRIX
@@ -162,7 +258,7 @@ struct FFTUtils {
   inline void fft(vector<Complex<T>>& cs, bool invert, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
     _initCapacity(pow2);
-    _expand(pow2, cs);
+    _expand(cs, pow2);
     if (invert) {
       reverse(cs.begin() + 1, cs.begin() + pow2);
       for (int i = 0; i < pow2; ++i) {
@@ -179,21 +275,35 @@ struct FFTUtils {
     for (int l = 1; l < pow2; l <<= 1) {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
         for (int j = 0, k = l; j < l; ++j, ++k) {
-          _c.initMul(cs[i + j + l], _roots[k]);
-          cs[i + j + l].initSub(cs[i + j], _c);
-          cs[i + j] += _c;
+          Complex<T> c = cs[i + j + l] * _roots[k];
+          cs[i + j + l] = cs[i + j] - c;
+          cs[i + j] += c;
         }
       }
     }
   }
 
-  inline void _expand(int pow2, vector<Complex<T>>& cs) {
+#ifdef _FFT_UTILS_EXPAND_INT_VECTOR
+  inline void _expand(vector<int>& xs, int pow2) {
+    for (size_t i = xs.size(); i < pow2; ++i) {
+      xs.push_back(0);
+    }
+  }
+#endif
+
+  inline void _expand(vector<Complex<T>>& cs, int pow2) {
     for (size_t i = cs.size(); i < pow2; ++i) {
       cs.emplace_back(0, 0);
     }
   }
 
-#ifdef _FFT_UTILS_SHRINK
+#ifdef _FFT_UTILS_SHRINK_INT_VECTOR
+  inline void _shrink(vector<int>& cs) {
+    for (; cs.size() > 1 && !cs.back(); cs.pop_back()) {}
+  }
+#endif
+
+#ifdef _FFT_UTILS_SHRINK_COMPLEX_VECTOR
   inline void _shrink(vector<Complex<T>>& cs) {
     for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
   }
@@ -210,10 +320,10 @@ struct FFTUtils {
     }
     _roots.resize(pow2);
     for (int i = oldPow2; i < pow2; i <<= 1) {
-      T angle = PI / i, baseAngle = angle * 2;
-      for (int j = i; j < i << 1; j += 2, angle += baseAngle) {
+      T baseAngle = PI / i;
+      for (int j = i, k = 1; j < i << 1; j += 2, k += 2) {
         _roots[j] = _roots[j >> 1];
-        _roots[j | 1].initPolar(1, angle);
+        _roots[j | 1].initPolar(1, baseAngle * k);
       }
     }
   }
