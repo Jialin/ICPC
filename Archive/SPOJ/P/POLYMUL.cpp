@@ -21,22 +21,26 @@
 
 using namespace std;
 
-#define FFT_UTILS_MUL_COMPLEX_VECTOR
+#define POLY_INT_ACCESS
+#define POLY_INT_MUL_INLINE
+#define POLY_INT_RESERVE
+#define POLY_INT_RESIZE
+#define POLY_INT_SIZE
+#include "math/poly/poly_int_macros.h"
 
 #include "debug/debug.h"
 #include "io/read_int.h"
 #include "io/write_int.h"
-#include "math/fft/fft_utils.h"
+#include "math/poly/poly_int.h"
 
-const int MAXN = 1 << 15;
+const int MAXPOW2 = 1 << 15;
 
-vector<math::Complex<double>> a, b, c;
-math::FFTUtils<double> fft;
+math::PolyInt<int64_t> a, b;
+math::FFTUtils<double> fft(MAXPOW2);
 
 int main() {
-  a.reserve(MAXN);
-  b.reserve(MAXN);
-  c.reserve(MAXN);
+  a.reserve(MAXPOW2);
+  b.reserve(MAXPOW2);
   int taskNumber;
   io::readInt(taskNumber);
   for (int taskIdx = 0; taskIdx < taskNumber; ++taskIdx) {
@@ -44,23 +48,19 @@ int main() {
     io::readInt(n);
     a.resize(n + 1);
     for (int i = 0; i <= n; ++i) {
-      int x;
-      io::readInt(x);
-      a[i].init(x, 0);
+      io::readInt(a[i]);
     }
     b.resize(n + 1);
     for (int i = 0; i <= n; ++i) {
-      int x;
-      io::readInt(x);
-      b[i].init(x, 0);
+      io::readInt(b[i]);
     }
-    fft.mul(a, b, c);
+    a.mulInline(b, false, fft);
     for (int i = 0; i <= n << 1; ++i) {
       if (i > 0) {
         io::writeChar(' ');
       }
-      if (i < static_cast<int>(c.size())) {
-        io::writeInt(static_cast<int64_t>(c[i].real + 0.5));
+      if (i < a.size()) {
+        io::writeInt(a[i]);
       } else {
         io::writeChar('0');
       }
