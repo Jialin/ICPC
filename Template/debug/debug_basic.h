@@ -198,6 +198,10 @@ inline string totype(const char* v) {
   return "const char*";
 }
 
+inline string totype(char* v) {
+  return "char*";
+}
+
 inline string totype(const string& v) {
   return "string";
 }
