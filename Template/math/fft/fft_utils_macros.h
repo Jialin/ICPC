@@ -4,10 +4,16 @@
 #define FFT_UTILS_MUL_COMPLEX_VECTOR
 #define FFT_UTILS_MUL_INLINE_COMPLEX_MATRIX
 #define FFT_UTILS_MUL_INLINE_COMPLEX_VECTOR
+#define FFT_UTILS_MUL_INLINE_INT
 #define FFT_UTILS_MUL_INLINE_MOD
 #define FFT_UTILS_MUL_INT
 #define FFT_UTILS_ONLINE_MOD
 #define FFT_UTILS_ONLINE_MOD_INT
+#endif
+
+#ifdef FFT_UTILS_MUL_INLINE_INT
+#define FFT_UTILS_MUL_INT
+#define _FFT_UTILS_SHRINK_INT_VECTOR
 #endif
 
 #ifdef FFT_UTILS_ONLINE_MOD
@@ -28,7 +34,6 @@
 #define COMPLEX_INIT_CONJ
 #define COMPLEX_MUL
 #define COMPLEX_SUB
-#define _FFT_UTILS_COMPLEX_2
 #endif
 
 #ifdef FFT_UTILS_MUL_COMPLEX_VECTOR
@@ -60,12 +65,9 @@
 #endif
 
 #define COMPLEX_ADD_INLINE
-#define COMPLEX_ASSIGN
 #define COMPLEX_DIV_INLINE_DOUBLE
 #define COMPLEX_INIT
-#define COMPLEX_INIT_MUL
 #define COMPLEX_INIT_POLAR
-#define COMPLEX_INIT_SUB
 
 #include "math/bigint/bigint_macros.h"
 #include "math/complex/complex_macros.h"

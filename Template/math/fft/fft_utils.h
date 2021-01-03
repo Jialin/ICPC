@@ -30,12 +30,11 @@ struct FFTUtils {
     _revs.resize(2);
     _revs[0] = 0;
     _revs[1] = 1;
-    _roots.reserve(capacity | 1);
+    _roots.reserve(capacity);
     _roots.resize(2);
     _roots[0].init(0, 0);
     _roots[1].init(1, 0);
     _initCapacity(capacity);
-    _cs.reserve(capacity);
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
     _cs2.reserve(capacity);
     _cs3.reserve(capacity);
@@ -48,32 +47,47 @@ struct FFTUtils {
   mul(const BigInt<GROUP, BASE_SQR>& x,
       const BigInt<GROUP, BASE_SQR>& y,
       BigInt<GROUP, BASE_SQR>& res) {
-    res = mul(x._vs, y._vs);
+    res = mulInt(x._vs, y._vs);
   }
 #endif
 
 #ifdef FFT_UTILS_MUL_INT
-  inline const vector<Complex<T>>&
-  mul(const vector<int>& x, const vector<int>& y) {
-    int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
-    _cs.resize(pow2);
-    for (size_t i = 0; i < pow2; ++i) {
-      _cs[i].init(i < x.size() ? x[i] : 0, i < y.size() ? y[i] : 0);
+  const Complex<T> DOWN_QUART = Complex<T>(0, -0.25);
+
+  template<typename V>
+  inline vector<Complex<T>> mulInt(const vector<V>& xs, const vector<V>& ys) {
+    if (xs.empty() || ys.empty()) {
+      return vector<Complex<T>>(1);
     }
-    fft(_cs, false, pow2);
-    _c.init(0, -0.25);
+    int pow2 = nextPow2_32(xs.size() + ys.size() - 1);
+    vector<Complex<T>> cs(pow2);
+    for (size_t i = 0; i < pow2; ++i) {
+      cs[i].init(i < xs.size() ? xs[i] : 0, i < ys.size() ? ys[i] : 0);
+    }
+    fft(cs, false, pow2);
     for (int i = 0; i <= (pow2 >> 1); ++i) {
       int j = (pow2 - i) & (pow2 - 1);
-      _c2.initMul(_cs[i] * _cs[i] - (_cs[j] * _cs[j]).conj(), _c);
-      _cs[i].initConj(_c2);
-      _cs[j] = _c2;
+      cs[j] = (cs[i] * cs[i] - (cs[j] * cs[j]).conj()) * DOWN_QUART;
+      cs[i].initConj(cs[j]);
     }
-    fft(_cs, false, pow2);
-    for (auto& c : _cs) {
+    fft(cs, false, pow2);
+    for (auto& c : cs) {
       c /= pow2;
     }
-    _shrink(_cs);
-    return _cs;
+    _shrink(cs);
+    return cs;
+  }
+#endif
+
+#ifdef FFT_UTILS_MUL_INLINE_INT
+  template<typename V>
+  inline void mulInlineInt(vector<V>& xs, const vector<V>& ys) {
+    const auto& cs = mulInt(xs, ys);
+    xs.resize(cs.size());
+    for (size_t i = 0; i < cs.size(); ++i) {
+      xs[i] = cs[i].real + 0.5;
+    }
+    _shrinkInt(xs);
   }
 #endif
 
@@ -119,7 +133,7 @@ struct FFTUtils {
       int64_t v3 = static_cast<int64_t>(cs[i].imag / pow2 + 0.5) % mod;
       xs[i] = ((((v1 << 15) + v2) << 15) + v3) % mod;
     }
-    _shrink(xs);
+    _shrinkInt(xs);
   }
 #endif
 
@@ -333,7 +347,8 @@ struct FFTUtils {
   }
 
 #ifdef _FFT_UTILS_SHRINK_INT_VECTOR
-  inline void _shrink(vector<int>& cs) {
+  template<typename V>
+  inline void _shrinkInt(vector<V>& cs) {
     for (; cs.size() > 1 && !cs.back(); cs.pop_back()) {}
   }
 #endif
@@ -364,11 +379,7 @@ struct FFTUtils {
   }
 
   vector<int> _revs;
-  vector<Complex<T>> _roots, _cs;
-  Complex<T> _c;
-#ifdef _FFT_UTILS_COMPLEX_2
-  Complex<T> _c2;
-#endif
+  vector<Complex<T>> _roots;
 #ifdef _FFT_UTILS_COMPLEX_VECTOR_3
   vector<Complex<T>> _cs2, _cs3;
 #endif
