@@ -11,7 +11,7 @@ namespace math {
 TEST(NTTUtilsFixTest, bigint) {
   NTTUtilsFix<int, int64_t, 7340033, 5> ntt;
   vector<ModInt<int, int64_t, 7340033>> x = {1, 2}, y = {3, 4};
-  ntt.mulInline(x, y);
+  ntt.mulInlineModify(x, y);
   ASSERT_EQ(3, x.size());
   EXPECT_EQ(3, x[0]._v);
   EXPECT_EQ(10, x[1]._v);
@@ -19,7 +19,7 @@ TEST(NTTUtilsFixTest, bigint) {
 
   x = {31772, 371773, 371721, 81631};
   y = {348484, 28481838, 381872, 59492};
-  ntt.mulInline(x, y);
+  ntt.mulInlineModify(x, y);
   ASSERT_EQ(7, x.size());
   EXPECT_EQ(3263884, x[0]._v);
   EXPECT_EQ(7008180, x[1]._v);

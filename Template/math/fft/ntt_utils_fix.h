@@ -61,11 +61,12 @@ struct NTTUtilsFix {
     _initCapacity(capacity);
   }
 
-#ifdef NTT_UTILS_FIX_MUL_INLINE
-  inline void
-  mulInline(vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic = false) {
+#ifdef NTT_UTILS_FIX_MUL_INLINE_MODIFY
+  inline void mulInlineModify(
+      vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic = false) {
     if (xs.empty() || ys.empty()) {
-      xs.clear();
+      xs.resize(1);
+      xs[0] = 0;
       return;
     }
     int pow2 = nextPow2_32(
@@ -125,7 +126,7 @@ struct NTTUtilsFix {
     for (int i = min(pow2, gs.size()) - 1; i >= 0; --i) {
       tmpGs[i] = gs[i];
     }
-    mulInline(delta, tmpGs, true);
+    mulInlineModify(delta, tmpGs, true);
     for (size_t i = medium; i < upper; ++i) {
       fs[i] += delta[i - lower];
     }
