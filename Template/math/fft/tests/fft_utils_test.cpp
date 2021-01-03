@@ -8,49 +8,6 @@
 
 namespace math {
 
-TEST(FFTUtilsTest, bigint) {
-  FFTUtils<> fft;
-  BigInt<4, int> x, y, res;
-  x = "0";
-  y = "0";
-  fft.mul(x, y, res);
-  ASSERT_EQ(1, res._vs.size());
-  EXPECT_EQ(0, res._vs[0]);
-
-  x = "1";
-  y = "0";
-  fft.mul(x, y, res);
-  ASSERT_EQ(1, res._vs.size());
-  EXPECT_EQ(0, res._vs[0]);
-
-  x = "1833811";
-  y = "0";
-  fft.mul(x, y, res);
-  ASSERT_EQ(1, res._vs.size());
-  EXPECT_EQ(0, res._vs[0]);
-
-  x = "12";
-  y = "77";
-  fft.mul(x, y, res);
-  ASSERT_EQ(1, res._vs.size());
-  EXPECT_EQ(924, res._vs[0]);
-
-  x = "1833811";
-  y = "1847182";
-  fft.mul(x, y, res);
-  ASSERT_EQ(4, res._vs.size());
-  EXPECT_EQ(602, res._vs[0]);
-  EXPECT_EQ(8267, res._vs[1]);
-  EXPECT_EQ(3873, res._vs[2]);
-  EXPECT_EQ(3, res._vs[3]);
-
-  x = "12";
-  y = "77";
-  fft.mul(x, y, res);
-  ASSERT_EQ(1, res._vs.size());
-  EXPECT_EQ(924, res._vs[0]);
-}
-
 TEST(FFTUtilsTest, mulInlineMod) {
   FFTUtils<> fft;
   vector<int> xs = {1, 2}, ys = {3, 4};

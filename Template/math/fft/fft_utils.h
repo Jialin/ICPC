@@ -2,14 +2,9 @@
 
 #include "math/fft/fft_utils_macros.h"
 
-#include "debug/debug.h"
 #include "math/bit/next_pow2_32.h"
 #include "math/complex/complex.h"
 #include "math/constants/pi.h"
-
-#ifdef FFT_UTILS_MUL_BIGINT
-#include "math/bigint/bigint.h"
-#endif
 
 #ifdef FFT_UTILS_ONLINE_MOD
 #include "math/mod/mod_int.h"
@@ -40,16 +35,6 @@ struct FFTUtils {
     _cs3.reserve(capacity);
 #endif
   }
-
-#ifdef FFT_UTILS_MUL_BIGINT
-  template<int GROUP, typename BASE_SQR>
-  inline void
-  mul(const BigInt<GROUP, BASE_SQR>& x,
-      const BigInt<GROUP, BASE_SQR>& y,
-      BigInt<GROUP, BASE_SQR>& res) {
-    res = mulInt(x._vs, y._vs, false);
-  }
-#endif
 
 #ifdef FFT_UTILS_MUL_INT
   const Complex<T> DOWN_QUART = Complex<T>(0, -0.25);

@@ -421,4 +421,47 @@ TEST(BigInt, gcdInline) {
   EXPECT_EQ(1838, x._vs[3]);
 }
 
+TEST(BigInt, fftMulInline) {
+  FFTUtils<> fft;
+  BigInt<4, int> x, y;
+  x = "0";
+  y = "0";
+  x.mulInline(y, fft);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(0, x._vs[0]);
+
+  x = "1";
+  y = "0";
+  x.mulInline(y, fft);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(0, x._vs[0]);
+
+  x = "1833811";
+  y = "0";
+  x.mulInline(y, fft);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(0, x._vs[0]);
+
+  x = "12";
+  y = "77";
+  x.mulInline(y, fft);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(924, x._vs[0]);
+
+  x = "1833811";
+  y = "1847182";
+  x.mulInline(y, fft);
+  ASSERT_EQ(4, x._vs.size());
+  EXPECT_EQ(602, x._vs[0]);
+  EXPECT_EQ(8267, x._vs[1]);
+  EXPECT_EQ(3873, x._vs[2]);
+  EXPECT_EQ(3, x._vs[3]);
+
+  x = "12";
+  y = "77";
+  x.mulInline(y, fft);
+  ASSERT_EQ(1, x._vs.size());
+  EXPECT_EQ(924, x._vs[0]);
+}
+
 } // namespace math

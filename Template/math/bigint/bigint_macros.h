@@ -19,6 +19,7 @@
 #define BIGINT_DIV_INLINE_INT
 #define BIGINT_DIV_MOD_INLINE_INT
 #define BIGINT_EQ_INT
+#define BIGINT_FFT_MUL_INLINE
 #define BIGINT_GCD_INLINE
 #define BIGINT_GE
 #define BIGINT_GE_INT
@@ -44,6 +45,12 @@
 #define BIGINT_OUTPUT_FAST
 #define BIGINT_SUB
 #define BIGINT_SUB_INLINE
+#endif
+
+#ifdef BIGINT_FFT_MUL_INLINE
+#define FFT_UTILS_MUL_INT
+#define BIGINT_ASSIGN_COMPLEX_VECTOR
+#define _BIGINT_FFT_UTILS
 #endif
 
 #ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
@@ -118,3 +125,4 @@
 #endif
 
 #include "math/complex/complex_macros.h"
+#include "math/fft/fft_utils_macros.h"

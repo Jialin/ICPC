@@ -5,10 +5,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "fft_utils_macros",
     hdrs = ["fft_utils_macros.h"],
-    deps = [
-        "//math/bigint:bigint_macros",
-        "//math/complex:complex_macros",
-    ],
+    deps = ["//math/complex:complex_macros"],
 )
 
 cc_library(
@@ -16,8 +13,6 @@ cc_library(
     hdrs = ["fft_utils.h"],
     deps = [
         ":fft_utils_macros",
-        "//debug",
-        "//math/bigint",
         "//math/bit:next_pow2_32",
         "//math/complex",
         "//math/constants:pi",

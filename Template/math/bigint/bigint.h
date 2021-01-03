@@ -19,6 +19,10 @@
 #include "io/write_int.h"
 #endif
 
+#ifdef _BIGINT_FFT_UTILS
+#include "math/fft/fft_utils.h"
+#endif
+
 using namespace std;
 
 namespace math {
@@ -540,6 +544,13 @@ struct BigInt {
       modDivInline(o, divRes);
       swap(*this, o);
     }
+  }
+#endif
+
+#ifdef BIGINT_FFT_MUL_INLINE
+  template<typename T>
+  inline void mulInline(const BigInt<GROUP, BASE_SQR>& o, FFTUtils<T>& fft) {
+    *this = fft.mulInt(_vs, o._vs, false);
   }
 #endif
 

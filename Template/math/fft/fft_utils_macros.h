@@ -1,6 +1,5 @@
 #ifdef FFT_UTILS_ALL
 #define FFT_UTILS_FFT_COMPLEX_MATRIX
-#define FFT_UTILS_MUL_BIGINT
 #define FFT_UTILS_MUL_COMPLEX_VECTOR
 #define FFT_UTILS_MUL_INLINE_COMPLEX_MATRIX
 #define FFT_UTILS_MUL_INLINE_COMPLEX_VECTOR
@@ -22,11 +21,6 @@
 
 #ifdef FFT_UTILS_MUL_INLINE_COMPLEX_MATRIX
 #define FFT_UTILS_FFT_COMPLEX_MATRIX
-#endif
-
-#ifdef FFT_UTILS_MUL_BIGINT
-#define BIGINT_ASSIGN_COMPLEX_VECTOR
-#define FFT_UTILS_MUL_INT
 #endif
 
 #ifdef FFT_UTILS_MUL_INT
@@ -70,5 +64,4 @@
 #define COMPLEX_INIT_POLAR
 #define COMPLEX_INIT_SUB
 
-#include "math/bigint/bigint_macros.h"
 #include "math/complex/complex_macros.h"
