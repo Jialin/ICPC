@@ -13,11 +13,3 @@
 #define COMPLEX_MUL_INLINE
 #define COMPLEX_SUB
 #endif
-
-#ifdef COMPLEX_MUL
-#define COMPLEX_INIT_MUL
-#endif
-
-#ifdef COMPLEX_SUB
-#define COMPLEX_INIT_SUB
-#endif
