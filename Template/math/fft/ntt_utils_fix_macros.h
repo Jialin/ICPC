@@ -5,6 +5,7 @@
 
 #ifdef NTT_UTILS_FIX_ONLINE
 #define NTT_UTILS_FIX_MUL_INLINE_MODIFY
+#define MOD_INT_ADD_INLINE
 #endif
 
 #define MOD_INT_EXP

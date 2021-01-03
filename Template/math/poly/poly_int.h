@@ -28,6 +28,12 @@ struct PolyInt {
   }
 #endif
 
+#ifdef POLY_INT_ASSIGN
+  inline void assign(int size, const V& v) {
+    _vs.assign(size, v);
+  }
+#endif
+
 #ifdef POLY_INT_RESERVE
   inline void reserve(int size) {
     _vs.reserve(size);
@@ -42,8 +48,15 @@ struct PolyInt {
 
 #ifdef POLY_INT_MUL_INLINE
   template<typename T>
-  inline void mulInline(const PolyInt& o, FFTUtils<T>& fft) {
-    fft.mulInlineInt(_vs, o._vs);
+  inline void mulInline(const PolyInt& o, bool cyclic, FFTUtils<T>& fft) {
+    fft.mulInlineInt(_vs, o._vs, cyclic);
+  }
+#endif
+
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const PolyInt& v) {
+    o << tostring(v._vs);
+    return o;
   }
 #endif
 
@@ -51,3 +64,10 @@ struct PolyInt {
 };
 
 } // namespace math
+
+#ifdef LOCAL
+template<typename V>
+inline string totype(const math::PolyInt<V>& v) {
+  return "PolyInt<" + totype(V()) + ">";
+}
+#endif

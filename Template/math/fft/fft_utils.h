@@ -47,7 +47,7 @@ struct FFTUtils {
   mul(const BigInt<GROUP, BASE_SQR>& x,
       const BigInt<GROUP, BASE_SQR>& y,
       BigInt<GROUP, BASE_SQR>& res) {
-    res = mulInt(x._vs, y._vs);
+    res = mulInt(x._vs, y._vs, false);
   }
 #endif
 
@@ -55,11 +55,13 @@ struct FFTUtils {
   const Complex<T> DOWN_QUART = Complex<T>(0, -0.25);
 
   template<typename V>
-  inline vector<Complex<T>> mulInt(const vector<V>& xs, const vector<V>& ys) {
+  inline vector<Complex<T>>
+  mulInt(const vector<V>& xs, const vector<V>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       return vector<Complex<T>>(1);
     }
-    int pow2 = nextPow2_32(xs.size() + ys.size() - 1);
+    int pow2 = nextPow2_32(
+        cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
     vector<Complex<T>> cs(pow2);
     for (size_t i = 0; i < pow2; ++i) {
       cs[i].init(i < xs.size() ? xs[i] : 0, i < ys.size() ? ys[i] : 0);
@@ -81,8 +83,8 @@ struct FFTUtils {
 
 #ifdef FFT_UTILS_MUL_INLINE_INT
   template<typename V>
-  inline void mulInlineInt(vector<V>& xs, const vector<V>& ys) {
-    const auto& cs = mulInt(xs, ys);
+  inline void mulInlineInt(vector<V>& xs, const vector<V>& ys, bool cyclic) {
+    const auto& cs = mulInt(xs, ys, cyclic);
     xs.resize(cs.size());
     for (size_t i = 0; i < cs.size(); ++i) {
       xs[i] = cs[i].real + 0.5;
