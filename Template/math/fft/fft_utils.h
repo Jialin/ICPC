@@ -325,7 +325,7 @@ struct FFTUtils {
       for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
         for (int j = 0, k = l; j < l; ++j, ++k) {
           Complex<T> c = cs[i + j + l] * _roots[k];
-          cs[i + j + l] = cs[i + j] - c;
+          cs[i + j + l].initSub(cs[i + j], c);
           cs[i + j] += c;
         }
       }
