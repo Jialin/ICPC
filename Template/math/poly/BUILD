@@ -16,3 +16,18 @@ cc_library(
         "//math/fft:fft_utils",
     ],
 )
+
+cc_library(
+    name = "poly_mod_int_macros",
+    hdrs = ["poly_mod_int_macros.h"],
+    deps = ["//math/fft:ntt_utils_fix_macros"],
+)
+
+cc_library(
+    name = "poly_mod_int",
+    hdrs = ["poly_mod_int.h"],
+    deps = [
+        ":poly_mod_int_macros",
+        "//math/fft:ntt_utils_fix",
+    ],
+)
