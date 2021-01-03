@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdio>
-
 namespace io {
 
 const int _kWriteBufferSize = 1 << 15;

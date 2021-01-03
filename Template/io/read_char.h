@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cctype>
-#include <cstdio>
-
 namespace io {
 
 const int _kReadBufferSize = 1 << 15;
