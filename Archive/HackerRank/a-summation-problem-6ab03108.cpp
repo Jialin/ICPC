@@ -21,29 +21,38 @@
 
 using namespace std;
 
+#define POLY_MOD_INT_ACCESS
+#define POLY_MOD_INT_CONSTRUCT
+#define POLY_MOD_INT_EMPLACE_BACK
+#define POLY_MOD_INT_MUL_INLINE_MODIFY
+#define POLY_MOD_INT_RESIZE
+#define POLY_MOD_INT_SIZE
+#define MOD_INT_ADD_INLINE
 #define MOD_INT_MUL
-#define NTT_UTILS_FIX_MOD_MUL_INLINE
-#include "math/fft/ntt_utils_fix_mod_macros.h"
+#include "math/poly/poly_mod_int_macros.h"
 
 #include "debug/debug.h"
-#include "math/fft/ntt_utils_fix_mod.h"
+#include "io/read_int.h"
+#include "io/write_int.h"
+#include "math/poly/poly_mod_int.h"
 
 const int MAXNK = 2000000 + 2;
-const int MAXPOW2 = 1 << 22;
 const int MOD = 998244353;
 
 using ModInt = math::ModInt<int, int64_t, MOD>;
+using PolyModInt = math::PolyModInt<int, int64_t, MOD>;
 
 int n, k, a[MAXNK];
 ModInt facts[MAXNK], invFacts[MAXNK];
-math::NTTUtilsFixMod<int, int64_t, MOD, 31> ntt(MAXPOW2);
+math::NTTUtilsFix<int, int64_t, MOD, 31> ntt;
 
 // f(i) = sum(f(j) * e^{sum(a[k], k from j+1 to i)}x , j from 0 to i - 1)
-
 // f(i) = sum{ e^sum(a[k], k from j to i), j from 0 to i}
 
 int main() {
-  scanf("%d%d", &n, &k);
+  io::readInt(n);
+  io::readInt(k);
+  ntt.init((k + 1) << 1);
   facts[0] = 1;
   for (int i = 1; i <= k; ++i) {
     facts[i] = facts[i - 1] * i;
@@ -53,12 +62,11 @@ int main() {
     invFacts[i - 1] = invFacts[i] * i;
   }
   for (int i = 0; i < n; ++i) {
-    scanf("%d", &a[i]);
+    io::readInt(a[i]);
   }
-  vector<ModInt> res;
-  vector<ModInt> expSum(1);
+  PolyModInt res, expSum(1);
   for (int i = 0; i < n; ++i) {
-    vector<ModInt> ex(k + 1);
+    PolyModInt ex(k + 1);
     ModInt pow = 1;
     ex[0] = pow;
     for (int j = 1; j <= k; ++j) {
@@ -66,7 +74,7 @@ int main() {
       ex[j] = pow * invFacts[j];
     }
     expSum[0] += 1;
-    ntt.mulInline(expSum, ex);
+    expSum.mulInlineModify(ex, false, ntt);
     if (expSum.size() > k) {
       expSum.resize(k + 1);
     }
@@ -78,6 +86,7 @@ int main() {
     }
   }
   for (int i = 1; i <= k; ++i) {
-    printf("%d%c", (res[i] * facts[i])._v, i == k ? '\n' : ' ');
+    io::writeInt((res[i] * facts[i])._v);
+    io::writeChar(i == k ? '\n' : ' ');
   }
 }
