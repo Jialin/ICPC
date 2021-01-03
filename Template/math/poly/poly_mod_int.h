@@ -1,6 +1,5 @@
 #pragma once
 
-#include "math/mod/mod_int_macros.h"
 #include "math/poly/poly_mod_int_macros.h"
 
 #ifdef _POLY_MOD_INT_NTT_UTILS_FIX
@@ -47,9 +46,9 @@ struct PolyModInt {
 
 #ifdef POLY_MOD_INT_MUL_INLINE_MODIFY
   template<V ROOT>
-  inline void
-  mulInlineModify(PolyModInt& o, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
-    ntt.mulInlineModify(_vs, o._vs);
+  inline void mulInlineModify(
+      PolyModInt& o, bool cyclic, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
+    ntt.mulInlineModify(_vs, o._vs, cyclic);
   }
 #endif
 

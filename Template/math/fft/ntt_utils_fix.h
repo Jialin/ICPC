@@ -62,8 +62,8 @@ struct NTTUtilsFix {
   }
 
 #ifdef NTT_UTILS_FIX_MUL_INLINE_MODIFY
-  inline void mulInlineModify(
-      vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic = false) {
+  inline void
+  mulInlineModify(vector<_ModInt>& xs, vector<_ModInt>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.resize(1);
       xs[0] = 0;
@@ -132,7 +132,6 @@ struct NTTUtilsFix {
     }
     _online(fs, gs, computedBound, medium, upper, transform);
   }
-
 #endif
 
   inline void ntt(vector<_ModInt>& vs, bool invert, int n = -1) {

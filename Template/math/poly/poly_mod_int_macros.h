@@ -13,3 +13,4 @@
 #endif
 
 #include "math/fft/ntt_utils_fix_macros.h"
+#include "math/mod/mod_int_macros.h"
