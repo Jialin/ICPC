@@ -26,7 +26,6 @@
 #ifdef FFT_UTILS_MUL_INT
 #define COMPLEX_CONJ
 #define COMPLEX_INIT_CONJ
-#define COMPLEX_MUL
 #define COMPLEX_SUB
 #endif
 
@@ -47,7 +46,6 @@
 #ifdef FFT_UTILS_MUL_INLINE_MOD
 #define COMPLEX_ADD
 #define COMPLEX_CONJ
-#define COMPLEX_MUL
 #define COMPLEX_SUB
 #define _FFT_UTILS_EXPAND_INT_VECTOR
 #define _FFT_UTILS_SHRINK_INT_VECTOR
@@ -63,5 +61,6 @@
 #define COMPLEX_INIT
 #define COMPLEX_INIT_POLAR
 #define COMPLEX_INIT_SUB
+#define COMPLEX_MUL
 
 #include "math/complex/complex_macros.h"

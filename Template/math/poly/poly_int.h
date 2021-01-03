@@ -22,6 +22,12 @@ struct PolyInt {
   }
 #endif
 
+#ifdef POLY_INT_ACCESS_CONST
+  inline const V& operator[](int idx) const {
+    return _vs[idx];
+  }
+#endif
+
 #ifdef POLY_INT_RESIZE
   inline void resize(int size) {
     _vs.resize(size);
@@ -43,6 +49,14 @@ struct PolyInt {
 #ifdef POLY_INT_SIZE
   inline size_t size() const {
     return _vs.size();
+  }
+#endif
+
+#ifdef POLY_INT_MUL
+  template<typename T>
+  inline vector<Complex<T>>
+  mul(const PolyInt& o, bool cyclic, FFTUtils<T>& fft) {
+    return fft.mulInt(_vs, o._vs, cyclic);
   }
 #endif
 

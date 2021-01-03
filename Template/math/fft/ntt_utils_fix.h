@@ -25,7 +25,6 @@ struct NTTUtilsFix {
   }
 
   inline void init(int capacity = -1) {
-    _root = _ModInt(ROOT);
     _rootPow = 1 << __builtin_ctz(PRIME - 1);
 #ifdef LOCAL
     if (ROOT < 0 || _ModInt(ROOT).exp(_rootPow)._v != 1 ||
@@ -182,11 +181,12 @@ struct NTTUtilsFix {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
     _roots.resize(pow2);
+    _ModInt root(ROOT);
     for (int i = oldPow2; i < pow2; i <<= 1) {
-      _v = _root.exp((_rootPow / i) >> 1);
+      V v = root.exp((_rootPow / i) >> 1)._v;
       for (int j = i; j < i << 1; j += 2) {
         _roots[j] = _roots[j >> 1];
-        _roots[j | 1] = _roots[j] * _v._v % PRIME;
+        _roots[j | 1] = _roots[j] * v % PRIME;
       }
     }
   }
@@ -201,7 +201,6 @@ struct NTTUtilsFix {
 
   vector<int> _revs;
   vector<V_SQR> _roots;
-  _ModInt _root, _invRoot, _v;
   int _rootPow;
 };
 
