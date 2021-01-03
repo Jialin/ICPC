@@ -26,6 +26,18 @@ struct PolyModInt {
   }
 #endif
 
+#ifdef POLY_MOD_INT_CLEAR
+  inline void clear() {
+    _vs.clear();
+  }
+#endif
+
+#ifdef POLY_MOD_INT_ASSIGN
+  inline void assign(int size, V v) {
+    _vs.assign(size, v);
+  }
+#endif
+
 #ifdef POLY_MOD_INT_RESIZE
   inline void resize(int size) {
     _vs.resize(size);
@@ -35,6 +47,12 @@ struct PolyModInt {
 #ifdef POLY_MOD_INT_RESERVE
   inline void reserve(int size) {
     _vs.reserve(size);
+  }
+#endif
+
+#ifdef POLY_MOD_INT_EMPLACE_BACK
+  inline void emplace_back(V v = 0) {
+    _vs.emplace_back(v);
   }
 #endif
 
@@ -49,6 +67,20 @@ struct PolyModInt {
   inline void mulInlineModify(
       PolyModInt& o, bool cyclic, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
     ntt.mulInlineModify(_vs, o._vs, cyclic);
+  }
+#endif
+
+#ifdef POLY_MOD_INT_NTT_INLINE
+  template<V ROOT>
+  inline void
+  nttInline(bool invert, int pow2, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
+    ntt.ntt(_vs, invert, pow2);
+  }
+#endif
+
+#ifdef POLY_MOD_INT_SHRINK
+  inline void shrink() {
+    for (; _vs.size() > 1 && !_vs.back()._v; _vs.pop_back()) {}
   }
 #endif
 
