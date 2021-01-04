@@ -9,46 +9,13 @@
 namespace math {
 
 template<typename V = int>
-struct PolyInt {
-#ifdef POLY_INT_CONSTRUCT
-  inline PolyInt(int size = 0, V v = 0) {
-    _vs.assign(size, v);
-  }
-#endif
-
-#ifdef POLY_INT_ACCESS
-  inline V& operator[](int idx) {
-    return _vs[idx];
-  }
-#endif
-
-#ifdef POLY_INT_ACCESS_CONST
-  inline const V& operator[](int idx) const {
-    return _vs[idx];
-  }
-#endif
-
-#ifdef POLY_INT_RESIZE
-  inline void resize(int size) {
-    _vs.resize(size);
-  }
-#endif
-
-#ifdef POLY_INT_ASSIGN
-  inline void assign(int size, const V& v) {
-    _vs.assign(size, v);
-  }
-#endif
-
-#ifdef POLY_INT_RESERVE
-  inline void reserve(int size) {
-    _vs.reserve(size);
-  }
-#endif
-
-#ifdef POLY_INT_SIZE
-  inline size_t size() const {
-    return _vs.size();
+struct PolyInt : vector<V> {
+#ifdef POLY_INT_ASSIGN_VECTOR
+  inline void operator=(const vector<V>& vs) {
+    this->resize(vs.size());
+    for (size_t i = 0; i < vs.size(); ++i) {
+      (*this)[i] = vs[i];
+    }
   }
 #endif
 
@@ -56,25 +23,16 @@ struct PolyInt {
   template<typename T>
   inline vector<Complex<T>>
   mul(const PolyInt& o, bool cyclic, FFTUtils<T>& fft) {
-    return fft.mulInt(_vs, o._vs, cyclic);
+    return fft.mulInt(*this, o, cyclic);
   }
 #endif
 
 #ifdef POLY_INT_MUL_INLINE
   template<typename T>
   inline void mulInline(const PolyInt& o, bool cyclic, FFTUtils<T>& fft) {
-    fft.mulInlineInt(_vs, o._vs, cyclic);
+    fft.mulInlineInt(*this, o, cyclic);
   }
 #endif
-
-#ifdef LOCAL
-  friend ostream& operator<<(ostream& o, const PolyInt& v) {
-    o << tostring(v._vs);
-    return o;
-  }
-#endif
-
-  vector<V> _vs;
 };
 
 } // namespace math

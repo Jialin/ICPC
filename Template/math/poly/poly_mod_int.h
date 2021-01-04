@@ -15,60 +15,27 @@
 namespace math {
 
 template<typename V, typename V_SQR, const V PRIME>
-struct PolyModInt {
+struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
   using _ModInt = ModInt<V, V_SQR, PRIME>;
 
 #ifdef POLY_MOD_INT_CONSTRUCT
   inline PolyModInt(int size = 0, V v = 0) {
-    _vs.assign(size, v);
+    this->assign(size, v);
   }
 #endif
 
-#ifdef POLY_MOD_INT_ACCESS
-  inline _ModInt& operator[](int idx) {
-    return _vs[idx];
-  }
-#endif
-
-#ifdef POLY_MOD_INT_CLEAR
-  inline void clear() {
-    _vs.clear();
-  }
-#endif
-
-#ifdef POLY_MOD_INT_ASSIGN
-  inline void assign(int size, V v) {
-    _vs.assign(size, v);
-  }
-#endif
-
-#ifdef POLY_MOD_INT_RESIZE
-  inline void resize(int size) {
-    _vs.resize(size);
-  }
-#endif
-
-#ifdef POLY_MOD_INT_RESERVE
-  inline void reserve(int size) {
-    _vs.reserve(size);
-  }
-#endif
-
-#ifdef POLY_MOD_INT_EMPLACE_BACK
-  inline void emplace_back(V v = 0) {
-    _vs.emplace_back(v);
-  }
-#endif
-
-#ifdef POLY_MOD_INT_SIZE
-  inline size_t size() const {
-    return _vs.size();
+#ifdef POLY_MOD_INT_ASSIGN_INT_VECTOR
+  inline void operator=(const vector<V>& vs) {
+    this->resize(vs.size());
+    for (size_t i = 0; i < vs.size(); ++i) {
+      (*this)[i] = vs[i];
+    }
   }
 #endif
 
 #ifdef POLY_MOD_INT_SHRINK
   inline void shrink() {
-    for (; _vs.size() > 1 && !_vs.back()._v; _vs.pop_back()) {}
+    for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
   }
 #endif
 
@@ -76,7 +43,7 @@ struct PolyModInt {
   template<V ROOT>
   inline void nttMulInlineModify(
       PolyModInt& o, bool cyclic, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
-    ntt.mulInlineModify(_vs, o._vs, cyclic);
+    ntt.mulInlineModify(*this, o, cyclic);
   }
 #endif
 
@@ -84,7 +51,7 @@ struct PolyModInt {
   template<V ROOT>
   inline void
   nttInline(bool invert, int pow2, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
-    ntt.ntt(_vs, invert, pow2);
+    ntt.ntt(*this, invert, pow2);
   }
 #endif
 
@@ -99,7 +66,7 @@ struct PolyModInt {
       int toComputeBound,
       const function<void(_ModInt& f, int idx)>& transform,
       NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
-    ntt.recurrenceInline(_vs, g._vs, computedBound, toComputeBound, transform);
+    ntt.recurrenceInline(*this, g, computedBound, toComputeBound, transform);
   }
 #endif
 
@@ -114,19 +81,16 @@ struct PolyModInt {
       int toComputeBound,
       const function<void(int& f, int idx)>& transform,
       FFTUtils<T>& fft) {
-    fft.recurrenceInlineMod(
-        _vs, g._vs, computedBound, toComputeBound, transform);
+    fft.recurrenceInlineMod(*this, g, computedBound, toComputeBound, transform);
   }
 #endif
 
 #ifdef LOCAL
   friend ostream& operator<<(ostream& o, const PolyModInt& vs) {
-    o << tostring(vs._vs);
+    o << tostring(static_cast<vector<_ModInt>>(vs));
     return o;
   }
 #endif
-
-  vector<_ModInt> _vs;
 };
 
 } // namespace math
