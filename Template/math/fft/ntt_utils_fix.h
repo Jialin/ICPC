@@ -86,11 +86,11 @@ struct NTTUtilsFix {
   }
 #endif
 
-#ifdef NTT_UTILS_FIX_ONLINE
-  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
-  //
-  // f(i), 0<=i<computedBound are precomputed
-  inline void online(
+#ifdef NTT_UTILS_FIX_RECURRENCE_INLINE
+  // Computes f[i], computedBound<=i<toComputeBound, where
+  // - 0<=i<computedBound, f[i] is computed
+  // - f[i]=sum(f[j]*g[i-j], 0<=j<i)
+  inline void recurrenceInline(
       vector<_ModInt>& fs,
       const vector<_ModInt>& gs,
       int computedBound,
@@ -98,10 +98,10 @@ struct NTTUtilsFix {
       const function<void(_ModInt& f, int idx)>& transform) {
     int pow2 = math::nextPow2_32(toComputeBound);
     _expand(fs, pow2);
-    _online(fs, gs, computedBound, 0, pow2, transform);
+    _recurrenceInline(fs, gs, computedBound, 0, pow2, transform);
   }
 
-  inline void _online(
+  inline void _recurrenceInline(
       vector<_ModInt>& fs,
       const vector<_ModInt>& gs,
       int computedBound,
@@ -115,7 +115,7 @@ struct NTTUtilsFix {
       return;
     }
     int medium = (lower + upper) >> 1;
-    _online(fs, gs, computedBound, lower, medium, transform);
+    _recurrenceInline(fs, gs, computedBound, lower, medium, transform);
     size_t pow2 = upper - lower;
     vector<_ModInt> delta(pow2);
     for (int i = lower; i < medium; ++i) {
@@ -127,9 +127,11 @@ struct NTTUtilsFix {
     }
     mulInlineModify(delta, tmpGs, true);
     for (size_t i = medium; i < upper; ++i) {
-      fs[i] += delta[i - lower];
+      if (i >= computedBound) {
+        fs[i] += delta[i - lower];
+      }
     }
-    _online(fs, gs, computedBound, medium, upper, transform);
+    _recurrenceInline(fs, gs, computedBound, medium, upper, transform);
   }
 #endif
 

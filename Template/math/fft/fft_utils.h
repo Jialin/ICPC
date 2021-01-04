@@ -6,7 +6,7 @@
 #include "math/complex/complex.h"
 #include "math/constants/pi.h"
 
-#ifdef FFT_UTILS_ONLINE_MOD
+#ifdef FFT_UTILS_RECURRENCE_INLINE_MOD
 #include "math/mod/mod_int.h"
 #endif
 
@@ -187,15 +187,14 @@ struct FFTUtils {
   }
 #endif
 
-#ifdef FFT_UTILS_ONLINE_MOD
-  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
-  //
-  // f(i), 0<=i<computedBound are precomputed
+#ifdef FFT_UTILS_RECURRENCE_INLINE_MOD
+  // Computes f[i], computedBound<=i<toComputeBound, where
+  // - f[i]=sum(f[j]*g[i-j], 0<=j<i)
+  // - 0<=i<computedBound, f[i] is computed
   template<typename V, typename V_SQR, V MOD>
-  inline void onlineMod(
+  inline void recurrenceInlineMod(
       vector<ModInt<V, V_SQR, MOD>>& fs,
       const vector<ModInt<V, V_SQR, MOD>>& gs,
-      int mod,
       int computedBound,
       int toComputeBound,
       const function<void(int& f, int idx)>& transform) {
@@ -208,7 +207,8 @@ struct FFTUtils {
     for (size_t i = 0; i < gs.size(); ++i) {
       gsI[i] = gs[i]._v;
     }
-    _onlineModInt(fsI, gsI, mod, computedBound, 0, toComputeBound, transform);
+    _recurrenceInlineModInt(
+        fsI, gsI, MOD, computedBound, 0, toComputeBound, transform);
     if (fs.size() < toComputeBound) {
       fs.resize(toComputeBound);
     }
@@ -218,11 +218,11 @@ struct FFTUtils {
   }
 #endif
 
-#ifdef FFT_UTILS_ONLINE_MOD_INT
-  // f(i)=transform(sum(f(j)*g(i-j), j from 0 to i-1))
-  //
-  // f(i), 0<=i<computedBound are precomputed
-  inline void onlineModInt(
+#ifdef FFT_UTILS_RECURRENCE_INLINE_MOD_INT
+  // Computes f[i], computedBound<=i<toComputeBound, where
+  // - f[i]=sum(f[j]*g[i-j], 0<=j<i)
+  // - 0<=i<computedBound, f[i] is computed
+  inline void recurrenceInlineModInt(
       vector<int>& fs,
       const vector<int>& gs,
       int mod,
@@ -230,10 +230,13 @@ struct FFTUtils {
       int toComputeBound,
       const function<void(int& f, int idx)>& transform) {
     _expand(fs, toComputeBound);
-    _onlineModInt(fs, gs, mod, computedBound, 0, toComputeBound, transform);
+    _recurrenceInlineModInt(
+        fs, gs, mod, computedBound, 0, toComputeBound, transform);
   }
+#endif
 
-  inline void _onlineModInt(
+#ifdef _FFT_UTILS_RECURRENCE_INLINE_MOD_INT
+  inline void _recurrenceInlineModInt(
       vector<int>& fs,
       const vector<int>& gs,
       int mod,
@@ -248,7 +251,8 @@ struct FFTUtils {
       return;
     }
     int medium = (lower + upper) >> 1;
-    _onlineModInt(fs, gs, mod, computedBound, lower, medium, transform);
+    _recurrenceInlineModInt(
+        fs, gs, mod, computedBound, lower, medium, transform);
     size_t pow2 = nextPow2_32(upper - lower);
     vector<int> delta(pow2);
     for (int i = lower; i < medium; ++i) {
@@ -265,7 +269,8 @@ struct FFTUtils {
         fs[i] -= mod;
       }
     }
-    _onlineModInt(fs, gs, mod, computedBound, medium, upper, transform);
+    _recurrenceInlineModInt(
+        fs, gs, mod, computedBound, medium, upper, transform);
   }
 #endif
 
