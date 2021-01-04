@@ -17,6 +17,11 @@ cc_library(
 )
 
 cc_library(
+    name = "debug_declare",
+    hdrs = ["debug_declare.h"],
+)
+
+cc_library(
     name = "debug_matrix",
     hdrs = ["debug_matrix.h"],
     deps = [":debug_basic"],
