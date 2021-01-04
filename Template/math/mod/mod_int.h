@@ -153,7 +153,7 @@ struct ModInt {
 #ifdef LOCAL
 template<typename V, typename V_SQR, V MOD>
 inline string totype(const math::ModInt<V, V_SQR, MOD>& v) {
-  return "ModInt<" + totype(V(0)) + "," + totype(V_SQR(0)) + "," +
-         tostring(MOD) + ">";
+  return "ModInt<" + totype(V()) + "," + totype(V_SQR()) + "," + tostring(MOD) +
+         ">";
 }
 #endif
