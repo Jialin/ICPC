@@ -28,6 +28,7 @@ cc_library(
     hdrs = ["poly_mod_int.h"],
     deps = [
         ":poly_mod_int_macros",
+        "//math/fft:fft_utils",
         "//math/fft:ntt_utils_fix",
     ],
 )

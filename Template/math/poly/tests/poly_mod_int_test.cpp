@@ -7,20 +7,20 @@
 
 namespace math {
 
-TEST(PolyModIntTest, mulInlineModify) {
+TEST(PolyModIntTest, nttMulInlineModify) {
   const int MOD = 7340033;
   NTTUtilsFix<int, int64_t, MOD, 5> ntt;
   PolyModInt<int, int64_t, MOD> xs, ys;
 
   xs._vs = {1, 2, 3};
   ys._vs = {0, 0};
-  xs.mulInlineModify(ys, false, ntt);
+  xs.nttMulInlineModify(ys, false, ntt);
   ASSERT_EQ(1, xs.size());
   EXPECT_EQ(0, xs[0]._v);
 
   xs._vs = {1, 2};
   ys._vs = {3, 4};
-  xs.mulInlineModify(ys, false, ntt);
+  xs.nttMulInlineModify(ys, false, ntt);
   ASSERT_EQ(3, xs.size());
   EXPECT_EQ(3, xs[0]._v);
   EXPECT_EQ(10, xs[1]._v);
@@ -28,7 +28,7 @@ TEST(PolyModIntTest, mulInlineModify) {
 
   xs._vs = {31772, 371773, 371721, 81631};
   ys._vs = {348484, 28481838, 381872, 59492};
-  xs.mulInlineModify(ys, false, ntt);
+  xs.nttMulInlineModify(ys, false, ntt);
   ASSERT_EQ(7, xs.size());
   EXPECT_EQ(3263884, xs[0]._v);
   EXPECT_EQ(7008180, xs[1]._v);
@@ -40,7 +40,7 @@ TEST(PolyModIntTest, mulInlineModify) {
 
   xs._vs = {135624671, 381862};
   ys._vs = {356513, 125683, 1215655};
-  xs.mulInlineModify(ys, true, ntt);
+  xs.nttMulInlineModify(ys, true, ntt);
   ASSERT_EQ(4, xs.size());
   EXPECT_EQ(4747033, xs[0]._v);
   EXPECT_EQ(4104746, xs[1]._v);
