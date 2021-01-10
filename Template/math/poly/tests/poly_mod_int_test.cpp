@@ -69,4 +69,25 @@ TEST(PolyModIntTest, fftInv) {
   EXPECT_EQ(213, res[10]._v);
 }
 
+TEST(PolyModIntTest, fftInvInline) {
+  const int MOD = 1000000007;
+  FFTUtils<double> fft;
+  PolyModInt<int, int64_t, MOD> xs;
+  xs = vector<int>{
+      1, 1000000006, 1000000006, 0, 1000000006, 0, 1000000005, 0, 0, 0, 0};
+  xs.fftInvInline(fft);
+  ASSERT_EQ(11, xs.size());
+  EXPECT_EQ(1, xs[0]._v);
+  EXPECT_EQ(1, xs[1]._v);
+  EXPECT_EQ(2, xs[2]._v);
+  EXPECT_EQ(3, xs[3]._v);
+  EXPECT_EQ(6, xs[4]._v);
+  EXPECT_EQ(10, xs[5]._v);
+  EXPECT_EQ(20, xs[6]._v);
+  EXPECT_EQ(35, xs[7]._v);
+  EXPECT_EQ(65, xs[8]._v);
+  EXPECT_EQ(116, xs[9]._v);
+  EXPECT_EQ(213, xs[10]._v);
+}
+
 } // namespace math

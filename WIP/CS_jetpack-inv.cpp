@@ -24,7 +24,7 @@ using namespace std;
 #include "debug/debug_declare.h"
 
 #define POLY_MOD_INT_CONSTRUCT
-#define POLY_MOD_INT_FFT_INV
+#define POLY_MOD_INT_FFT_INV_INLINE
 #define MOD_INT_MUL
 #define MOD_INT_NEGATE
 #include "math/poly/poly_mod_int_macros.h"
@@ -75,8 +75,6 @@ int main() {
   for (int i = 2; i <= min(n, k << 1); i += 2) {
     bases[i] = -(facts[i - 2] * invFacts[i >> 1] * invFacts[(i >> 1) - 1])._v;
   }
-  DEBUGV(bases);
-  const auto& answer = bases.fftInv(fft);
-  DEBUGV(answer);
-  printf("%d\n", answer.back()._v);
+  bases.fftInvInline(fft);
+  printf("%d\n", bases.back()._v);
 }

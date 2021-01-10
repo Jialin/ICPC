@@ -7,9 +7,11 @@
 #define MOD_INT_EXP
 #define MOD_INT_FLIP
 #define MOD_INT_INV
+#define MOD_INT_INV_INLINE
 #define MOD_INT_MUL
 #define MOD_INT_MUL_INLINE
 #define MOD_INT_NEGATE
+#define MOD_INT_NEGATE_INLINE
 #define MOD_INT_SUB_INLINE
 #endif
 

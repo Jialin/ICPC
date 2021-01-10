@@ -2,7 +2,7 @@
 
 #include "math/mod/mod_int_macros.h"
 
-#ifdef MOD_INT_INV
+#if defined(MOD_INT_INV) || defined(MOD_INT_INV_INLINE)
 #include "math/gcd/ext_gcd.h"
 #endif
 
@@ -47,6 +47,14 @@ struct ModInt {
 #ifdef MOD_INT_NEGATE
   inline ModInt operator-() const {
     return ModInt(_v ? MOD - _v : 0);
+  }
+#endif
+
+#ifdef MOD_INT_NEGATE_INLINE
+  inline void negateInline() {
+    if (_v) {
+      _v = MOD - _v;
+    }
   }
 #endif
 
@@ -122,6 +130,18 @@ struct ModInt {
     extGcd<V>(_v, MOD, x0, x1);
 #endif
     return ModInt(x0);
+  }
+#endif
+
+#ifdef MOD_INT_INV_INLINE
+  inline void invInline() {
+    V x0, x1;
+#ifdef LOCAL
+    DEBUG_EQ(extGcd<V>(_v, MOD, x0, x1), 1);
+#else
+    extGcd<V>(_v, MOD, x0, x1);
+#endif
+    _v = fix(x0);
   }
 #endif
 

@@ -34,6 +34,20 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef POLY_MOD_INT_ADD_INLINE
+  inline void operator+=(PolyModInt o) {
+    if (o.size() > this->size()) {
+      this->reserve(o.size());
+      for (size_t i = this->size(); i < o.size(); ++i) {
+        this->emplace_back(0);
+      }
+    }
+    for (size_t i = 0; i < o.size(); ++i) {
+      (*this)[i] += o[i];
+    }
+  }
+#endif
+
 #ifdef POLY_MOD_INT_SUB
   inline PolyModInt operator-(PolyModInt o) const {
     PolyModInt res(max(this->size(), o.size()));
@@ -50,10 +64,24 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef POLY_MOD_INT_MUL_INT
   inline PolyModInt operator*(V scale) const {
     PolyModInt res = *this;
-    for (auto& x : res) {
+    res *= scale;
+    return res;
+  }
+#endif
+
+#ifdef POLY_MOD_INT_MUL_INLINE_INT
+  inline void operator*=(V scale) {
+    for (auto& x : *this) {
       x *= scale;
     }
-    return res;
+  }
+#endif
+
+#ifdef POLY_MOD_INT_NEGATE_INLINE
+  inline void negateInline() {
+    for (auto& x : *this) {
+      x.negateInline();
+    }
   }
 #endif
 
@@ -89,17 +117,29 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef POLY_MOD_INT_FFT_INV
   template<typename T>
   inline PolyModInt fftInv(FFTUtils<T>& fft) {
-    if (this->size() == 1) {
-      return PolyModInt(1, (*this)[0].inv()._v);
-    }
-    PolyModInt old = *this, half = *this;
-    half.resize((this->size() + 1) >> 1);
-    half = half.fftInv(fft);
-    old.fftMulInline(half, fft);
-    old.fftMulInline(half, fft);
-    PolyModInt res = half * 2 - old;
-    res.resize(this->size());
+    PolyModInt res = *this;
+    res.fftInvInline(fft);
     return res;
+  }
+#endif
+
+#ifdef POLY_MOD_INT_FFT_INV_INLINE
+  template<typename T>
+  inline void fftInvInline(FFTUtils<T>& fft) {
+    int n = this->size();
+    if (n == 1) {
+      (*this)[0].invInline();
+      return;
+    }
+    PolyModInt half = *this;
+    half.resize((n + 1) >> 1);
+    half.fftInvInline(fft);
+    this->fftMulInline(half, fft);
+    this->fftMulInline(half, fft);
+    half *= 2;
+    this->resize(n);
+    this->negateInline();
+    *this += half;
   }
 #endif
 
