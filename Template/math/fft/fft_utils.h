@@ -6,7 +6,8 @@
 #include "math/complex/complex.h"
 #include "math/constants/pi.h"
 
-#ifdef FFT_UTILS_RECURRENCE_INLINE_MOD
+#if defined(FFT_UTILS_MUL_INLINE_MOD_INT) ||                                   \
+    defined(FFT_UTILS_RECURRENCE_INLINE_MOD)
 #include "math/mod/mod_int.h"
 #endif
 
@@ -75,6 +76,26 @@ struct FFTUtils {
       xs[i] = cs[i].real + 0.5;
     }
     _shrinkInt(xs);
+  }
+#endif
+
+#ifdef FFT_UTILS_MUL_INLINE_MOD_INT
+  template<typename V, typename V_SQR, V MOD>
+  inline void mulInlineModInt(
+      vector<ModInt<V, V_SQR, MOD>>& xs,
+      const vector<ModInt<V, V_SQR, MOD>>& ys) {
+    vector<int> xsI(xs.size()), ysI(ys.size());
+    for (size_t i = 0; i < xs.size(); ++i) {
+      xsI[i] = xs[i]._v;
+    }
+    for (size_t i = 0; i < ys.size(); ++i) {
+      ysI[i] = ys[i]._v;
+    }
+    mulInlineMod(xsI, ysI, MOD, false);
+    xs.resize(xsI.size());
+    for (size_t i = 0; i < xs.size(); ++i) {
+      xs[i] = xsI[i];
+    }
   }
 #endif
 

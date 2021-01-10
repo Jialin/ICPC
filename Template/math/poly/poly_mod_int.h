@@ -10,6 +10,7 @@
 #include "math/fft/fft_utils.h"
 #endif
 
+#include "debug/debug_basic.h"
 #include "math/mod/mod_int.h"
 
 namespace math {
@@ -33,9 +34,39 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef POLY_MOD_INT_SUB
+  inline PolyModInt operator-(PolyModInt o) const {
+    PolyModInt res(max(this->size(), o.size()));
+    for (size_t i = 0; i < this->size(); ++i) {
+      res[i] += (*this)[i];
+    }
+    for (size_t i = 0; i < o.size(); ++i) {
+      res[i] -= o[i];
+    }
+    return res;
+  }
+#endif
+
+#ifdef POLY_MOD_INT_MUL_INT
+  inline PolyModInt operator*(V scale) const {
+    PolyModInt res = *this;
+    for (auto& x : res) {
+      x *= scale;
+    }
+    return res;
+  }
+#endif
+
 #ifdef POLY_MOD_INT_SHRINK
   inline void shrink() {
     for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
+  }
+#endif
+
+#ifdef POLY_MOD_INT_FFT_MUL_INLINE
+  template<typename T>
+  inline void fftMulInline(const PolyModInt& o, FFTUtils<T>& fft) {
+    fft.mulInlineModInt(*this, o);
   }
 #endif
 
@@ -52,6 +83,23 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
   inline void
   nttInline(bool invert, int pow2, NTTUtilsFix<V, V_SQR, PRIME, ROOT>& ntt) {
     ntt.ntt(*this, invert, pow2);
+  }
+#endif
+
+#ifdef POLY_MOD_INT_FFT_INV
+  template<typename T>
+  inline PolyModInt fftInv(FFTUtils<T>& fft) {
+    if (this->size() == 1) {
+      return PolyModInt(1, (*this)[0].inv()._v);
+    }
+    PolyModInt old = *this, half = *this;
+    half.resize((this->size() + 1) >> 1);
+    half = half.fftInv(fft);
+    old.fftMulInline(half, fft);
+    old.fftMulInline(half, fft);
+    PolyModInt res = half * 2 - old;
+    res.resize(this->size());
+    return res;
   }
 #endif
 

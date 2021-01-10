@@ -44,6 +44,12 @@ struct ModInt {
   }
 #endif
 
+#ifdef MOD_INT_NEGATE
+  inline ModInt operator-() const {
+    return ModInt(_v ? MOD - _v : 0);
+  }
+#endif
+
 #ifdef MOD_INT_ADD
   inline ModInt operator+(const ModInt& o) const {
     return ModInt(_v + o._v);
@@ -55,6 +61,15 @@ struct ModInt {
     _v += o._v;
     if (_v >= MOD) {
       _v -= MOD;
+    }
+  }
+#endif
+
+#ifdef MOD_INT_SUB_INLINE
+  inline void operator-=(const ModInt& o) {
+    _v -= o._v;
+    if (_v < 0) {
+      _v += MOD;
     }
   }
 #endif
