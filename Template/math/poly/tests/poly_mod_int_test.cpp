@@ -52,6 +52,8 @@ TEST(PolyModIntTest, fftInv) {
   const int MOD = 1000000007;
   FFTUtils<double> fft;
   PolyModInt<int, int64_t, MOD> xs;
+
+  // CS Academy jetpack
   xs = vector<int>{
       1, 1000000006, 1000000006, 0, 1000000006, 0, 1000000005, 0, 0, 0, 0};
   const auto& res = xs.fftInv(fft);
@@ -73,6 +75,8 @@ TEST(PolyModIntTest, fftInvInline) {
   const int MOD = 1000000007;
   FFTUtils<double> fft;
   PolyModInt<int, int64_t, MOD> xs;
+
+  // CS Academy jetpack
   xs = vector<int>{
       1, 1000000006, 1000000006, 0, 1000000006, 0, 1000000005, 0, 0, 0, 0};
   xs.fftInvInline(fft);
@@ -88,6 +92,26 @@ TEST(PolyModIntTest, fftInvInline) {
   EXPECT_EQ(65, xs[8]._v);
   EXPECT_EQ(116, xs[9]._v);
   EXPECT_EQ(213, xs[10]._v);
+
+  // CodeChef MMNN01
+  xs = vector<int>{1, 500000003, 500000003, 0, 0};
+  xs.fftInvInline(fft);
+  ASSERT_EQ(5, xs.size());
+  EXPECT_EQ(1, xs[0]._v);
+  EXPECT_EQ(500000004, xs[1]._v);
+  EXPECT_EQ(750000006, xs[2]._v);
+  EXPECT_EQ(625000005, xs[3]._v);
+  EXPECT_EQ(187500002, xs[4]._v);
+
+  xs = vector<int>{1, 833333339, 722222227, 722222227, 148148149, 478395065};
+  xs.fftInvInline(fft);
+  ASSERT_EQ(6, xs.size());
+  EXPECT_EQ(1, xs[0]._v);
+  EXPECT_EQ(166666668, xs[1]._v);
+  EXPECT_EQ(305555558, xs[2]._v);
+  EXPECT_EQ(375000003, xs[3]._v);
+  EXPECT_EQ(101080248, xs[4]._v);
+  EXPECT_EQ(925025727, xs[5]._v);
 }
 
 } // namespace math

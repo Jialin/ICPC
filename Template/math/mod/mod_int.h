@@ -34,7 +34,7 @@ struct ModInt {
     return v;
   }
 
-  inline ModInt(V v = 0) {
+  inline ModInt(V_SQR v = 0) {
     _v = fix(v);
   }
 

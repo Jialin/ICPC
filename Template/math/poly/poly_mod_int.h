@@ -128,6 +128,7 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
   inline void fftInvInline(FFTUtils<T>& fft) {
     int n = this->size();
     if (n == 1) {
+      DEBUG_GT((*this)[0]._v, 0);
       (*this)[0].invInline();
       return;
     }
@@ -135,10 +136,11 @@ struct PolyModInt : vector<ModInt<V, V_SQR, PRIME>> {
     half.resize((n + 1) >> 1);
     half.fftInvInline(fft);
     this->fftMulInline(half, fft);
+    this->resize(n);
     this->fftMulInline(half, fft);
-    half *= 2;
     this->resize(n);
     this->negateInline();
+    half *= 2;
     *this += half;
   }
 #endif

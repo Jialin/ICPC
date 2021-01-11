@@ -30,11 +30,12 @@ TEST(FFTUtilsTest, mulInlineMod) {
   EXPECT_EQ(856391424, xs[6]);
 }
 
-TEST(FFTUtilsTest, recurrenceInlineModJetpack) {
+TEST(FFTUtilsTest, recurrenceInlineMod) {
   const int MOD = 1000000007;
   FFTUtils<> fft;
   vector<ModInt<int, int64_t, MOD>> bases, res;
 
+  // CS Academy Jetpack
   bases = {0, 1, 1, 0, 1, 0, 2, 0, 5};
   res = {1};
   fft.recurrenceInlineMod(res, bases, 1, 10000, [](int& f, int idx) {});

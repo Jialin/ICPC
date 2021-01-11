@@ -80,29 +80,69 @@ struct FFTUtils {
 #endif
 
 #ifdef FFT_UTILS_MUL_INLINE_MOD_INT
+  vector<Complex<T>> _asFix, _bsFix, _csFix, _dsFix;
+
   template<typename V, typename V_SQR, V MOD>
   inline void mulInlineModInt(
       vector<ModInt<V, V_SQR, MOD>>& xs,
       const vector<ModInt<V, V_SQR, MOD>>& ys) {
-    vector<int> xsI(xs.size()), ysI(ys.size());
-    for (size_t i = 0; i < xs.size(); ++i) {
-      xsI[i] = xs[i]._v;
+    if (xs.empty() || ys.empty()) {
+      xs.clear();
+      return;
     }
+    int pow2 = nextPow2_32(xs.size() + ys.size() - 1);
+    _asFix.resize(pow2);
+    for (size_t i = 0; i < xs.size(); ++i) {
+      _asFix[i].init(xs[i]._v >> 15, xs[i]._v & 32767);
+    }
+    for (size_t i = xs.size(); i < pow2; ++i) {
+      _asFix[i].init(0, 0);
+    }
+    fft(_asFix, false, pow2);
+    _bsFix.resize(pow2);
     for (size_t i = 0; i < ys.size(); ++i) {
-      ysI[i] = ys[i]._v;
+      _bsFix[i].init(ys[i]._v >> 15, ys[i]._v & 32767);
     }
-    mulInlineMod(xsI, ysI, MOD, false);
-    xs.resize(xsI.size());
-    for (size_t i = 0; i < xs.size(); ++i) {
-      xs[i] = xsI[i];
+    for (size_t i = ys.size(); i < pow2; ++i) {
+      _bsFix[i].init(0, 0);
+    }
+    fft(_bsFix, false, pow2);
+    _csFix.resize(pow2);
+    _dsFix.resize(pow2);
+    for (int i = 0; i < pow2; ++i) {
+      int j = (pow2 - 1) & (pow2 - i);
+      Complex<T> v1 = _asFix[i] + _asFix[j].conj();
+      v1 /= 2;
+      Complex<T> v2 = _asFix[i] - _asFix[j].conj();
+      v2 /= 2;
+      swap(v2.real, v2.imag);
+      v2.imag = -v2.imag;
+      Complex<T> v3 = _bsFix[i] + _bsFix[j].conj();
+      v3 /= 2;
+      Complex<T> v4 = _bsFix[i] - _bsFix[j].conj();
+      v4 /= 2;
+      swap(v4.real, v4.imag);
+      v4.imag = -v4.imag;
+      _csFix[j] = v2 * v4;
+      swap(_csFix[j].real, _csFix[j].imag);
+      _csFix[j].real = -_csFix[j].real;
+      _csFix[j] += v1 * v3;
+      _dsFix[j] = v1 * v4 + v2 * v3;
+    }
+    fft(_csFix, false, pow2);
+    fft(_dsFix, false, pow2);
+    _expand(xs, pow2);
+    for (int i = 0; i < pow2; ++i) {
+      int64_t v1 = static_cast<int64_t>(_csFix[i].real / pow2 + 0.5) % MOD;
+      int64_t v2 = static_cast<int64_t>(_dsFix[i].real / pow2 + 0.5) % MOD;
+      int64_t v3 = static_cast<int64_t>(_csFix[i].imag / pow2 + 0.5) % MOD;
+      xs[i] = (((v1 << 15) + v2) << 15) + v3;
     }
   }
 #endif
 
 #ifdef FFT_UTILS_MUL_INLINE_MOD
-  const Complex<T> RIGHT_HALF = Complex<T>(0.5, 0);
-  const Complex<T> DOWN_HALF = Complex<T>(0, -0.5);
-  const Complex<T> UP = Complex<T>(0, 1);
+  vector<Complex<T>> as, bs, cs, ds;
 
   inline void mulInlineMod(
       vector<int>& xs, const vector<int>& ys, int mod, bool cyclic = false) {
@@ -112,24 +152,42 @@ struct FFTUtils {
     }
     int pow2 = nextPow2_32(
         cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
-    vector<Complex<T>> as(pow2);
+    as.resize(pow2);
     for (size_t i = 0; i < xs.size(); ++i) {
       as[i].init(xs[i] >> 15, xs[i] & 32767);
     }
+    for (size_t i = xs.size(); i < pow2; ++i) {
+      as[i].init(0, 0);
+    }
     fft(as, false, pow2);
-    vector<Complex<T>> bs(pow2);
+    bs.resize(pow2);
     for (size_t i = 0; i < ys.size(); ++i) {
       bs[i].init(ys[i] >> 15, ys[i] & 32767);
     }
+    for (size_t i = ys.size(); i < pow2; ++i) {
+      bs[i].init(0, 0);
+    }
     fft(bs, false, pow2);
-    vector<Complex<T>> cs(pow2), ds(pow2);
+    cs.resize(pow2);
+    ds.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       int j = (pow2 - 1) & (pow2 - i);
-      Complex<T> v1 = (as[i] + as[j].conj()) * RIGHT_HALF;
-      Complex<T> v2 = (as[i] - as[j].conj()) * DOWN_HALF;
-      Complex<T> v3 = (bs[i] + bs[j].conj()) * RIGHT_HALF;
-      Complex<T> v4 = (bs[i] - bs[j].conj()) * DOWN_HALF;
-      cs[j] = v1 * v3 + v2 * v4 * UP;
+      Complex<T> v1 = as[i] + as[j].conj();
+      v1 /= 2;
+      Complex<T> v2 = as[i] - as[j].conj();
+      v2 /= 2;
+      swap(v2.real, v2.imag);
+      v2.imag = -v2.imag;
+      Complex<T> v3 = bs[i] + bs[j].conj();
+      v3 /= 2;
+      Complex<T> v4 = bs[i] - bs[j].conj();
+      v4 /= 2;
+      swap(v4.real, v4.imag);
+      v4.imag = -v4.imag;
+      cs[j] = v2 * v4;
+      swap(cs[j].real, cs[j].imag);
+      cs[j].real = -cs[j].real;
+      cs[j] += v1 * v3;
       ds[j] = v1 * v4 + v2 * v3;
     }
     fft(cs, false, pow2);
@@ -335,9 +393,9 @@ struct FFTUtils {
       }
     }
     for (int l = 1; l < pow2; l <<= 1) {
-      for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
-        for (int j = 0, k = l; j < l; ++j, ++k) {
-          Complex<T> c = cs[i + j + l] * _roots[k];
+      for (int i = 0; i < pow2; i += l << 1) {
+        for (int j = 0; j < l; ++j) {
+          Complex<T> c = cs[i + j + l] * _roots[j + l];
           cs[i + j + l].initSub(cs[i + j], c);
           cs[i + j] += c;
         }
@@ -346,9 +404,11 @@ struct FFTUtils {
   }
 
 #ifdef _FFT_UTILS_EXPAND_INT_VECTOR
-  inline void _expand(vector<int>& xs, int pow2) {
+  template<typename V>
+  inline void _expand(vector<V>& xs, int pow2) {
+    xs.reserve(pow2);
     for (size_t i = xs.size(); i < pow2; ++i) {
-      xs.push_back(0);
+      xs.emplace_back(0);
     }
   }
 #endif
