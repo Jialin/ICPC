@@ -56,6 +56,7 @@
 #endif
 
 #ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+#define _BIGINT_FFT_T
 #define _BIGINT_POW10
 #endif
 
@@ -78,6 +79,7 @@
 #ifdef BIGINT_INIT_MUL
 #define FFT_MUL_UTILS_MUL_INT
 #define _BIGINT_FFT_MUL_UTILS
+#define _BIGINT_FFT_T
 #endif
 
 #ifdef BIGINT_MOD_DIV_INLINE
@@ -90,6 +92,10 @@
 
 #ifdef BIGINT_MUL_INLINE_INT
 #define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
+#define _BIGINT_FFT_T
 #endif
 
 #ifdef BIGINT_SUB_INLINE

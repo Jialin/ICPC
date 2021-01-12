@@ -24,8 +24,22 @@ using namespace std;
 
 namespace math {
 
-template<int GROUP = 4, typename BASE_SQR = int64_t, typename FFT_T = double>
+template<
+    int GROUP = 4,
+    typename BASE_SQR = int64_t,
+#ifdef _BIGINT_FFT_T
+    typename FFT_T = double
+#endif
+    >
 struct BigInt : vector<int> {
+  using _BigInt = BigInt<
+      GROUP,
+      BASE_SQR,
+#ifdef _BIGINT_FFT_T
+      FFT_T
+#endif
+      >;
+
 // ^ BIGINT_CONSTRUCT_EMPTY
 #ifdef BIGINT_CONSTRUCT_EMPTY
   inline BigInt() {}
@@ -80,9 +94,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_INIT_ADD
 #ifdef BIGINT_INIT_ADD
-  inline void initAdd(
-      const BigInt<GROUP, BASE_SQR, FFT_T>& x,
-      const BigInt<GROUP, BASE_SQR, FFT_T>& y) {
+  inline void initAdd(const _BigInt& x, const _BigInt& y) {
     DEBUGF_NE(
         this,
         &x,
@@ -98,10 +110,9 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_INIT_MUL
 #ifdef BIGINT_INIT_MUL
-  inline void initMul(
-      const BigInt<GROUP, BASE_SQR, FFT_T>& x,
-      const BigInt<GROUP, BASE_SQR, FFT_T>& y) {
+  inline void initMul(const _BigInt& x, const _BigInt& y) {
     // BIGINT_INIT_MUL => _BIGINT_FFT_MUL_UTILS
+    // BIGINT_INIT_MUL => _BIGINT_FFT_T
     // BIGINT_INIT_MUL => FFT_MUL_UTILS_MUL_INT
     *this = FFTMulUtils<FFT_T>::instance().mulInt(x, y, false);
   }
@@ -116,7 +127,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_ASSIGN
 #ifdef BIGINT_ASSIGN
-  inline void operator=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
+  inline void operator=(const _BigInt& o) {
     clear();
     insert(begin(), o.begin(), o.end());
   }
@@ -146,6 +157,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_ASSIGN_COMPLEX_VECTOR
 #ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+  // BIGINT_ASSIGN_COMPLEX_VECTOR => _BIGINT_FFT_T
   inline void operator=(const vector<Complex<FFT_T>>& o) {
     reserve(o.size() + 1);
     clear();
@@ -184,9 +196,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_ADD
 #ifdef BIGINT_ADD
-  inline BigInt<GROUP, BASE_SQR, FFT_T>
-  operator+(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
-    BigInt<GROUP, BASE_SQR, FFT_T> res;
+  inline _BigInt operator+(const _BigInt& o) const {
+    _BigInt res;
     res.initAdd(*this, o);
     return res;
   }
@@ -195,8 +206,8 @@ struct BigInt : vector<int> {
 // ^ BIGINT_ADD_INT
 #ifdef BIGINT_ADD_INT
   template<typename T>
-  inline BigInt<GROUP, BASE_SQR, FFT_T> operator+(T v) const {
-    BigInt<GROUP, BASE_SQR, FFT_T> res;
+  inline _BigInt operator+(T v) const {
+    _BigInt res;
     res = *this;
     res += v;
     return res;
@@ -205,7 +216,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_ADD_INLINE
 #ifdef BIGINT_ADD_INLINE
-  inline void operator+=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
+  inline void operator+=(const _BigInt& o) {
     bool carry = false;
     for (size_t i = 0; i < size() || i < o.size() || carry; ++i) {
       if (i == size()) {
@@ -248,9 +259,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_SUB
 #ifdef BIGINT_SUB
-  inline BigInt<GROUP, BASE_SQR, FFT_T>
-  operator-(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
-    BigInt<GROUP, BASE_SQR, FFT_T> res;
+  inline _BigInt operator-(const _BigInt& o) const {
+    _BigInt res;
     res = *this;
     res -= o;
     return res;
@@ -259,7 +269,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_SUB_INLINE
 #ifdef BIGINT_SUB_INLINE
-  inline void operator-=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
+  inline void operator-=(const _BigInt& o) {
 #ifdef LOCAL
     DEBUGF_GE(
         cmp(o), 0, "Should only subtract bigint that's not larger than o");
@@ -305,9 +315,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_MUL
 #ifdef BIGINT_MUL
-  inline BigInt<GROUP, BASE_SQR, FFT_T>
-  operator*(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
-    BigInt<GROUP, BASE_SQR> res;
+  inline _BigInt operator*(const _BigInt& o) const {
+    _BigInt res;
     res.initMul(*this, o);
     return res;
   }
@@ -315,8 +324,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_MUL_INT
 #ifdef BIGINT_MUL_INT
-  inline BigInt<GROUP, BASE_SQR, FFT_T> operator*(BASE_SQR v) const {
-    BigInt<GROUP, BASE_SQR, FFT_T> res;
+  inline _BigInt operator*(BASE_SQR v) const {
+    _BigInt res;
     res = *this;
     res *= v;
     return res;
@@ -325,8 +334,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_MUL_INLINE
 #ifdef BIGINT_MUL_INLINE
-  inline void operator*=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
-    BigInt<GROUP, BASE_SQR, FFT_T> res;
+  inline void operator*=(const _BigInt& o) {
+    _BigInt res;
     res.initMul(*this, o);
     *this = res;
   }
@@ -352,8 +361,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_DIV_INLINE
 #ifdef BIGINT_DIV_INLINE
-  inline void operator/=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
-    BigInt<GROUP, BASE_SQR> divRes;
+  inline void operator/=(const _BigInt& o) {
+    _BigInt divRes;
     modDivInline(o, divRes);
     *this = move(divRes);
   }
@@ -368,8 +377,8 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_MOD_INLINE
 #ifdef BIGINT_MOD_INLINE
-  inline void operator%=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) {
-    BigInt<GROUP, BASE_SQR> divRes;
+  inline void operator%=(const _BigInt& o) {
+    _BigInt divRes;
     modDivInline(o, divRes);
   }
 #endif
@@ -390,7 +399,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_LT
 #ifdef BIGINT_LT
-  inline bool operator<(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
+  inline bool operator<(const _BigInt& o) const {
     return cmp(o) < 0;
   }
 #endif
@@ -413,7 +422,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_GE
 #ifdef BIGINT_GE
-  inline bool operator>=(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
+  inline bool operator>=(const _BigInt& o) const {
     return cmp(o) >= 0;
   }
 #endif
@@ -428,9 +437,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_MOD_DIV_INLINE
 #ifdef BIGINT_MOD_DIV_INLINE
-  inline void modDivInline(
-      const BigInt<GROUP, BASE_SQR, FFT_T>& o,
-      BigInt<GROUP, BASE_SQR, FFT_T>& divRes) {
+  inline void modDivInline(const _BigInt& o, _BigInt& divRes) {
     divRes.resize(
         max(static_cast<int>(size()) - static_cast<int>(o.size()) + 1, 1));
     fill(divRes.begin(), divRes.end(), 0);
@@ -453,8 +460,7 @@ struct BigInt : vector<int> {
     divRes.clean();
   }
 
-  inline void shiftSubInline(
-      const BigInt<GROUP, BASE_SQR, FFT_T>& o, BASE_SQR mul, int shift) {
+  inline void shiftSubInline(const _BigInt& o, BASE_SQR mul, int shift) {
     BASE_SQR carry = 0;
     for (size_t i = 0, j = shift; i < o.size(); ++i, ++j) {
       BASE_SQR delta = carry + o[i] * mul;
@@ -478,8 +484,7 @@ struct BigInt : vector<int> {
     clean();
   }
 
-  inline bool isLessThanShiftCmp(
-      const BigInt<GROUP, BASE_SQR, FFT_T>& o, BASE_SQR mul, int shift) {
+  inline bool isLessThanShiftCmp(const _BigInt& o, BASE_SQR mul, int shift) {
     if (mul && size() < o.size() + shift) {
       return true;
     }
@@ -519,7 +524,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_CMP
 #ifdef BIGINT_CMP
-  inline int cmp(const BigInt<GROUP, BASE_SQR, FFT_T>& o) const {
+  inline int cmp(const _BigInt& o) const {
     if (size() != o.size()) {
       return size() < o.size() ? -1 : 1;
     }
@@ -564,11 +569,11 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_GCD_INLINE
 #ifdef BIGINT_GCD_INLINE
-  inline void gcdInline(BigInt<GROUP, BASE_SQR, FFT_T>& o) {
+  inline void gcdInline(_BigInt& o) {
     if (cmp(o) < 0) {
       swap(o);
     }
-    BigInt<GROUP, BASE_SQR> divRes;
+    _BigInt divRes;
     while (o.cmp(0) > 0) {
       modDivInline(o, divRes);
       swap(o);
@@ -652,6 +657,7 @@ struct BigInt : vector<int> {
 
 // ^ BIGINT_OUTPUT_COMPLEX_VECTOR
 #ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
+  // BIGINT_OUTPUT_COMPLEX_VECTOR => _BIGINT_FFT_T
   inline void outputComplexVector(vector<Complex<FFT_T>>& res) const {
 #ifdef LOCAL
     int limit = is_same<T, long double>::value ? 12 : 9;
