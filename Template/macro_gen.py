@@ -3,7 +3,7 @@ import re
 import subprocess
 from copy import deepcopy
 
-TEMPLATES = ["math/mod/mod_int.h"]
+TEMPLATES = ["math/mod/mod_int.h", "math/complex/complex.h"]
 
 
 def generate_dep_lines(dep_from, dep_tos):
