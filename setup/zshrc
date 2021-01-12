@@ -168,6 +168,7 @@ function unittest {
   local current_path=$(pwd)
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
+  python3 macro_gen.py
   bazel build //... --compilation_mode opt && bazel test //... --compilation_mode opt $@
   cd $current_path
 }
@@ -180,6 +181,7 @@ function unittestdebug {
   local current_path=$(pwd)
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
+  python3 macro_gen.py
   bazel test $@ --compilation_mode opt --copt=-DLOCAL
   cd $current_path
 }
