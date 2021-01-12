@@ -28,7 +28,7 @@ struct FFTMulUtils {
   mulInt(const vector<V>& xs, const vector<V>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       _as.resize(1);
-      // => COMPLEX_INIT
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_INIT
       _as[0].init(0, 0);
       return _as;
     }
@@ -42,15 +42,15 @@ struct FFTMulUtils {
     fft.fft(_as, false, pow2);
     for (int i = 0; i <= (pow2 >> 1); ++i) {
       int j = (pow2 - i) & (pow2 - 1);
-      // => COMPLEX_CONJ
-      // => COMPLEX_SUB
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_CONJ
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_SUB
       _as[j] = (_as[i] * _as[i] - (_as[j] * _as[j]).conj()) * DOWN_QUART;
-      // => COMPLEX_INIT_CONJ
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_INIT_CONJ
       _as[i].initConj(_as[j]);
     }
     fft.fft(_as, false, pow2);
     for (auto& c : _as) {
-      // => COMPLEX_DIV_INLINE_DOUBLE
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_DIV_INLINE_DOUBLE
       c /= pow2;
     }
     // FFT_MUL_UTILS_MUL_INT => _FFT_UTILS_SHRINK_COMPLEX_VECTOR
@@ -65,6 +65,7 @@ struct FFTMulUtils {
 #ifdef FFT_MUL_UTILS_MUL_INLINE_INT
   template<typename V>
   inline void mulInlineInt(vector<V>& xs, const vector<V>& ys, bool cyclic) {
+    // FFT_MUL_UTILS_MUL_INLINE_INT => FFT_MUL_UTILS_MUL_INT
     const auto& cs = mulInt(xs, ys, cyclic);
     xs.resize(cs.size());
     for (size_t i = 0; i < cs.size(); ++i) {
