@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "poly_int_macros",
     hdrs = ["poly_int_macros.h"],
-    deps = ["//math/fft:fft_utils_macros"],
+    deps = ["//math/fft:fft_mixed_utils_macros"],
 )
 
 cc_library(
@@ -13,7 +13,7 @@ cc_library(
     hdrs = ["poly_int.h"],
     deps = [
         ":poly_int_macros",
-        "//math/fft:fft_utils",
+        "//math/fft:fft_mixed_utils",
     ],
 )
 
@@ -28,7 +28,7 @@ cc_library(
     hdrs = ["poly_mod_int.h"],
     deps = [
         ":poly_mod_int_macros",
-        "//math/fft:fft_utils",
+        "//math/fft:fft_mixed_utils",
         "//math/fft:ntt_utils_fix",
     ],
 )

@@ -7,7 +7,7 @@
 #endif
 
 #ifdef _POLY_MOD_INT_FFT_UTILS
-#include "math/fft/fft_utils.h"
+#include "math/fft/fft_mixed_utils.h"
 #endif
 
 #include "debug/debug_basic.h"

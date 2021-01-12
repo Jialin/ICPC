@@ -3,7 +3,7 @@
 #include "math/poly/poly_int_macros.h"
 
 #ifdef _POLY_INT_FFT_UTILS
-#include "math/fft/fft_utils.h"
+#include "math/fft/fft_mixed_utils.h"
 #endif
 
 namespace math {

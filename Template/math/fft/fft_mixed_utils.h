@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/fft/fft_utils_macros.h"
+#include "math/fft/fft_mixed_utils_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/complex/complex.h"
@@ -31,10 +31,6 @@ struct FFTUtils {
     _roots[0].init(0, 0);
     _roots[1].init(1, 0);
     _initCapacity(capacity);
-#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
-    _cs2.reserve(capacity);
-    _cs3.reserve(capacity);
-#endif
   }
 
 #ifdef FFT_UTILS_MUL_INT
@@ -453,9 +449,6 @@ struct FFTUtils {
 
   vector<int> _revs;
   vector<Complex<T>> _roots;
-#ifdef _FFT_UTILS_COMPLEX_VECTOR_3
-  vector<Complex<T>> _cs2, _cs3;
-#endif
 };
 
 } // namespace math

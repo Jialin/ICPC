@@ -20,7 +20,7 @@
 #endif
 
 #ifdef _BIGINT_FFT_UTILS
-#include "math/fft/fft_utils.h"
+#include "math/fft/fft_mixed_utils.h"
 #endif
 
 using namespace std;

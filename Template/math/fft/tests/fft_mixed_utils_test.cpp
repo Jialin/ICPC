@@ -2,9 +2,9 @@
 
 #define BIGINT_ALL
 #define FFT_UTILS_ALL
-#include "math/fft/fft_utils_macros.h"
+#include "math/fft/fft_mixed_utils_macros.h"
 
-#include "math/fft/fft_utils.h"
+#include "math/fft/fft_mixed_utils.h"
 
 namespace math {
 
