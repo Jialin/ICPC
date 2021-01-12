@@ -3,20 +3,28 @@ import re
 import subprocess
 from copy import deepcopy
 
-TEMPLATES = ["math/mod/mod_int.h", "math/complex/complex.h"]
+TEMPLATES = [
+    "math/complex/complex.h",
+    "math/fft/fft_utils.h",
+    "math/fft/fft_mul_utils.h",
+    "math/mod/mod_int.h",
+]
 
 
 def generate_dep_lines(dep_from, dep_tos):
     return (
-        ["#ifdef " + dep_from]
+        (["#ifdef " + dep_from] if dep_from else [])
         + ["#define " + dep_to for dep_to in sorted(dep_tos)]
-        + ["#endif"]
+        + (["#endif"] if dep_from else [])
     )
 
 
 def write_macro_file(macro_filepath, lines):
-    with open(macro_filepath, "r") as macro_file:
-        original_lines = macro_file.readlines()
+    try:
+        with open(macro_filepath, "r") as macro_file:
+            original_lines = macro_file.readlines()
+    except:
+        original_lines = []
     file = open(macro_filepath, "w")
     file.write("\n".join(lines))
     file.close()
@@ -30,10 +38,15 @@ def write_macro_file(macro_filepath, lines):
 ALL_DECLARE_PATTERN = re.compile(r"^.*// ALL ([A-Z_]+)$")
 ALL_DEPS_PATTERN = re.compile(r"^.*// \^ ([A-Z_]+)$")
 DEPS_PATTERN = re.compile(r"^.*//\s*([A-Z_]+) => ([A-Z_]+)\s*$")
+GLOBAL_DEPS_PATTERN = re.compile(r"^.*//\s* => ([A-Z_]+)\s*$")
+INCLUDE_PATTERN = re.compile(r"^(#include \S+)\s*// INCLUDE$")
 for template in TEMPLATES:
     template_filepath = os.path.join(os.environ["ICPC_HOME"], "Template", template)
+    all_dep = ""
     deps = {}
     all_deps = set()
+    global_deps = set()
+    includes = set()
     # Load all_deps and deps
     with open(template_filepath, "r") as template_file:
         for line in template_file.readlines():
@@ -41,9 +54,17 @@ for template in TEMPLATES:
             if match:
                 all_dep = match[1]
                 continue
+            match = INCLUDE_PATTERN.match(line)
+            if match:
+                includes.add(match[1])
+                continue
             match = ALL_DEPS_PATTERN.match(line)
             if match:
                 all_deps.add(match[1])
+                continue
+            match = GLOBAL_DEPS_PATTERN.match(line)
+            if match:
+                global_deps.add(match[1])
                 continue
             match = DEPS_PATTERN.match(line)
             if match:
@@ -63,9 +84,18 @@ for template in TEMPLATES:
         deps = new_deps
     # Generate codes
     lines = generate_dep_lines(all_dep, all_deps)
-    for dep_from, dep_tos in sorted(deps.items()):
+    if lines:
         lines.append("")
+    lines.extend(generate_dep_lines("", global_deps))
+    for dep_from, dep_tos in sorted(deps.items()):
+        if lines:
+            lines.append("")
         lines.extend(generate_dep_lines(dep_from, dep_tos))
+    if lines:
+        lines.append("")
+    lines.extend(sorted(includes))
+    if lines and lines[-1]:
+        lines.append("")
     # Write file
     macro_filepath = re.sub(".h$", "_macros.h", template_filepath)
     write_macro_file(macro_filepath, lines)
