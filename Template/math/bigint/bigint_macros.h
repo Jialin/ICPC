@@ -19,7 +19,6 @@
 #define BIGINT_DIV_INLINE_INT
 #define BIGINT_DIV_MOD_INLINE_INT
 #define BIGINT_EQ_INT
-#define BIGINT_FFT_MUL_INLINE
 #define BIGINT_GCD_INLINE
 #define BIGINT_GE
 #define BIGINT_GE_INT
@@ -45,84 +44,61 @@
 #define BIGINT_OUTPUT_FAST
 #define BIGINT_SUB
 #define BIGINT_SUB_INLINE
+#define BIGINT_SUB_INLINE_INT
 #endif
 
-#ifdef BIGINT_FFT_MUL_INLINE
-#define FFT_UTILS_MUL_INT
-#define BIGINT_ASSIGN_COMPLEX_VECTOR
-#define _BIGINT_FFT_UTILS
+#ifdef BIGINT_ADD_INLINE
+#define _BIGINT_POW10
 #endif
 
-#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
-#define COMPLEX_INIT
+#ifdef BIGINT_ADD_INLINE_INT
+#define _BIGINT_POW10
 #endif
 
-#ifdef BIGINT_SUB
-#define BIGINT_SUB_INLINE
+#ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+#define _BIGINT_POW10
 #endif
 
-#ifdef BIGINT_ADD_INT
-#define BIGINT_ADD_INLINE_INT
+#ifdef BIGINT_CMP_INT
+#define _BIGINT_POW10
 #endif
 
-#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_GE) || defined(BIGINT_LT)
-#define BIGINT_CMP
+#ifdef BIGINT_DIGIT_COUNT
+#define _BIGINT_POW10
 #endif
 
-#if defined(BIGINT_EQ_INT) || defined(BIGINT_GCD_INLINE) ||                    \
-    defined(BIGINT_GE_INT) || defined(BIGINT_GT_INT) ||                        \
-    defined(BIGINT_LT_INT) || defined(BIGINT_NE_INT)
-#define BIGINT_CMP_INT
+#ifdef BIGINT_DIV_MOD_INLINE_INT
+#define _BIGINT_POW10
 #endif
 
-#if defined(BIGINT_GCD_INLINE) || defined(BIGINT_DIV_INLINE_INT)
-#define BIGINT_DIV_MOD_INLINE_INT
+#ifdef BIGINT_INIT_INT
+#define _BIGINT_POW10
 #endif
 
-#if defined(LOCAL) && defined(BIGINT_SUB_INLINE)
-#define BIGINT_COMPARE
+#ifdef BIGINT_INIT_MUL
+#define FFT_MUL_UTILS_MUL_INT
+#define _BIGINT_FFT_MUL_UTILS
 #endif
 
-#ifdef BIGINT_MUL_INT
-#define BIGINT_MUL_INLINE_INT
+#ifdef BIGINT_MOD_DIV_INLINE
+#define _BIGINT_POW10
 #endif
 
-#ifdef BIGINT_ADD
-#define BIGINT_INIT_ADD
+#ifdef BIGINT_MOD_INT
+#define _BIGINT_POW10
 #endif
 
-#if defined(BIGINT_ADD_INT) || defined(BIGINT_INIT_ADD) ||                     \
-    defined(BIGINT_MUL_INLINE) || defined(BIGINT_MUL_INT) ||                   \
-    defined(BIGINT_SUB)
-#define BIGINT_ASSIGN
+#ifdef BIGINT_MUL_INLINE_INT
+#define _BIGINT_POW10
 #endif
 
-#ifdef BIGINT_INIT_ADD
-#define BIGINT_ADD_INLINE
+#ifdef BIGINT_SUB_INLINE
+#define _BIGINT_POW10
 #endif
 
-#if defined(BIGINT_MUL) || defined(BIGINT_MUL_INLINE)
-#define BIGINT_INIT_MUL
-#endif
-
-#if defined(BIGINT_ASSIGN_INT) || defined(BIGINT_CONSTRUCT_INT)
-#define BIGINT_INIT_INT
-#endif
-
-#if defined(BIGINT_DIV_INLINE) || defined(BIGINT_MOD_INLINE)
-#define BIGINT_MOD_DIV_INLINE
-#endif
-
-#if defined(BIGINT_ASSIGN_COMPLEX_VECTOR) ||                                   \
-    defined(BIGINT_DIV_MOD_INLINE_INT) || defined(BIGINT_INIT_CHAR_ARRAY) ||   \
-    defined(BIGINT_INIT_MUL) || defined(BIGINT_MOD_DIV_INLINE) ||              \
-    defined(BIGINT_MUL_INLINE_INT) || defined(BIGINT_SUB_INLINE)
-#define BIGINT_CLEAN
-#endif
-
-#if defined(BIGINT_ASSIGN_CHAR_ARRAY) || defined(BIGINT_ASSIGN_STRING)
-#define BIGINT_INIT_CHAR_ARRAY
+#ifdef BIGINT_SUB_INLINE_INT
+#define _BIGINT_POW10
 #endif
 
 #include "math/complex/complex_macros.h"
-#include "math/fft/fft_mixed_utils_macros.h"
+#include "math/fft/fft_mul_utils_macros.h"

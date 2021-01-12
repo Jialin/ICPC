@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/complex/complex_macros.h" // INCLUDE
+#include "math/fft/fft_utils_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/complex/complex.h"

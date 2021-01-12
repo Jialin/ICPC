@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #define BIGINT_ALL
+#include "math/bigint/bigint_macros.h"
 
 #include "math/bigint/bigint.h"
 
@@ -58,6 +59,39 @@ TEST(BigInt, initInt) {
 TEST(BigInt, initMul) {
   BigInt<4, int> a, b, res;
 
+  a = 0;
+  b = 0;
+  res.initMul(a, b);
+  ASSERT_EQ(1, res.size());
+  EXPECT_EQ(0, res[0]);
+
+  a = "1";
+  b = "0";
+  res.initMul(a, b);
+  ASSERT_EQ(1, res.size());
+  EXPECT_EQ(0, res[0]);
+
+  a = "1833811";
+  b = "0";
+  res.initMul(a, b);
+  ASSERT_EQ(1, res.size());
+  EXPECT_EQ(0, res[0]);
+
+  a = "12";
+  b = "77";
+  res.initMul(a, b);
+  ASSERT_EQ(1, res.size());
+  EXPECT_EQ(924, res[0]);
+
+  a = "1833811";
+  b = "1847182";
+  res.initMul(a, b);
+  ASSERT_EQ(4, res.size());
+  EXPECT_EQ(602, res[0]);
+  EXPECT_EQ(8267, res[1]);
+  EXPECT_EQ(3873, res[2]);
+  EXPECT_EQ(3, res[3]);
+
   a = 12;
   b = 12;
   res.initMul(a, b);
@@ -86,7 +120,7 @@ TEST(BigInt, initMul) {
   EXPECT_EQ(8529, res[6]);
   EXPECT_EQ(2, res[7]);
 
-  BigInt<9, int64_t> a9, b9, res9;
+  BigInt<9, int64_t, long double> a9, b9, res9;
   a9 = "999999999999999999999";
   b9 = "8123881931004020101941";
   res9.initMul(a9, b9);
@@ -176,9 +210,9 @@ TEST(BigInt, addInline) {
 }
 
 TEST(BigInt, subInline) {
-  BigInt<> a;
+  BigInt<9> a;
   a = "12345678901234567890";
-  BigInt<> b;
+  BigInt<9> b;
   b = "12384812331371743";
   a -= b;
   ASSERT_EQ(3, a.size());
@@ -198,7 +232,7 @@ TEST(BigInt, subInline) {
 }
 
 TEST(BigInt, addInlineInt) {
-  BigInt<> v;
+  BigInt<9> v;
   v = "12345678901234567890";
 
   v += 0;
@@ -215,7 +249,7 @@ TEST(BigInt, addInlineInt) {
 }
 
 TEST(BigInt, mulInlineInt) {
-  BigInt<> v;
+  BigInt<9> v;
 
   v = "182378471831341";
   v *= 2;
@@ -235,7 +269,7 @@ TEST(BigInt, mulInlineInt) {
 }
 
 TEST(BigInt, modInline) {
-  BigInt<> x, y, divRes;
+  BigInt<9> x, y, divRes;
 
   x = "1827461738161";
   y = "1";
@@ -284,7 +318,7 @@ TEST(BigInt, modInline) {
 }
 
 TEST(BigInt, divModInlineInt) {
-  BigInt<> v;
+  BigInt<9> v;
   v = "182378471831341231241";
   EXPECT_EQ(2, v.divModInlineInt(3));
   ASSERT_EQ(3, v.size());
@@ -307,7 +341,7 @@ TEST(BigInt, divModInlineInt) {
 }
 
 TEST(BigInt, modInt) {
-  BigInt<> v;
+  BigInt<9> v;
   v = "182378471831341231241";
   EXPECT_EQ(0, v % 1);
   EXPECT_EQ(1, v % 2);
@@ -316,15 +350,15 @@ TEST(BigInt, modInt) {
 }
 
 TEST(BigInt, cmp) {
-  BigInt<> a;
+  BigInt<9> a;
   string aStr("12345678901234567890");
   a.initCharArray(aStr.c_str(), aStr.size());
 
-  BigInt<> b;
+  BigInt<9> b;
   string bStr("12384813");
   b.initCharArray(bStr.c_str(), bStr.size());
 
-  BigInt<> c;
+  BigInt<9> c;
   string cStr("12345678901234567891");
   c.initCharArray(cStr.c_str(), cStr.size());
 
@@ -387,7 +421,7 @@ TEST(BigInt, digitSum) {
 }
 
 TEST(BigInt, outputCharArray) {
-  BigInt<> v;
+  BigInt<9> v;
   char s[100];
 
   v = "0000";
@@ -404,7 +438,7 @@ TEST(BigInt, outputCharArray) {
 }
 
 TEST(BigInt, gcdInline) {
-  BigInt<> x, y;
+  BigInt<9> x, y;
   x = "45100439945872875162588853040";
   y = "262846577632689827002596945105";
   x.gcdInline(y);
@@ -419,49 +453,6 @@ TEST(BigInt, gcdInline) {
   EXPECT_EQ(473738383, x[1]);
   EXPECT_EQ(383747178, x[2]);
   EXPECT_EQ(1838, x[3]);
-}
-
-TEST(BigInt, fftMulInline) {
-  FFTUtils<> fft;
-  BigInt<4, int> x, y;
-  x = "0";
-  y = "0";
-  x.mulInline(y, fft);
-  ASSERT_EQ(1, x.size());
-  EXPECT_EQ(0, x[0]);
-
-  x = "1";
-  y = "0";
-  x.mulInline(y, fft);
-  ASSERT_EQ(1, x.size());
-  EXPECT_EQ(0, x[0]);
-
-  x = "1833811";
-  y = "0";
-  x.mulInline(y, fft);
-  ASSERT_EQ(1, x.size());
-  EXPECT_EQ(0, x[0]);
-
-  x = "12";
-  y = "77";
-  x.mulInline(y, fft);
-  ASSERT_EQ(1, x.size());
-  EXPECT_EQ(924, x[0]);
-
-  x = "1833811";
-  y = "1847182";
-  x.mulInline(y, fft);
-  ASSERT_EQ(4, x.size());
-  EXPECT_EQ(602, x[0]);
-  EXPECT_EQ(8267, x[1]);
-  EXPECT_EQ(3873, x[2]);
-  EXPECT_EQ(3, x[3]);
-
-  x = "12";
-  y = "77";
-  x.mulInline(y, fft);
-  ASSERT_EQ(1, x.size());
-  EXPECT_EQ(924, x[0]);
 }
 
 } // namespace math

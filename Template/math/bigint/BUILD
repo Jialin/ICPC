@@ -11,12 +11,12 @@ cc_library(
         "//io:write_int",
         "//math:pow10",
         "//math/complex",
-        "//math/fft:fft_mixed_utils",
+        "//math/fft:fft_mul_utils",
     ],
 )
 
 cc_library(
     name = "bigint_macros",
     hdrs = ["bigint_macros.h"],
-    deps = ["//math/fft:fft_mixed_utils_macros"],
+    deps = ["//math/fft:fft_mul_utils_macros"],
 )

@@ -4,6 +4,7 @@ import subprocess
 from copy import deepcopy
 
 TEMPLATES = [
+    "math/bigint/bigint.h",
     "math/complex/complex.h",
     "math/fft/fft_utils.h",
     "math/fft/fft_mul_utils.h",
@@ -35,10 +36,10 @@ def write_macro_file(macro_filepath, lines):
         print("{} updated.".format(macro_filepath))
 
 
-ALL_DECLARE_PATTERN = re.compile(r"^.*// ALL ([A-Z_]+)$")
-ALL_DEPS_PATTERN = re.compile(r"^.*// \^ ([A-Z_]+)$")
-DEPS_PATTERN = re.compile(r"^.*//\s*([A-Z_]+) => ([A-Z_]+)\s*$")
-GLOBAL_DEPS_PATTERN = re.compile(r"^.*//\s* => ([A-Z_]+)\s*$")
+ALL_DECLARE_PATTERN = re.compile(r"^.*// ALL ([A-Z0-9_]+)$")
+ALL_DEPS_PATTERN = re.compile(r"^.*// \^ ([A-Z0-9_]+)$")
+DEPS_PATTERN = re.compile(r"^.*//\s*([A-Z0-9_]+) => ([A-Z0-9_]+)\s*$")
+GLOBAL_DEPS_PATTERN = re.compile(r"^.*//\s* => ([A-Z0-9_]+)\s*$")
 INCLUDE_PATTERN = re.compile(r"^(#include \S+)\s*// INCLUDE$")
 for template in TEMPLATES:
     template_filepath = os.path.join(os.environ["ICPC_HOME"], "Template", template)
