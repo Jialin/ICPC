@@ -8,15 +8,6 @@ cc_library(
 )
 
 cc_library(
-    name = "debug_bigint",
-    hdrs = ["debug_bigint.h"],
-    deps = [
-        ":debug_basic",
-        "//math/bigint",
-    ],
-)
-
-cc_library(
     name = "debug_declare",
     hdrs = ["debug_declare.h"],
 )
@@ -32,7 +23,6 @@ cc_library(
     hdrs = ["debug.h"],
     deps = [
         ":debug_basic",
-        ":debug_bigint",
         ":debug_matrix",
         "@boost//:stacktrace",
     ],

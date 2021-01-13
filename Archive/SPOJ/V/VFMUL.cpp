@@ -22,8 +22,8 @@ using namespace std;
 
 #define BIGINT_INIT_CAPACITY
 #define BIGINT_INIT_CHAR_ARRAY
+#define BIGINT_MUL_INLINE
 #define BIGINT_OUTPUT_FAST
-#define BIGINT_FFT_MUL_INLINE
 #include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
@@ -34,11 +34,11 @@ using namespace std;
 const int GROUP = 5;
 const int MAXL = 300000 + GROUP * 5;
 
-math::FFTUtils<double> fft((MAXL / GROUP) << 1);
-math::BigInt<GROUP, int64_t> a, b;
+math::BigInt<GROUP, int64_t, double> a, b;
 char s1[MAXL], s2[MAXL];
 
 int main() {
+  math::FFTUtils<double>::instance().initCapacity((MAXL / GROUP) << 1);
   a.initCapacity(MAXL << 1);
   b.initCapacity(MAXL << 1);
   int taskNumber;
@@ -48,7 +48,7 @@ int main() {
     io::readCharArray(s2);
     a.initCharArray(s1);
     b.initCharArray(s2);
-    a.mulInline(b, fft);
+    a *= b;
     a.outputFast();
     io::writeChar('\n');
   }

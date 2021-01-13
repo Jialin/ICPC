@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "debug/debug.h"
 #include "math/prime/prime_iterator.h"
 

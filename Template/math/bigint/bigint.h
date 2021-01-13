@@ -6,7 +6,6 @@
 #include "math/fft/fft_mul_utils_macros.h" // INCLUDE
 
 #include "debug/debug_basic.h"
-#include "math/complex/complex.h"
 
 #ifdef _BIGINT_POW10
 #include "math/pow10.h"
@@ -24,21 +23,21 @@ using namespace std;
 
 namespace math {
 
+#ifdef _BIGINT_FFT_T
 template<
     int GROUP = 4,
     typename BASE_SQR = int64_t,
-#ifdef _BIGINT_FFT_T
-    typename FFT_T = double
+    typename FFT_T = long double>
+#else
+template<int GROUP = 4, typename BASE_SQR = int64_t>
 #endif
-    >
 struct BigInt : vector<int> {
-  using _BigInt = BigInt<
-      GROUP,
-      BASE_SQR,
+
 #ifdef _BIGINT_FFT_T
-      FFT_T
+  using _BigInt = BigInt<GROUP, BASE_SQR, FFT_T>;
+#else
+  using _BigInt = BigInt<GROUP, BASE_SQR>;
 #endif
-      >;
 
 // ^ BIGINT_CONSTRUCT_EMPTY
 #ifdef BIGINT_CONSTRUCT_EMPTY
@@ -49,6 +48,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_CONSTRUCT_INT
   template<typename T>
   inline BigInt(T v) {
+    // BIGINT_CONSTRUCT_INT => BIGINT_INIT_INT
     initInt<T>(v);
   }
 #endif
@@ -105,6 +105,7 @@ struct BigInt : vector<int> {
         &y,
         "in a.initAdd(b,c), a and c should not reference to the same instance");
     *this = x;
+    // BIGINT_INIT_ADD => BIGINT_ADD_INLINE
     *this += y;
   }
 #endif
@@ -153,6 +154,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_ASSIGN_INT
   template<typename T>
   inline void operator=(T o) {
+    // BIGINT_ASSIGN_INT => BIGINT_INIT_INT
     initInt<T>(o);
   }
 #endif
@@ -176,6 +178,7 @@ struct BigInt : vector<int> {
       (*this)[i] = carry - newCarry * POW10[GROUP];
       carry = newCarry;
     }
+    // BIGINT_ASSIGN_COMPLEX_VECTOR => BIGINT_SHRINK
     shrink();
   }
 #endif
@@ -184,6 +187,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_EQ_INT
   template<typename T>
   inline bool operator==(T v) const {
+    // BIGINT_EQ_INT => BIGINT_CMP_INT
     return !cmp<T>(v);
   }
 #endif
@@ -192,6 +196,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_NE_INT
   template<typename T>
   inline bool operator!=(T v) const {
+    // BIGINT_NE_INT => BIGINT_CMP_INT
     return cmp<T>(v);
   }
 #endif
@@ -200,6 +205,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_ADD
   inline _BigInt operator+(const _BigInt& o) const {
     _BigInt res;
+    // BIGINT_ADD => BIGINT_INIT_ADD
     res.initAdd(*this, o);
     return res;
   }
@@ -211,6 +217,7 @@ struct BigInt : vector<int> {
   inline _BigInt operator+(T v) const {
     _BigInt res;
     res = *this;
+    // BIGINT_ADD_INT => BIGINT_ADD_INLINE_INT
     res += v;
     return res;
   }
@@ -285,6 +292,7 @@ struct BigInt : vector<int> {
         (*this)[i] += POW10[GROUP];
       }
     }
+    // BIGINT_SUB_INLINE => BIGINT_SHRINK
     shrink();
   }
 #endif
@@ -329,6 +337,7 @@ struct BigInt : vector<int> {
   inline _BigInt operator*(BASE_SQR v) const {
     _BigInt res;
     res = *this;
+    // BIGINT_MUL_INT => BIGINT_MUL_INLINE_INT
     res *= v;
     return res;
   }
@@ -356,6 +365,7 @@ struct BigInt : vector<int> {
       (*this)[i] = static_cast<int>(cur % POW10[GROUP]);
       carry = static_cast<int>(cur / POW10[GROUP]);
     }
+    // BIGINT_MUL_INLINE_INT => BIGINT_SHRINK
     shrink();
   }
 #endif
@@ -372,6 +382,7 @@ struct BigInt : vector<int> {
 // ^ BIGINT_DIV_INLINE_INT
 #ifdef BIGINT_DIV_INLINE_INT
   inline void operator/=(BASE_SQR v) {
+    // BIGINT_DIV_INLINE_INT => BIGINT_DIV_MOD_INLINE_INT
     divModInlineInt(v);
   }
 #endif
@@ -401,6 +412,7 @@ struct BigInt : vector<int> {
 // ^ BIGINT_LT
 #ifdef BIGINT_LT
   inline bool operator<(const _BigInt& o) const {
+    // BIGINT_LT => BIGINT_CMP
     return cmp(o) < 0;
   }
 #endif
@@ -409,6 +421,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_LT_INT
   template<typename T>
   inline bool operator<(T v) const {
+    // BIGINT_LT_INT => BIGINT_CMP_INT
     return cmp<T>(v) < 0;
   }
 #endif
@@ -417,6 +430,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_GT_INT
   template<typename T>
   inline bool operator>(T v) const {
+    // BIGINT_LT_INT => BIGINT_CMP_INT
     return cmp<T>(v) > 0;
   }
 #endif
@@ -424,6 +438,7 @@ struct BigInt : vector<int> {
 // ^ BIGINT_GE
 #ifdef BIGINT_GE
   inline bool operator>=(const _BigInt& o) const {
+    // BIGINT_GE => BIGINT_CMP
     return cmp(o) >= 0;
   }
 #endif
@@ -432,6 +447,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_GE_INT
   template<typename T>
   inline bool operator>=(T v) const {
+    // BIGINT_LT_INT => BIGINT_CMP_INT
     return cmp<T>(v) >= 0;
   }
 #endif
@@ -457,6 +473,7 @@ struct BigInt : vector<int> {
       divRes[i] = res;
       shiftSubInline(o, res, i);
     }
+    // BIGINT_MOD_DIV_INLINE => BIGINT_SHRINK
     shrink();
     divRes.shrink();
   }
@@ -518,6 +535,7 @@ struct BigInt : vector<int> {
       (*this)[i] = cur / v;
       mod = cur % v;
     }
+    // BIGINT_DIV_MOD_INLINE_INT => BIGINT_SHRINK
     shrink();
     return mod;
   }
@@ -571,11 +589,14 @@ struct BigInt : vector<int> {
 // ^ BIGINT_GCD_INLINE
 #ifdef BIGINT_GCD_INLINE
   inline void gcdInline(_BigInt& o) {
+    // BIGINT_GCD_INLINE => BIGINT_CMP
     if (cmp(o) < 0) {
       swap(o);
     }
     _BigInt divRes;
+    // BIGINT_GCD_INLINE => BIGINT_CMP_INT
     while (o.cmp(0) > 0) {
+      // BIGINT_GCD_INLINE => BIGINT_MOD_DIV_INLINE
       modDivInline(o, divRes);
       swap(o);
     }
@@ -666,6 +687,33 @@ struct BigInt : vector<int> {
     }
   }
 #endif
+
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const _BigInt& v) {
+    int idx = static_cast<int>(v.size()) - 1;
+    o << v[idx];
+    for (int i = idx - 1; i >= 0; --i) {
+      o << "," << setfill('0') << setw(GROUP) << v[i];
+    }
+    return o;
+  }
+#endif
 };
 
 } // namespace math
+
+#if defined(LOCAL) && defined(_BIGINT_FFT_T)
+template<
+    int GROUP = 4,
+    typename BASE_SQR = int64_t,
+    typename FFT_T = long double>
+inline string totype(const math::BigInt<GROUP, BASE_SQR, FFT_T>& v) {
+  return "BigInt<" + tostring(GROUP) + "," + totype(BASE_SQR()) + "," +
+         totype(FFT_T()) + ">";
+}
+#elif defined(LOCAL)
+template<int GROUP = 4, typename BASE_SQR = int64_t>
+inline string totype(const math::BigInt<GROUP, BASE_SQR>& v) {
+  return "BigInt<" + tostring(GROUP) + "," + totype(BASE_SQR()) + ">";
+}
+#endif

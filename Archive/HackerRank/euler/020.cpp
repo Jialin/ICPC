@@ -23,9 +23,10 @@ using namespace std;
 #define BIGINT_ASSIGN_INT
 #define BIGINT_DIGIT_SUM
 #define BIGINT_MUL_INLINE_INT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXN = 1001;
 

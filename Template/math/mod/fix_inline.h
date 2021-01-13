@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "debug/debug.h"
 #include "math/mod/slight_fix_inline.h"
 

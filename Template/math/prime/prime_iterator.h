@@ -1,10 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <vector>
-
 using namespace std;
 
 namespace math {

@@ -23,10 +23,11 @@ using namespace std;
 #define BIGINT_DIV_INLINE
 #define BIGINT_GCD_INLINE
 #define BIGINT_INIT_CHAR_ARRAY
-#define BIGINT_PRINT
+#define BIGINT_OUTPUT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXL = 32;
 
@@ -46,11 +47,11 @@ int main() {
     a.gcdInline(b);
     p /= a;
     q /= a;
-    p.print();
+    p.output();
     putchar(' ');
     putchar('/');
     putchar(' ');
-    q.print();
+    q.output();
     putchar('\n');
   }
   return 0;

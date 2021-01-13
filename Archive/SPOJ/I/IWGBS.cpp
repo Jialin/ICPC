@@ -23,10 +23,11 @@ using namespace std;
 #define BIGINT_ADD_INLINE
 #define BIGINT_ASSIGN_INT
 #define BIGINT_INIT_CAPACITY
-#define BIGINT_PRINT
+#define BIGINT_OUTPUT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXL = 2090;
 
@@ -46,6 +47,6 @@ int main() {
     one += zero;
   }
   one += zero;
-  one.print();
+  one.output();
   putchar('\n');
 }

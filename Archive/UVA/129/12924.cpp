@@ -26,16 +26,19 @@ using namespace std;
 #define BIGINT_INIT_ADD
 #define BIGINT_MUL_INLINE
 #define BIGINT_MUL_INLINE_INT
-#define BIGINT_PRINT_QUICK
+#define BIGINT_OUTPUT_FAST
 #define BIGINT_SUB_INLINE
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
 #include "io/read_int.h"
 #include "io/write_int.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
-inline pair<math::BigInt<>, math::BigInt<>> fib(int n) {
-  math::BigInt<> a, b;
+using BigInt = math::BigInt<5, int64_t, double>;
+
+inline pair<BigInt, BigInt> fib(int n) {
+  BigInt a, b;
   if (!n) {
     a = 0;
     b = 1;
@@ -43,16 +46,16 @@ inline pair<math::BigInt<>, math::BigInt<>> fib(int n) {
   }
   tie(a, b) = fib(n >> 1);
 
-  math::BigInt<> tmpC;
+  BigInt tmpC;
   tmpC.initAdd(b, b);
   tmpC -= a;
-  math::BigInt<> c;
+  BigInt c;
   c.initMul(a, tmpC);
 
-  math::BigInt<> aa, bb;
+  BigInt aa, bb;
   aa.initMul(a, a);
   bb.initMul(b, b);
-  math::BigInt<> d;
+  BigInt d;
   d.initAdd(aa, bb);
 
   if (n & 1) {
@@ -64,7 +67,7 @@ inline pair<math::BigInt<>, math::BigInt<>> fib(int n) {
 }
 
 int main() {
-  math::BigInt<> a, b;
+  BigInt a, b;
   int taskNumber;
   io::readInt(taskNumber);
   for (int taskIdx = 0; taskIdx < taskNumber; ++taskIdx) {
@@ -81,7 +84,7 @@ int main() {
     a *= na;
     b *= nb;
     a += b;
-    a.printQuick();
+    a.outputFast();
     io::writeChar('\n');
   }
   return 0;

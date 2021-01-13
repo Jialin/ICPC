@@ -23,10 +23,11 @@ using namespace std;
 #define BIGINT_ASSIGN_INT
 #define BIGINT_LT
 #define BIGINT_MUL_INLINE_INT
-#define BIGINT_PRINT
+#define BIGINT_OUTPUT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXN = 100;
 
@@ -84,7 +85,7 @@ int main() {
     if (negative) {
       putchar('-');
     }
-    res.print();
+    res.output();
     putchar('\n');
   }
   return 0;

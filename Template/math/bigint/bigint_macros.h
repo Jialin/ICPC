@@ -47,6 +47,12 @@
 #define BIGINT_SUB_INLINE_INT
 #endif
 
+#ifdef BIGINT_ADD
+#define BIGINT_ADD_INLINE
+#define BIGINT_INIT_ADD
+#define _BIGINT_POW10
+#endif
+
 #ifdef BIGINT_ADD_INLINE
 #define _BIGINT_POW10
 #endif
@@ -55,8 +61,19 @@
 #define _BIGINT_POW10
 #endif
 
+#ifdef BIGINT_ADD_INT
+#define BIGINT_ADD_INLINE_INT
+#define _BIGINT_POW10
+#endif
+
 #ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+#define BIGINT_SHRINK
 #define _BIGINT_FFT_T
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_ASSIGN_INT
+#define BIGINT_INIT_INT
 #define _BIGINT_POW10
 #endif
 
@@ -64,11 +81,45 @@
 #define _BIGINT_POW10
 #endif
 
+#ifdef BIGINT_CONSTRUCT_INT
+#define BIGINT_INIT_INT
+#define _BIGINT_POW10
+#endif
+
 #ifdef BIGINT_DIGIT_COUNT
 #define _BIGINT_POW10
 #endif
 
+#ifdef BIGINT_DIV_INLINE_INT
+#define BIGINT_DIV_MOD_INLINE_INT
+#define BIGINT_SHRINK
+#define _BIGINT_POW10
+#endif
+
 #ifdef BIGINT_DIV_MOD_INLINE_INT
+#define BIGINT_SHRINK
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_EQ_INT
+#define BIGINT_CMP_INT
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_GCD_INLINE
+#define BIGINT_CMP
+#define BIGINT_CMP_INT
+#define BIGINT_MOD_DIV_INLINE
+#define BIGINT_SHRINK
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_GE
+#define BIGINT_CMP
+#endif
+
+#ifdef BIGINT_INIT_ADD
+#define BIGINT_ADD_INLINE
 #define _BIGINT_POW10
 #endif
 
@@ -82,13 +133,24 @@
 
 #ifdef BIGINT_INIT_MUL
 #define BIGINT_ASSIGN_COMPLEX_VECTOR
+#define BIGINT_SHRINK
 #define FFT_MUL_UTILS_MUL_INT
 #define _BIGINT_FFT_MUL_UTILS
 #define _BIGINT_FFT_T
 #define _BIGINT_POW10
 #endif
 
+#ifdef BIGINT_LT
+#define BIGINT_CMP
+#endif
+
+#ifdef BIGINT_LT_INT
+#define BIGINT_CMP_INT
+#define _BIGINT_POW10
+#endif
+
 #ifdef BIGINT_MOD_DIV_INLINE
+#define BIGINT_SHRINK
 #define _BIGINT_POW10
 #endif
 
@@ -99,6 +161,7 @@
 #ifdef BIGINT_MUL_INLINE
 #define BIGINT_ASSIGN_COMPLEX_VECTOR
 #define BIGINT_INIT_MUL
+#define BIGINT_SHRINK
 #define FFT_MUL_UTILS_MUL_INT
 #define _BIGINT_FFT_MUL_UTILS
 #define _BIGINT_FFT_T
@@ -106,6 +169,18 @@
 #endif
 
 #ifdef BIGINT_MUL_INLINE_INT
+#define BIGINT_SHRINK
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_MUL_INT
+#define BIGINT_MUL_INLINE_INT
+#define BIGINT_SHRINK
+#define _BIGINT_POW10
+#endif
+
+#ifdef BIGINT_NE_INT
+#define BIGINT_CMP_INT
 #define _BIGINT_POW10
 #endif
 
@@ -114,6 +189,7 @@
 #endif
 
 #ifdef BIGINT_SUB_INLINE
+#define BIGINT_SHRINK
 #define _BIGINT_POW10
 #endif
 

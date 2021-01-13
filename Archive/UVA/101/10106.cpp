@@ -22,22 +22,23 @@ using namespace std;
 
 #define BIGINT_INIT_CHAR_ARRAY
 #define BIGINT_MUL_INLINE
-#define BIGINT_PRINT
+#define BIGINT_OUTPUT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXL = 256;
 
 char as[MAXL], bs[MAXL];
-math::BigInt<9, int64_t> a, b;
+math::BigInt<4, int64_t, long double> a, b;
 
 int main() {
   while (scanf("%s%s", as, bs) != EOF) {
     a.initCharArray(as);
     b.initCharArray(bs);
     a *= b;
-    a.print();
+    a.output();
     putchar('\n');
   }
   return 0;

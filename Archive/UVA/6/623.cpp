@@ -22,13 +22,14 @@ using namespace std;
 
 #define BIGINT_ASSIGN_INT
 #define BIGINT_MUL_INT
-#define BIGINT_PRINT_QUICK
+#define BIGINT_OUTPUT_FAST
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
 #include "io/read_int.h"
 #include "io/write_char_array.h"
 #include "io/write_int.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 const int MAXN = 1000 + 1;
 
@@ -44,7 +45,7 @@ int main() {
     io::writeInt(n);
     io::writeChar('!');
     io::writeChar('\n');
-    facts[n].printQuick();
+    facts[n].outputFast();
     io::writeChar('\n');
   }
   return 0;

@@ -112,6 +112,7 @@ function CPP-run11 {
 #   > CPP-gen A.cpp
 ####################
 function CPP-gen {
+  python3 $ICPC_HOME/template/macro_gen.py
   python3 $ICPC_HOME/setup/cpp_gen.py $@
   return $?
 }

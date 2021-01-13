@@ -24,9 +24,10 @@ using namespace std;
 #define BIGINT_LT_INT
 #define BIGINT_MOD_INT
 #define BIGINT_SUB_INLINE_INT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 #include "math/mod/exp.h"
 #include "math/mod/fix.h"
 #include "math/mod/mul.h"
@@ -52,7 +53,7 @@ int main() {
     bi -= 1;
     int res = math::subMod(base, 1, mod);
     if (bi < 32) {
-      res = math::mulMod(res, math::expMod(base, bi._vs[0], mod), mod);
+      res = math::mulMod(res, math::expMod(base, bi[0], mod), mod);
     } else {
       int phi = math::phiUsePrimes(mod, pg.primes);
       res = math::mulMod(res, math::expMod(base, phi + bi % phi, mod), mod);

@@ -25,10 +25,11 @@ using namespace std;
 #define BIGINT_DIGIT_COUNT
 #define BIGINT_MUL_INLINE
 #define BIGINT_MUL
-#define BIGINT_PRINT
+#define BIGINT_OUTPUT
+#include "math/bigint/bigint_macros.h"
 
 #include "debug/debug.h"
-#include "math/bigint.h"
+#include "math/bigint/bigint.h"
 
 int t, a, b;
 math::BigInt<> res, bigT, bigTB;
@@ -63,7 +64,7 @@ int main() {
   while (scanf("%d%d%d", &t, &a, &b) != EOF) {
     printf("(%d^%d-1)/(%d^%d-1) ", t, a, t, b);
     if (calc()) {
-      res.print();
+      res.output();
       putchar('\n');
     } else {
       puts("is not an integer with less than 100 digits.");
