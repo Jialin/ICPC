@@ -12,8 +12,10 @@ inline void writeInt(T x, int padding = 0) {
     x = -x;
   }
   int n = 0;
-  for (; x || !n; x /= 10) {
-    s[n++] = '0' + x % 10;
+  while (x || !n) {
+    T newX = x / 10;
+    s[n++] = '0' + (x - newX * 10);
+    x = newX;
   }
   for (int i = n; i < padding; ++i) {
     writeChar('0');

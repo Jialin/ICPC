@@ -42,17 +42,24 @@ struct FFTMulUtils {
     fft.fft(_as, false, pow2);
     for (int i = 0; i <= (pow2 >> 1); ++i) {
       int j = (pow2 - i) & (pow2 - 1);
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_CONJ
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_SUB
-      _as[j] = (_as[i] * _as[i] - (_as[j] * _as[j]).conj()) * DOWN_QUART;
+      // FFT_MUL_UTILS_MUL_INT => COMPLEX_MUL_INLINE
+      _as[i] *= _as[i];
+      if (i != j) {
+        _as[j] *= _as[j];
+        _as[j].imag = -_as[j].imag;
+        _as[j].initSub(_as[i], _as[j]);
+        // FFT_MUL_UTILS_MUL_INT => COMPLEX_DIV_INLINE_DOUBLE
+        _as[j] /= pow2 << 2;
+        swap(_as[j].real, _as[j].imag);
+        _as[j].imag = -_as[j].imag;
+      } else {
+        _as[j].real = _as[j].imag / (pow2 << 1);
+        _as[j].imag = 0;
+      }
       // FFT_MUL_UTILS_MUL_INT => COMPLEX_INIT_CONJ
       _as[i].initConj(_as[j]);
     }
     fft.fft(_as, false, pow2);
-    for (auto& c : _as) {
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_DIV_INLINE_DOUBLE
-      c /= pow2;
-    }
     // FFT_MUL_UTILS_MUL_INT => _FFT_UTILS_SHRINK_COMPLEX_VECTOR
     _shrink(_as);
     return _as;

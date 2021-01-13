@@ -73,7 +73,8 @@ struct BigInt : vector<int> {
       }
       push_back(v);
     }
-    clean();
+    // BIGINT_INIT_CHAR_ARRAY => BIGINT_SHRINK
+    shrink();
   }
 #endif
 
@@ -113,14 +114,15 @@ struct BigInt : vector<int> {
   inline void initMul(const _BigInt& x, const _BigInt& y) {
     // BIGINT_INIT_MUL => _BIGINT_FFT_MUL_UTILS
     // BIGINT_INIT_MUL => _BIGINT_FFT_T
+    // BIGINT_INIT_MUL => BIGINT_ASSIGN_COMPLEX_VECTOR
     // BIGINT_INIT_MUL => FFT_MUL_UTILS_MUL_INT
     *this = FFTMulUtils<FFT_T>::instance().mulInt(x, y, false);
   }
 #endif
 
-// ^ BIGINT_CLEAN
-#ifdef BIGINT_CLEAN
-  inline void clean() {
+// ^ BIGINT_SHRINK
+#ifdef BIGINT_SHRINK
+  inline void shrink() {
     for (; size() > 1 && !back(); pop_back()) {}
   }
 #endif
@@ -174,7 +176,7 @@ struct BigInt : vector<int> {
       (*this)[i] = carry - newCarry * POW10[GROUP];
       carry = newCarry;
     }
-    clean();
+    shrink();
   }
 #endif
 
@@ -283,7 +285,7 @@ struct BigInt : vector<int> {
         (*this)[i] += POW10[GROUP];
       }
     }
-    clean();
+    shrink();
   }
 #endif
 
@@ -335,9 +337,8 @@ struct BigInt : vector<int> {
 // ^ BIGINT_MUL_INLINE
 #ifdef BIGINT_MUL_INLINE
   inline void operator*=(const _BigInt& o) {
-    _BigInt res;
-    res.initMul(*this, o);
-    *this = res;
+    // BIGINT_MUL_INLINE => BIGINT_INIT_MUL
+    initMul(*this, o);
   }
 #endif
 
@@ -355,7 +356,7 @@ struct BigInt : vector<int> {
       (*this)[i] = static_cast<int>(cur % POW10[GROUP]);
       carry = static_cast<int>(cur / POW10[GROUP]);
     }
-    clean();
+    shrink();
   }
 #endif
 
@@ -456,8 +457,8 @@ struct BigInt : vector<int> {
       divRes[i] = res;
       shiftSubInline(o, res, i);
     }
-    clean();
-    divRes.clean();
+    shrink();
+    divRes.shrink();
   }
 
   inline void shiftSubInline(const _BigInt& o, BASE_SQR mul, int shift) {
@@ -481,7 +482,7 @@ struct BigInt : vector<int> {
       carry = (carry - (*this)[i] + POW10[GROUP] + 1) / POW10[GROUP];
       (*this)[i] -= delta - carry * POW10[GROUP];
     }
-    clean();
+    shrink();
   }
 
   inline bool isLessThanShiftCmp(const _BigInt& o, BASE_SQR mul, int shift) {
@@ -517,7 +518,7 @@ struct BigInt : vector<int> {
       (*this)[i] = cur / v;
       mod = cur % v;
     }
-    clean();
+    shrink();
     return mod;
   }
 #endif
@@ -659,14 +660,6 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
   // BIGINT_OUTPUT_COMPLEX_VECTOR => _BIGINT_FFT_T
   inline void outputComplexVector(vector<Complex<FFT_T>>& res) const {
-#ifdef LOCAL
-    int limit = is_same<T, long double>::value ? 12 : 9;
-    DEBUGF_TRUE(
-        log10(size()) + (GROUP << 1) <= limit,
-        "GROUP might be too large for FFT multiplication. size:%lu GROUP:%d\n",
-        size(),
-        GROUP);
-#endif
     res.resize(size());
     for (size_t i = 0; i < size(); ++i) {
       res[i].init((*this)[i], 0);

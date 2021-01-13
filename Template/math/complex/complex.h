@@ -51,9 +51,9 @@ struct Complex {
 // ^ COMPLEX_MUL_INLINE
 #ifdef COMPLEX_MUL_INLINE
   inline void operator*=(const Complex<T>& o) {
-    T originalReal = real;
-    real = originalReal * o.real - imag * o.imag;
-    imag = originalReal * o.imag + imag * o.real;
+    T realCopy = real, oRealCopy = o.real;
+    real = realCopy * oRealCopy - imag * o.imag;
+    imag = realCopy * o.imag + imag * oRealCopy;
   }
 #endif
 
