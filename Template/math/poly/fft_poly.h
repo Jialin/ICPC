@@ -29,6 +29,14 @@ struct FFTPoly : vector<V> {
   }
 #endif
 
+// ^ FFT_POLY_MUL_INLINE_CYCLIC
+#ifdef FFT_POLY_MUL_INLINE_CYCLIC
+  inline void mulInlineCyclic(const FFTPoly& o) {
+    // FFT_POLY_MUL_INLINE_CYCLIC => FFT_MUL_UTILS_MUL_INLINE_REAL
+    FFTMulUtils<FFT_T>::instance().mulInlineReal(*this, o, true);
+  }
+#endif
+
 #ifdef LOCAL
   friend ostream& operator<<(ostream& o, const FFTPoly& vs) {
     o << tostring(static_cast<vector<V>>(vs));
