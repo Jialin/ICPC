@@ -170,6 +170,18 @@ TEST(FFTMulUtilsTest, mulInlineReal) {
   EXPECT_EQ(16, xs[3]);
   EXPECT_EQ(19, xs[4]);
   EXPECT_EQ(14, xs[5]);
+
+  vector<double> xsR = {1, 2}, ysR = {3, 4, 5, 6, 7};
+  fft.mulInlineReal(xsR, ysR, true);
+  ASSERT_EQ(8, xsR.size());
+  EXPECT_NEAR(3, xsR[0], EPS);
+  EXPECT_NEAR(10, xsR[1], EPS);
+  EXPECT_NEAR(13, xsR[2], EPS);
+  EXPECT_NEAR(16, xsR[3], EPS);
+  EXPECT_NEAR(19, xsR[4], EPS);
+  EXPECT_NEAR(14, xsR[5], EPS);
+  EXPECT_NEAR(0, xsR[6], EPS);
+  EXPECT_NEAR(0, xsR[7], EPS);
 }
 
 } // namespace math
