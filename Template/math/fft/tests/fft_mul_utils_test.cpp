@@ -14,13 +14,13 @@ constexpr double LARGE_EPS = 0.1;
 
 } // namespace
 
-TEST(FFTMulUtilsTest, mulInt) {
+TEST(FFTMulUtilsTest, mulReal) {
   auto& fft = FFTMulUtils<>::instance();
   vector<int> xs, ys;
 
   xs = {3, 4};
   ys = {};
-  const auto& res1 = fft.mulInt(xs, ys, false);
+  const auto& res1 = fft.mulReal(xs, ys, false);
   ASSERT_EQ(1, res1.size());
   EXPECT_NEAR(0, res1[0].real, EPS);
   EXPECT_NEAR(0, res1[0].real, EPS);
@@ -28,14 +28,14 @@ TEST(FFTMulUtilsTest, mulInt) {
 
   xs = {0, 0};
   ys = {3, 4};
-  const auto& res2 = fft.mulInt(xs, ys, false);
+  const auto& res2 = fft.mulReal(xs, ys, false);
   ASSERT_EQ(1, res2.size());
   EXPECT_NEAR(0, res2[0].real, EPS);
   EXPECT_NEAR(0, res2[0].imag, EPS);
 
   xs = {1, 2};
   ys = {3, 4};
-  const auto& res3 = fft.mulInt(xs, ys, false);
+  const auto& res3 = fft.mulReal(xs, ys, false);
   ASSERT_EQ(3, res3.size());
   EXPECT_NEAR(3, res3[0].real, EPS);
   EXPECT_NEAR(0, res3[0].imag, EPS);
@@ -46,7 +46,7 @@ TEST(FFTMulUtilsTest, mulInt) {
 
   xs = {31772, 371773, 371721, 81631};
   ys = {348484, 28481838, 381872, 59492};
-  const auto& res4 = fft.mulInt(xs, ys, false);
+  const auto& res4 = fft.mulReal(xs, ys, false);
   ASSERT_EQ(7, res4.size());
   EXPECT_NEAR(11072033648, res4[0].real, LARGE_EPS);
   EXPECT_NEAR(0, res4[0].imag, LARGE_EPS);
@@ -65,7 +65,7 @@ TEST(FFTMulUtilsTest, mulInt) {
 
   xs = {1, 2};
   ys = {3, 4, 5, 6};
-  const auto& res5 = fft.mulInt(xs, ys, true);
+  const auto& res5 = fft.mulReal(xs, ys, true);
   EXPECT_EQ(4, res5.size());
   EXPECT_NEAR(15, res5[0].real, EPS);
   EXPECT_NEAR(0, res5[0].imag, EPS);
@@ -78,7 +78,7 @@ TEST(FFTMulUtilsTest, mulInt) {
 
   xs = {1, 2};
   ys = {3, 4, 5, 6, 7};
-  const auto& res6 = fft.mulInt(xs, ys, true);
+  const auto& res6 = fft.mulReal(xs, ys, true);
   EXPECT_EQ(6, res6.size());
   EXPECT_NEAR(3, res6[0].real, EPS);
   EXPECT_NEAR(0, res6[0].imag, EPS);
@@ -94,25 +94,25 @@ TEST(FFTMulUtilsTest, mulInt) {
   EXPECT_NEAR(0, res6[5].imag, EPS);
 }
 
-TEST(FFTMulUtilsTest, mulInlineInt) {
+TEST(FFTMulUtilsTest, mulInlineReal) {
   auto& fft = FFTMulUtils<>::instance();
   vector<int> xs, ys;
 
   xs = {3, 4};
   ys = {};
-  fft.mulInlineInt(xs, ys, false);
+  fft.mulInlineReal(xs, ys, false);
   ASSERT_EQ(1, xs.size());
   EXPECT_EQ(0, xs[0]);
 
   xs = {0, 0};
   ys = {3, 4};
-  fft.mulInlineInt(xs, ys, false);
+  fft.mulInlineReal(xs, ys, false);
   ASSERT_EQ(1, xs.size());
   EXPECT_EQ(0, xs[0]);
 
   xs = {1, 2};
   ys = {3, 4};
-  fft.mulInlineInt(xs, ys, false);
+  fft.mulInlineReal(xs, ys, false);
   ASSERT_EQ(3, xs.size());
   EXPECT_EQ(3, xs[0]);
   EXPECT_EQ(10, xs[1]);
@@ -121,7 +121,7 @@ TEST(FFTMulUtilsTest, mulInlineInt) {
   vector<int64_t> xs64, ys64;
   xs64 = {31772, 371773, 371721, 81631};
   ys64 = {348484, 28481838, 381872, 59492};
-  fft.mulInlineInt(xs64, ys64, false);
+  fft.mulInlineReal(xs64, ys64, false);
   ASSERT_EQ(7, xs64.size());
   EXPECT_EQ(11072033648, xs64[0]);
   EXPECT_EQ(1034481899068, xs64[1]);
@@ -133,7 +133,7 @@ TEST(FFTMulUtilsTest, mulInlineInt) {
 
   xs = {1, 2};
   ys = {3, 4, 5, 6};
-  fft.mulInlineInt(xs, ys, true);
+  fft.mulInlineReal(xs, ys, true);
   ASSERT_EQ(4, xs.size());
   EXPECT_EQ(15, xs[0]);
   EXPECT_EQ(10, xs[1]);
@@ -142,7 +142,7 @@ TEST(FFTMulUtilsTest, mulInlineInt) {
 
   xs = {1, 2};
   ys = {3, 4, 5, 6, 7};
-  fft.mulInlineInt(xs, ys, true);
+  fft.mulInlineReal(xs, ys, true);
   ASSERT_EQ(6, xs.size());
   EXPECT_EQ(3, xs[0]);
   EXPECT_EQ(10, xs[1]);

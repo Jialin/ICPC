@@ -19,71 +19,75 @@ struct FFTMulUtils {
     return instance;
   }
 
-// ^ FFT_MUL_UTILS_MUL_INT
-#ifdef FFT_MUL_UTILS_MUL_INT
-  const Complex<T> DOWN_QUART = Complex<T>(0, -0.25);
-
-  template<typename V>
+// ^ FFT_MUL_UTILS_MUL_REAL
+#ifdef FFT_MUL_UTILS_MUL_REAL
+  template<typename R>
   inline const vector<Complex<T>>&
-  mulInt(const vector<V>& xs, const vector<V>& ys, bool cyclic) {
+  mulReal(const vector<R>& xs, const vector<R>& ys, bool cyclic) {
+    static vector<Complex<T>> cs;
     if (xs.empty() || ys.empty()) {
-      _as.resize(1);
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_INIT
-      _as[0].init(0, 0);
-      return _as;
+      cs.resize(1);
+      // FFT_MUL_UTILS_MUL_REAL => COMPLEX_INIT
+      cs[0].init(0, 0);
+      return cs;
     }
     int pow2 = nextPow2_32(
         cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
-    _as.resize(pow2);
+    cs.resize(pow2);
     for (size_t i = 0; i < pow2; ++i) {
-      _as[i].init(i < xs.size() ? xs[i] : 0, i < ys.size() ? ys[i] : 0);
+      cs[i].init(i < xs.size() ? xs[i] : 0, i < ys.size() ? ys[i] : 0);
     }
     auto& fft = FFTUtils<T>::instance();
-    fft.fft(_as, false, pow2);
+    fft.fft(cs, false, pow2);
     for (int i = 0; i <= (pow2 >> 1); ++i) {
       int j = (pow2 - i) & (pow2 - 1);
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_MUL_INLINE
-      _as[i] *= _as[i];
+      // FFT_MUL_UTILS_MUL_REAL => COMPLEX_MUL_INLINE
+      cs[i] *= cs[i];
       if (i != j) {
-        _as[j] *= _as[j];
-        _as[j].imag = -_as[j].imag;
-        _as[j].initSub(_as[i], _as[j]);
-        // FFT_MUL_UTILS_MUL_INT => COMPLEX_DIV_INLINE_DOUBLE
-        _as[j] /= pow2 << 2;
-        swap(_as[j].real, _as[j].imag);
-        _as[j].imag = -_as[j].imag;
+        cs[j] *= cs[j];
+        cs[j].imag = -cs[j].imag;
+        cs[j].initSub(cs[i], cs[j]);
+        // FFT_MUL_UTILS_MUL_REAL => COMPLEX_DIV_INLINE_DOUBLE
+        cs[j] /= pow2 << 2;
+        swap(cs[j].real, cs[j].imag);
+        cs[j].imag = -cs[j].imag;
       } else {
-        _as[j].real = _as[j].imag / (pow2 << 1);
-        _as[j].imag = 0;
+        cs[j].real = cs[j].imag / (pow2 << 1);
+        cs[j].imag = 0;
       }
-      // FFT_MUL_UTILS_MUL_INT => COMPLEX_INIT_CONJ
-      _as[i].initConj(_as[j]);
+      // FFT_MUL_UTILS_MUL_REAL => COMPLEX_INIT_CONJ
+      cs[i].initConj(cs[j]);
     }
-    fft.fft(_as, false, pow2);
-    // FFT_MUL_UTILS_MUL_INT => _FFT_UTILS_SHRINK_COMPLEX_VECTOR
-    _shrink(_as);
-    return _as;
+    fft.fft(cs, false, pow2);
+    if (is_integral<R>::value) {
+      // FFT_MUL_UTILS_MUL_REAL => _FFT_UTILS_SHRINK_COMPLEX_VECTOR
+      _shrink(cs);
+    }
+    return cs;
   }
-
-  vector<Complex<T>> _as;
 #endif
 
-// ^ FFT_MUL_UTILS_MUL_INLINE_INT
-#ifdef FFT_MUL_UTILS_MUL_INLINE_INT
-  template<typename V>
-  inline void mulInlineInt(vector<V>& xs, const vector<V>& ys, bool cyclic) {
-    // FFT_MUL_UTILS_MUL_INLINE_INT => FFT_MUL_UTILS_MUL_INT
-    const auto& cs = mulInt(xs, ys, cyclic);
+// ^ FFT_MUL_UTILS_MUL_INLINE_REAL
+#ifdef FFT_MUL_UTILS_MUL_INLINE_REAL
+  template<typename R>
+  inline void mulInlineReal(vector<R>& xs, const vector<R>& ys, bool cyclic) {
+    // FFT_MUL_UTILS_MUL_INLINE_REAL => FFT_MUL_UTILS_MUL_REAL
+    const auto& cs = mulReal(xs, ys, cyclic);
     xs.resize(cs.size());
     for (size_t i = 0; i < cs.size(); ++i) {
-      xs[i] = cs[i].real + 0.5;
+      xs[i] = cs[i].real + (is_integral<R>::value ? 0.5 : 0);
     }
   }
 #endif
 
 #ifdef _FFT_UTILS_SHRINK_COMPLEX_VECTOR
   inline void _shrink(vector<Complex<T>>& cs) {
-    for (; cs.size() > 1 && cs.back().real < 0.5; cs.pop_back()) {}
+    for (; cs.size() > 1; cs.pop_back()) {
+      T real = cs.back().real;
+      if (real < -0.5 || real > 0.5) {
+        break;
+      }
+    }
   }
 #endif
 };

@@ -116,8 +116,8 @@ struct BigInt : vector<int> {
     // BIGINT_INIT_MUL => _BIGINT_FFT_MUL_UTILS
     // BIGINT_INIT_MUL => _BIGINT_FFT_T
     // BIGINT_INIT_MUL => BIGINT_ASSIGN_COMPLEX_VECTOR
-    // BIGINT_INIT_MUL => FFT_MUL_UTILS_MUL_INT
-    *this = FFTMulUtils<FFT_T>::instance().mulInt(x, y, false);
+    // BIGINT_INIT_MUL => FFT_MUL_UTILS_MUL_REAL
+    *this = FFTMulUtils<FFT_T>::instance().mulReal(x, y, false);
   }
 #endif
 
