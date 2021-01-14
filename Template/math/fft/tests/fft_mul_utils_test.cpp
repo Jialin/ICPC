@@ -92,6 +92,26 @@ TEST(FFTMulUtilsTest, mulReal) {
   EXPECT_NEAR(0, res6[4].imag, EPS);
   EXPECT_NEAR(14, res6[5].real, EPS);
   EXPECT_NEAR(0, res6[5].imag, EPS);
+
+  vector<double> xsR = {1, 2}, ysR = {3, 4, 5, 6, 7};
+  const auto& res7 = fft.mulReal(xsR, ysR, true);
+  EXPECT_EQ(8, res7.size());
+  EXPECT_NEAR(3, res7[0].real, EPS);
+  EXPECT_NEAR(0, res7[0].imag, EPS);
+  EXPECT_NEAR(10, res7[1].real, EPS);
+  EXPECT_NEAR(0, res7[1].imag, EPS);
+  EXPECT_NEAR(13, res7[2].real, EPS);
+  EXPECT_NEAR(0, res7[2].imag, EPS);
+  EXPECT_NEAR(16, res7[3].real, EPS);
+  EXPECT_NEAR(0, res7[3].imag, EPS);
+  EXPECT_NEAR(19, res7[4].real, EPS);
+  EXPECT_NEAR(0, res7[4].imag, EPS);
+  EXPECT_NEAR(14, res7[5].real, EPS);
+  EXPECT_NEAR(0, res7[5].imag, EPS);
+  EXPECT_NEAR(0, res7[6].real, EPS);
+  EXPECT_NEAR(0, res7[6].imag, EPS);
+  EXPECT_NEAR(0, res7[7].real, EPS);
+  EXPECT_NEAR(0, res7[7].imag, EPS);
 }
 
 TEST(FFTMulUtilsTest, mulInlineReal) {
