@@ -9,7 +9,12 @@
 namespace math {
 
 template<typename V, typename FFT_T = long double>
-struct FFTPoly : vector<V> {
+struct FFTPoly : public vector<V> {
+// ^ FFT_POLY_CONSTRUCT
+#ifdef FFT_POLY_CONSTRUCT
+  inline FFTPoly(int size, V v) : vector<V>(size, v) {}
+#endif
+
 // ^ FFT_POLY_ASSIGN_VECTOR
 #ifdef FFT_POLY_ASSIGN_VECTOR
   template<typename OV>

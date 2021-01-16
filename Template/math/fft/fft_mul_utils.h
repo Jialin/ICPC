@@ -75,7 +75,7 @@ struct FFTMulUtils {
     const auto& cs = mulReal(xs, ys, cyclic);
     xs.resize(cs.size());
     for (size_t i = 0; i < cs.size(); ++i) {
-      xs[i] = cs[i].real + (is_integral<R>::value ? 0.5 : 0);
+      xs[i] = is_integral<R>::value ? cs[i].real + 0.5 : cs[i].real;
     }
   }
 #endif
