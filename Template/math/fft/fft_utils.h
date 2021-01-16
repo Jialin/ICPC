@@ -57,6 +57,7 @@ struct FFTUtils {
     if (inverse) {
       reverse(cs.begin() + 1, cs.begin() + pow2);
       for (int i = 0; i < pow2; ++i) {
+        // => COMPLEX_DIV_INLINE_DOUBLE
         cs[i] /= pow2;
       }
     }
