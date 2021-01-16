@@ -1,15 +1,11 @@
+// ALL NTT_UTILS_ALL
 #pragma once
 
 #include "math/fft/ntt_utils_macros.h"
+#include "math/mod/mod_int_macros.h" // INCLUDE
 
 #include "math/bit/next_pow2_32.h"
-#include "math/mod/add.h"
-#include "math/mod/exp.h"
-#include "math/mod/fix.h"
-#include "math/mod/inv.h"
-#include "math/mod/mul.h"
-#include "math/mod/mul_inline.h"
-#include "math/mod/sub.h"
+#include "math/mod/mod_int.h"
 
 using namespace std;
 
@@ -17,74 +13,104 @@ namespace math {
 
 ////////////////////////////////
 // Example setups:
-// |prime mod|root|  format   |
+// |  mod    |root|  format   |
 // | 7340033 | 5  | (7<<20)+1 |
 // |924844033|3597|(441<<21)+1|
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
-template<typename V = int, typename V_SQR = int64_t>
+template<typename V, typename V_SQR, V PRIME, V ROOT>
 struct NTTUtils {
-  inline NTTUtils(V primeMod, V root, int capacity = -1) {
-    init(primeMod, root, capacity);
-  }
+  using _ModInt = ModInt<V, V_SQR, PRIME>;
 
-  inline void init(V primeMod, V root, int capacity = -1) {
-    _mod = primeMod;
-    _root = root;
-    _invRoot = invMod(root, _mod);
-    _rootPow = 1 << __builtin_ctz(_mod - 1);
-    if (capacity > 0) {
-      capacity = nextPow2_32(capacity);
+  inline static NTTUtils& instance() {
+#ifdef LOCAL
+    int _rootPow = 1 << __builtin_ctz(PRIME - 1);
+    if (ROOT < 0 || _ModInt(ROOT).exp(_rootPow)._v != 1 ||
+        _ModInt(ROOT).exp(_rootPow >> 1)._v == 1) {
+      DEBUGF(
+          "Invalid ROOT(%d). PRIME %d = (%d << %d) + 1. Computing the right "
+          "one ...\n",
+          ROOT,
+          PRIME,
+          (PRIME - 1) / _rootPow,
+          __builtin_ctz(PRIME - 1));
+      for (V root = 2;; ++root) {
+        if (_ModInt(root).exp(_rootPow)._v == 1 &&
+            _ModInt(root).exp(_rootPow >> 1)._v != 1) {
+          DEBUGF("!!! Set ROOT as %d !!!\n", root);
+          assert(false);
+        }
+      }
     }
-    capacity = max(capacity, 2);
-    _revs.reserve(capacity);
-    _revs.resize(2);
-    _revs[0] = 0;
-    _revs[1] = 1;
-    _roots.reserve(capacity);
-    _roots.resize(2);
-    _roots[0] = 0;
-    _roots[1] = 1;
-    _initCapacity(capacity);
-    _vs.reserve(capacity);
+#endif
+    static NTTUtils instance;
+    return instance;
   }
 
-#ifdef NTT_UTILS_MUL_MODIFY
-  inline const vector<V>& mulModify(vector<V>& x, vector<V>& y) {
-    int pow2 = nextPow2_32(max(static_cast<int>(x.size() + y.size()) - 1, 1));
-    _fix(x);
-    ntt(x, false, pow2);
-    _fix(y);
-    ntt(y, false, pow2);
-    _vs.resize(pow2);
+  inline void initCapacity(int capacity) {
+    if (_revs.size() >= capacity) {
+      return;
+    }
+    int _rootPow = 1 << __builtin_ctz(PRIME - 1);
+    int pow2 = nextPow2_32(max(capacity, 2));
+    DEBUG_GE(_rootPow, pow2);
+    _revs.reserve(pow2);
+    _roots.reserve(pow2);
+    if (_revs.size() < 2) {
+      _revs.resize(2);
+      _revs[0] = 0;
+      _revs[1] = 1;
+      _roots.resize(2);
+      _roots[0] = 0;
+      _roots[1] = 1;
+    }
+    int oldPow2 = _revs.size(), lgN = __builtin_ctz(pow2);
+    _revs.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
-      _vs[i] = mulMod<V, V_SQR>(x[i], y[i], _mod);
+      _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
-    ntt(_vs, true, pow2);
-    _shrink(_vs);
-    return _vs;
+    _roots.resize(pow2);
+    _ModInt root(ROOT);
+    for (int i = oldPow2; i < pow2; i <<= 1) {
+      // => MOD_INT_EXP
+      V v = root.exp((_rootPow / i) >> 1)._v;
+      for (int j = i; j < i << 1; j += 2) {
+        _roots[j] = _roots[j >> 1];
+        _roots[j | 1] = _roots[j] * v % PRIME;
+      }
+    }
   }
 
-  inline void _fix(vector<V>& x) {
-    for (size_t i = 0; i < x.size(); ++i) {
-      fixModInline<V>(x[i], _mod);
+// ^ NTT_UTILS_NTT_MOD_INT
+#ifdef NTT_UTILS_NTT_MOD_INT
+  // NTT_UTILS_NTT_MOD_INT => _NTT_UTILS_MOD_INT
+  inline void nttModInt(vector<_ModInt>& vs, bool inverse, int n = -1) {
+    int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
+    static vector<V> vsI;
+    vsI.resize(pow2);
+    for (int i = 0; i < pow2; ++i) {
+      vsI[i] = i < vs.size() ? vs[i]._v : 0;
     }
-  }
-
-  inline void _shrink(vector<V>& vs) {
-    for (; vs.size() > 1 && !vs.back(); vs.pop_back()) {}
+    ntt(vsI, inverse, pow2);
+    if (vs.size() < pow2) {
+      vs.resize(pow2);
+    }
+    for (int i = 0; i < pow2; ++i) {
+      vs[i] = vsI[i];
+    }
   }
 #endif
 
-  inline void ntt(vector<V>& vs, bool invert, int n = -1) {
+  inline void ntt(vector<V>& vs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
-    _initCapacity(pow2);
+    initCapacity(pow2);
     _expand(vs, pow2);
-    if (invert) {
+    if (inverse) {
       reverse(vs.begin() + 1, vs.begin() + pow2);
-      int invPow2 = invMod<V>(pow2, _mod);
+      // => MOD_INT_INV
+      V_SQR v = _ModInt(pow2).inv()._v;
       for (int i = 0; i < pow2; ++i) {
-        mulModInline<V, V_SQR>(vs[i], invPow2, _mod);
+        vs[i] = vs[i] * v % PRIME;
       }
     }
     int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
@@ -95,47 +121,33 @@ struct NTTUtils {
       }
     }
     for (int l = 1; l < pow2; l <<= 1) {
-      for (int i = 0, l2 = l << 1; i < pow2; i += l2) {
+      for (int i = 0; i < pow2; i += l << 1) {
         for (int j = 0; j < l; ++j) {
-          V v = mulMod<V, V_SQR>(vs[i + j + l], _roots[j + l], _mod);
-          vs[i + j + l] = subMod<V>(vs[i + j], v, _mod);
-          vs[i + j] = addMod<V>(vs[i + j], v, _mod);
+          V v = vs[i + j + l] * _roots[j + l] % PRIME;
+          vs[i + j + l] = vs[i + j] + PRIME - v;
+          if (vs[i + j + l] >= PRIME) {
+            vs[i + j + l] -= PRIME;
+          }
+          vs[i + j] += v;
+          if (vs[i + j] >= PRIME) {
+            vs[i + j] -= PRIME;
+          }
         }
       }
     }
   }
 
-  inline void _initCapacity(int pow2) {
-    if (_revs.size() >= pow2) {
-      return;
-    }
-    DEBUG_GE(_rootPow, pow2);
-    int oldPow2 = _revs.size(), lgN = __builtin_ctz(pow2);
-    _revs.resize(pow2);
-    for (int i = 0; i < pow2; ++i) {
-      _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
-    }
-    _roots.resize(pow2);
-    for (int i = oldPow2; i < pow2; i <<= 1) {
-      V v = expMod<V, V_SQR>(_root, (_rootPow >> 1) / i, _mod),
-        mul = mulMod<V, V_SQR>(v, v, _mod);
-      for (int j = i; j < i << 1; j += 2) {
-        _roots[j] = _roots[j >> 1];
-        _roots[j | 1] = v;
-        mulModInline<V, V_SQR>(v, mul, _mod);
-      }
+  template<typename T>
+  inline void _expand(vector<T>& vs, int pow2) {
+    int size = vs.size();
+    vs.resize(pow2);
+    for (size_t i = size; i < pow2; ++i) {
+      vs[i] = 0;
     }
   }
 
-  inline void _expand(vector<V>& vs, int pow2) {
-    for (size_t i = vs.size(); i < pow2; ++i) {
-      vs.push_back(0);
-    }
-  }
-
-  vector<V> _revs, _roots, _vs;
-  V _mod, _root, _invRoot;
-  int _rootPow;
+  vector<int> _revs;
+  vector<V_SQR> _roots;
 };
 
 } // namespace math

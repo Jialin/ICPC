@@ -29,13 +29,3 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
-
-cc_test(
-    name = "ntt_utils_test",
-    srcs = ["ntt_utils_test.cpp"],
-    deps = [
-        "//math/fft:ntt_utils",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
