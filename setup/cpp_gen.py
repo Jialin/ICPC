@@ -3,31 +3,6 @@ import re
 import subprocess
 import sys
 
-INCLUDES = [
-    "algorithm",
-    "bitset",
-    "cassert",
-    "cctype",
-    "cmath",
-    "complex",
-    "cstddef",
-    "cstdint",
-    "cstdio",
-    "cstring",
-    "functional",
-    "iomanip",
-    "iostream",
-    "map",
-    "queue",
-    "set",
-    "string",
-    "tuple",
-    "unordered_map",
-    "unordered_set",
-    "utility",
-    "vector",
-]
-
 DEBUG_LINES = [
     "#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED",
     "#include <boost/stacktrace.hpp>",
@@ -37,9 +12,12 @@ GEN_PATH = "gen"
 
 
 def generate_includes():
-    return ["#include <{}>".format(include) for include in INCLUDES] + [
-        USING_NAMESPACE_STD
-    ]
+    include_filepath = os.path.join(
+        os.environ["ICPC_HOME"], "Template", "common", "include.h"
+    )
+    with open(include_filepath, "r") as input_file:
+        return ["\n".join([line.strip() for line in input_file if line.strip()])]
+    return []
 
 
 def generate_clean_lines(lines):
@@ -144,9 +122,13 @@ def gen_file(
 
 def gen_no_stl_include_file(input_file_name, output_file_name):
     STL_INCLUDE_PATTERN = re.compile(r"^#include <.+>$")
+    COMMON_INCLUDE_PATTERN = re.compile(r"^#include \"common/include.h\"$")
     with open(input_file_name, "r") as input_file:
         no_include_lines = [
-            line for line in input_file if not STL_INCLUDE_PATTERN.match(line)
+            line
+            for line in input_file
+            if not STL_INCLUDE_PATTERN.match(line)
+            and not COMMON_INCLUDE_PATTERN.match(line)
         ]
         write_file(os.path.join(GEN_PATH, output_file_name), no_include_lines)
 
