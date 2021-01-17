@@ -1,3 +1,4 @@
+// ALL FFT_UTILS_ALL
 #pragma once
 
 #include "math/complex/complex_macros.h" // INCLUDE
@@ -81,6 +82,29 @@ struct FFTUtils {
       }
     }
   }
+
+// ^ FFT_UTILS_FFT_2D
+#ifdef FFT_UTILS_FFT_2D
+  inline void fft2d(vector<vector<Complex<T>>>& cs, bool inverse, int n = -1) {
+    int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
+    cs.reserve(pow2);
+    for (size_t i = 0; i < pow2; ++i) {
+      if (i < cs.size()) {
+        fft(cs[i], inverse, pow2);
+      } else {
+        cs.emplace_back(pow2);
+      }
+    }
+    for (int i = 0; i < pow2; ++i) {
+      for (int j = i + 1; j < pow2; ++j) {
+        swap(cs[i][j], cs[j][i]);
+      }
+    }
+    for (size_t i = 0; i < pow2; ++i) {
+      fft(cs[i], inverse, pow2);
+    }
+  }
+#endif
 
   inline void _expand(vector<Complex<T>>& cs, int pow2) {
     int n = cs.size();

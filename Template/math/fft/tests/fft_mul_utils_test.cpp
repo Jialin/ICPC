@@ -184,4 +184,52 @@ TEST(FFTMulUtilsTest, mulInlineReal) {
   EXPECT_NEAR(0, xsR[7], EPS);
 }
 
+TEST(FFTMulUtilsTest, mulInlineModify2d) {
+  auto& fft = FFTMulUtils<double>::instance();
+  vector<vector<Complex<double>>> xs, ys;
+  xs = {
+      {{1, 0}, {2, 0}, {3, 0}},
+      {{4, 0}, {5, 0}, {6, 0}},
+      {{7, 0}, {8, 0}, {9, 0}}};
+  ys = {{{10, 0}, {11, 0}}, {{12, 0}, {13, 0}}};
+  fft.mulInlineModify2d(xs, ys, false);
+  ASSERT_EQ(4, xs.size());
+  ASSERT_EQ(4, xs[0].size());
+  EXPECT_NEAR(10, xs[0][0].real, EPS);
+  EXPECT_NEAR(0, xs[0][0].imag, EPS);
+  EXPECT_NEAR(31, xs[0][1].real, EPS);
+  EXPECT_NEAR(0, xs[0][1].imag, EPS);
+  EXPECT_NEAR(52, xs[0][2].real, EPS);
+  EXPECT_NEAR(0, xs[0][2].imag, EPS);
+  EXPECT_NEAR(33, xs[0][3].real, EPS);
+  EXPECT_NEAR(0, xs[0][3].imag, EPS);
+  ASSERT_EQ(4, xs[1].size());
+  EXPECT_NEAR(52, xs[1][0].real, EPS);
+  EXPECT_NEAR(0, xs[1][0].imag, EPS);
+  EXPECT_NEAR(131, xs[1][1].real, EPS);
+  EXPECT_NEAR(0, xs[1][1].imag, EPS);
+  EXPECT_NEAR(177, xs[1][2].real, EPS);
+  EXPECT_NEAR(0, xs[1][2].imag, EPS);
+  EXPECT_NEAR(105, xs[1][3].real, EPS);
+  EXPECT_NEAR(0, xs[1][3].imag, EPS);
+  ASSERT_EQ(4, xs[2].size());
+  EXPECT_NEAR(118, xs[2][0].real, EPS);
+  EXPECT_NEAR(0, xs[2][0].imag, EPS);
+  EXPECT_NEAR(269, xs[2][1].real, EPS);
+  EXPECT_NEAR(0, xs[2][1].imag, EPS);
+  EXPECT_NEAR(315, xs[2][2].real, EPS);
+  EXPECT_NEAR(0, xs[2][2].imag, EPS);
+  EXPECT_NEAR(177, xs[2][3].real, EPS);
+  EXPECT_NEAR(0, xs[2][3].imag, EPS);
+  ASSERT_EQ(4, xs[3].size());
+  EXPECT_NEAR(84, xs[3][0].real, EPS);
+  EXPECT_NEAR(0, xs[3][0].imag, EPS);
+  EXPECT_NEAR(187, xs[3][1].real, EPS);
+  EXPECT_NEAR(0, xs[3][1].imag, EPS);
+  EXPECT_NEAR(212, xs[3][2].real, EPS);
+  EXPECT_NEAR(0, xs[3][2].imag, EPS);
+  EXPECT_NEAR(117, xs[3][3].real, EPS);
+  EXPECT_NEAR(0, xs[3][3].imag, EPS);
+}
+
 } // namespace math

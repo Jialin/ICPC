@@ -80,6 +80,34 @@ struct FFTMulUtils {
   }
 #endif
 
+// ^ FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D
+#ifdef FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D
+  inline void mulInlineModify2d(
+      vector<vector<Complex<T>>>& xs,
+      vector<vector<Complex<T>>>& ys,
+      bool cyclic) {
+    if (xs.empty() || ys.empty() || xs[0].empty() || ys[0].empty()) {
+      xs.clear();
+      return;
+    }
+    int n =
+        cyclic ? max(max(xs.size(), ys.size()), max(xs[0].size(), ys[0].size()))
+               : max(xs.size() + ys.size(), xs[0].size() + ys[0].size()) - 1;
+    int pow2 = nextPow2_32(n);
+    auto& fft = FFTUtils<T>::instance();
+    // FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D => FFT_UTILS_FFT_2D
+    fft.fft2d(xs, false, pow2);
+    fft.fft2d(ys, false, pow2);
+    for (int i = 0; i < pow2; ++i) {
+      for (int j = 0; j < pow2; ++j) {
+        // FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D => COMPLEX_MUL_INLINE
+        xs[i][j] *= ys[i][j];
+      }
+    }
+    fft.fft2d(xs, true, pow2);
+  }
+#endif
+
 #ifdef _FFT_UTILS_SHRINK_COMPLEX_VECTOR
   inline void _shrink(vector<Complex<T>>& cs) {
     for (; cs.size() > 1; cs.pop_back()) {
