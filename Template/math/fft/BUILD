@@ -52,6 +52,23 @@ cc_library(
 )
 
 cc_library(
+    name = "ntt_mul_utils_macros",
+    hdrs = ["ntt_mul_utils_macros.h"],
+    deps = [":ntt_utils_macros"],
+)
+
+cc_library(
+    name = "ntt_mul_utils",
+    hdrs = ["ntt_mul_utils.h"],
+    deps = [
+        ":ntt_mul_utils_macros",
+        ":ntt_utils",
+        "//common:macros",
+        "//math/bit:next_pow2_32",
+    ],
+)
+
+cc_library(
     name = "ntt_utils_fix_macros",
     hdrs = ["ntt_utils_fix_macros.h"],
     deps = ["//math/mod:mod_int_macros"],
@@ -70,6 +87,7 @@ cc_library(
 cc_library(
     name = "ntt_utils_macros",
     hdrs = ["ntt_utils_macros.h"],
+    deps = ["//math/mod:mod_int_macros"],
 )
 
 cc_library(
@@ -77,12 +95,6 @@ cc_library(
     hdrs = ["ntt_utils.h"],
     deps = [
         ":ntt_utils_macros",
-        "//debug",
-        "//math/bit:next_pow2_32",
-        "//math/mod:add",
-        "//math/mod:exp",
-        "//math/mod:inv",
-        "//math/mod:mul",
-        "//math/mod:sub",
+        "//math/mod:mod_int",
     ],
 )
