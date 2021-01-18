@@ -9,6 +9,7 @@ BasedOnStyle: LLVM
 BinPackArguments: false
 BinPackParameters: false
 BreakStringLiterals: true
+ColumnLimit: 100
 CompactNamespaces: true
 FixNamespaceComments: true
 IndentWidth: 2
