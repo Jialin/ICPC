@@ -39,6 +39,13 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+// ^ NTT_POLY_MOD_INT_SHRINK
+#ifdef NTT_POLY_MOD_INT_SHRINK
+  inline void shrink() {
+    for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
+  }
+#endif
+
 #ifdef LOCAL
   friend ostream& operator<<(ostream& o, const NTTPolyModInt& vs) {
     o << tostring(static_cast<vector<ModInt<V, V_SQR, PRIME>>>(vs));
