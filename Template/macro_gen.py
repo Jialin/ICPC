@@ -7,11 +7,13 @@ TEMPLATES = [
     "math/bigint/bigint.h",
     "math/complex/complex.h",
     "math/fft/fft_utils.h",
+    "math/fft/fft_mul_mod_utils.h",
     "math/fft/fft_mul_utils.h",
     "math/fft/ntt_utils.h",
     "math/fft/ntt_mul_utils.h",
     "math/mod/mod_int.h",
     "math/poly/fft_poly.h",
+    "math/poly/fft_poly_mod_int.h",
     "math/poly/ntt_poly_mod_int.h",
 ]
 
@@ -42,6 +44,7 @@ def write_macro_file(macro_filepath, lines):
 
 ALL_DECLARE_PATTERN = re.compile(r"^.*// ALL ([A-Z0-9_]+)$")
 ALL_DEPS_PATTERN = re.compile(r"^.*// \^ ([A-Z0-9_]+)$")
+ALL_DEPS_SHORT_PATTERN = re.compile(r"^#ifdef ([A-Z0-9_]+) // \^$")
 DEPS_PATTERN = re.compile(r"^.*//\s*([A-Z0-9_]+) => ([A-Z0-9_]+)\s*$")
 GLOBAL_DEPS_PATTERN = re.compile(r"^.*//\s* => ([A-Z0-9_]+)\s*$")
 INCLUDE_PATTERN = re.compile(r"^(#include \S+)\s*// INCLUDE$")
@@ -64,6 +67,10 @@ for template in TEMPLATES:
                 includes.add(match[1])
                 continue
             match = ALL_DEPS_PATTERN.match(line)
+            if match:
+                all_deps.add(match[1])
+                continue
+            match = ALL_DEPS_SHORT_PATTERN.match(line)
             if match:
                 all_deps.add(match[1])
                 continue

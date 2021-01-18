@@ -11,6 +11,18 @@ cc_test(
 )
 
 cc_test(
+    name = "fft_mul_mod_utils_test",
+    srcs = ["fft_mul_mod_utils_test.cpp"],
+    deps = [
+        "//math/fft:fft_mul_mod_utils",
+        "//math/poly:fft_poly_mod_int",
+        "//math/poly:fft_poly_mod_int_macros",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "fft_mul_utils_test",
     srcs = ["fft_mul_utils_test.cpp"],
     deps = [

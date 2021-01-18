@@ -21,6 +21,26 @@ cc_library(
 )
 
 cc_library(
+    name = "fft_mul_mod_utils_macros",
+    hdrs = ["fft_mul_mod_utils_macros.h"],
+    deps = [
+        ":fft_utils_macros",
+        "//math/mod:mod_int_macros",
+    ],
+)
+
+cc_library(
+    name = "fft_mul_mod_utils",
+    hdrs = ["fft_mul_mod_utils.h"],
+    deps = [
+        ":fft_mul_mod_utils_macros",
+        ":fft_utils",
+        "//math/bit:next_pow2_32",
+        "//math/mod:mod_int",
+    ],
+)
+
+cc_library(
     name = "fft_mul_utils_macros",
     hdrs = ["fft_mul_utils_macros.h"],
     deps = [":fft_utils_macros"],
@@ -40,6 +60,7 @@ cc_library(
 cc_library(
     name = "fft_utils_macros",
     hdrs = ["fft_utils_macros.h"],
+    deps = ["//math/complex:complex_macros"],
 )
 
 cc_library(
@@ -47,6 +68,7 @@ cc_library(
     hdrs = ["fft_utils.h"],
     deps = [
         ":fft_utils_macros",
+        "//math/complex",
         "//math/constants:pi",
     ],
 )

@@ -3,6 +3,21 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "fft_poly_mod_int_macros",
+    hdrs = ["fft_poly_mod_int_macros.h"],
+    deps = ["//math/fft:fft_mul_mod_utils_macros"],
+)
+
+cc_library(
+    name = "fft_poly_mod_int",
+    hdrs = ["fft_poly_mod_int.h"],
+    deps = [
+        ":fft_poly_mod_int_macros",
+        "//math/fft:fft_mul_mod_utils",
+    ],
+)
+
+cc_library(
     name = "ntt_poly_mod_int_macros",
     hdrs = ["ntt_poly_mod_int_macros.h"],
     deps = ["//math/fft:ntt_mul_utils_macros"],
