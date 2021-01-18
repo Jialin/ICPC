@@ -35,8 +35,7 @@ struct NTTUtils {
           (PRIME - 1) / _rootPow,
           __builtin_ctz(PRIME - 1));
       for (V root = 2;; ++root) {
-        if (_ModInt(root).exp(_rootPow)._v == 1 &&
-            _ModInt(root).exp(_rootPow >> 1)._v != 1) {
+        if (_ModInt(root).exp(_rootPow)._v == 1 && _ModInt(root).exp(_rootPow >> 1)._v != 1) {
           DEBUGF("!!! Set ROOT as %d !!!\n", root);
           assert(false);
         }
@@ -123,9 +122,10 @@ struct NTTUtils {
       for (int i = 0; i < pow2; i += l << 1) {
         for (int j = 0; j < l; ++j) {
           V v = vs[i + j + l] * _roots[j + l] % PRIME;
-          vs[i + j + l] = vs[i + j] + PRIME - v;
-          if (vs[i + j + l] >= PRIME) {
-            vs[i + j + l] -= PRIME;
+          if (vs[i + j] >= v) {
+            vs[i + j + l] = vs[i + j] - v;
+          } else {
+            vs[i + j + l] = PRIME - v + vs[i + j];
           }
           vs[i + j] += v;
           if (vs[i + j] >= PRIME) {
