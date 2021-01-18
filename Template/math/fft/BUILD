@@ -58,6 +58,20 @@ cc_library(
 )
 
 cc_library(
+    name = "fft_online_mod_utils_macros",
+    hdrs = ["fft_online_mod_utils_macros.h"],
+)
+
+cc_library(
+    name = "fft_online_mod_utils",
+    hdrs = ["fft_online_mod_utils.h"],
+    deps = [
+        ":fft_online_mod_utils_macros",
+        "//common:macros",
+    ],
+)
+
+cc_library(
     name = "fft_utils_macros",
     hdrs = ["fft_utils_macros.h"],
     deps = ["//math/complex:complex_macros"],

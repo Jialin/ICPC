@@ -29,12 +29,13 @@ struct FFTMulModUtils {
   template<typename V, typename V_SQR, V MOD>
   inline void mulInlineModInt(
       vector<ModInt<V, V_SQR, MOD>>& xs,
-      const vector<ModInt<V, V_SQR, MOD>>& ys) {
+      const vector<ModInt<V, V_SQR, MOD>>& ys,
+      bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.clear();
       return;
     }
-    int n = xs.size() + ys.size() - 1;
+    int n = cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1;
     int pow2 = nextPow2_32(n);
     static vector<Complex<T>> as, bs, cs, ds;
     as.resize(pow2);

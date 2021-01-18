@@ -17,7 +17,7 @@ TEST(FFTMulModUtilsTest, mulInlineModInt) {
   FFTPolyModInt<double, int, int64_t, 1000000007> xs, ys;
   xs = vector<int>{1, 2};
   ys = vector<int>{3, 4};
-  fft.mulInlineModInt(xs, ys);
+  fft.mulInlineModInt(xs, ys, false);
   ASSERT_EQ(3, xs.size());
   EXPECT_EQ(3, xs[0]._v);
   EXPECT_EQ(10, xs[1]._v);
@@ -25,7 +25,7 @@ TEST(FFTMulModUtilsTest, mulInlineModInt) {
 
   xs = vector<int>{31772, 371773, 371721, 81631};
   ys = vector<int>{348484, 28481838, 381872, 59492};
-  fft.mulInlineModInt(xs, ys);
+  fft.mulInlineModInt(xs, ys, false);
   ASSERT_EQ(7, xs.size());
   EXPECT_EQ(72033571, xs[0]._v);
   EXPECT_EQ(481891830, xs[1]._v);

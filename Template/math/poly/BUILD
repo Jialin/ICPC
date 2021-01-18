@@ -5,7 +5,10 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "fft_poly_mod_int_macros",
     hdrs = ["fft_poly_mod_int_macros.h"],
-    deps = ["//math/fft:fft_mul_mod_utils_macros"],
+    deps = [
+        "//math/fft:fft_mul_mod_utils_macros",
+        "//math/fft:fft_online_mod_utils_macros",
+    ],
 )
 
 cc_library(
@@ -14,6 +17,7 @@ cc_library(
     deps = [
         ":fft_poly_mod_int_macros",
         "//math/fft:fft_mul_mod_utils",
+        "//math/fft:fft_online_mod_utils",
     ],
 )
 

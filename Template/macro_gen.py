@@ -6,9 +6,10 @@ from copy import deepcopy
 TEMPLATES = [
     "math/bigint/bigint.h",
     "math/complex/complex.h",
-    "math/fft/fft_utils.h",
     "math/fft/fft_mul_mod_utils.h",
     "math/fft/fft_mul_utils.h",
+    "math/fft/fft_online_mod_utils.h",
+    "math/fft/fft_utils.h",
     "math/fft/ntt_utils.h",
     "math/fft/ntt_mul_utils.h",
     "math/mod/mod_int.h",
