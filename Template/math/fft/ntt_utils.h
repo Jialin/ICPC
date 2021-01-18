@@ -81,8 +81,7 @@ struct NTTUtils {
     }
   }
 
-// ^ NTT_UTILS_NTT_MOD_INT
-#ifdef NTT_UTILS_NTT_MOD_INT
+#ifdef NTT_UTILS_NTT_MOD_INT // ^
   // NTT_UTILS_NTT_MOD_INT => _NTT_UTILS_MOD_INT
   inline void nttModInt(vector<_ModInt>& vs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);

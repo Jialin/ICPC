@@ -83,8 +83,7 @@ struct FFTUtils {
     }
   }
 
-// ^ FFT_UTILS_FFT_2D
-#ifdef FFT_UTILS_FFT_2D
+#ifdef FFT_UTILS_FFT_2D // ^
   inline void fft2d(vector<vector<Complex<T>>>& cs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? cs.size() : n);
     cs.reserve(pow2);

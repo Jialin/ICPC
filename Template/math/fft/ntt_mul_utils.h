@@ -22,8 +22,7 @@ struct NTTMulUtils {
     return instance;
   }
 
-// ^ NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-#ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT
+#ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT // ^
   // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => _NTT_MUL_UTILS_MOD_INT
   inline void
   mulInlineModInt(vector<_ModInt>& xs, const vector<_ModInt>& ys, bool cyclic) {

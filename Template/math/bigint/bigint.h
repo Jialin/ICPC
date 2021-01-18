@@ -39,13 +39,11 @@ struct BigInt : vector<int> {
   using _BigInt = BigInt<GROUP, BASE_SQR>;
 #endif
 
-// ^ BIGINT_CONSTRUCT_EMPTY
-#ifdef BIGINT_CONSTRUCT_EMPTY
+#ifdef BIGINT_CONSTRUCT_EMPTY // ^
   inline BigInt() {}
 #endif
 
-// ^ BIGINT_CONSTRUCT_INT
-#ifdef BIGINT_CONSTRUCT_INT
+#ifdef BIGINT_CONSTRUCT_INT // ^
   template<typename T>
   inline BigInt(T v) {
     // BIGINT_CONSTRUCT_INT => BIGINT_INIT_INT
@@ -53,8 +51,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_INIT_CAPACITY
-#ifdef BIGINT_INIT_CAPACITY
+#ifdef BIGINT_INIT_CAPACITY // ^
   inline void initCapacity(int capacity = -1) {
     if (capacity >= 0) {
       reserve((capacity + GROUP - 1) / GROUP);
@@ -62,8 +59,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_INIT_CHAR_ARRAY
-#ifdef BIGINT_INIT_CHAR_ARRAY
+#ifdef BIGINT_INIT_CHAR_ARRAY // ^
   inline void initCharArray(const char* s, int size = -1) {
     clear();
     for (int i = (size >= 0 ? size : strlen(s)) - 1; i >= 0; i -= GROUP) {
@@ -78,8 +74,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_INIT_INT
-#ifdef BIGINT_INIT_INT
+#ifdef BIGINT_INIT_INT // ^
   template<typename T>
   inline void initInt(T v) {
     clear();
@@ -93,8 +88,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_INIT_ADD
-#ifdef BIGINT_INIT_ADD
+#ifdef BIGINT_INIT_ADD // ^
   inline void initAdd(const _BigInt& x, const _BigInt& y) {
     DEBUGF_NE(
         this,
@@ -110,8 +104,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_INIT_MUL
-#ifdef BIGINT_INIT_MUL
+#ifdef BIGINT_INIT_MUL // ^
   inline void initMul(const _BigInt& x, const _BigInt& y) {
     // BIGINT_INIT_MUL => _BIGINT_FFT_MUL_UTILS
     // BIGINT_INIT_MUL => _BIGINT_FFT_T
@@ -121,37 +114,32 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_SHRINK
-#ifdef BIGINT_SHRINK
+#ifdef BIGINT_SHRINK // ^
   inline void shrink() {
     for (; size() > 1 && !back(); pop_back()) {}
   }
 #endif
 
-// ^ BIGINT_ASSIGN
-#ifdef BIGINT_ASSIGN
+#ifdef BIGINT_ASSIGN // ^
   inline void operator=(const _BigInt& o) {
     clear();
     insert(begin(), o.begin(), o.end());
   }
 #endif
 
-// ^ BIGINT_ASSIGN_CHAR_ARRAY
-#ifdef BIGINT_ASSIGN_CHAR_ARRAY
+#ifdef BIGINT_ASSIGN_CHAR_ARRAY // ^
   inline void operator=(const char* s) {
     initCharArray(s);
   }
 #endif
 
-// ^ BIGINT_ASSIGN_STRING
-#ifdef BIGINT_ASSIGN_STRING
+#ifdef BIGINT_ASSIGN_STRING // ^
   inline void operator=(const string& o) {
     initCharArray(o.c_str(), o.size());
   }
 #endif
 
-// ^ BIGINT_ASSIGN_INT
-#ifdef BIGINT_ASSIGN_INT
+#ifdef BIGINT_ASSIGN_INT // ^
   template<typename T>
   inline void operator=(T o) {
     // BIGINT_ASSIGN_INT => BIGINT_INIT_INT
@@ -159,8 +147,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_ASSIGN_COMPLEX_VECTOR
-#ifdef BIGINT_ASSIGN_COMPLEX_VECTOR
+#ifdef BIGINT_ASSIGN_COMPLEX_VECTOR // ^
   // BIGINT_ASSIGN_COMPLEX_VECTOR => _BIGINT_FFT_T
   inline void operator=(const vector<Complex<FFT_T>>& o) {
     reserve(o.size() + 1);
@@ -183,8 +170,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_EQ_INT
-#ifdef BIGINT_EQ_INT
+#ifdef BIGINT_EQ_INT // ^
   template<typename T>
   inline bool operator==(T v) const {
     // BIGINT_EQ_INT => BIGINT_CMP_INT
@@ -192,8 +178,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_NE_INT
-#ifdef BIGINT_NE_INT
+#ifdef BIGINT_NE_INT // ^
   template<typename T>
   inline bool operator!=(T v) const {
     // BIGINT_NE_INT => BIGINT_CMP_INT
@@ -201,8 +186,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_ADD
-#ifdef BIGINT_ADD
+#ifdef BIGINT_ADD // ^
   inline _BigInt operator+(const _BigInt& o) const {
     _BigInt res;
     // BIGINT_ADD => BIGINT_INIT_ADD
@@ -211,8 +195,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_ADD_INT
-#ifdef BIGINT_ADD_INT
+#ifdef BIGINT_ADD_INT // ^
   template<typename T>
   inline _BigInt operator+(T v) const {
     _BigInt res;
@@ -223,8 +206,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_ADD_INLINE
-#ifdef BIGINT_ADD_INLINE
+#ifdef BIGINT_ADD_INLINE // ^
   inline void operator+=(const _BigInt& o) {
     bool carry = false;
     for (size_t i = 0; i < size() || i < o.size() || carry; ++i) {
@@ -241,8 +223,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_ADD_INLINE_INT
-#ifdef BIGINT_ADD_INLINE_INT
+#ifdef BIGINT_ADD_INLINE_INT // ^
   template<typename T>
   inline void operator+=(T v) {
     bool carry = false;
@@ -266,8 +247,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_SUB
-#ifdef BIGINT_SUB
+#ifdef BIGINT_SUB // ^
   inline _BigInt operator-(const _BigInt& o) const {
     _BigInt res;
     res = *this;
@@ -276,8 +256,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_SUB_INLINE
-#ifdef BIGINT_SUB_INLINE
+#ifdef BIGINT_SUB_INLINE // ^
   inline void operator-=(const _BigInt& o) {
 #ifdef LOCAL
     DEBUGF_GE(
@@ -297,8 +276,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_SUB_INLINE_INT
-#ifdef BIGINT_SUB_INLINE_INT
+#ifdef BIGINT_SUB_INLINE_INT // ^
   template<typename T>
   inline void operator-=(T v) {
     bool carry = false;
@@ -323,8 +301,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_MUL
-#ifdef BIGINT_MUL
+#ifdef BIGINT_MUL // ^
   inline _BigInt operator*(const _BigInt& o) const {
     _BigInt res;
     res.initMul(*this, o);
@@ -332,8 +309,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_MUL_INT
-#ifdef BIGINT_MUL_INT
+#ifdef BIGINT_MUL_INT // ^
   inline _BigInt operator*(BASE_SQR v) const {
     _BigInt res;
     res = *this;
@@ -343,16 +319,14 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_MUL_INLINE
-#ifdef BIGINT_MUL_INLINE
+#ifdef BIGINT_MUL_INLINE // ^
   inline void operator*=(const _BigInt& o) {
     // BIGINT_MUL_INLINE => BIGINT_INIT_MUL
     initMul(*this, o);
   }
 #endif
 
-// ^ BIGINT_MUL_INLINE_INT
-#ifdef BIGINT_MUL_INLINE_INT
+#ifdef BIGINT_MUL_INLINE_INT // ^
   inline void operator*=(BASE_SQR v) {
     // BIGINT_MUL_INLINE_INT => _BIGINT_POW10
     DEBUG_LT(v, POW10[GROUP]);
@@ -370,8 +344,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_DIV_INLINE
-#ifdef BIGINT_DIV_INLINE
+#ifdef BIGINT_DIV_INLINE // ^
   inline void operator/=(const _BigInt& o) {
     _BigInt divRes;
     modDivInline(o, divRes);
@@ -379,24 +352,21 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_DIV_INLINE_INT
-#ifdef BIGINT_DIV_INLINE_INT
+#ifdef BIGINT_DIV_INLINE_INT // ^
   inline void operator/=(BASE_SQR v) {
     // BIGINT_DIV_INLINE_INT => BIGINT_DIV_MOD_INLINE_INT
     divModInlineInt(v);
   }
 #endif
 
-// ^ BIGINT_MOD_INLINE
-#ifdef BIGINT_MOD_INLINE
+#ifdef BIGINT_MOD_INLINE // ^
   inline void operator%=(const _BigInt& o) {
     _BigInt divRes;
     modDivInline(o, divRes);
   }
 #endif
 
-// ^ BIGINT_MOD_INT
-#ifdef BIGINT_MOD_INT
+#ifdef BIGINT_MOD_INT // ^
   inline BASE_SQR operator%(BASE_SQR v) {
     DEBUG_GT(v, 0);
     // BIGINT_MOD_INT => _BIGINT_POW10
@@ -409,16 +379,14 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_LT
-#ifdef BIGINT_LT
+#ifdef BIGINT_LT // ^
   inline bool operator<(const _BigInt& o) const {
     // BIGINT_LT => BIGINT_CMP
     return cmp(o) < 0;
   }
 #endif
 
-// ^ BIGINT_LT_INT
-#ifdef BIGINT_LT_INT
+#ifdef BIGINT_LT_INT // ^
   template<typename T>
   inline bool operator<(T v) const {
     // BIGINT_LT_INT => BIGINT_CMP_INT
@@ -426,8 +394,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_GT_INT
-#ifdef BIGINT_GT_INT
+#ifdef BIGINT_GT_INT // ^
   template<typename T>
   inline bool operator>(T v) const {
     // BIGINT_LT_INT => BIGINT_CMP_INT
@@ -435,16 +402,14 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_GE
-#ifdef BIGINT_GE
+#ifdef BIGINT_GE // ^
   inline bool operator>=(const _BigInt& o) const {
     // BIGINT_GE => BIGINT_CMP
     return cmp(o) >= 0;
   }
 #endif
 
-// ^ BIGINT_GE_INT
-#ifdef BIGINT_GE_INT
+#ifdef BIGINT_GE_INT // ^
   template<typename T>
   inline bool operator>=(T v) const {
     // BIGINT_LT_INT => BIGINT_CMP_INT
@@ -452,8 +417,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_MOD_DIV_INLINE
-#ifdef BIGINT_MOD_DIV_INLINE
+#ifdef BIGINT_MOD_DIV_INLINE // ^
   inline void modDivInline(const _BigInt& o, _BigInt& divRes) {
     divRes.resize(
         max(static_cast<int>(size()) - static_cast<int>(o.size()) + 1, 1));
@@ -524,8 +488,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_DIV_MOD_INLINE_INT
-#ifdef BIGINT_DIV_MOD_INLINE_INT
+#ifdef BIGINT_DIV_MOD_INLINE_INT // ^
   inline BASE_SQR divModInlineInt(BASE_SQR v) {
     // BIGINT_DIV_MOD_INLINE_INT => _BIGINT_POW10
     DEBUG_LE(v - 1, numeric_limits<BASE_SQR>::max() / POW10[GROUP]);
@@ -541,8 +504,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_CMP
-#ifdef BIGINT_CMP
+#ifdef BIGINT_CMP // ^
   inline int cmp(const _BigInt& o) const {
     if (size() != o.size()) {
       return size() < o.size() ? -1 : 1;
@@ -556,8 +518,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_CMP_INT
-#ifdef BIGINT_CMP_INT
+#ifdef BIGINT_CMP_INT // ^
   template<typename T>
   inline int cmp(T o, size_t idx = 0) const {
     if (!o) {
@@ -586,8 +547,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_GCD_INLINE
-#ifdef BIGINT_GCD_INLINE
+#ifdef BIGINT_GCD_INLINE // ^
   inline void gcdInline(_BigInt& o) {
     // BIGINT_GCD_INLINE => BIGINT_CMP
     if (cmp(o) < 0) {
@@ -603,8 +563,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_DIGIT_COUNT
-#ifdef BIGINT_DIGIT_COUNT
+#ifdef BIGINT_DIGIT_COUNT // ^
   inline int digitCount() const {
     int res = (static_cast<int>(size()) - 1) * GROUP + 1;
     // BIGINT_DIGIT_COUNT => _BIGINT_POW10
@@ -613,8 +572,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_DIGIT_SUM
-#ifdef BIGINT_DIGIT_SUM
+#ifdef BIGINT_DIGIT_SUM // ^
   inline int digitSum() const {
     int res = 0;
     for (int v : *this) {
@@ -626,8 +584,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_OUTPUT
-#ifdef BIGINT_OUTPUT
+#ifdef BIGINT_OUTPUT // ^
   inline void output() const {
     int idx = static_cast<int>(size()) - 1;
     printf("%d", (*this)[idx]);
@@ -637,8 +594,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_OUTPUT_FAST
-#ifdef BIGINT_OUTPUT_FAST
+#ifdef BIGINT_OUTPUT_FAST // ^
   inline void outputFast() const {
     int idx = static_cast<int>(size()) - 1;
     io::writeInt((*this)[idx]);
@@ -648,8 +604,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_OUTPUT_CHAR_ARRAY
-#ifdef BIGINT_OUTPUT_CHAR_ARRAY
+#ifdef BIGINT_OUTPUT_CHAR_ARRAY // ^
   inline int outputCharArray(char* res) const {
     char* resStart = res;
     int idx = static_cast<int>(size()) - 1;
@@ -677,8 +632,7 @@ struct BigInt : vector<int> {
   }
 #endif
 
-// ^ BIGINT_OUTPUT_COMPLEX_VECTOR
-#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR
+#ifdef BIGINT_OUTPUT_COMPLEX_VECTOR // ^
   // BIGINT_OUTPUT_COMPLEX_VECTOR => _BIGINT_FFT_T
   inline void outputComplexVector(vector<Complex<FFT_T>>& res) const {
     res.resize(size());

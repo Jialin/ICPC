@@ -10,8 +10,7 @@ namespace math {
 
 template<typename V, typename V_SQR, V PRIME, V ROOT>
 struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
-// ^ NTT_POLY_MOD_INT_ASSIGN_VECTOR
-#ifdef NTT_POLY_MOD_INT_ASSIGN_VECTOR
+#ifdef NTT_POLY_MOD_INT_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
     this->resize(vs.size());
@@ -21,8 +20,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
-// ^ NTT_POLY_MOD_INT_MUL_INLINE
-#ifdef NTT_POLY_MOD_INT_MUL_INLINE
+#ifdef NTT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(
@@ -30,8 +28,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
-// ^ NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC
-#ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC
+#ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(
@@ -39,8 +36,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
-// ^ NTT_POLY_MOD_INT_SHRINK
-#ifdef NTT_POLY_MOD_INT_SHRINK
+#ifdef NTT_POLY_MOD_INT_SHRINK // ^
   inline void shrink() {
     for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
   }

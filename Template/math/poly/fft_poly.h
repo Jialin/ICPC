@@ -10,13 +10,11 @@ namespace math {
 
 template<typename V, typename FFT_T = long double>
 struct FFTPoly : public vector<V> {
-// ^ FFT_POLY_CONSTRUCT
-#ifdef FFT_POLY_CONSTRUCT
+#ifdef FFT_POLY_CONSTRUCT // ^
   inline FFTPoly(int size, V v) : vector<V>(size, v) {}
 #endif
 
-// ^ FFT_POLY_ASSIGN_VECTOR
-#ifdef FFT_POLY_ASSIGN_VECTOR
+#ifdef FFT_POLY_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
     this->resize(vs.size());
@@ -26,16 +24,14 @@ struct FFTPoly : public vector<V> {
   }
 #endif
 
-// ^ FFT_POLY_MUL_INLINE
-#ifdef FFT_POLY_MUL_INLINE
+#ifdef FFT_POLY_MUL_INLINE // ^
   inline void operator*=(const FFTPoly& o) {
     // FFT_POLY_MUL_INLINE => FFT_MUL_UTILS_MUL_INLINE_REAL
     FFTMulUtils<FFT_T>::instance().mulInlineReal(*this, o, false);
   }
 #endif
 
-// ^ FFT_POLY_MUL_INLINE_CYCLIC
-#ifdef FFT_POLY_MUL_INLINE_CYCLIC
+#ifdef FFT_POLY_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const FFTPoly& o) {
     // FFT_POLY_MUL_INLINE_CYCLIC => FFT_MUL_UTILS_MUL_INLINE_REAL
     FFTMulUtils<FFT_T>::instance().mulInlineReal(*this, o, true);

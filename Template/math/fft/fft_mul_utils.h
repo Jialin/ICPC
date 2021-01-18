@@ -19,8 +19,7 @@ struct FFTMulUtils {
     return instance;
   }
 
-// ^ FFT_MUL_UTILS_MUL_REAL
-#ifdef FFT_MUL_UTILS_MUL_REAL
+#ifdef FFT_MUL_UTILS_MUL_REAL // ^
   template<typename R>
   inline const vector<Complex<T>>&
   mulReal(const vector<R>& xs, const vector<R>& ys, bool cyclic) {
@@ -67,8 +66,7 @@ struct FFTMulUtils {
   }
 #endif
 
-// ^ FFT_MUL_UTILS_MUL_INLINE_REAL
-#ifdef FFT_MUL_UTILS_MUL_INLINE_REAL
+#ifdef FFT_MUL_UTILS_MUL_INLINE_REAL // ^
   template<typename R>
   inline void mulInlineReal(vector<R>& xs, const vector<R>& ys, bool cyclic) {
     // FFT_MUL_UTILS_MUL_INLINE_REAL => FFT_MUL_UTILS_MUL_REAL
@@ -80,8 +78,7 @@ struct FFTMulUtils {
   }
 #endif
 
-// ^ FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D
-#ifdef FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D
+#ifdef FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D // ^
   inline void mulInlineModify2d(
       vector<vector<Complex<T>>>& xs,
       vector<vector<Complex<T>>>& ys,

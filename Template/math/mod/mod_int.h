@@ -39,22 +39,19 @@ struct ModInt {
     _v = fix(v);
   }
 
-// ^ MOD_INT_ASSIGN
-#ifdef MOD_INT_ASSIGN
+#ifdef MOD_INT_ASSIGN // ^
   inline void operator=(const ModInt& o) {
     _v = o._v;
   }
 #endif
 
-// ^ MOD_INT_NEGATE
-#ifdef MOD_INT_NEGATE
+#ifdef MOD_INT_NEGATE // ^
   inline ModInt operator-() const {
     return ModInt(_v ? MOD - _v : 0);
   }
 #endif
 
-// ^ MOD_INT_NEGATE_INLINE
-#ifdef MOD_INT_NEGATE_INLINE
+#ifdef MOD_INT_NEGATE_INLINE // ^
   inline void negateInline() {
     if (_v) {
       _v = MOD - _v;
@@ -62,15 +59,13 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_ADD
-#ifdef MOD_INT_ADD
+#ifdef MOD_INT_ADD // ^
   inline ModInt operator+(const ModInt& o) const {
     return ModInt(_v + o._v);
   }
 #endif
 
-// ^ MOD_INT_ADD_INLINE
-#ifdef MOD_INT_ADD_INLINE
+#ifdef MOD_INT_ADD_INLINE // ^
   inline void operator+=(const ModInt& o) {
     _v += o._v;
     if (_v >= MOD) {
@@ -79,8 +74,7 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_SUB_INLINE
-#ifdef MOD_INT_SUB_INLINE
+#ifdef MOD_INT_SUB_INLINE // ^
   inline void operator-=(const ModInt& o) {
     _v -= o._v;
     if (_v < 0) {
@@ -89,45 +83,39 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_MUL
-#ifdef MOD_INT_MUL
+#ifdef MOD_INT_MUL // ^
   inline ModInt operator*(const ModInt& o) const {
     return ModInt(fix(static_cast<V_SQR>(_v) * o._v));
   }
 #endif
 
-// ^ MOD_INT_MUL_INLINE
-#ifdef MOD_INT_MUL_INLINE
+#ifdef MOD_INT_MUL_INLINE // ^
   inline void operator*=(const ModInt& o) {
     _v = fix(static_cast<V_SQR>(_v) * o._v);
   }
 #endif
 
-// ^ MOD_INT_DIV
-#ifdef MOD_INT_DIV
+#ifdef MOD_INT_DIV // ^
   inline ModInt operator/(const ModInt& o) const {
     // MOD_INT_DIV => MOD_INT_INV
     return *this * o.inv();
   }
 #endif
 
-// ^ MOD_INT_DIV_INLINE
-#ifdef MOD_INT_DIV_INLINE
+#ifdef MOD_INT_DIV_INLINE // ^
   inline void operator/=(const ModInt& o) {
     // MOD_INT_DIV_INLINE => MOD_INT_INV
     _v = fix(static_cast<V_SQR>(_v) * o.inv()._v);
   }
 #endif
 
-// ^ MOD_INT_INIT_MUL
-#ifdef MOD_INT_INIT_MUL
+#ifdef MOD_INT_INIT_MUL // ^
   inline void initMul(const ModInt& x, const ModInt& y) {
     _v = fix(static_cast<V_SQR>(x._v) * y._v);
   }
 #endif
 
-// ^ MOD_INT_INIT_SUB
-#ifdef MOD_INT_INIT_SUB
+#ifdef MOD_INT_INIT_SUB // ^
   inline void initSub(const ModInt& x, const ModInt& y) {
     _v = x._v - y._v;
     if (_v < 0) {
@@ -136,8 +124,7 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_INV
-#ifdef MOD_INT_INV
+#ifdef MOD_INT_INV // ^
   inline ModInt inv() const {
     ModInt res = *this;
     // MOD_INT_INV => MOD_INT_INV_INLINE
@@ -146,8 +133,7 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_INV_INLINE
-#ifdef MOD_INT_INV_INLINE
+#ifdef MOD_INT_INV_INLINE // ^
   inline void invInline() {
     V x0, x1;
     // MOD_INT_INV_INLINE => _MOD_INT_EXTGCD
@@ -160,8 +146,7 @@ struct ModInt {
   }
 #endif
 
-// ^ MOD_INT_EXP
-#ifdef MOD_INT_EXP
+#ifdef MOD_INT_EXP // ^
   template<typename E>
   inline ModInt exp(E e) const {
     if (e < 0) {
