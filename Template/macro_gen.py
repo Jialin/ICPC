@@ -12,6 +12,7 @@ TEMPLATES = [
     "math/fft/fft_utils.h",
     "math/fft/ntt_utils.h",
     "math/fft/ntt_mul_utils.h",
+    "math/fft/ntt_online_utils.h",
     "math/mod/mod_int.h",
     "math/poly/fft_poly.h",
     "math/poly/fft_poly_mod_int.h",

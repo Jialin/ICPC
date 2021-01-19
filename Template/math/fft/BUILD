@@ -105,6 +105,22 @@ cc_library(
 )
 
 cc_library(
+    name = "ntt_online_utils_macros",
+    hdrs = ["ntt_online_utils_macros.h"],
+    deps = [":ntt_mul_utils_macros"],
+)
+
+cc_library(
+    name = "ntt_online_utils",
+    hdrs = ["ntt_online_utils.h"],
+    deps = [
+        ":ntt_online_utils_macros",
+        "//common:macros",
+        "//math/fft:ntt_mul_utils",
+    ],
+)
+
+cc_library(
     name = "ntt_utils_fix_macros",
     hdrs = ["ntt_utils_fix_macros.h"],
     deps = ["//math/mod:mod_int_macros"],

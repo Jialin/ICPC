@@ -55,6 +55,16 @@ cc_test(
 )
 
 cc_test(
+    name = "ntt_online_utils_test",
+    srcs = ["ntt_online_utils_test.cpp"],
+    deps = [
+        "//math/fft:ntt_online_utils",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "ntt_utils_fix_test",
     srcs = ["ntt_utils_fix_test.cpp"],
     deps = [

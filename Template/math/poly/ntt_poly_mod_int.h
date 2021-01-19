@@ -1,10 +1,15 @@
 // ALL NTT_POLY_MOD_INT_ALL
 #pragma once
 
-#include "math/fft/ntt_mul_utils_macros.h" // INCLUDE
+#include "math/fft/ntt_mul_utils_macros.h"    // INCLUDE
+#include "math/fft/ntt_online_utils_macros.h" // INCLUDE
 #include "math/poly/ntt_poly_mod_int_macros.h"
 
 #include "math/fft/ntt_mul_utils.h"
+
+#ifdef _NTT_POLY_MOD_INT_ONLINE_UTILS
+#include "math/fft/ntt_online_utils.h"
+#endif
 
 namespace math {
 
@@ -23,16 +28,27 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(
-        *this, o, false);
+    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, false);
   }
 #endif
 
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(
-        *this, o, true);
+    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, true);
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_ONLINE_INLINE // ^
+  inline void onlineInline(
+      const NTTPolyModInt& o,
+      int computedBound,
+      int toComputeBound,
+      const function<void(ModInt<V, V_SQR, PRIME>& f, int idx)>& transform) {
+    // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_ONLINE_UTILS
+    // NTT_POLY_MOD_INT_MUL_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
+    NTTOnlineUtils<V, V_SQR, PRIME, ROOT>::instance().onlineInlineModInt(
+        *this, o, computedBound, toComputeBound, transform);
   }
 #endif
 
@@ -55,7 +71,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef LOCAL
 template<typename V, typename V_SQR, V PRIME, V ROOT>
 inline string totype(const math::NTTPolyModInt<V, V_SQR, PRIME, ROOT>& v) {
-  return "NTTPolyModInt<" + totype(V()) + "," + totype(V_SQR()) + "," +
-         tostring(PRIME) + "," + tostring(ROOT) + ">";
+  return "NTTPolyModInt<" + totype(V()) + "," + totype(V_SQR()) + "," + tostring(PRIME) + "," +
+         tostring(ROOT) + ">";
 }
 #endif

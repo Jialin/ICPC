@@ -24,7 +24,10 @@ cc_library(
 cc_library(
     name = "ntt_poly_mod_int_macros",
     hdrs = ["ntt_poly_mod_int_macros.h"],
-    deps = ["//math/fft:ntt_mul_utils_macros"],
+    deps = [
+        "//math/fft:ntt_mul_utils_macros",
+        "//math/fft:ntt_online_utils_macros",
+    ],
 )
 
 cc_library(
@@ -33,6 +36,7 @@ cc_library(
     deps = [
         ":ntt_poly_mod_int_macros",
         "//math/fft:ntt_mul_utils",
+        "//math/fft:ntt_online_utils",
     ],
 )
 

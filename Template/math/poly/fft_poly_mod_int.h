@@ -21,7 +21,7 @@ namespace math {
 template<typename FFT_T, typename V, typename V_SQR, V PRIME>
 struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef FFT_POLY_MOD_INT_CONSTRUCT // ^
-  inline FFTPolyModInt(int size, V v = 0) {
+  inline FFTPolyModInt(int size = 0, V v = 0) {
     this->assign(size, v);
   }
 #endif
