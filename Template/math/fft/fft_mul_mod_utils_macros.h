@@ -9,5 +9,8 @@
 #define _FFT_MUL_MOD_UTILS_MOD_INT
 #endif
 
-#include "math/fft/fft_utils_macros.h"
+#ifdef _FFT_MUL_MOD_UTILS_MOD_INT
 #include "math/mod/mod_int_macros.h"
+#endif
+
+#include "math/fft/fft_utils_macros.h"

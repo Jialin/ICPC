@@ -2,9 +2,13 @@
 // ALL FFT_MUL_MOD_UTILS_ALL
 #pragma once
 
+#ifdef _FFT_MUL_MOD_UTILS_MOD_INT
+// _FFT_MUL_MOD_UTILS_MOD_INT => INCLUDE math/mod/mod_int_macros.h
+#include "math/mod/mod_int_macros.h"
+#endif
+
 #include "math/fft/fft_mul_mod_utils_macros.h"
 #include "math/fft/fft_utils_macros.h" // INCLUDE
-#include "math/mod/mod_int_macros.h"   // INCLUDE
 
 #include "math/bit/next_pow2_32.h"
 #include "math/complex/complex.h"

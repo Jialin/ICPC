@@ -2,8 +2,12 @@
 // ALL NTT_POLY_MOD_INT_ALL
 #pragma once
 
-#include "math/fft/ntt_mul_utils_macros.h"    // INCLUDE
-#include "math/fft/ntt_online_utils_macros.h" // INCLUDE
+#ifdef _NTT_POLY_MOD_INT_ONLINE_UTILS
+// _NTT_POLY_MOD_INT_ONLINE_UTILS => INCLUDE math/fft/ntt_online_utils_macros.h
+#include "math/fft/ntt_online_utils_macros.h"
+#endif
+
+#include "math/fft/ntt_mul_utils_macros.h" // INCLUDE
 #include "math/poly/ntt_poly_mod_int_macros.h"
 
 #include "math/fft/ntt_mul_utils.h"

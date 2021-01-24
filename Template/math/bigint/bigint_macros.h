@@ -197,5 +197,6 @@
 #define _BIGINT_POW10
 #endif
 
-#include "math/complex/complex_macros.h"
+#ifdef _BIGINT_FFT_MUL_UTILS
 #include "math/fft/fft_mul_utils_macros.h"
+#endif

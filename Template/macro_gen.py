@@ -12,6 +12,14 @@ def generate_dep_lines(dep_from, dep_tos):
     )
 
 
+def generate_include_lines(dep, includes):
+    return (
+        ["#ifdef " + dep]
+        + sorted(['#include "{}"'.format(include) for include in includes])
+        + ["#endif"]
+    )
+
+
 def write_macro_file(macro_filepath, lines):
     try:
         with open(macro_filepath, "r") as macro_file:
@@ -34,7 +42,8 @@ ALL_DEPS_PATTERN = re.compile(r"^.*// \^ ([A-Z0-9_]+)$")
 ALL_DEPS_SHORT_PATTERN = re.compile(r"^#ifdef ([A-Z0-9_]+) // \^$")
 DEPS_PATTERN = re.compile(r"^.*//\s*([A-Z0-9_]+) => ([A-Z0-9_]+)\s*$")
 GLOBAL_DEPS_PATTERN = re.compile(r"^.*//\s* => ([A-Z0-9_]+)\s*$")
-INCLUDE_PATTERN = re.compile(r"^(#include \S+)\s*// INCLUDE$")
+INCLUDE_PATTERN = re.compile(r"^.*//\s*([A-Z0-9_]+) => INCLUDE (\S+)\s*$")
+GLOBAL_INCLUDE_PATTERN = re.compile(r"^(#include \S+)\s*// INCLUDE$")
 
 for subdir, dirs, files in os.walk(os.path.join(os.environ["ICPC_HOME"], "Template")):
     for filename in files:
@@ -44,7 +53,8 @@ for subdir, dirs, files in os.walk(os.path.join(os.environ["ICPC_HOME"], "Templa
         deps = {}
         all_deps = set()
         global_deps = set()
-        includes = set()
+        includes = {}
+        global_includes = set()
         # Load all_deps and deps
         with open(template_filepath, "r") as template_file:
             for line in template_file.readlines():
@@ -58,7 +68,15 @@ for subdir, dirs, files in os.walk(os.path.join(os.environ["ICPC_HOME"], "Templa
                     continue
                 match = INCLUDE_PATTERN.match(line)
                 if match:
-                    includes.add(match[1])
+                    dep = match[1]
+                    include = match[2]
+                    if dep not in includes:
+                        includes[dep] = set()
+                    includes[dep].add(include)
+                    continue
+                match = GLOBAL_INCLUDE_PATTERN.match(line)
+                if match:
+                    global_includes.add(match[1])
                     continue
                 match = ALL_DEPS_PATTERN.match(line)
                 if match:
@@ -99,9 +117,13 @@ for subdir, dirs, files in os.walk(os.path.join(os.environ["ICPC_HOME"], "Templa
             if lines:
                 lines.append("")
             lines.extend(generate_dep_lines(dep_from, dep_tos))
+        for dep, include in sorted(includes.items()):
+            if lines:
+                lines.append("")
+            lines.extend(generate_include_lines(dep, include))
         if lines:
             lines.append("")
-        lines.extend(sorted(includes))
+        lines.extend(sorted(global_includes))
         if lines and lines[-1]:
             lines.append("")
         # Write file

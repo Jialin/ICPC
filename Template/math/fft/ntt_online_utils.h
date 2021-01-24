@@ -2,9 +2,13 @@
 // ALL NTT_ONLINE_UTILS_ALL
 #pragma once
 
+#ifdef _NTT_ONLINE_UTILS_MOD_INT
+// _NTT_ONLINE_UTILS_MOD_INT => INCLUDE math/mod/mod_int_macros.h
+#include "math/mod/mod_int_macros.h"
+#endif
+
 #include "math/fft/ntt_mul_utils_macros.h" // INCLUDE
 #include "math/fft/ntt_online_utils_macros.h"
-#include "math/mod/mod_int_macros.h" // INCLUDE
 
 #include "common/macros.h"
 #include "math/fft/ntt_mul_utils.h"

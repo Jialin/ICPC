@@ -2,9 +2,17 @@
 // ALL FFT_POLY_MOD_INT_ALL
 #pragma once
 
-#include "math/fft/fft_mul_mod_utils_macros.h"    // INCLUDE
-#include "math/fft/fft_online_mod_utils_macros.h" // INCLUDE
-#include "math/mod/mod_int_macros.h"
+#ifdef FFT_POLY_MOD_INT_MUL_INLINE
+// FFT_POLY_MOD_INT_MUL_INLINE => INCLUDE math/fft/fft_mul_mod_utils_macros.h
+#include "math/fft/fft_mul_mod_utils_macros.h"
+#endif
+
+#ifdef FFT_POLY_MOD_INT_ONLINE_INLINE
+// FFT_POLY_MOD_INT_ONLINE_INLINE => INCLUDE math/fft/fft_online_mod_utils_macros.h
+#include "math/fft/fft_online_mod_utils_macros.h"
+#endif
+
+#include "math/mod/mod_int_macros.h" // INCLUDE
 #include "math/poly/fft_poly_mod_int_macros.h"
 
 #include "math/mod/mod_int.h"

@@ -8,5 +8,8 @@
 #define _NTT_ONLINE_UTILS_MOD_INT
 #endif
 
-#include "math/fft/ntt_mul_utils_macros.h"
+#ifdef _NTT_ONLINE_UTILS_MOD_INT
 #include "math/mod/mod_int_macros.h"
+#endif
+
+#include "math/fft/ntt_mul_utils_macros.h"

@@ -2,9 +2,12 @@
 // ALL BIGINT_ALL
 #pragma once
 
+#ifdef _BIGINT_FFT_MUL_UTILS
+// _BIGINT_FFT_MUL_UTILS => INCLUDE math/fft/fft_mul_utils_macros.h
+#include "math/fft/fft_mul_utils_macros.h"
+#endif
+
 #include "math/bigint/bigint_macros.h"
-#include "math/complex/complex_macros.h"   // INCLUDE
-#include "math/fft/fft_mul_utils_macros.h" // INCLUDE
 
 #include "debug/debug_basic.h"
 

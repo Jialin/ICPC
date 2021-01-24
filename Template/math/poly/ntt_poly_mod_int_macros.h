@@ -16,5 +16,8 @@
 #define _NTT_POLY_MOD_INT_ONLINE_UTILS
 #endif
 
-#include "math/fft/ntt_mul_utils_macros.h"
+#ifdef _NTT_POLY_MOD_INT_ONLINE_UTILS
 #include "math/fft/ntt_online_utils_macros.h"
+#endif
+
+#include "math/fft/ntt_mul_utils_macros.h"
