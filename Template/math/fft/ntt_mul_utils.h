@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL NTT_MUL_UTILS_ALL
 #pragma once
 
@@ -24,15 +25,13 @@ struct NTTMulUtils {
 
 #ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT // ^
   // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => _NTT_MUL_UTILS_MOD_INT
-  inline void
-  mulInlineModInt(vector<_ModInt>& xs, const vector<_ModInt>& ys, bool cyclic) {
+  inline void mulInlineModInt(vector<_ModInt>& xs, const vector<_ModInt>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.resize(1);
       xs[0] = 0;
       return;
     }
-    int pow2 = nextPow2_32(
-        cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
+    int pow2 = nextPow2_32(cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
     auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
     ntt._expand(xs, pow2);
     // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => NTT_UTILS_NTT_MOD_INT

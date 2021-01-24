@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL FFT_POLY_MOD_INT_ALL
 #pragma once
 

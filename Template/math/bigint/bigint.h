@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL BIGINT_ALL
 #pragma once
 
@@ -24,10 +25,7 @@ using namespace std;
 namespace math {
 
 #ifdef _BIGINT_FFT_T
-template<
-    int GROUP = 4,
-    typename BASE_SQR = int64_t,
-    typename FFT_T = long double>
+template<int GROUP = 4, typename BASE_SQR = int64_t, typename FFT_T = long double>
 #else
 template<int GROUP = 4, typename BASE_SQR = int64_t>
 #endif
@@ -90,14 +88,8 @@ struct BigInt : vector<int> {
 
 #ifdef BIGINT_INIT_ADD // ^
   inline void initAdd(const _BigInt& x, const _BigInt& y) {
-    DEBUGF_NE(
-        this,
-        &x,
-        "in a.initAdd(b,c), a and b should not reference to the same instance");
-    DEBUGF_NE(
-        this,
-        &y,
-        "in a.initAdd(b,c), a and c should not reference to the same instance");
+    DEBUGF_NE(this, &x, "in a.initAdd(b,c), a and b should not reference to the same instance");
+    DEBUGF_NE(this, &y, "in a.initAdd(b,c), a and c should not reference to the same instance");
     *this = x;
     // BIGINT_INIT_ADD => BIGINT_ADD_INLINE
     *this += y;
@@ -259,8 +251,7 @@ struct BigInt : vector<int> {
 #ifdef BIGINT_SUB_INLINE // ^
   inline void operator-=(const _BigInt& o) {
 #ifdef LOCAL
-    DEBUGF_GE(
-        cmp(o), 0, "Should only subtract bigint that's not larger than o");
+    DEBUGF_GE(cmp(o), 0, "Should only subtract bigint that's not larger than o");
 #endif
     bool carry = false;
     for (size_t i = 0; i < o.size() || carry; ++i) {
@@ -419,8 +410,7 @@ struct BigInt : vector<int> {
 
 #ifdef BIGINT_MOD_DIV_INLINE // ^
   inline void modDivInline(const _BigInt& o, _BigInt& divRes) {
-    divRes.resize(
-        max(static_cast<int>(size()) - static_cast<int>(o.size()) + 1, 1));
+    divRes.resize(max(static_cast<int>(size()) - static_cast<int>(o.size()) + 1, 1));
     fill(divRes.begin(), divRes.end(), 0);
     for (int i = static_cast<int>(divRes.size()) - 1; i >= 0; --i) {
       int res = 0;
@@ -471,8 +461,7 @@ struct BigInt : vector<int> {
       return true;
     }
     BASE_SQR carry = 0;
-    for (int i = static_cast<int>(size()) - 1, j = i - shift; i >= 0;
-         --i, --j) {
+    for (int i = static_cast<int>(size()) - 1, j = i - shift; i >= 0; --i, --j) {
       carry = carry * POW10[GROUP] + (*this)[i];
       if (0 <= j && j < o.size()) {
         if (carry < mul * o[j]) {
@@ -657,13 +646,9 @@ struct BigInt : vector<int> {
 } // namespace math
 
 #if defined(LOCAL) && defined(_BIGINT_FFT_T)
-template<
-    int GROUP = 4,
-    typename BASE_SQR = int64_t,
-    typename FFT_T = long double>
+template<int GROUP = 4, typename BASE_SQR = int64_t, typename FFT_T = long double>
 inline string totype(const math::BigInt<GROUP, BASE_SQR, FFT_T>& v) {
-  return "BigInt<" + tostring(GROUP) + "," + totype(BASE_SQR()) + "," +
-         totype(FFT_T()) + ">";
+  return "BigInt<" + tostring(GROUP) + "," + totype(BASE_SQR()) + "," + totype(FFT_T()) + ">";
 }
 #elif defined(LOCAL)
 template<int GROUP = 4, typename BASE_SQR = int64_t>

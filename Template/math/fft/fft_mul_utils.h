@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL FFT_MUL_UTILS_ALL
 #pragma once
 
@@ -21,8 +22,7 @@ struct FFTMulUtils {
 
 #ifdef FFT_MUL_UTILS_MUL_REAL // ^
   template<typename R>
-  inline const vector<Complex<T>>&
-  mulReal(const vector<R>& xs, const vector<R>& ys, bool cyclic) {
+  inline const vector<Complex<T>>& mulReal(const vector<R>& xs, const vector<R>& ys, bool cyclic) {
     static vector<Complex<T>> cs;
     if (xs.empty() || ys.empty()) {
       cs.resize(1);
@@ -30,8 +30,7 @@ struct FFTMulUtils {
       cs[0].init(0, 0);
       return cs;
     }
-    int pow2 = nextPow2_32(
-        cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
+    int pow2 = nextPow2_32(cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
     cs.resize(pow2);
     for (size_t i = 0; i < pow2; ++i) {
       cs[i].init(i < xs.size() ? xs[i] : 0, i < ys.size() ? ys[i] : 0);
@@ -79,17 +78,14 @@ struct FFTMulUtils {
 #endif
 
 #ifdef FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D // ^
-  inline void mulInlineModify2d(
-      vector<vector<Complex<T>>>& xs,
-      vector<vector<Complex<T>>>& ys,
-      bool cyclic) {
+  inline void
+  mulInlineModify2d(vector<vector<Complex<T>>>& xs, vector<vector<Complex<T>>>& ys, bool cyclic) {
     if (xs.empty() || ys.empty() || xs[0].empty() || ys[0].empty()) {
       xs.clear();
       return;
     }
-    int n =
-        cyclic ? max(max(xs.size(), ys.size()), max(xs[0].size(), ys[0].size()))
-               : max(xs.size() + ys.size(), xs[0].size() + ys[0].size()) - 1;
+    int n = cyclic ? max(max(xs.size(), ys.size()), max(xs[0].size(), ys[0].size()))
+                   : max(xs.size() + ys.size(), xs[0].size() + ys[0].size()) - 1;
     int pow2 = nextPow2_32(n);
     auto& fft = FFTUtils<T>::instance();
     // FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D => FFT_UTILS_FFT_2D

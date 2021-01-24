@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL COMPLEX_ALL
 #pragma once
 
@@ -38,8 +39,7 @@ struct Complex {
 
 #ifdef COMPLEX_MUL // ^
   inline Complex<T> operator*(const Complex<T>& o) const {
-    return Complex<T>(
-        real * o.real - imag * o.imag, real * o.imag + o.real * imag);
+    return Complex<T>(real * o.real - imag * o.imag, real * o.imag + o.real * imag);
   }
 #endif
 

@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL NTT_POLY_MOD_INT_ALL
 #pragma once
 
@@ -15,6 +16,12 @@ namespace math {
 
 template<typename V, typename V_SQR, V PRIME, V ROOT>
 struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
+#ifdef NTT_POLY_MOD_INT_CONSTRUCT // ^
+  inline NTTPolyModInt(int size = 0, V v = 0) {
+    this->assign(size, v);
+  }
+#endif
+
 #ifdef NTT_POLY_MOD_INT_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
@@ -45,8 +52,8 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       int computedBound,
       int toComputeBound,
       const function<void(ModInt<V, V_SQR, PRIME>& f, int idx)>& transform) {
-    // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_ONLINE_UTILS
-    // NTT_POLY_MOD_INT_MUL_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
+    // NTT_POLY_MOD_INT_ONLINE_INLINE => _NTT_POLY_MOD_INT_ONLINE_UTILS
+    // NTT_POLY_MOD_INT_ONLINE_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
     NTTOnlineUtils<V, V_SQR, PRIME, ROOT>::instance().onlineInlineModInt(
         *this, o, computedBound, toComputeBound, transform);
   }

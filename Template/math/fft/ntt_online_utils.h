@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL NTT_ONLINE_UTILS_ALL
 #pragma once
 

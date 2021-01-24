@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL FFT_MUL_MOD_UTILS_ALL
 #pragma once
 
@@ -28,9 +29,7 @@ struct FFTMulModUtils {
   // FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT => _FFT_MUL_MOD_UTILS_MOD_INT
   template<typename V, typename V_SQR, V MOD>
   inline void mulInlineModInt(
-      vector<ModInt<V, V_SQR, MOD>>& xs,
-      const vector<ModInt<V, V_SQR, MOD>>& ys,
-      bool cyclic) {
+      vector<ModInt<V, V_SQR, MOD>>& xs, const vector<ModInt<V, V_SQR, MOD>>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.clear();
       return;

@@ -1,3 +1,4 @@
+// !macro_gen
 // ALL MOD_INT_ALL
 #pragma once
 
@@ -183,7 +184,6 @@ struct ModInt {
 #ifdef LOCAL
 template<typename V, typename V_SQR, V MOD>
 inline string totype(const math::ModInt<V, V_SQR, MOD>& v) {
-  return "ModInt<" + totype(V()) + "," + totype(V_SQR()) + "," + tostring(MOD) +
-         ">";
+  return "ModInt<" + totype(V()) + "," + totype(V_SQR()) + "," + tostring(MOD) + ">";
 }
 #endif
