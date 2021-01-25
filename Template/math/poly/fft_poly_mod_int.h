@@ -2,8 +2,8 @@
 // ALL FFT_POLY_MOD_INT_ALL
 #pragma once
 
-#ifdef FFT_POLY_MOD_INT_MUL_INLINE
-// FFT_POLY_MOD_INT_MUL_INLINE => INCLUDE math/fft/fft_mul_mod_utils_macros.h
+#ifdef _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
+// _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS => INCLUDE math/fft/fft_mul_mod_utils_macros.h
 #include "math/fft/fft_mul_mod_utils_macros.h"
 #endif
 
@@ -17,7 +17,7 @@
 
 #include "math/mod/mod_int.h"
 
-#ifdef FFT_POLY_MOD_INT_MUL_INLINE
+#ifdef _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
 #include "math/fft/fft_mul_mod_utils.h"
 #endif
 
@@ -45,10 +45,30 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef FFT_POLY_MOD_INT_SUB // ^
+  inline FFTPolyModInt operator-(const FFTPolyModInt& o) const {
+    FFTPolyModInt res(max(this->size(), o.size()));
+    FORSIZE(i, *this) {
+      res[i] += (*this)[i];
+    }
+    FORSIZE(i, o) {
+      res[i] -= o[i];
+    }
+    return res;
+  }
+#endif
+
 #ifdef FFT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_MUL_INLINE => _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
     // FFT_POLY_MOD_INT_MUL_INLINE => FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT
     FFTMulModUtils<FFT_T>::instance().mulInlineModInt(*this, o, false);
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_SHRINK // ^
+  inline void shrink() {
+    for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
   }
 #endif
 
@@ -61,6 +81,51 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // FFT_POLY_MOD_INT_ONLINE_INLINE => FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT
     FFTOnlineModUtils<FFT_T>::instance().template onlineInlineModInt<V, V_SQR, PRIME>(
         *this, o, computedBound, toComputeBound, transform);
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_INV_INLINE // ^
+  inline void invInline() {
+    static FFTPolyModInt res;
+    int n = this->size();
+    res.resize(n);
+    FOR(i, 0, n) {
+      res[i] = (*this)[i];
+    }
+    res._inv(*this, n);
+  }
+
+  inline void _inv(FFTPolyModInt& res, int n) {
+    if (n == 1) {
+      DEBUG_GT((*this)[0]._v, 0);
+      res.resize(1);
+      // FFT_POLY_MOD_INT_INV_INLINE => MOD_INT_INV
+      res[0] = (*this)[0].inv();
+      return;
+    }
+    int nHalf = (n + 1) >> 1;
+    _inv(res, nHalf);
+    static FFTPolyModInt tmp;
+    tmp.resize(n);
+    FOR(i, 0, n) {
+      tmp[i] = (*this)[i];
+    }
+    // FFT_POLY_MOD_INT_INV_INLINE => _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
+    // FFT_POLY_MOD_INT_INV_INLINE => FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT
+    auto& fft = FFTMulModUtils<FFT_T>::instance();
+    fft.mulInlineModInt(tmp, res, false);
+    tmp.resize(n);
+    fft.mulInlineModInt(tmp, res, false);
+    FOR(i, 0, n) {
+      if (i < res.size()) {
+        // FFT_POLY_MOD_INT_INV_INLINE => MOD_INT_MUL_INLINE
+        res[i] *= 2;
+      } else {
+        res.emplace_back(0);
+      }
+      // FFT_POLY_MOD_INT_INV_INLINE => MOD_INT_SUB_INLINE
+      res[i] -= tmp[i];
+    }
   }
 #endif
 

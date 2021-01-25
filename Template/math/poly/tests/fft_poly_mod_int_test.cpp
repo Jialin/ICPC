@@ -55,4 +55,42 @@ TEST(FFTPolyModIntTest, onlineInline) {
   EXPECT_EQ(911015404, res[4097]._v);
 }
 
+TEST(FFTPolyModIntTest, invInline) {
+  const int MOD = 1000000007;
+  FFTPolyModInt<double, int, int64_t, MOD> res;
+  res = vector<int>{1, 1000000006, 1000000006, 0, 1000000006, 0, 1000000005, 0, 0, 0, 0};
+  res.invInline();
+  ASSERT_EQ(11, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(1, res[1]._v);
+  EXPECT_EQ(2, res[2]._v);
+  EXPECT_EQ(3, res[3]._v);
+  EXPECT_EQ(6, res[4]._v);
+  EXPECT_EQ(10, res[5]._v);
+  EXPECT_EQ(20, res[6]._v);
+  EXPECT_EQ(35, res[7]._v);
+  EXPECT_EQ(65, res[8]._v);
+  EXPECT_EQ(116, res[9]._v);
+  EXPECT_EQ(213, res[10]._v);
+
+  res = vector<int>{1, 500000003, 500000003, 0, 0};
+  res.invInline();
+  ASSERT_EQ(5, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(500000004, res[1]._v);
+  EXPECT_EQ(750000006, res[2]._v);
+  EXPECT_EQ(625000005, res[3]._v);
+  EXPECT_EQ(187500002, res[4]._v);
+
+  res = vector<int>{1, 833333339, 722222227, 722222227, 148148149, 478395065};
+  res.invInline();
+  ASSERT_EQ(6, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(166666668, res[1]._v);
+  EXPECT_EQ(305555558, res[2]._v);
+  EXPECT_EQ(375000003, res[3]._v);
+  EXPECT_EQ(101080248, res[4]._v);
+  EXPECT_EQ(925025727, res[5]._v);
+}
+
 } // namespace math
