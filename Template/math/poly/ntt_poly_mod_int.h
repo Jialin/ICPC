@@ -63,6 +63,30 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef NTT_POLY_MOD_INT_DERIVE_INLINE // ^
+  inline void deriveInline() {
+    if (this->empty()) {
+      return;
+    }
+    this->erase(this->begin());
+    FOR(i, 0, SIZE(*this)) {
+      (*this)[i] *= i + 1;
+    }
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_INTEGRAL_INLINE // ^
+  inline void integralInline() {
+    if (this->empty()) {
+      return;
+    }
+    this->insert(this->begin(), ModInt<V, V_SQR, PRIME>(0));
+    FOR(i, 1, SIZE(*this)) {
+      (*this)[i] /= i;
+    }
+  }
+#endif
+
 #ifdef NTT_POLY_MOD_INT_SHRINK // ^
   inline void shrink() {
     for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}

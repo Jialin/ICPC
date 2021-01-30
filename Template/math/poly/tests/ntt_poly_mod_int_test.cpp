@@ -52,9 +52,33 @@ TEST(NTTPolyModIntTest, mulInlineCyclic) {
   EXPECT_EQ(6742591, xs[3]._v);
 }
 
+TEST(NTTPolyModIntTest, deriveInline) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  res = vector<int>{1283, 1331, 14322, 112315, 1812};
+  res.deriveInline();
+  ASSERT_EQ(4, res.size());
+  EXPECT_EQ(1331, res[0]._v);
+  EXPECT_EQ(28644, res[1]._v);
+  EXPECT_EQ(336945, res[2]._v);
+  EXPECT_EQ(7248, res[3]._v);
+}
+
+TEST(NTTPolyModIntTest, integralInline) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  res = vector<int>{12, 13, 14, 15};
+  res.integralInline();
+  ASSERT_EQ(5, res.size());
+  EXPECT_EQ(0, res[0]._v);
+  EXPECT_EQ(12, res[1]._v);
+  EXPECT_EQ(3670023, res[2]._v);
+  EXPECT_EQ(4893360, res[3]._v);
+  EXPECT_EQ(1835012, res[4]._v);
+}
+
 TEST(NTTPolyModIntTest, onlineInline) {
   const int MOD = 924844033;
-  auto& ntt = NTTOnlineUtils<int, int64_t, MOD, 3597>::instance();
   NTTPolyModInt<int, int64_t, MOD, 3597> fs, bases;
 
   fs = vector<int>{1};
