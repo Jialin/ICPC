@@ -156,7 +156,7 @@ struct NTTUtils {
   }
 
   vector<int> _revs;
-  vector<V> _roots;
+  vector<V_SQR> _roots;
   uint64_t _quota;
 };
 

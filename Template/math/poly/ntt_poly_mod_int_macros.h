@@ -119,3 +119,5 @@
 #ifdef _NTT_POLY_MOD_INT_NTT_UTILS
 #include "math/fft/ntt_utils_macros.h"
 #endif
+
+#include "math/mod/mod_int_macros.h"

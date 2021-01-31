@@ -17,6 +17,7 @@
 #include "math/fft/ntt_online_utils_macros.h"
 #endif
 
+#include "math/mod/mod_int_macros.h" // INCLUDE
 #include "math/poly/ntt_poly_mod_int_macros.h"
 
 #ifdef _NTT_POLY_MOD_INT_NTT_UTILS
@@ -30,6 +31,8 @@
 #ifdef _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
 #include "math/fft/ntt_online_utils.h"
 #endif
+
+#include "math/mod/mod_int.h"
 
 namespace math {
 
