@@ -16,5 +16,6 @@
 			"**/boost**boost/**": true
 		}
 	},
-	"C_Cpp.default.forcedInclude": []
+	"C_Cpp.default.forcedInclude": [],
+	"C_Cpp.intelliSenseMemoryLimit": 8192
 }
