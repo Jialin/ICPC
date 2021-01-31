@@ -3,24 +3,6 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "fft_mixed_utils_macros",
-    hdrs = ["fft_mixed_utils_macros.h"],
-    deps = ["//math/complex:complex_macros"],
-)
-
-cc_library(
-    name = "fft_mixed_utils",
-    hdrs = ["fft_mixed_utils.h"],
-    deps = [
-        ":fft_mixed_utils_macros",
-        "//math/bit:next_pow2_32",
-        "//math/complex",
-        "//math/constants:pi",
-        "//math/mod:mod_int",
-    ],
-)
-
-cc_library(
     name = "fft_mul_mod_utils_macros",
     hdrs = ["fft_mul_mod_utils_macros.h"],
     deps = [
@@ -117,22 +99,6 @@ cc_library(
         ":ntt_online_utils_macros",
         "//common:macros",
         "//math/fft:ntt_mul_utils",
-    ],
-)
-
-cc_library(
-    name = "ntt_utils_fix_macros",
-    hdrs = ["ntt_utils_fix_macros.h"],
-    deps = ["//math/mod:mod_int_macros"],
-)
-
-cc_library(
-    name = "ntt_utils_fix",
-    hdrs = ["ntt_utils_fix.h"],
-    deps = [
-        ":ntt_utils_fix_macros",
-        "//math/bit:next_pow2_32",
-        "//math/mod:mod_int",
     ],
 )
 

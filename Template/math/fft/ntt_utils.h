@@ -24,10 +24,6 @@ template<typename V, typename V_SQR, V PRIME, V ROOT>
 struct NTTUtils {
   using _ModInt = ModInt<V, V_SQR, PRIME>;
 
-  inline NTTUtils() {
-    _quota = numeric_limits<uint64_t>::max() / PRIME;
-  }
-
   inline static NTTUtils& instance() {
 #ifdef LOCAL
     int _rootPow = 1 << __builtin_ctz(PRIME - 1);
@@ -84,6 +80,7 @@ struct NTTUtils {
         _roots[j | 1] = _roots[j] * v % PRIME;
       }
     }
+    _quota = numeric_limits<uint64_t>::max() / PRIME / *max_element(_roots.begin(), _roots.end());
   }
 
 #ifdef NTT_UTILS_NTT_MOD_INT // ^
