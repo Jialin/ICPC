@@ -92,9 +92,12 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     FOR(i, 0, n) {
       res[i] = (*this)[i];
     }
+    // FFT_POLY_MOD_INT_INV_INLINE => _FFT_POLY_MOD_INT_INV
     res._inv(*this, n);
   }
+#endif
 
+#ifdef _FFT_POLY_MOD_INT_INV
   inline void _inv(FFTPolyModInt& res, int n) {
     if (n == 1) {
       DEBUG_GT((*this)[0]._v, 0);
