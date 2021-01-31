@@ -52,6 +52,101 @@ TEST(NTTPolyModIntTest, mulInlineCyclic) {
   EXPECT_EQ(6742591, xs[3]._v);
 }
 
+TEST(NTTPolyModIntTest, inv) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> xs;
+  xs = vector<int>{1, 7340032, 7340032, 0, 7340032, 0, 7340031, 0, 0, 0, 0};
+  const auto& res1 = xs.inv();
+  ASSERT_EQ(11, res1.size());
+  EXPECT_EQ(1, res1[0]._v);
+  EXPECT_EQ(1, res1[1]._v);
+  EXPECT_EQ(2, res1[2]._v);
+  EXPECT_EQ(3, res1[3]._v);
+  EXPECT_EQ(6, res1[4]._v);
+  EXPECT_EQ(10, res1[5]._v);
+  EXPECT_EQ(20, res1[6]._v);
+  EXPECT_EQ(35, res1[7]._v);
+  EXPECT_EQ(65, res1[8]._v);
+  EXPECT_EQ(116, res1[9]._v);
+  EXPECT_EQ(213, res1[10]._v);
+
+  xs = vector<int>{1, 3670016, 3670016, 0, 0};
+  const auto& res2 = xs.inv();
+  ASSERT_EQ(5, res2.size());
+  EXPECT_EQ(1, res2[0]._v);
+  EXPECT_EQ(3670017, res2[1]._v);
+  EXPECT_EQ(1835009, res2[2]._v);
+  EXPECT_EQ(2752513, res2[3]._v);
+  EXPECT_EQ(2293761, res2[4]._v);
+
+  xs = vector<int>{1, 3909610, 2898993, 2898993, 1347489, 1292920};
+  const auto& res3 = xs.inv();
+  ASSERT_EQ(6, res3.size());
+  EXPECT_EQ(1, res3[0]._v);
+  EXPECT_EQ(3430423, res3[1]._v);
+  EXPECT_EQ(1253181, res3[2]._v);
+  EXPECT_EQ(1705603, res3[3]._v);
+  EXPECT_EQ(4560677, res3[4]._v);
+  EXPECT_EQ(1508198, res3[5]._v);
+}
+
+TEST(NTTPolyModIntTest, invInline) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  res = vector<int>{1, 0};
+  res.invInline();
+  ASSERT_EQ(2, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(0, res[1]._v);
+
+  res = vector<int>{1, 7340032, 7340032, 0, 7340032, 0, 7340031, 0, 0, 0, 0};
+  res.invInline();
+  ASSERT_EQ(11, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(1, res[1]._v);
+  EXPECT_EQ(2, res[2]._v);
+  EXPECT_EQ(3, res[3]._v);
+  EXPECT_EQ(6, res[4]._v);
+  EXPECT_EQ(10, res[5]._v);
+  EXPECT_EQ(20, res[6]._v);
+  EXPECT_EQ(35, res[7]._v);
+  EXPECT_EQ(65, res[8]._v);
+  EXPECT_EQ(116, res[9]._v);
+  EXPECT_EQ(213, res[10]._v);
+
+  res = vector<int>{1, 3670016, 3670016, 0, 0};
+  res.invInline();
+  ASSERT_EQ(5, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(3670017, res[1]._v);
+  EXPECT_EQ(1835009, res[2]._v);
+  EXPECT_EQ(2752513, res[3]._v);
+  EXPECT_EQ(2293761, res[4]._v);
+
+  res = vector<int>{1, 3909610, 2898993, 2898993, 1347489, 1292920};
+  res.invInline();
+  ASSERT_EQ(6, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(3430423, res[1]._v);
+  EXPECT_EQ(1253181, res[2]._v);
+  EXPECT_EQ(1705603, res[3]._v);
+  EXPECT_EQ(4560677, res[4]._v);
+  EXPECT_EQ(1508198, res[5]._v);
+}
+
+TEST(NTTPolyModIntTest, expInline) {
+  const int MOD = 924844033;
+  NTTPolyModInt<int, int64_t, MOD, 3597> res;
+  res = vector<int>{0, 0, 1, 3, 616562698};
+  res.expInline();
+  ASSERT_EQ(5, res.size());
+  EXPECT_EQ(1, res[0]._v);
+  EXPECT_EQ(0, res[1]._v);
+  EXPECT_EQ(1, res[2]._v);
+  EXPECT_EQ(3, res[3]._v);
+  EXPECT_EQ(154140682, res[4]._v);
+}
+
 TEST(NTTPolyModIntTest, deriveInline) {
   const int MOD = 7340033;
   NTTPolyModInt<int, int64_t, MOD, 5> res;
