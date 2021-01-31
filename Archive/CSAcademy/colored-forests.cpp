@@ -3,8 +3,7 @@
 #include "common/macros.h"
 #include "debug/debug_declare.h"
 
-#define MOD_INT_ADD
-#define MOD_INT_DIV
+#define MOD_INT_INIT_MUL
 #define MOD_INT_DIV_INLINE
 #define MOD_INT_MUL
 #define NTT_POLY_MOD_INT_CONSTRUCT
@@ -29,6 +28,7 @@ using ModInt = math::ModInt<int, int64_t, MOD>;
 using NTTPolyModInt = math::NTTPolyModInt<int, int64_t, MOD, ROOT>;
 
 int n, m;
+ModInt fact[MAXN], invFact[MAXN];
 ModInt colorWays[MAXM][MAXN];
 NTTPolyModInt bases;
 
@@ -49,6 +49,13 @@ NTTPolyModInt bases;
 // - g(i)*i=sum(g(j)*c(j))
 //
 // f(n)*n=sum(f(i)*g(n-i),i from 1 to n-1)
+// F'x+F=F*G
+// F'x=G(F-1)
+// F'/(F-1)=G/x
+// ln'(F-1)=G/x
+//
+// ln(F-1)=integ(G/x)
+// F-1=exp(integ(G/x))
 //
 // Alternative:
 // - a[i]=S[i][m]*m!*i^(i-2)/i!
@@ -61,25 +68,31 @@ int main() {
   }
   for (int i = 2; i <= m; ++i) {
     for (int j = i; j <= n; ++j) {
-      colorWays[i][j] = (colorWays[i][j - 1] + colorWays[i - 1][j - 1]) * i;
+      colorWays[i][j] = (colorWays[i][j - 1]._v + colorWays[i - 1][j - 1]._v) * CAST<int64_t>(i);
     }
   }
+  fact[0] = 1;
+  FOR(i, 1, n + 1) {
+    fact[i].initMul(fact[i - 1], i);
+  }
+  invFact[n] = fact[n].inv();
+  for (int i = n - 1; i >= 0; --i) {
+    invFact[i].initMul(invFact[i + 1], i + 1);
+  }
   bases.resize(n + 1);
-  ModInt fact = 1;
   for (int i = 1; i <= n; ++i) {
     if (i >= m) {
-      bases[i] = colorWays[m][i] * ModInt(i).exp(max(i - 2, 0)) / fact;
+      bases[i] = colorWays[m][i] * ModInt(i).exp(max(i - 2, 0)) * invFact[i - 1];
+    } else {
+      bases[i] = 0;
     }
-    fact *= i;
   }
   NTTPolyModInt answers(1, 1);
   answers.onlineInline(bases, 1, n + 1, [](ModInt& f, int idx) {
     f /= idx;
   });
-  fact = 1;
   for (int i = 1; i <= n; ++i) {
-    fact *= i;
-    answers[i] *= fact;
+    answers[i] *= fact[i];
     io::writeInt(answers[i]._v);
     io::writeChar('\n');
   }

@@ -21,18 +21,14 @@
 
 using namespace std;
 
-#define POLY_MOD_INT_ACCESS
-#define POLY_MOD_INT_MUL_INLINE_MODIFY
-#define POLY_MOD_INT_RESIZE
-#define POLY_MOD_INT_SIZE
-#include "math/poly/poly_mod_int_macros.h"
+#define NTT_POLY_MOD_INT_MUL_INLINE
+#include "math/poly/ntt_poly_mod_int_macros.h"
 
 #include "debug/debug.h"
 #include "io/read_int.h"
 #include "io/write_int.h"
-#include "math/poly/poly_mod_int.h"
+#include "math/poly/ntt_poly_mod_int.h"
 
-const int MAXN = 200000 + 2;
 const int MAXM = (1000000 + 2) >> 1;
 const int MOD = 7340033;
 
@@ -40,8 +36,7 @@ using V = int;
 using V_SQR = int64_t;
 
 int n, x, y, x1;
-math::PolyModInt<V, V_SQR, MOD> xs, revXs;
-math::NTTUtilsFix<V, V_SQR, MOD, 5> ntt(MAXN << 1);
+math::NTTPolyModInt<V, V_SQR, MOD, 5> xs, revXs;
 
 int answers[MAXM];
 
@@ -58,7 +53,7 @@ int main() {
     xs[v] = 1;
     revXs[x - v] = 1;
   }
-  xs.mulInlineModify(revXs, false, ntt);
+  xs *= revXs;
   memset(answers, 0xFF, sizeof(answers));
   for (int i = x + 1, j = y + 1; i <= (x << 1) && j < MAXM; ++i, ++j) {
     if (i < xs.size() && xs[i]._v && j < MAXM) {

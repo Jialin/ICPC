@@ -1,46 +1,29 @@
-#include <algorithm>
-#include <bitset>
-#include <cassert>
-#include <cctype>
-#include <cmath>
-#include <complex>
-#include <cstddef>
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <set>
-#include <string>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
+// First batch includes
+#include "common/include.h"
+#include "common/macros.h"
+#include "debug/debug_declare.h"
 
-using namespace std;
+#define FFT_MUL_UTILS_MUL_INLINE_MODIFY_2D
+#include "math/fft/fft_mul_utils_macros.h"
 
-#define FFT_UTILS_MUL_INLINE_COMPLEX_MATRIX
-#include "math/fft/fft_utils_macros.h"
-
-#include "debug/debug.h"
 #include "io/read_char_array.h"
 #include "io/read_int.h"
 #include "io/write_char.h"
-#include "math/fft/fft_utils.h"
+#include "math/fft/fft_mul_utils.h"
+
+// Last include
+#include "debug/debug.h"
 
 const int MAXN = 400 + 2;
 const int MAXPOW2 = 1 << 10;
 const double EPS = 1E-5;
 
-using COMPLEX_T = double;
+using FFT_T = double;
 
 int n, m, r, c, nr, mc, pow2;
 char board[MAXN][MAXN], pattern[MAXN][MAXN];
-math::FFTUtils<COMPLEX_T> fft(MAXPOW2);
 bool valid[MAXN][MAXN];
-vector<vector<math::Complex<COMPLEX_T>>> boardCs, patternCs;
+vector<vector<math::Complex<FFT_T>>> boardCs, patternCs;
 
 int main() {
   io::readInt(n);
@@ -78,7 +61,7 @@ int main() {
       }
     }
   }
-  fft.mulInline(boardCs, patternCs, true);
+  math::FFTMulUtils<FFT_T>::instance().mulInlineModify2d(boardCs, patternCs, true);
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < m; ++j) {
       io::writeChar(

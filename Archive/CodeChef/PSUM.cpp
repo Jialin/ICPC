@@ -1,41 +1,21 @@
-#include <algorithm>
-#include <bitset>
-#include <cassert>
-#include <cctype>
-#include <cmath>
-#include <complex>
-#include <cstddef>
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <set>
-#include <string>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
+// First batch includes
+#include "common/include.h"
+#include "common/macros.h"
+#include "debug/debug_declare.h"
 
-using namespace std;
-
-#define POLY_MOD_INT_ACCESS
-#define POLY_MOD_INT_ASSIGN
-#define POLY_MOD_INT_CLEAR
-#define POLY_MOD_INT_EMPLACE_BACK
-#define POLY_MOD_INT_NTT_INLINE
-#define POLY_MOD_INT_RESERVE
-#define POLY_MOD_INT_RESIZE
-#define POLY_MOD_INT_SHRINK
-#define POLY_MOD_INT_SIZE
 #define MOD_INT_ADD_INLINE
 #define MOD_INT_DIV
-#include "math/poly/poly_mod_int_macros.h"
+#define MOD_INT_MUL
+#define MOD_INT_MUL_INLINE
+#define NTT_POLY_MOD_INT_SHRINK
+#define NTT_UTILS_NTT_MOD_INT
+#include "math/fft/ntt_utils_macros.h"
+#include "math/poly/ntt_poly_mod_int_macros.h"
 
-#include "math/poly/poly_mod_int.h"
+#include "math/fft/ntt_utils.h"
+#include "math/poly/ntt_poly_mod_int.h"
 
+// Last include
 #include "debug/debug.h"
 
 // e^(ax) = sum(a^k / k! * x^k, k >= 0)
@@ -51,15 +31,14 @@ const int MOD = 998244353;
 const int ROOT = 31;
 
 using ModInt = math::ModInt<int, int64_t, MOD>;
-using PolyModInt = math::PolyModInt<int, int64_t, MOD>;
 
 int n, budget, e, costs[MAXN], values[MAXN];
-
-PolyModInt row[MAXN], product, cell;
-math::NTTUtilsFix<int, int64_t, MOD, ROOT> ntt(MAXPOW2);
+math::NTTPolyModInt<int, int64_t, MOD, ROOT> row[MAXN], product, cell;
 vector<ModInt> invFacts;
 
 int main() {
+  auto& ntt = math::NTTUtils<int, int64_t, MOD, ROOT>::instance();
+  ntt.initCapacity(MAXPOW2);
   while (scanf("%d%d%d", &n, &budget, &e) != EOF) {
     invFacts.resize(e + 1);
     invFacts[0] = 1;
@@ -86,20 +65,19 @@ int main() {
       for (int j = 1; j <= e; ++j) {
         product[j] *= invFacts[j];
       }
-      product.nttInline(false, pow2, ntt);
+      ntt.nttModInt(product, false, pow2);
       for (int j = budget - costs[i]; j >= 0; --j) {
         cell = row[j];
-        cell.nttInline(false, pow2, ntt);
+        ntt.nttModInt(cell, false, pow2);
         for (int k = 0; k < pow2; ++k) {
           cell[k] *= product[k];
         }
-        cell.nttInline(true, pow2, ntt);
+        ntt.nttModInt(cell, true, pow2);
         if (cell.size() > e) {
           cell.resize(e + 1);
         }
         cell.shrink();
-        for (; row[j + costs[i]].size() < cell.size();
-             row[j + costs[i]].emplace_back(0)) {}
+        for (; row[j + costs[i]].size() < cell.size(); row[j + costs[i]].emplace_back(0)) {}
         for (size_t k = 0; k < cell.size(); ++k) {
           row[j + costs[i]][k] += cell[k];
         }

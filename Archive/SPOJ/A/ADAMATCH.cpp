@@ -21,27 +21,23 @@
 
 using namespace std;
 
-#define POLY_INT_ACCESS
-#define POLY_INT_MUL_INLINE
-#define POLY_INT_RESERVE
-#define POLY_INT_RESIZE
-#define POLY_INT_SIZE
-#include "math/poly/poly_int_macros.h"
+#define FFT_POLY_MUL_INLINE_CYCLIC
+#include "math/poly/fft_poly_macros.h"
 
 #include "debug/debug.h"
 #include "io/read_char_array.h"
 #include "io/write_int.h"
-#include "math/fft/fft_utils.h"
-#include "math/poly/poly_int.h"
+#include "math/poly/fft_poly.h"
 
 const int MAXL = 500000 + 1;
 const int MAXPOW2 = 1 << 19;
 
+using FFT_T = double;
+
 int n, m;
 char s[MAXL], t[MAXL];
-math::PolyInt<int> a, b;
+math::FFTPoly<int, FFT_T> a, b;
 vector<int> sum;
-math::FFTUtils<double> fft(MAXPOW2);
 
 inline void calc(char c) {
   a.resize(n);
@@ -52,7 +48,7 @@ inline void calc(char c) {
   for (int i = 0, j = m - 1; i < m; ++i, --j) {
     b[i] = t[j] == c;
   }
-  a.mulInline(b, true, fft);
+  a.mulInlineCyclic(b);
   for (int i = 0, j = m - 1; i <= n - m && j < a.size(); ++i, ++j) {
     sum[i] += a[j];
   }
@@ -62,6 +58,7 @@ int main() {
   sum.reserve(MAXL);
   a.reserve(MAXPOW2);
   b.reserve(MAXPOW2);
+  math::FFTUtils<FFT_T>::instance().initCapacity(MAXPOW2);
   while (true) {
     n = io::readCharArray(s);
     if (!n) {
@@ -73,7 +70,6 @@ int main() {
     calc('C');
     calc('T');
     calc('G');
-    DEBUGV(sum);
     io::writeInt(m - *max_element(sum.begin(), sum.end()));
     io::writeChar('\n');
   }
