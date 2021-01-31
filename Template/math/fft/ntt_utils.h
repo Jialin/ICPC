@@ -2,6 +2,7 @@
 // ALL NTT_UTILS_ALL
 #pragma once
 
+#include "common/macros.h"
 #include "math/fft/ntt_utils_macros.h"
 #include "math/mod/mod_int_macros.h" // INCLUDE
 
@@ -22,6 +23,10 @@ namespace math {
 template<typename V, typename V_SQR, V PRIME, V ROOT>
 struct NTTUtils {
   using _ModInt = ModInt<V, V_SQR, PRIME>;
+
+  inline NTTUtils() {
+    _quota = numeric_limits<uint64_t>::max() / PRIME;
+  }
 
   inline static NTTUtils& instance() {
 #ifdef LOCAL
@@ -73,7 +78,7 @@ struct NTTUtils {
     _ModInt root(ROOT);
     for (int i = oldPow2; i < pow2; i <<= 1) {
       // => MOD_INT_EXP
-      V v = root.exp((_rootPow / i) >> 1)._v;
+      V_SQR v = root.exp((_rootPow / i) >> 1)._v;
       for (int j = i; j < i << 1; j += 2) {
         _roots[j] = _roots[j >> 1];
         _roots[j | 1] = _roots[j] * v % PRIME;
@@ -103,37 +108,41 @@ struct NTTUtils {
   inline void ntt(vector<V>& vs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     initCapacity(pow2);
-    _expand(vs, pow2);
+    static vector<uint64_t> vs64;
+    vs64.resize(pow2);
+    int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
     if (inverse) {
       reverse(vs.begin() + 1, vs.begin() + pow2);
       // => MOD_INT_INV
       V_SQR v = _ModInt(pow2).inv()._v;
       for (int i = 0; i < pow2; ++i) {
-        vs[i] = vs[i] * v % PRIME;
+        vs64[i] = vs[_revs[i] >> shift] * v % PRIME;
+      }
+    } else {
+      for (int i = 0; i < pow2; ++i) {
+        vs64[i] = vs[_revs[i] >> shift];
       }
     }
-    int shift = __builtin_ctz(_revs.size()) - __builtin_ctz(pow2);
-    for (int i = 0; i < pow2; ++i) {
-      int j = _revs[i] >> shift;
-      if (i < j) {
-        swap(vs[i], vs[j]);
-      }
-    }
-    for (int l = 1; l < pow2; l <<= 1) {
+    for (int l = 1, cnt = 0; l < pow2; l <<= 1, ++cnt) {
       for (int i = 0; i < pow2; i += l << 1) {
         for (int j = 0; j < l; ++j) {
-          V v = vs[i + j + l] * _roots[j + l] % PRIME;
-          if (vs[i + j] >= v) {
-            vs[i + j + l] = vs[i + j] - v;
-          } else {
-            vs[i + j + l] = PRIME - v + vs[i + j];
-          }
-          vs[i + j] += v;
-          if (vs[i + j] >= PRIME) {
-            vs[i + j] -= PRIME;
-          }
+          uint64_t v = vs64[i + j + l] * _roots[j + l] % PRIME;
+          vs64[i + j + l] = PRIME - v + vs64[i + j];
+          vs64[i + j] += v;
         }
       }
+      if (cnt == _quota) {
+        FOR(i, 0, pow2) {
+          vs64[i] %= PRIME;
+        }
+        cnt = 0;
+      }
+    }
+    if (vs.size() < pow2) {
+      vs.resize(pow2);
+    }
+    FOR(i, 0, pow2) {
+      vs[i] = vs64[i] % PRIME;
     }
   }
 
@@ -147,7 +156,8 @@ struct NTTUtils {
   }
 
   vector<int> _revs;
-  vector<V_SQR> _roots;
+  vector<V> _roots;
+  uint64_t _quota;
 };
 
 } // namespace math

@@ -5,6 +5,7 @@
 #define MOD_INT_DIV
 #define MOD_INT_DIV_INLINE
 #define MOD_INT_EXP
+#define MOD_INT_INIT_ADD
 #define MOD_INT_INIT_MUL
 #define MOD_INT_INIT_SUB
 #define MOD_INT_INV
@@ -31,7 +32,6 @@
 #ifdef MOD_INT_EXP
 #define MOD_INT_INV
 #define MOD_INT_INV_INLINE
-#define MOD_INT_MUL_INLINE
 #define _MOD_INT_EXTGCD
 #endif
 

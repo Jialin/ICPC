@@ -2,17 +2,32 @@
 // ALL NTT_POLY_MOD_INT_ALL
 #pragma once
 
-#ifdef _NTT_POLY_MOD_INT_ONLINE_UTILS
-// _NTT_POLY_MOD_INT_ONLINE_UTILS => INCLUDE math/fft/ntt_online_utils_macros.h
+#ifdef _NTT_POLY_MOD_INT_NTT_UTILS
+// _NTT_POLY_MOD_INT_NTT_UTILS => INCLUDE math/fft/ntt_utils_macros.h
+#include "math/fft/ntt_utils_macros.h"
+#endif
+
+#ifdef _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+// _NTT_POLY_MOD_INT_NTT_MUL_UTILS => INCLUDE math/fft/ntt_mul_utils_macros.h
+#include "math/fft/ntt_mul_utils_macros.h"
+#endif
+
+#ifdef _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
+// _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS => INCLUDE math/fft/ntt_online_utils_macros.h
 #include "math/fft/ntt_online_utils_macros.h"
 #endif
 
-#include "math/fft/ntt_mul_utils_macros.h" // INCLUDE
 #include "math/poly/ntt_poly_mod_int_macros.h"
 
-#include "math/fft/ntt_mul_utils.h"
+#ifdef _NTT_POLY_MOD_INT_NTT_UTILS
+#include "math/fft/ntt_utils.h"
+#endif
 
-#ifdef _NTT_POLY_MOD_INT_ONLINE_UTILS
+#ifdef _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+#include "math/fft/ntt_mul_utils.h"
+#endif
+
+#ifdef _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
 #include "math/fft/ntt_online_utils.h"
 #endif
 
@@ -38,6 +53,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const NTTPolyModInt& o) {
+    // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, false);
   }
@@ -45,6 +61,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
+    // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, true);
   }
@@ -56,7 +73,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       int computedBound,
       int toComputeBound,
       const function<void(ModInt<V, V_SQR, PRIME>& f, int idx)>& transform) {
-    // NTT_POLY_MOD_INT_ONLINE_INLINE => _NTT_POLY_MOD_INT_ONLINE_UTILS
+    // NTT_POLY_MOD_INT_ONLINE_INLINE => _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
     // NTT_POLY_MOD_INT_ONLINE_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
     NTTOnlineUtils<V, V_SQR, PRIME, ROOT>::instance().onlineInlineModInt(
         *this, o, computedBound, toComputeBound, transform);
@@ -81,10 +98,25 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     if (this->empty()) {
       return;
     }
+    static vector<ModInt<V, V_SQR, PRIME>> invs;
+    if (invs.size() < this->size() + 1) {
+      int n = invs.size();
+      invs.resize(this->size() + 1);
+      if (SIZE(invs) > 1) {
+        invs[1] = 1;
+      }
+      FOR(i, max(n, 2), SIZE(invs)) {
+        invs[i] = invs[PRIME % i];
+        // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_MUL_INLINE
+        invs[i] *= PRIME / i;
+        // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_NEGATE_INLINE
+        invs[i].negateInline();
+      }
+    }
     this->insert(this->begin(), ModInt<V, V_SQR, PRIME>(0));
     FOR(i, 1, SIZE(*this)) {
-      // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_DIV_INLINE
-      (*this)[i] /= i;
+      // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_MUL_INLINE
+      (*this)[i] *= invs[i];
     }
   }
 #endif
@@ -95,12 +127,20 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       return;
     }
     DEBUG_EQ((*this)[0]._v, 1);
-    // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_INV
-    const auto& invP = inv();
+    static NTTPolyModInt invP;
+    int n = this->size();
+    invP.resize(n);
+    FOR(i, 0, SIZE(invP)) {
+      invP[i] = (*this)[i];
+    }
+    // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_INV_INLINE
+    invP.invInline();
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_DERIVE_INLINE
     deriveInline();
+    // NTT_POLY_MOD_INT_LN_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, invP, false);
+    this->resize(n);
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_INTEGRAL_INLINE
     integralInline();
   }
@@ -159,31 +199,34 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       res[0] = p[0].inv();
       return;
     }
-    _inv(p, res, (n + 1) >> 1);
-    static NTTPolyModInt tmp;
-    tmp.resize(n);
+    int nHalf = (n + 1) >> 1;
+    _inv(p, res, nHalf);
+    static NTTPolyModInt tmpP;
+    int pow2 = nextPow2_32(n + (nHalf << 1) - 2);
+    tmpP.resize(pow2);
     FOR(i, 0, n) {
-      tmp[i] = p[i];
+      tmpP[i] = p[i];
     }
-    auto& ntt = NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance();
-    // _NTT_POLY_MOD_INT_INV => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    ntt.mulInlineModInt(tmp, res, false);
-    if (tmp.size() > n) {
-      tmp.resize(n);
+    FOR(i, n, pow2) {
+      tmpP[i] = 0;
     }
-    ntt.mulInlineModInt(tmp, res, false);
-    FOR(i, 0, n) {
-      if (i < res.size()) {
-        // _NTT_POLY_MOD_INT_INV => MOD_INT_MUL_INLINE
-        res[i] *= 2;
-      } else {
-        res.emplace_back(0);
-      }
-      if (i < tmp.size()) {
-        // _NTT_POLY_MOD_INT_INV => MOD_INT_SUB_INLINE
-        res[i] -= tmp[i];
-      }
+    // _NTT_POLY_MOD_INT_INV => _NTT_POLY_MOD_INT_NTT_UTILS
+    auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
+    // _NTT_POLY_MOD_INT_INV => NTT_UTILS_NTT_MOD_INT
+    ntt.nttModInt(tmpP, false, pow2);
+    ntt.nttModInt(res, false, pow2);
+    FOR(i, 0, pow2) {
+      V v = res[i]._v;
+      // _NTT_POLY_MOD_INT_INV => MOD_INT_MUL_INLINE
+      res[i] *= tmpP[i];
+      // _NTT_POLY_MOD_INT_INV => MOD_INT_NEGATE_INLINE
+      res[i].negateInline();
+      // _NTT_POLY_MOD_INT_INV => MOD_INT_ADD_INLINE
+      res[i] += 2;
+      res[i] *= v;
     }
+    ntt.nttModInt(res, true, pow2);
+    res.resize(n);
   }
 #endif
 
@@ -214,6 +257,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     }
     // _NTT_POLY_MOD_INT_EXP => MOD_INT_ADD_INLINE
     tmpP[0] += 1;
+    // _NTT_POLY_MOD_INT_EXP => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
     // _NTT_POLY_MOD_INT_EXP => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(res, tmpP, false);
     res.resize(n);

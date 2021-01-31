@@ -116,6 +116,15 @@ struct ModInt {
   }
 #endif
 
+#ifdef MOD_INT_INIT_ADD // ^
+  inline void initAdd(const ModInt& x, const ModInt& y) {
+    _v = x._v + y._v;
+    if (_v > MOD) {
+      _v -= MOD;
+    }
+  }
+#endif
+
 #ifdef MOD_INT_INIT_SUB // ^
   inline void initSub(const ModInt& x, const ModInt& y) {
     _v = x._v - y._v;
@@ -154,15 +163,14 @@ struct ModInt {
       // MOD_INT_EXP => MOD_INT_INV
       return inv().exp(-e);
     }
-    ModInt res = 1, mul = *this;
+    V_SQR res = 1, mul = _v;
     while (e) {
       if (e & 1) {
-        // MOD_INT_EXP => MOD_INT_MUL_INLINE
-        res *= mul;
+        res = res * mul % MOD;
       }
       e >>= 1;
       if (e) {
-        mul *= mul;
+        mul = mul * mul % MOD;
       }
     }
     return res;
