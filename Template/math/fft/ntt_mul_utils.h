@@ -3,7 +3,17 @@
 #pragma once
 
 #include "common/macros.h"
+
+#ifdef _NTT_MUL_UTILS_MOD_INT
+// _NTT_MUL_UTILS_MOD_INT => INCLUDE math/mod/mod_int_macros.h
+#include "math/mod/mod_int_macros.h"
+#endif
+
 #include "math/fft/ntt_utils_macros.h" // INCLUDE
+
+#ifdef _NTT_MUL_UTILS_MOD_INT
+#include "math/mod/mod_int.h"
+#endif
 
 #include "math/bit/next_pow2_32.h"
 #include "math/fft/ntt_utils.h"
@@ -48,6 +58,7 @@ struct NTTMulUtils {
     ntt._expand(ys2, pow2);
     ntt.nttModInt(ys2, false, pow2);
     for (int i = 0; i < pow2; ++i) {
+      // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_MUL_INLINE
       xs[i] *= ys2[i];
     }
     ntt.nttModInt(xs, true, pow2);
