@@ -130,42 +130,48 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
-  // #ifdef NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED // ^
-  //   inline void divInlinePrecomputed(int size, int sizeO, const NTTPolyModInt& invRevO) {
-  //     if (size < sizeO) {
-  //       this->assign(1, 0);
-  //       return;
-  //     }
-  //     // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_EXTEND
-  //     extend(size);
-  //     this->resize(size);
-  //     reverse(this->begin(), this->end());
-  //     size -= sizeO - 1;
-  //     // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
-  //     *this *= invRevO;
-  //     this->resize(size);
-  //     reverse(this->begin(), this->end());
-  //     shrink();
-  //   }
-  // #endif
+#ifdef NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED // ^
+  inline void divInlinePrecomputed(const NTTPolyModInt& invRevO) {
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < invRevO.size()) {
+      this->assign(1, 0);
+      return;
+    }
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_ASSIGN
+    int size = this->size() - invRevO.size() + 1;
+    reverse(this->begin(), this->end());
+    this->resize(size);
+    static NTTPolyModInt tmpO;
+    DEBUG_GE(invRevO.size(), size);
+    tmpO.resize(size);
+    FOR(i, 0, size) {
+      tmpO[i] = invRevO[i];
+    }
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_MUL_INLINE
+    *this *= tmpO;
+    this->resize(size);
+    reverse(this->begin(), this->end());
+    shrink();
+  }
+#endif
 
-  // #ifdef NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED // ^
-  //   inline void modInlinePrecomputed(int size, const NTTPolyModInt& o, const NTTPolyModInt&
-  //   invRevO) {
-  //     if (size < o.size()) {
-  //       return;
-  //     }
-  //     static NTTPolyModInt tmp;
-  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_ASSIGN
-  //     tmp = *this;
-  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
-  //     tmp.divInlinePrecomputed(size, o.size(), invRevO);
-  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
-  //     tmp *= o;
-  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_SUB_INLINE
-  //     *this -= tmp;
-  //   }
-  // #endif
+#ifdef NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED // ^
+  inline void modInlinePrecomputed(const NTTPolyModInt& o, const NTTPolyModInt& invRevO) {
+    if (this->size() < invRevO.size()) {
+      return;
+    }
+    static NTTPolyModInt tmp;
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_ASSIGN
+    tmp = *this;
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
+    tmp.divInlinePrecomputed(invRevO);
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
+    tmp *= o;
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_SUB_INLINE
+    *this -= tmp;
+  }
+#endif
 
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
@@ -206,36 +212,31 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       modP[i].negateInline();
     }
     modP[n] = 1;
-    // static NTTPolyModInt invRevModP;
-    // invRevModP = modP;
-    // reverse(invRevModP.begin(), invRevModP.begin());
-    // // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
-    // invRevModP.invInline(n - 1);
-    // DEBUGV(invRevModP);
+    static NTTPolyModInt invRevModP;
+    invRevModP = modP;
+    reverse(invRevModP.begin(), invRevModP.end());
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
+    invRevModP.invInline();
     static NTTPolyModInt mulP;
     mulP.resize(2);
     mulP[0] = 0;
     mulP[1] = 1;
-    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE
-    mulP %= modP;
-    // // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
-    // mulP.modInlinePrecomputed(n21, modP, invRevModP);
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
+    mulP.modInlinePrecomputed(modP, invRevModP);
     static NTTPolyModInt resP;
     resP.assign(1, 1);
     while (k) {
       if (k & 1) {
         // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MUL_INLINE
         resP *= mulP;
-        resP %= modP;
-        // resP.modInlinePrecomputed(n21, modP, invRevModP);
+        resP.modInlinePrecomputed(modP, invRevModP);
       }
       k >>= 1;
       if (!k) {
         break;
       }
       mulP *= mulP;
-      mulP %= modP;
-      // mulP.modInlinePrecomputed(n21, modP, invRevModP);
+      mulP.modInlinePrecomputed(modP, invRevModP);
     }
     // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_DOT
     return xs.dot(resP);
