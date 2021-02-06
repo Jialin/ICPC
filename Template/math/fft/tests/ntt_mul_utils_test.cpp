@@ -27,6 +27,17 @@ TEST(NTTMulUtilsTest, mulInlineModInt) {
   EXPECT_EQ(4368242, xs[4]._v);
   EXPECT_EQ(5719417, xs[5]._v);
   EXPECT_EQ(4629639, xs[6]._v);
+
+  xs = {1, 2, 3, 4};
+  NTTMulUtils<int, int64_t, MOD, 5>::instance().mulInlineModInt(xs, xs, false);
+  ASSERT_EQ(7, xs.size());
+  EXPECT_EQ(1, xs[0]._v);
+  EXPECT_EQ(4, xs[1]._v);
+  EXPECT_EQ(10, xs[2]._v);
+  EXPECT_EQ(20, xs[3]._v);
+  EXPECT_EQ(25, xs[4]._v);
+  EXPECT_EQ(24, xs[5]._v);
+  EXPECT_EQ(16, xs[6]._v);
 }
 
 } // namespace math

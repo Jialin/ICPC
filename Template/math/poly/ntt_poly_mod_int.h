@@ -143,7 +143,6 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     reverse(this->begin(), this->end());
     this->resize(size);
     static NTTPolyModInt tmpO;
-    DEBUG_GE(invRevO.size(), size);
     tmpO.resize(size);
     FOR(i, 0, size) {
       tmpO[i] = invRevO[i];
@@ -203,6 +202,10 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef NTT_POLY_MOD_INT_RECURRENCE // ^
   template<typename K>
   inline ModInt<V, V_SQR, PRIME> recurrence(const NTTPolyModInt& xs, K k) const {
+    DEBUG_GE(k, 0);
+    if (!k) {
+      return xs[0];
+    }
     static NTTPolyModInt modP;
     int n = this->size();
     modP.resize(n + 1);
@@ -217,29 +220,33 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     reverse(invRevModP.begin(), invRevModP.end());
     // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
     invRevModP.invInline();
-    static NTTPolyModInt mulP;
-    mulP.resize(2);
-    mulP[0] = 0;
-    mulP[1] = 1;
-    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
-    mulP.modInlinePrecomputed(modP, invRevModP);
     static NTTPolyModInt resP;
-    resP.assign(1, 1);
-    while (k) {
-      if (k & 1) {
-        // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MUL_INLINE
-        resP *= mulP;
-        resP.modInlinePrecomputed(modP, invRevModP);
-      }
-      k >>= 1;
-      if (!k) {
-        break;
-      }
-      mulP *= mulP;
-      mulP.modInlinePrecomputed(modP, invRevModP);
-    }
+    resP.resize(2);
+    resP[0] = 0;
+    resP[1] = 1;
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
+    resP.modInlinePrecomputed(modP, invRevModP);
+    resP._recurrence(modP, invRevModP, k);
     // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_DOT
     return xs.dot(resP);
+  }
+
+  template<typename K>
+  inline void _recurrence(const NTTPolyModInt& o, const NTTPolyModInt& invRevO, K k) {
+    if (k == 1) {
+      return;
+    }
+    _recurrence(o, invRevO, k >> 1);
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MUL_INLINE
+    *this *= *this;
+    if (k & 1) {
+      this->resize(this->size() + 1);
+      for (int i = SIZE(*this) - 1; i > 0; --i) {
+        (*this)[i] = (*this)[i - 1];
+      }
+      (*this)[0] = 0;
+    }
+    this->modInlinePrecomputed(o, invRevO);
   }
 #endif
 
