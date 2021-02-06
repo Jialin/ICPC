@@ -43,9 +43,6 @@ struct NTTMulUtils {
     }
     int pow2 = nextPow2_32(cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
     auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
-    ntt._expand(xs, pow2);
-    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => NTT_UTILS_NTT_MOD_INT
-    ntt.nttModInt(xs, false, pow2);
     static vector<_ModInt> ys2;
     ys2.resize(pow2);
     FOR(i, 0, pow2) {
@@ -55,6 +52,9 @@ struct NTTMulUtils {
         ys2[i] = 0;
       }
     }
+    ntt._expand(xs, pow2);
+    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => NTT_UTILS_NTT_MOD_INT
+    ntt.nttModInt(xs, false, pow2);
     ntt._expand(ys2, pow2);
     ntt.nttModInt(ys2, false, pow2);
     for (int i = 0; i < pow2; ++i) {

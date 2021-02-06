@@ -39,6 +39,58 @@ TEST(NTTPolyModIntTest, mulInline) {
   EXPECT_EQ(4629639, xs[6]._v);
 }
 
+TEST(NTTPolyModIntTest, divInline) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  xs = vector<int>{15, 22, 27, 18};
+  ys = vector<int>{2, 3};
+  xs /= ys;
+  ASSERT_EQ(3, xs.size());
+  EXPECT_EQ(4, xs[0]._v);
+  EXPECT_EQ(5, xs[1]._v);
+  EXPECT_EQ(6, xs[2]._v);
+
+  xs = vector<int>{15, 30, 27, 18};
+  ys = vector<int>{4, 5, 6};
+  xs /= ys;
+  ASSERT_EQ(2, xs.size());
+  EXPECT_EQ(2, xs[0]._v);
+  EXPECT_EQ(3, xs[1]._v);
+}
+
+TEST(NTTPolyModIntTest, modInline) {
+  const int MOD = 7340033;
+  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  xs = vector<int>{15, 22, 27, 18};
+  ys = vector<int>{2, 3};
+  xs %= ys;
+  ASSERT_EQ(1, xs.size());
+  EXPECT_EQ(7, xs[0]._v);
+
+  xs = vector<int>{15, 30, 27, 18};
+  ys = vector<int>{4, 5, 6};
+  xs %= ys;
+  ASSERT_EQ(2, xs.size());
+  EXPECT_EQ(7, xs[0]._v);
+  EXPECT_EQ(8, xs[1]._v);
+}
+
+TEST(NTTPolyModIntTest, recurrence) {
+  const int MOD = 104857601;
+  NTTPolyModInt<int, int64_t, MOD, 21> xs, coefs;
+  xs = vector<int>{1, 2, 3};
+  coefs = vector<int>{6, 5, 4};
+  EXPECT_EQ(1, coefs.recurrence(xs, 0)._v);
+  EXPECT_EQ(2, coefs.recurrence(xs, 1)._v);
+  EXPECT_EQ(3, coefs.recurrence(xs, 2)._v);
+  EXPECT_EQ(28, coefs.recurrence(xs, 3)._v);
+  EXPECT_EQ(139, coefs.recurrence(xs, 4)._v);
+  EXPECT_EQ(2690515, coefs.recurrence(xs, 10)._v);
+  EXPECT_EQ(35593197, coefs.recurrence(xs, 100)._v);
+  EXPECT_EQ(33015477, coefs.recurrence(xs, 1000)._v);
+  EXPECT_EQ(99777528, coefs.recurrence(xs, 100000000000000)._v);
+}
+
 TEST(NTTPolyModIntTest, mulInlineCyclic) {
   const int MOD = 7340033;
   NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;

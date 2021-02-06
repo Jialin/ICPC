@@ -44,6 +44,16 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef NTT_POLY_MOD_INT_ASSIGN // ^
+  inline void operator=(const NTTPolyModInt& o) {
+    this->resize(o.size());
+    FORSIZE(i, o) {
+      (*this)[i] = o[i];
+    }
+    shrink();
+  }
+#endif
+
 #ifdef NTT_POLY_MOD_INT_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
@@ -51,6 +61,19 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     for (size_t i = 0; i < vs.size(); ++i) {
       (*this)[i] = vs[i];
     }
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_SUB_INLINE // ^
+  inline void operator-=(const NTTPolyModInt& o) {
+    // NTT_POLY_MOD_INT_SUB_INLINE => NTT_POLY_MOD_INT_EXTEND
+    extend(o.size());
+    for (int i = SIZE(o) - 1; i >= 0; --i) {
+      // NTT_POLY_MOD_INT_SUB_INLINE => MOD_INT_SUB_INLINE
+      (*this)[i] -= o[i];
+    }
+    // NTT_POLY_MOD_INT_SUB_INLINE => NTT_POLY_MOD_SHRINK
+    shrink();
   }
 #endif
 
@@ -62,6 +85,88 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+#ifdef NTT_POLY_MOD_INT_DIV_INLINE // ^
+  inline void operator/=(const NTTPolyModInt& o) {
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < o.size()) {
+      this->assign(1, 0);
+      return;
+    }
+    static NTTPolyModInt tmpO;
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_ASSIGN
+    tmpO = o;
+    tmpO.shrink();
+    int size = this->size() - tmpO.size() + 1;
+    reverse(this->begin(), this->end());
+    this->resize(size);
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_INV_INLINE
+    reverse(tmpO.begin(), tmpO.end());
+    tmpO.invInline(size);
+    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_MUL_INLINE
+    *this *= tmpO;
+    this->resize(size);
+    reverse(this->begin(), this->end());
+    shrink();
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_MOD_INLINE // ^
+  inline void operator%=(const NTTPolyModInt& o) {
+    // NTT_POLY_MOD_INT_MOD_INLINE => NTT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < o.size()) {
+      return;
+    }
+    static NTTPolyModInt tmp;
+    // NTT_POLY_MOD_INT_MOD_INLINE => NTT_POLY_MOD_INT_ASSIGN
+    tmp = *this;
+    // NTT_POLY_MOD_INT_MOD_INLINE => NTT_POLY_MOD_INT_DIV_INLINE
+    tmp /= o;
+    // NTT_POLY_MOD_INT_MOD_INLINE => NTT_POLY_MOD_INT_MUL_INLINE
+    tmp *= o;
+    // NTT_POLY_MOD_INT_MOD_INLINE => NTT_POLY_MOD_INT_SUB_INLINE
+    *this -= tmp;
+  }
+#endif
+
+  // #ifdef NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED // ^
+  //   inline void divInlinePrecomputed(int size, int sizeO, const NTTPolyModInt& invRevO) {
+  //     if (size < sizeO) {
+  //       this->assign(1, 0);
+  //       return;
+  //     }
+  //     // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_EXTEND
+  //     extend(size);
+  //     this->resize(size);
+  //     reverse(this->begin(), this->end());
+  //     size -= sizeO - 1;
+  //     // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
+  //     *this *= invRevO;
+  //     this->resize(size);
+  //     reverse(this->begin(), this->end());
+  //     shrink();
+  //   }
+  // #endif
+
+  // #ifdef NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED // ^
+  //   inline void modInlinePrecomputed(int size, const NTTPolyModInt& o, const NTTPolyModInt&
+  //   invRevO) {
+  //     if (size < o.size()) {
+  //       return;
+  //     }
+  //     static NTTPolyModInt tmp;
+  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_ASSIGN
+  //     tmp = *this;
+  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
+  //     tmp.divInlinePrecomputed(size, o.size(), invRevO);
+  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
+  //     tmp *= o;
+  //     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_SUB_INLINE
+  //     *this -= tmp;
+  //   }
+  // #endif
+
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
@@ -70,6 +175,9 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
+// Computes f[i], computedBound<=i<toComputeBound, where
+// - f[i]=transform(sum(f[j]*g[i-j], 0<=j<i))
+// - 0<=i<computedBound, f[i] is computed
 #ifdef NTT_POLY_MOD_INT_ONLINE_INLINE // ^
   inline void onlineInline(
       const NTTPolyModInt& o,
@@ -80,6 +188,57 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // NTT_POLY_MOD_INT_ONLINE_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
     NTTOnlineUtils<V, V_SQR, PRIME, ROOT>::instance().onlineInlineModInt(
         *this, o, computedBound, toComputeBound, transform);
+  }
+#endif
+
+// Compute k-th element in linear recurrence relations.
+//   x_n = coef_0 * x_{n-d} + coef_1 * x_{n-d+1} + ... + coef_{d-1} * x_{n-1}
+// Given, x_0, ... x_{d-1}, compute x_k
+#ifdef NTT_POLY_MOD_INT_RECURRENCE // ^
+  template<typename K>
+  inline ModInt<V, V_SQR, PRIME> recurrence(const NTTPolyModInt& xs, K k) const {
+    static NTTPolyModInt modP;
+    int n = this->size();
+    modP.resize(n + 1);
+    FOR(i, 0, n) {
+      modP[i] = (*this)[i];
+      // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_NEGATE_INLINE
+      modP[i].negateInline();
+    }
+    modP[n] = 1;
+    // static NTTPolyModInt invRevModP;
+    // invRevModP = modP;
+    // reverse(invRevModP.begin(), invRevModP.begin());
+    // // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
+    // invRevModP.invInline(n - 1);
+    // DEBUGV(invRevModP);
+    static NTTPolyModInt mulP;
+    mulP.resize(2);
+    mulP[0] = 0;
+    mulP[1] = 1;
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE
+    mulP %= modP;
+    // // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
+    // mulP.modInlinePrecomputed(n21, modP, invRevModP);
+    static NTTPolyModInt resP;
+    resP.assign(1, 1);
+    while (k) {
+      if (k & 1) {
+        // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MUL_INLINE
+        resP *= mulP;
+        resP %= modP;
+        // resP.modInlinePrecomputed(n21, modP, invRevModP);
+      }
+      k >>= 1;
+      if (!k) {
+        break;
+      }
+      mulP *= mulP;
+      mulP %= modP;
+      // mulP.modInlinePrecomputed(n21, modP, invRevModP);
+    }
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_DOT
+    return xs.dot(resP);
   }
 #endif
 
@@ -181,12 +340,16 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #endif
 
 #ifdef NTT_POLY_MOD_INT_INV_INLINE // ^
-  inline void invInline() {
+  inline void invInline(int size = -1) {
     static NTTPolyModInt tmpP;
-    int n = this->size();
+    int n = size < 0 ? this->size() : size;
     tmpP.resize(n);
     FOR(i, 0, n) {
-      tmpP[i] = (*this)[i];
+      if (i < this->size()) {
+        tmpP[i] = (*this)[i];
+      } else {
+        tmpP[i] = 0;
+      }
     }
     // NTT_POLY_MOD_INT_INV_INLINE => _NTT_POLY_MOD_INT_INV
     _inv(tmpP, *this, n);
@@ -264,6 +427,26 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // _NTT_POLY_MOD_INT_EXP => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
     NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(res, tmpP, false);
     res.resize(n);
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_DOT // ^
+  inline ModInt<V, V_SQR, PRIME> dot(const NTTPolyModInt& o) const {
+    ModInt<V, V_SQR, PRIME> res = 0;
+    for (int i = min(SIZE(*this), SIZE(o)) - 1; i >= 0; --i) {
+      static ModInt<V, V_SQR, PRIME> subRes;
+      // NTT_POLY_MOD_INT_DOT => MOD_INT_INIT_MUL
+      subRes.initMul((*this)[i], o[i]);
+      // NTT_POLY_MOD_INT_DOT => MOD_INT_ADD_INLINE
+      res += subRes;
+    }
+    return res;
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_EXTEND // ^
+  inline void extend(int size) {
+    for (; this->size() < size; this->emplace_back(0)) {}
   }
 #endif
 
