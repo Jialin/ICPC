@@ -61,14 +61,11 @@ struct NTTMulUtils {
           ys2[i] = 0;
         }
       }
+      ntt.nttModInt(ys2, false, pow2);
     }
     ntt._expand(xs, pow2);
     // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => NTT_UTILS_NTT_MOD_INT
     ntt.nttModInt(xs, false, pow2);
-    if (!isSame) {
-      ntt._expand(ys2, pow2);
-      ntt.nttModInt(ys2, false, pow2);
-    }
     for (int i = 0; i < pow2; ++i) {
       // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_MUL_INLINE
       xs[i] *= isSame ? xs[i] : ys2[i];

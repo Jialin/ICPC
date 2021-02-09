@@ -165,10 +165,30 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     tmp = *this;
     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
     tmp.divInlinePrecomputed(invRevO);
-    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
-    tmp *= o;
-    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_SUB_INLINE
-    *this -= tmp;
+    _subInlineMul(tmp, o);
+  }
+
+  inline void _subInlineMul(NTTPolyModInt& a, const NTTPolyModInt& b) {
+    int aSize = a.size();
+    int mask = nextPow2_32(max(a.size(), b.size())) - 1;
+    int shift = ((a.size() + b.size() - 1) & mask);
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC
+    a.mulInlineCyclic(b);
+    // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_EXTEND
+    a.extend(mask + 1);
+    for (int i = 0, j = a.size() - 1 + shift; i < aSize; ++i, --j) {
+      // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => MOD_INT_SUB_INLINE
+      a[j & mask] -= (*this)[this->size() - 1 - i];
+    }
+    this->resize(this->size() - aSize);
+    int j = a.size() - aSize + shift - this->size();
+    if (j < 0) {
+      j = j % (mask + 1) + mask + 1;
+    }
+    j &= mask;
+    for (int i = 0; i < this->size(); ++i, ++j) {
+      (*this)[i] -= a[j & mask];
+    }
   }
 #endif
 

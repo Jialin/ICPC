@@ -40,4 +40,14 @@ TEST(NTTMulUtilsTest, mulInlineModInt) {
   EXPECT_EQ(16, xs[6]._v);
 }
 
+TEST(NTTMulUtilsTest, mulInlineModIntCyclic) {
+  const int MOD = 104857601;
+  vector<ModInt<int, int64_t, MOD>> xs = {4, 1}, ys = {104857595, 104857596, 104857597, 1};
+  NTTMulUtils<int, int64_t, MOD, 21>::instance().mulInlineModInt(xs, ys, true);
+  ASSERT_EQ(3, xs.size());
+  EXPECT_EQ(104857578, xs[0]._v);
+  EXPECT_EQ(104857575, xs[1]._v);
+  EXPECT_EQ(104857580, xs[2]._v);
+}
+
 } // namespace math
