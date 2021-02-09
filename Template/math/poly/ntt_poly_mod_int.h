@@ -219,54 +219,61 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 // Compute k-th element in linear recurrence relations.
 //   x_n = coef_0 * x_{n-d} + coef_1 * x_{n-d+1} + ... + coef_{d-1} * x_{n-1}
 // Given, x_0, ... x_{d-1}, compute x_k
+//
+// Reference: https://discuss.codechef.com/t/rng-editorial/10068/5
 #ifdef NTT_POLY_MOD_INT_RECURRENCE // ^
   template<typename K>
   inline ModInt<V, V_SQR, PRIME> recurrence(const NTTPolyModInt& xs, K k) const {
     DEBUG_GE(k, 0);
-    if (!k) {
-      return xs[0];
-    }
-    static NTTPolyModInt modP;
+    DEBUG_EQ(this->size(), xs.size());
     int n = this->size();
-    modP.resize(n + 1);
-    FOR(i, 0, n) {
-      modP[i] = (*this)[i];
+    if (k < n) {
+      return xs[k];
+    }
+    static NTTPolyModInt qs;
+    qs.resize(n + 1);
+    qs[0] = 1;
+    for (int i = 1, j = n - 1; j >= 0; ++i, --j) {
+      qs[i] = (*this)[j];
       // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_NEGATE_INLINE
-      modP[i].negateInline();
+      qs[i].negateInline();
     }
-    modP[n] = 1;
-    static NTTPolyModInt invRevModP;
-    invRevModP = modP;
-    reverse(invRevModP.begin(), invRevModP.end());
-    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
-    invRevModP.invInline();
-    static NTTPolyModInt resP;
-    resP.resize(2);
-    resP[0] = 0;
-    resP[1] = 1;
-    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
-    resP.modInlinePrecomputed(modP, invRevModP);
-    resP._recurrence(modP, invRevModP, k);
-    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_DOT
-    return xs.dot(resP);
-  }
-
-  template<typename K>
-  inline void _recurrence(const NTTPolyModInt& o, const NTTPolyModInt& invRevO, K k) {
-    if (k == 1) {
-      return;
-    }
-    _recurrence(o, invRevO, k >> 1);
+    static NTTPolyModInt ps;
+    ps = qs;
     // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_MUL_INLINE
-    *this *= *this;
-    if (k & 1) {
-      this->resize(this->size() + 1);
-      for (int i = SIZE(*this) - 1; i > 0; --i) {
-        (*this)[i] = (*this)[i - 1];
+    ps *= xs;
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_TRUNCATE
+    ps.truncate(n);
+    for (; k > n; k >>= 1) {
+      static NTTPolyModInt qsNegate;
+      qsNegate = qs;
+      for (int i = 1; i < qsNegate.size(); i += 2) {
+        qsNegate[i].negateInline();
       }
-      (*this)[0] = 0;
+      qs *= qsNegate;
+      int size = qs.size();
+      int idx = 0;
+      for (int i = 0; i < size; ++idx, i += 2) {
+        qs[idx] = qs[i];
+      }
+      qs.resize(idx);
+      ps *= qsNegate;
+      size = ps.size();
+      idx = 0;
+      for (int i = k & 1; i < size; ++idx, i += 2) {
+        ps[idx] = ps[i];
+      }
+      ps.resize(idx);
     }
-    this->modInlinePrecomputed(o, invRevO);
+    // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_INV_INLINE
+    qs.invInline(k + 1);
+    ps.truncate(k + 1);
+    ps *= qs;
+    if (k < ps.size()) {
+      return ps[k];
+    } else {
+      return 0;
+    }
   }
 #endif
 
@@ -481,6 +488,14 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef NTT_POLY_MOD_INT_SHRINK // ^
   inline void shrink() {
     for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
+  }
+#endif
+
+#ifdef NTT_POLY_MOD_INT_TRUNCATE // ^
+  inline void truncate(int size) {
+    if (this->size() > size) {
+      this->resize(size);
+    }
   }
 #endif
 
