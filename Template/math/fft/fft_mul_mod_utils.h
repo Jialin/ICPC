@@ -2,6 +2,8 @@
 // ALL FFT_MUL_MOD_UTILS_ALL
 #pragma once
 
+#include "common/macros.h"
+
 #ifdef _FFT_MUL_MOD_UTILS_MOD_INT
 // _FFT_MUL_MOD_UTILS_MOD_INT => INCLUDE math/mod/mod_int_macros.h
 #include "math/mod/mod_int_macros.h"
@@ -41,16 +43,17 @@ struct FFTMulModUtils {
     int n = cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1;
     int pow2 = nextPow2_32(n);
     static vector<Complex<T>> as, bs, cs, ds;
+    int cut = max(CAST<int>(sqrt(MOD)), 1);
     as.resize(pow2);
     for (size_t i = 0; i < xs.size(); ++i) {
-      as[i].init(xs[i]._v >> 15, xs[i]._v & 32767);
+      as[i].init(xs[i]._v / cut, xs[i]._v % cut);
     }
     for (size_t i = xs.size(); i < pow2; ++i) {
       as[i].init(0, 0);
     }
     bs.resize(pow2);
     for (size_t i = 0; i < ys.size(); ++i) {
-      bs[i].init(ys[i]._v >> 15, ys[i]._v & 32767);
+      bs[i].init(ys[i]._v / cut, ys[i]._v % cut);
     }
     for (size_t i = ys.size(); i < pow2; ++i) {
       bs[i].init(0, 0);
@@ -92,7 +95,7 @@ struct FFTMulModUtils {
       int64_t v1 = static_cast<int64_t>(cs[i].real / pow2 + 0.5) % MOD;
       int64_t v2 = static_cast<int64_t>(ds[i].real / pow2 + 0.5) % MOD;
       int64_t v3 = static_cast<int64_t>(cs[i].imag / pow2 + 0.5) % MOD;
-      xs[i] = (((v1 << 15) + v2) << 15) + v3;
+      xs[i] = (((v1 * cut) + v2) * cut) + v3;
     }
   }
 #endif

@@ -93,4 +93,20 @@ TEST(FFTPolyModIntTest, invInline) {
   EXPECT_EQ(925025727, res[5]._v);
 }
 
+TEST(FFTPolyModIntTest, recurrence) {
+  const int MOD = 1000000007;
+  FFTPolyModInt<double, int, int64_t, MOD> coefs, xs;
+  coefs = vector<int>{1, 1};
+  xs = vector<int>{1, 1};
+  EXPECT_EQ(55, coefs.recurrence(xs, 9)._v);
+
+  coefs = vector<int>{1, 1, 1};
+  xs = vector<int>{1, 1, 1};
+  EXPECT_EQ(105, coefs.recurrence(xs, 9)._v);
+  EXPECT_EQ(193, coefs.recurrence(xs, 10)._v);
+  EXPECT_EQ(166924950, coefs.recurrence(xs, 100)._v);
+  EXPECT_EQ(430943869, coefs.recurrence(xs, 1000)._v);
+  EXPECT_EQ(65299825, coefs.recurrence(xs, 10000)._v);
+}
+
 } // namespace math

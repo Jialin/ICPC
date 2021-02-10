@@ -66,12 +66,6 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   }
 #endif
 
-#ifdef FFT_POLY_MOD_INT_SHRINK // ^
-  inline void shrink() {
-    for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
-  }
-#endif
-
 #ifdef FFT_POLY_MOD_INT_ONLINE_INLINE // ^
   inline void onlineInline(
       const FFTPolyModInt& o,
@@ -85,15 +79,92 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #endif
 
 #ifdef FFT_POLY_MOD_INT_INV_INLINE // ^
-  inline void invInline() {
-    static FFTPolyModInt res;
-    int n = this->size();
-    res.resize(n);
+  inline void invInline(int size = -1) {
+    static FFTPolyModInt tmpP;
+    int n = size < 0 ? this->size() : size;
+    tmpP.resize(n);
     FOR(i, 0, n) {
-      res[i] = (*this)[i];
+      if (i < this->size()) {
+        tmpP[i] = (*this)[i];
+      } else {
+        tmpP[i] = 0;
+      }
     }
     // FFT_POLY_MOD_INT_INV_INLINE => _FFT_POLY_MOD_INT_INV
-    res._inv(*this, n);
+    tmpP._inv(*this, n);
+  }
+#endif
+
+// Compute k-th element in linear recurrence relations.
+//   x_n = coef_0 * x_{n-d} + coef_1 * x_{n-d+1} + ... + coef_{d-1} * x_{n-1}
+// Given, x_0, ... x_{d-1}, compute x_k
+//
+// Reference: https://discuss.codechef.com/t/rng-editorial/10068/5
+#ifdef FFT_POLY_MOD_INT_RECURRENCE // ^
+  template<typename K>
+  inline ModInt<V, V_SQR, PRIME> recurrence(const FFTPolyModInt& xs, K k) const {
+    DEBUG_GE(k, 0);
+    DEBUG_EQ(this->size(), xs.size());
+    int n = this->size();
+    if (k < n) {
+      return xs[k];
+    }
+    static FFTPolyModInt qs;
+    qs.resize(n + 1);
+    qs[0] = 1;
+    for (int i = 1, j = n - 1; j >= 0; ++i, --j) {
+      qs[i] = (*this)[j];
+      // FFT_POLY_MOD_INT_RECURRENCE => MOD_INT_NEGATE_INLINE
+      qs[i].negateInline();
+    }
+    static FFTPolyModInt ps;
+    ps = qs;
+    // FFT_POLY_MOD_INT_RECURRENCE => FFT_POLY_MOD_INT_MUL_INLINE
+    ps *= xs;
+    // FFT_POLY_MOD_INT_RECURRENCE => FFT_POLY_MOD_INT_TRUNCATE
+    ps.truncate(n);
+    for (; k > n; k >>= 1) {
+      static FFTPolyModInt qsNegate;
+      qsNegate = qs;
+      for (int i = 1; i < qsNegate.size(); i += 2) {
+        qsNegate[i].negateInline();
+      }
+      ps *= qsNegate;
+      qs *= qsNegate;
+      int idx = 0;
+      for (int i = k & 1; i < ps.size(); ++idx, i += 2) {
+        ps[idx] = ps[i];
+      }
+      ps.resize(idx);
+      idx = 0;
+      for (int i = 0; i < qs.size(); ++idx, i += 2) {
+        qs[idx] = qs[i];
+      }
+      qs.resize(idx);
+    }
+    // FFT_POLY_MOD_INT_RECURRENCE => FFT_POLY_MOD_INT_INV_INLINE
+    qs.invInline(k + 1);
+    ps.truncate(k + 1);
+    ps *= qs;
+    if (k < ps.size()) {
+      return ps[k];
+    } else {
+      return 0;
+    }
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_SHRINK // ^
+  inline void shrink() {
+    for (; this->size() > 1 && !this->back()._v; this->pop_back()) {}
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_TRUNCATE // ^
+  inline void truncate(int size) {
+    if (this->size() > size) {
+      this->resize(size);
+    }
   }
 #endif
 
