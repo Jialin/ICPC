@@ -171,7 +171,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
   inline void _subInlineMul(NTTPolyModInt& a, const NTTPolyModInt& b) {
     int aSize = a.size();
     int mask = nextPow2_32(max(a.size(), b.size())) - 1;
-    int shift = ((a.size() + b.size() - 1) & mask);
+    int shift = (a.size() + b.size() - 1) & mask;
     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC
     a.mulInlineCyclic(b);
     // NTT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_EXTEND
@@ -245,22 +245,37 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_TRUNCATE
     ps.truncate(n);
     for (; k > n; k >>= 1) {
+      //////////////////////////
+      // Compute qs *= qsNegate
+      //////////////////////////
       static NTTPolyModInt qsNegate;
+      int pow2 = nextPow2_32(max(ps.size(), qs.size()) + qs.size() - 1);
       qsNegate = qs;
-      for (int i = 1; i < qsNegate.size(); i += 2) {
-        qsNegate[i].negateInline();
+      // NTT_POLY_MOD_INT_RECURRENCE => _NTT_POLY_MOD_INT_NTT_UTILS
+      auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
+      // NTT_POLY_MOD_INT_RECURRENCE => NTT_UTILS_NTT_MOD_INT
+      ntt.nttModInt(qsNegate, false, pow2);
+      qs.resize(pow2);
+      for (int i = (pow2 >> 1) - 1; i >= 0; --i) {
+        // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_INIT_MUL
+        qs[i].initMul(qsNegate[i], qsNegate[i ^ (pow2 >> 1)]);
+        qs[i ^ (pow2 >> 1)] = qs[i];
       }
-      qs *= qsNegate;
-      int size = qs.size();
+      ntt.nttModInt(qs, true, pow2 >> 1);
+      qs.resize(pow2 >> 1);
+      // NTT_POLY_MOD_INT_RECURRENCE => NTT_POLY_MOD_INT_SHRINK
+      qs.shrink();
+      //////////////////////////
+      // Compute ps *= qsNegate
+      //////////////////////////
+      ntt.nttModInt(ps, false, pow2);
+      FOR(i, 0, pow2) {
+        ps[i] *= qsNegate[i ^ (pow2 >> 1)];
+      }
+      ntt.nttModInt(ps, true, pow2);
+      ps.shrink();
       int idx = 0;
-      for (int i = 0; i < size; ++idx, i += 2) {
-        qs[idx] = qs[i];
-      }
-      qs.resize(idx);
-      ps *= qsNegate;
-      size = ps.size();
-      idx = 0;
-      for (int i = k & 1; i < size; ++idx, i += 2) {
+      for (int i = k & 1; i < ps.size(); ++idx, i += 2) {
         ps[idx] = ps[i];
       }
       ps.resize(idx);
