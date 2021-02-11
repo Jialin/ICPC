@@ -27,8 +27,8 @@
 
 namespace math {
 
-template<typename FFT_T, typename V, typename V_SQR, V PRIME>
-struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
+template<typename FFT_T, typename V, typename V_SQR, V MOD>
+struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
 #ifdef FFT_POLY_MOD_INT_CONSTRUCT // ^
   inline FFTPolyModInt(int size = 0, V v = 0) {
     this->assign(size, v);
@@ -71,9 +71,9 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       const FFTPolyModInt& o,
       int computedBound,
       int toComputeBound,
-      const function<void(ModInt<V, V_SQR, PRIME>& f, int idx)>& transform) {
+      const function<void(ModInt<V, V_SQR, MOD>& f, int idx)>& transform) {
     // FFT_POLY_MOD_INT_ONLINE_INLINE => FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT
-    FFTOnlineModUtils<FFT_T>::instance().template onlineInlineModInt<V, V_SQR, PRIME>(
+    FFTOnlineModUtils<FFT_T>::instance().template onlineInlineModInt<V, V_SQR, MOD>(
         *this, o, computedBound, toComputeBound, transform);
   }
 #endif
@@ -102,7 +102,7 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 // Reference: https://discuss.codechef.com/t/rng-editorial/10068/5
 #ifdef FFT_POLY_MOD_INT_RECURRENCE // ^
   template<typename K>
-  inline ModInt<V, V_SQR, PRIME> recurrence(const FFTPolyModInt& xs, K k) const {
+  inline ModInt<V, V_SQR, MOD> recurrence(const FFTPolyModInt& xs, K k) const {
     DEBUG_GE(k, 0);
     DEBUG_EQ(this->size(), xs.size());
     int n = this->size();
@@ -205,7 +205,7 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef LOCAL
   friend ostream& operator<<(ostream& o, const FFTPolyModInt& vs) {
-    o << tostring(static_cast<vector<ModInt<V, V_SQR, PRIME>>>(vs));
+    o << tostring(static_cast<vector<ModInt<V, V_SQR, MOD>>>(vs));
     return o;
   }
 #endif
@@ -214,9 +214,9 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 } // namespace math
 
 #ifdef LOCAL
-template<typename FFT_T, typename V, typename V_SQR, V PRIME>
-inline string totype(const math::FFTPolyModInt<FFT_T, V, V_SQR, PRIME>& v) {
+template<typename FFT_T, typename V, typename V_SQR, V MOD>
+inline string totype(const math::FFTPolyModInt<FFT_T, V, V_SQR, MOD>& v) {
   return "FFTPolyModInt<" + totype(FFT_T()) + "," + totype(V()) + "," + totype(V_SQR()) + "," +
-         tostring(PRIME) + ">";
+         tostring(MOD) + ">";
 }
 #endif
