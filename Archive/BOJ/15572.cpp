@@ -1,35 +1,24 @@
-#include <algorithm>
-#include <bitset>
-#include <cassert>
-#include <cctype>
-#include <cmath>
-#include <cstddef>
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <set>
-#include <string>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
-using namespace std;
+// First batch includes
+#include "common/include.h"
+#include "common/macros.h"
+#include "debug/debug_declare.h"
 
+#define FFT_POLY_MOD_INT_RECURRENCE
+#define MOD_INT_ADD
+#define MOD_INT_SUB
+#include "math/poly/fft_poly_mod_int_macros.h"
+
+#include "math/poly/fft_poly_mod_int.h"
+
+// Last include
 #include "debug/debug.h"
-#include "math/matrix/kitamasa_once.h"
-#include "math/mod/sub.h"
 
 const int MOD = 1999;
 
-math::KitamasaOnce<int, int> ki;
-vector<int> coef, vs, two;
+using Poly = math::FFTPolyModInt<double, int, int64_t, MOD>;
 
-// https://www.acmicpc.net/problem/15572
+Poly coefs, vs, two;
+
 int main() {
   int n;
   int64_t m;
@@ -37,14 +26,14 @@ int main() {
   two.resize(n + 1);
   two[0] = 1;
   for (int i = 1; i <= n; ++i) {
-    two[i] = math::addMod(two[i - 1], two[i - 1], MOD);
+    two[i] = two[i - 1] + two[i - 1];
   }
   vs.resize(n);
   for (int i = 0; i < n - 1; ++i) {
     vs[i] = two[i];
   }
-  vs[n - 1] = math::subMod(two[n], 1, MOD);
-  coef.assign(n, 1);
-  coef[0] = two[n - 1];
-  printf("%d\n", ki.calc(coef, vs, m - 1, MOD));
+  vs[n - 1] = two[n] - 1;
+  coefs.assign(n, 1);
+  coefs[0] = two[n - 1];
+  printf("%d\n", coefs.recurrence(vs, m - 1)._v);
 }
