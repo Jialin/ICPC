@@ -5,7 +5,7 @@ cc_test(
     srcs = ["topological_sorter_test.cpp"],
     deps = [
         "//graphs:topological_sorter",
-        "//graphs/forward_star:unweighted_forward_star",
+        "//graphs/forward_star",
         "@gtest",
         "@gtest//:gtest_main",
     ],

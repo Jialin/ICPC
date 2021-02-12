@@ -1,11 +1,14 @@
 #include "gtest/gtest.h"
 
-#include "graphs/forward_star/unweighted_forward_star.h"
+#define FORWARD_STAR_ALL
+#include "graphs/forward_star/forward_star_macros.h"
 
-namespace graphs {
+#include "graphs/forward_star/forward_star.h"
 
-TEST(UnweightedForwardStarTest, basic) {
-  UnweightedForwardStar fs(3);
+namespace graph {
+
+TEST(ForwardStarTest, basic) {
+  ForwardStar fs(3);
   EXPECT_EQ(fs._edgeIdx, 0);
   EXPECT_EQ(fs.lastOut[0], -1);
   EXPECT_EQ(fs.lastOut[1], -1);
@@ -46,4 +49,4 @@ TEST(UnweightedForwardStarTest, basic) {
   EXPECT_EQ(fs.inDegree[2], 2);
 }
 
-} // namespace graphs
+} // namespace graph

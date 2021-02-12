@@ -1,15 +1,20 @@
 #include "gtest/gtest.h"
 
-#include "graphs/forward_star/unweighted_forward_star.h"
+#define FORWARD_STAR_ALL
+#include "graphs/forward_star/forward_star_macros.h"
+
+#include "graphs/forward_star/forward_star.h"
 #include "graphs/topological_sorter.h"
 
-namespace graphs {
+namespace graph {
 
 TEST(TopologicalSorterTest, unconnected) {
   TopologicalSorter ts;
   vector<int> orders;
-  auto processor = [&orders](int u) { orders.push_back(u); };
-  UnweightedForwardStar fs(5);
+  auto processor = [&orders](int u) {
+    orders.push_back(u);
+  };
+  ForwardStar fs(5);
   EXPECT_TRUE(ts.calc(fs, processor));
 
   EXPECT_EQ(orders.size(), 5);
@@ -23,8 +28,10 @@ TEST(TopologicalSorterTest, unconnected) {
 TEST(TopologicalSorterTest, dag) {
   TopologicalSorter ts;
   vector<int> orders;
-  auto processor = [&orders](int u) { orders.push_back(u); };
-  UnweightedForwardStar fs(5);
+  auto processor = [&orders](int u) {
+    orders.push_back(u);
+  };
+  ForwardStar fs(5);
   fs.addDirected(0, 1);
   fs.addDirected(0, 2);
   fs.addDirected(0, 3);
@@ -44,8 +51,10 @@ TEST(TopologicalSorterTest, dag) {
 TEST(TopologicalSorterTest, cyclic) {
   TopologicalSorter ts;
   vector<int> orders;
-  auto processor = [&orders](int u) { orders.push_back(u); };
-  UnweightedForwardStar fs(5);
+  auto processor = [&orders](int u) {
+    orders.push_back(u);
+  };
+  ForwardStar fs(5);
   fs.addDirected(0, 1);
   fs.addDirected(0, 2);
   fs.addDirected(0, 3);
@@ -60,4 +69,4 @@ TEST(TopologicalSorterTest, cyclic) {
   EXPECT_EQ(orders[2], 2);
 }
 
-} // namespace graphs
+} // namespace graph
