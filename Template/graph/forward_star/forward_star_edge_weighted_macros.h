@@ -1,0 +1,9 @@
+#ifdef FORWARD_STAR_EDGE_WEIGHTED_ALL
+#define FORWARD_STAR_EDGE_WEIGHTED_ADD_UNDIRECTED
+#endif
+
+#ifdef FORWARD_STAR_EDGE_WEIGHTED_ADD_UNDIRECTED
+#define FORWARD_STAR_ADD_UNDIRECTED
+#endif
+
+#include "graph/forward_star/forward_star_macros.h"
