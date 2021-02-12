@@ -2,7 +2,7 @@
 // ALL FORWARD_STAR_ALL
 #pragma once
 
-#include "graphs/forward_star/forward_star_macros.h"
+#include "graph/forward_star/forward_star_macros.h"
 
 using namespace std;
 

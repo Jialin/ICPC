@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 
 #define FORWARD_STAR_ALL
-#include "graphs/forward_star/forward_star_macros.h"
+#include "graph/forward_star/forward_star_macros.h"
 
-#include "graphs/forward_star/forward_star.h"
-#include "graphs/topological_sorter.h"
+#include "graph/forward_star/forward_star.h"
+#include "graph/topological_sorter.h"
 
 namespace graph {
 
