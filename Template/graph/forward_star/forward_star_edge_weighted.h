@@ -5,6 +5,8 @@
 #include "graph/forward_star/forward_star_edge_weighted_macros.h"
 #include "graph/forward_star/forward_star_macros.h" // INCLUDE
 
+#include "common/macros.h"
+#include "debug/debug_basic.h"
 #include "graph/forward_star/forward_star.h"
 
 using namespace std;
@@ -38,7 +40,27 @@ struct ForwardStarEdgeWeighted : ForwardStar {
   }
 #endif
 
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const ForwardStarEdgeWeighted& g) {
+    o << "In total " << g._n << " nodes, " << g._edgeIdx << " edges." << endl;
+    FOR(i, 0, g._n) {
+      o << "From node " << i << ":" << endl;
+      FOREDGE(j, i, g) {
+        o << "\t=> node " << g.toIdx[j] << ": " << g.weights[j] << endl;
+      }
+    }
+    return o;
+  }
+#endif
+
   vector<EDGE_W> weights;
 };
 
 } // namespace graph
+
+#ifdef LOCAL
+template<typename EDGE_W>
+inline string totype(const graph::ForwardStarEdgeWeighted<EDGE_W>& v) {
+  return "ForwardStarEdgeWeighted<" + totype(EDGE_W()) + ">";
+}
+#endif

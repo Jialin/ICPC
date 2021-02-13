@@ -14,6 +14,8 @@ cc_library(
     deps = [
         ":forward_star",
         ":forward_star_edge_weighted_macros",
+        "//common:macros",
+        "//debug:debug_basic",
     ],
 )
 
