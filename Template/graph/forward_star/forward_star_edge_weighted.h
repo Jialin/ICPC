@@ -24,6 +24,7 @@ struct ForwardStarEdgeWeighted : ForwardStar {
     if (edgeCapacity > 0) {
       weights.reserve(edgeCapacity);
     }
+    weights.clear();
   }
 
   inline void addDirected(int x, int y, EDGE_W&& w) {
@@ -37,6 +38,29 @@ struct ForwardStarEdgeWeighted : ForwardStar {
     weights.push_back(std::move(w));
     // FORWARD_STAR_EDGE_WEIGHTED_ADD_UNDIRECTED => FORWARD_STAR_ADD_UNDIRECTED
     ForwardStar::addUndirected(x, y);
+  }
+#endif
+
+// NOTE: updater(fromNodeIdx, toNodeIdx, edgeIdx) returns whether distance to <toNodeIdx> is updated
+#ifdef FORWARD_STAR_EDGE_WEIGHTED_SPFA // ^
+  inline void spfa(int startIdx, const function<bool(int, int, int)>& updater) {
+    static vector<bool> inQ;
+    static queue<int> q;
+    inQ.assign(_n, false);
+    q.push(startIdx);
+    inQ[startIdx] = true;
+    while (!q.empty()) {
+      int u = q.front();
+      q.pop();
+      inQ[u] = false;
+      FOREDGE(i, u, *this) {
+        int v = toIdx[i];
+        if (updater(u, v, i) && !inQ[v]) {
+          q.push(v);
+          inQ[v] = true;
+        }
+      }
+    }
   }
 #endif
 
