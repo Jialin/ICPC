@@ -15,6 +15,15 @@ struct FFTPoly : public vector<V> {
   inline FFTPoly(int size, V v) : vector<V>(size, v) {}
 #endif
 
+#ifdef FFT_POLY_ASSIGN // ^
+  inline void operator=(const FFTPoly& o) {
+    this->resize(o.size());
+    FORSIZE(i, o) {
+      (*this)[i] = o[i];
+    }
+  }
+#endif
+
 #ifdef FFT_POLY_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
