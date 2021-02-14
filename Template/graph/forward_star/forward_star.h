@@ -49,7 +49,27 @@ struct ForwardStar {
   vector<int> inDegree;
 #endif
 
+#ifdef LOCAL
+  friend ostream& operator<<(ostream& o, const ForwardStar& g) {
+    o << "In total " << g._n << " nodes, " << g._edgeIdx << " edges." << endl;
+    FOR(i, 0, g._n) {
+      o << "From node " << i << ":" << endl;
+      FOREDGE(j, i, g) {
+        o << "\t=> node " << g.toIdx[j] << endl;
+      }
+    }
+    return o;
+  }
+#endif
+
   int _n, _edgeIdx;
 };
 
 } // namespace graph
+
+#ifdef LOCAL
+template<typename EDGE_W>
+inline string totype(const graph::ForwardStar& v) {
+  return "ForwardStar";
+}
+#endif
