@@ -35,6 +35,16 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   }
 #endif
 
+#ifdef FFT_POLY_MOD_INT_ASSIGN // ^
+  inline void operator=(const FFTPolyModInt& o) {
+    this->resize(o.size());
+    FORSIZE(i, o) {
+      (*this)[i] = o[i];
+    }
+    shrink();
+  }
+#endif
+
 #ifdef FFT_POLY_MOD_INT_ASSIGN_VECTOR // ^
   template<typename OV>
   inline void operator=(const vector<OV>& vs) {
@@ -49,12 +59,27 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   inline FFTPolyModInt operator-(const FFTPolyModInt& o) const {
     FFTPolyModInt res(max(this->size(), o.size()));
     FORSIZE(i, *this) {
+      // FFT_POLY_MOD_INT_SUB => MOD_INT_ADD_INLINE
       res[i] += (*this)[i];
     }
     FORSIZE(i, o) {
+      // FFT_POLY_MOD_INT_SUB => MOD_INT_SUB_INLINE
       res[i] -= o[i];
     }
     return res;
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_SUB_INLINE // ^
+  inline void operator-=(const FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_SUB_INLINE => FFT_POLY_MOD_INT_EXTEND
+    extend(o.size());
+    for (int i = SIZE(o) - 1; i >= 0; --i) {
+      // FFT_POLY_MOD_INT_SUB_INLINE => MOD_INT_SUB_INLINE
+      (*this)[i] -= o[i];
+    }
+    // FFT_POLY_MOD_INT_SUB_INLINE => FFT_POLY_MOD_SHRINK
+    shrink();
   }
 #endif
 
@@ -66,15 +91,71 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   }
 #endif
 
-#ifdef FFT_POLY_MOD_INT_ONLINE_INLINE // ^
-  inline void onlineInline(
-      const FFTPolyModInt& o,
-      int computedBound,
-      int toComputeBound,
-      const function<void(ModInt<V, V_SQR, MOD>& f, int idx)>& transform) {
-    // FFT_POLY_MOD_INT_ONLINE_INLINE => FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT
-    FFTOnlineModUtils<FFT_T>::instance().template onlineInlineModInt<V, V_SQR, MOD>(
-        *this, o, computedBound, toComputeBound, transform);
+#ifdef FFT_POLY_MOD_INT_DIV_INLINE // ^
+  inline void operator/=(const FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_DIV_INLINE => FFT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < o.size()) {
+      this->assign(1, 0);
+      return;
+    }
+    static FFTPolyModInt tmpO;
+    // FFT_POLY_MOD_INT_DIV_INLINE => FFT_POLY_MOD_INT_ASSIGN
+    tmpO = o;
+    tmpO.shrink();
+    int size = this->size() - tmpO.size() + 1;
+    reverse(this->begin(), this->end());
+    this->resize(size);
+    // FFT_POLY_MOD_INT_DIV_INLINE => FFT_POLY_MOD_INT_INV_INLINE
+    reverse(tmpO.begin(), tmpO.end());
+    tmpO.invInline(size);
+    // FFT_POLY_MOD_INT_DIV_INLINE => FFT_POLY_MOD_INT_MUL_INLINE
+    *this *= tmpO;
+    this->resize(size);
+    reverse(this->begin(), this->end());
+    shrink();
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_MOD_INLINE // ^
+  inline void operator%=(const FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < o.size()) {
+      return;
+    }
+    static FFTPolyModInt tmp;
+    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_ASSIGN
+    tmp = *this;
+    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_DIV_INLINE
+    tmp /= o;
+    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_MUL_INLINE
+    tmp *= o;
+    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_SUB_INLINE
+    *this -= tmp;
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_POW_MOD_INLINE // ^
+  template<typename EXP>
+  inline void powModInline(const FFTPolyModInt& o, EXP e) {
+    // FFT_POLY_MOD_INT_POW_MOD_INLINE => FFT_POLY_MOD_INT_MOD_INLINE
+    *this %= o;
+    static FFTPolyModInt mul;
+    // FFT_POLY_MOD_INT_POW_MOD_INLINE => FFT_POLY_MOD_INT_ASSIGN
+    mul = *this;
+    this->assign(1, 1);
+    for (; e > 0; e >>= 1) {
+      if (e & 1) {
+        // FFT_POLY_MOD_INT_POW_MOD_INLINE => FFT_POLY_MOD_INT_MUL_INLINE
+        *this *= mul;
+        *this %= o;
+      }
+      if (e > 1) {
+        mul *= mul;
+        mul %= o;
+      }
+    }
   }
 #endif
 
@@ -92,6 +173,18 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
     }
     // FFT_POLY_MOD_INT_INV_INLINE => _FFT_POLY_MOD_INT_INV
     tmpP._inv(*this, n);
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_ONLINE_INLINE // ^
+  inline void onlineInline(
+      const FFTPolyModInt& o,
+      int computedBound,
+      int toComputeBound,
+      const function<void(ModInt<V, V_SQR, MOD>& f, int idx)>& transform) {
+    // FFT_POLY_MOD_INT_ONLINE_INLINE => FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT
+    FFTOnlineModUtils<FFT_T>::instance().template onlineInlineModInt<V, V_SQR, MOD>(
+        *this, o, computedBound, toComputeBound, transform);
   }
 #endif
 
@@ -151,6 +244,12 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
     } else {
       return 0;
     }
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_EXTEND // ^
+  inline void extend(int size) {
+    for (; this->size() < size; this->emplace_back(0)) {}
   }
 #endif
 

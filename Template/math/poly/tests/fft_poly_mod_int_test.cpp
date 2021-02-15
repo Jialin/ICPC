@@ -109,4 +109,40 @@ TEST(FFTPolyModIntTest, recurrence) {
   EXPECT_EQ(65299825, coefs.recurrence(xs, 10000)._v);
 }
 
+TEST(FFTPolyModIntTest, divInline) {
+  const int MOD = 7340033;
+  FFTPolyModInt<double, int, int64_t, MOD> xs, ys;
+  xs = vector<int>{15, 22, 27, 18};
+  ys = vector<int>{2, 3};
+  xs /= ys;
+  ASSERT_EQ(3, xs.size());
+  EXPECT_EQ(4, xs[0]._v);
+  EXPECT_EQ(5, xs[1]._v);
+  EXPECT_EQ(6, xs[2]._v);
+
+  xs = vector<int>{15, 30, 27, 18};
+  ys = vector<int>{4, 5, 6};
+  xs /= ys;
+  ASSERT_EQ(2, xs.size());
+  EXPECT_EQ(2, xs[0]._v);
+  EXPECT_EQ(3, xs[1]._v);
+}
+
+TEST(FFTPolyModIntTest, modInline) {
+  const int MOD = 7340033;
+  FFTPolyModInt<double, int, int64_t, MOD> xs, ys;
+  xs = vector<int>{15, 22, 27, 18};
+  ys = vector<int>{2, 3};
+  xs %= ys;
+  ASSERT_EQ(1, xs.size());
+  EXPECT_EQ(7, xs[0]._v);
+
+  xs = vector<int>{15, 30, 27, 18};
+  ys = vector<int>{4, 5, 6};
+  xs %= ys;
+  ASSERT_EQ(2, xs.size());
+  EXPECT_EQ(7, xs[0]._v);
+  EXPECT_EQ(8, xs[1]._v);
+}
+
 } // namespace math
