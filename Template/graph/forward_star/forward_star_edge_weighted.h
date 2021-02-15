@@ -2,6 +2,8 @@
 // ALL FORWARD_STAR_EDGE_WEIGHTED_ALL
 #pragma once
 
+#include <queue>
+
 #include "graph/forward_star/forward_star_edge_weighted_macros.h"
 #include "graph/forward_star/forward_star_macros.h" // INCLUDE
 
