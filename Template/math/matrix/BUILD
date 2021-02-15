@@ -17,6 +17,21 @@ cc_library(
 )
 
 cc_library(
+    name = "matrix_mod_int_macros",
+    hdrs = ["matrix_mod_int_macros.h"],
+    deps = ["//math/mod:mod_int"],
+)
+
+cc_library(
+    name = "matrix_mod_int",
+    hdrs = ["matrix_mod_int.h"],
+    deps = [
+        ":matrix_mod_int_macros",
+        "//common:macros",
+    ],
+)
+
+cc_library(
     name = "matrix_mod_exp_utils",
     hdrs = ["matrix_mod_exp_utils.h"],
     deps = [

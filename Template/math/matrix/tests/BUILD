@@ -21,6 +21,16 @@ cc_test(
 )
 
 cc_test(
+    name = "matrix_mod_int_test",
+    srcs = ["matrix_mod_int_test.cpp"],
+    deps = [
+        "//math/matrix:matrix_mod_int",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "matrix_mul_inline_test",
     srcs = ["matrix_mul_inline_test.cpp"],
     deps = [
