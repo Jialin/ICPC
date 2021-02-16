@@ -91,6 +91,14 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   }
 #endif
 
+#ifdef FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
+  inline void mulInlineCyclic(const FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC => _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
+    // FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC => FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT
+    FFTMulModUtils<FFT_T>::instance().mulInlineModInt(*this, o, true);
+  }
+#endif
+
 #ifdef FFT_POLY_MOD_INT_DIV_INLINE // ^
   inline void operator/=(const FFTPolyModInt& o) {
     // FFT_POLY_MOD_INT_DIV_INLINE => FFT_POLY_MOD_INT_SHRINK
@@ -136,6 +144,68 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   }
 #endif
 
+#ifdef FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED // ^
+  inline void divInlinePrecomputed(const FFTPolyModInt& invRevO) {
+    // FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_SHRINK
+    shrink();
+    if (this->size() < invRevO.size()) {
+      this->assign(1, 0);
+      return;
+    }
+    // FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_ASSIGN
+    int size = this->size() - invRevO.size() + 1;
+    reverse(this->begin(), this->end());
+    this->resize(size);
+    static FFTPolyModInt tmpO;
+    tmpO.resize(size);
+    FOR(i, 0, size) {
+      tmpO[i] = invRevO[i];
+    }
+    // FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_MUL_INLINE
+    *this *= tmpO;
+    this->resize(size);
+    reverse(this->begin(), this->end());
+    shrink();
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED // ^
+  inline void modInlinePrecomputed(const FFTPolyModInt& o, const FFTPolyModInt& invRevO) {
+    if (this->size() < invRevO.size()) {
+      return;
+    }
+    static FFTPolyModInt tmp;
+    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_ASSIGN
+    tmp = *this;
+    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
+    tmp.divInlinePrecomputed(invRevO);
+    _subInlineMul(tmp, o);
+  }
+
+  inline void _subInlineMul(FFTPolyModInt& a, const FFTPolyModInt& b) {
+    int aSize = a.size();
+    int mask = nextPow2_32(max(a.size(), b.size())) - 1;
+    int shift = (a.size() + b.size() - 1) & mask;
+    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC
+    a.mulInlineCyclic(b);
+    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_EXTEND
+    a.extend(mask + 1);
+    for (int i = 0, j = a.size() - 1 + shift; i < aSize; ++i, --j) {
+      // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => MOD_INT_SUB_INLINE
+      a[j & mask] -= (*this)[this->size() - 1 - i];
+    }
+    this->resize(this->size() - aSize);
+    int j = a.size() - aSize + shift - this->size();
+    if (j < 0) {
+      j = j % (mask + 1) + mask + 1;
+    }
+    j &= mask;
+    for (int i = 0; i < this->size(); ++i, ++j) {
+      (*this)[i] -= a[j & mask];
+    }
+  }
+#endif
+
 #ifdef FFT_POLY_MOD_INT_POW_MOD_INLINE // ^
   template<typename EXP>
   inline void powModInline(const FFTPolyModInt& o, EXP e) {
@@ -159,6 +229,35 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
   }
 #endif
 
+#ifdef FFT_POLY_MOD_INT_INIT_POW_MOD_MEMO // ^
+  template<typename EXP>
+  inline void initPowModMemo(
+      const FFTPolyModInt& bases,
+      const FFTPolyModInt& o,
+      const FFTPolyModInt& invRevO,
+      EXP e,
+      vector<FFTPolyModInt>& memo) {
+    if (memo.empty()) {
+      memo.push_back(bases);
+      // FFT_POLY_MOD_INT_INIT_POW_MOD_MEMO => FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED
+      memo.back().modInlinePrecomputed(o, invRevO);
+    }
+    this->assign(1, 1);
+    for (int i = 0; e > 0; e >>= 1, ++i) {
+      if (e & 1) {
+        // FFT_POLY_MOD_INT_INIT_POW_MOD_MEMO => FFT_POLY_MOD_INT_MUL_INLINE
+        *this *= memo[i];
+        this->modInlinePrecomputed(o, invRevO);
+      }
+      if (e > 1 && i >= SIZE(memo) - 1) {
+        memo.push_back(memo.back());
+        memo.back() *= memo.back();
+        memo.back().modInlinePrecomputed(o, invRevO);
+      }
+    }
+  }
+#endif
+
 #ifdef FFT_POLY_MOD_INT_INV_INLINE // ^
   inline void invInline(int size = -1) {
     static FFTPolyModInt tmpP;
@@ -173,6 +272,17 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
     }
     // FFT_POLY_MOD_INT_INV_INLINE => _FFT_POLY_MOD_INT_INV
     tmpP._inv(*this, n);
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_INV // ^
+  inline FFTPolyModInt inv(int size = -1) const {
+    FFTPolyModInt res;
+    // FFT_POLY_MOD_INT_INV => FFT_POLY_MOD_INT_ASSIGN
+    res = *this;
+    // FFT_POLY_MOD_INT_INV => FFT_POLY_MOD_INT_INV_INLINE
+    res.invInline(size);
+    return res;
   }
 #endif
 

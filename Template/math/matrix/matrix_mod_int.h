@@ -37,7 +37,6 @@ struct MatrixModInt : public vector<vector<ModInt<V, V_SQR, MOD>>> {
             break;
           }
         }
-        assert(row >= 0); // TODO ??????????
         DEBUG_GE(row, 0);
         FOR(j, i, _n) {
           swap((*this)[i][j], (*this)[row][j]);
@@ -67,7 +66,6 @@ struct MatrixModInt : public vector<vector<ModInt<V, V_SQR, MOD>>> {
       }
     }
     for (int i = _n - 1; i >= 0; --i) {
-      assert((*this)[i][i]._v == 1); // TODO ??????????
       DEBUG_EQ((*this)[i][i]._v, 1);
       for (int j = i - 1; j >= 0; --j) {
         b[j] -= b[i] * (*this)[j][i];

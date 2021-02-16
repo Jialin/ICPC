@@ -145,4 +145,60 @@ TEST(FFTPolyModIntTest, modInline) {
   EXPECT_EQ(8, xs[1]._v);
 }
 
+TEST(FFTPolyModIntTest, powModInline) {
+  const int MOD = 1000000007;
+  FFTPolyModInt<double, int, int64_t, MOD> baseP, modP;
+  modP = vector<int>{1, 1000000005, 1000000004, 1000000002};
+
+  baseP = vector<int>{0, 1};
+  baseP.powModInline(modP, 7);
+  ASSERT_EQ(3, baseP.size());
+  EXPECT_EQ(296640002, baseP[0]._v);
+  EXPECT_EQ(536320004, baseP[1]._v);
+  EXPECT_EQ(994880007, baseP[2]._v);
+
+  baseP = vector<int>{0, 1};
+  baseP.powModInline(modP, 11);
+  ASSERT_EQ(3, baseP.size());
+  EXPECT_EQ(855637510, baseP[0]._v);
+  EXPECT_EQ(723735557, baseP[1]._v);
+  EXPECT_EQ(270944770, baseP[2]._v);
+
+  baseP = vector<int>{0, 1};
+  baseP.powModInline(modP, 13);
+  ASSERT_EQ(3, baseP.size());
+  EXPECT_EQ(112233739, baseP[0]._v);
+  EXPECT_EQ(829721483, baseP[1]._v);
+  EXPECT_EQ(410558385, baseP[2]._v);
+}
+
+TEST(FFTPolyModIntTest, initPowModMemo) {
+  const int MOD = 1000000007;
+  FFTPolyModInt<double, int, int64_t, MOD> baseP, modP, invRevModP, res;
+  vector<FFTPolyModInt<double, int, int64_t, MOD>> memo;
+  baseP = vector<int>{0, 1};
+  modP = vector<int>{1, 1000000005, 1000000004, 1000000002};
+  invRevModP = modP;
+  reverse(invRevModP.begin(), invRevModP.end());
+  invRevModP.invInline();
+
+  res.initPowModMemo(baseP, modP, invRevModP, 7, memo);
+  ASSERT_EQ(3, res.size());
+  EXPECT_EQ(296640002, res[0]._v);
+  EXPECT_EQ(536320004, res[1]._v);
+  EXPECT_EQ(994880007, res[2]._v);
+
+  res.initPowModMemo(baseP, modP, invRevModP, 11, memo);
+  ASSERT_EQ(3, res.size());
+  EXPECT_EQ(855637510, res[0]._v);
+  EXPECT_EQ(723735557, res[1]._v);
+  EXPECT_EQ(270944770, res[2]._v);
+
+  res.initPowModMemo(baseP, modP, invRevModP, 13, memo);
+  ASSERT_EQ(3, res.size());
+  EXPECT_EQ(112233739, res[0]._v);
+  EXPECT_EQ(829721483, res[1]._v);
+  EXPECT_EQ(410558385, res[2]._v);
+}
+
 } // namespace math

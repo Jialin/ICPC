@@ -132,13 +132,13 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED // ^
   inline void divInlinePrecomputed(const NTTPolyModInt& invRevO) {
-    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_SHRINK
+    // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_SHRINK
     shrink();
     if (this->size() < invRevO.size()) {
       this->assign(1, 0);
       return;
     }
-    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_ASSIGN
+    // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_ASSIGN
     int size = this->size() - invRevO.size() + 1;
     reverse(this->begin(), this->end());
     this->resize(size);
@@ -147,7 +147,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     FOR(i, 0, size) {
       tmpO[i] = invRevO[i];
     }
-    // NTT_POLY_MOD_INT_DIV_INLINE => NTT_POLY_MOD_INT_MUL_INLINE
+    // NTT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED => NTT_POLY_MOD_INT_MUL_INLINE
     *this *= tmpO;
     this->resize(size);
     reverse(this->begin(), this->end());
