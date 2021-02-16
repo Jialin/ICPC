@@ -107,6 +107,18 @@ function CPP-run11 {
   _CPP-run $@
 }
 
+##########################################
+# Example usage:
+#   > CPP-run17 A.cpp
+#   > CPP-run17 A.cpp input
+#   > CPP-run17 A.cpp input output
+#   > CPP-run17 A.cpp input output answer
+##########################################
+function CPP-run17 {
+  CPP-compile $1 c++17
+  _CPP-run $@
+}
+
 ####################
 # Example usage:
 #   > CPP-gen A.cpp
@@ -150,6 +162,18 @@ function CPP-gen-run11 {
   if [ $? = 0 ]
   then
     CPP-run11 gen/gendebug-$1 ${@:2}
+  fi
+}
+
+##########################
+# Example usage:
+#   > CPP-gen-run17 A.cpp
+##########################
+function CPP-gen-run17 {
+  CPP-gen $@
+  if [ $? = 0 ]
+  then
+    CPP-run17 gen/gendebug-$1 ${@:2}
   fi
 }
 
