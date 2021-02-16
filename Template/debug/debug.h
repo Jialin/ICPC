@@ -12,6 +12,12 @@ inline string totype(const vector<T>& vs) {
   return "vector<" + (!vs.empty() ? totype(*vs.data()) : "") + ">";
 }
 
+template<typename K, typename V>
+inline string totype(const unordered_map<K, V>& vs) {
+  return "unordered_map<" +
+         (vs.empty() ? "" : totype(vs.begin()->first) + "," + totype(vs.begin()->second)) + ">";
+}
+
 template<typename T>
 inline string tostring(const vector<T>& vs) {
   stringstream ss;
@@ -22,12 +28,32 @@ inline string tostring(const vector<T>& vs) {
       if (i < 16) {
         ss << "," << tostring(vs[i]);
       } else {
-        ss << ",..." << vs.size() - i << " more";
+        ss << ",...";
         break;
       }
     }
   }
-  ss << "]";
+  ss << "](" << vs.size() << " elements)";
+  return ss.str();
+}
+
+template<typename K, typename V>
+inline string tostring(const unordered_map<K, V>& vs) {
+  stringstream ss;
+  ss << "{";
+  int i = 0;
+  for (const auto& [k, v] : vs) {
+    if (i >= 16) {
+      ss << ",...";
+      break;
+    }
+    if (i) {
+      ss << ",";
+    }
+    ss << tostring(k) << ":" << tostring(v);
+    ++i;
+  }
+  ss << "}(" << vs.size() << " tuples)";
   return ss.str();
 }
 #endif
