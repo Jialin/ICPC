@@ -2,6 +2,10 @@
 // ALL FFT_POLY_MOD_INT_ALL
 #pragma once
 
+#ifndef _FFT_POLY_MOD_INT_MOD_THRESHOLD
+#define _FFT_POLY_MOD_INT_MOD_THRESHOLD 16
+#endif
+
 #ifdef _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
 // _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS => INCLUDE math/fft/fft_mul_mod_utils_macros.h
 #include "math/fft/fft_mul_mod_utils_macros.h"
@@ -132,15 +136,34 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
     if (this->size() < o.size()) {
       return;
     }
+    if (this->size() - o.size() < _FFT_POLY_MOD_INT_MOD_THRESHOLD) {
+      DEBUG_GE(o.size(), 1);
+      DEBUG_NE(o.back()._v, 0);
+      static ModInt<V, V_SQR, MOD> inv;
+      // FFT_POLY_MOD_INT_MOD_INLINE => MOD_INT_INV
+      inv = o.back().inv();
+      for (int i = SIZE(*this) - 1; i >= SIZE(o) - 1; --i) {
+        if (!(*this)[i]._v) {
+          continue;
+        }
+        static ModInt<V, V_SQR, MOD> mul;
+        // FFT_POLY_MOD_INT_MOD_INLINE => MOD_INT_INIT_MUL
+        mul.initMul((*this)[i], inv);
+        for (int j = i - SIZE(o) + 1, k = 0; j <= i; ++j, ++k) {
+          // FFT_POLY_MOD_INT_MOD_INLINE => MOD_INT_MUL
+          (*this)[j] -= mul * o[k];
+        }
+      }
+      shrink();
+      return;
+    }
     static FFTPolyModInt tmp;
     // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_ASSIGN
     tmp = *this;
     // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_DIV_INLINE
     tmp /= o;
-    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_MUL_INLINE
-    tmp *= o;
-    // FFT_POLY_MOD_INT_MOD_INLINE => FFT_POLY_MOD_INT_SUB_INLINE
-    *this -= tmp;
+    // FFT_POLY_MOD_INT_MOD_INLINE => _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL
+    _subInlineMul(tmp, o);
   }
 #endif
 
@@ -179,19 +202,22 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
     tmp = *this;
     // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_DIV_INLINE_PRECOMPUTED
     tmp.divInlinePrecomputed(invRevO);
+    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL
     _subInlineMul(tmp, o);
   }
+#endif
 
+#ifdef _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL
   inline void _subInlineMul(FFTPolyModInt& a, const FFTPolyModInt& b) {
     int aSize = a.size();
     int mask = nextPow2_32(max(a.size(), b.size())) - 1;
     int shift = (a.size() + b.size() - 1) & mask;
-    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC
+    // _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL => FFT_POLY_MOD_INT_MUL_INLINE_CYCLIC
     a.mulInlineCyclic(b);
-    // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => FFT_POLY_MOD_INT_EXTEND
+    // _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL => FFT_POLY_MOD_INT_EXTEND
     a.extend(mask + 1);
     for (int i = 0, j = a.size() - 1 + shift; i < aSize; ++i, --j) {
-      // FFT_POLY_MOD_INT_MOD_INLINE_PRECOMPUTED => MOD_INT_SUB_INLINE
+      // _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL => MOD_INT_SUB_INLINE
       a[j & mask] -= (*this)[this->size() - 1 - i];
     }
     this->resize(this->size() - aSize);
@@ -255,6 +281,33 @@ struct FFTPolyModInt : public vector<ModInt<V, V_SQR, MOD>> {
         memo.back().modInlinePrecomputed(o, invRevO);
       }
     }
+  }
+#endif
+
+#ifdef FFT_POLY_MOD_INT_RESULTANT_MODIFY // ^
+  inline ModInt<V, V_SQR, MOD> resultantModify(FFTPolyModInt& o) {
+    // FFT_POLY_MOD_INT_RESULTANT_MODIFY => FFT_POLY_MOD_INT_SHRINK
+    this->shrink();
+    o.shrink();
+    if (this->empty() || o.empty() || (o.size() == 1 && !o.back()._v)) {
+      return 0;
+    }
+    if (o.size() == 1) {
+      // FFT_POLY_MOD_INT_RESULTANT_MODIFY => MOD_INT_EXP
+      return o.back().exp(this->size() - 1);
+    }
+    int degree = this->size();
+    // FFT_POLY_MOD_INT_RESULTANT_MODIFY => FFT_POLY_MOD_INT_MOD_INLINE
+    *this %= o;
+    this->shrink();
+    degree -= this->size();
+    ModInt<V, V_SQR, MOD> mul = o.back().exp(degree);
+    if ((this->size() - 1) & (o.size() - 1) & 1) {
+      // FFT_POLY_MOD_INT_RESULTANT_MODIFY => MOD_INT_NEGATE_INLINE
+      mul.negateInline();
+    }
+    // FFT_POLY_MOD_INT_RESULTANT_MODIFY => MOD_INT_MUL
+    return o.resultantModify(*this) * mul;
   }
 #endif
 

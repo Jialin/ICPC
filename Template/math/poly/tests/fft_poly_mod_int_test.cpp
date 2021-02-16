@@ -201,4 +201,21 @@ TEST(FFTPolyModIntTest, initPowModMemo) {
   EXPECT_EQ(410558385, res[2]._v);
 }
 
+TEST(FFTPolyModIntTest, resultantModify) {
+  const int MOD = 1000000007;
+  FFTPolyModInt<double, int, int64_t, MOD> aP, bP;
+
+  aP = vector<int>{2, 1};
+  bP = vector<int>{MOD - 1, 0, 1};
+  EXPECT_EQ(3, aP.resultantModify(bP)._v);
+
+  aP = vector<int>{10, 20, 40, 30};
+  bP = vector<int>{MOD - 1, 0, 0, 0, 1};
+  EXPECT_EQ(0, aP.resultantModify(bP)._v);
+
+  aP = vector<int>{10, 20, 40, 3};
+  bP = vector<int>{MOD - 1, 0, 0, 0, 1};
+  EXPECT_EQ(2343519, aP.resultantModify(bP)._v);
+}
+
 } // namespace math
