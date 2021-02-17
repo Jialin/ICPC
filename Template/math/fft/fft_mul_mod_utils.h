@@ -33,9 +33,8 @@ struct FFTMulModUtils {
 
 #ifdef FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT // ^
   // FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT => _FFT_MUL_MOD_UTILS_MOD_INT
-  template<typename V, typename V_SQR, V MOD>
-  inline void mulInlineModInt(
-      vector<ModInt<V, V_SQR, MOD>>& xs, const vector<ModInt<V, V_SQR, MOD>>& ys, bool cyclic) {
+  template<typename MOD_INT>
+  inline void mulInlineModInt(vector<MOD_INT>& xs, const vector<MOD_INT>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.clear();
       return;
@@ -43,7 +42,8 @@ struct FFTMulModUtils {
     int n = cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1;
     int pow2 = nextPow2_32(n);
     static vector<Complex<T>> as, bs, cs, ds;
-    int cut = max(CAST<int>(sqrt(MOD)), 1);
+    // FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT => MOD_INT_CONST_MOD
+    int cut = max(CAST<int>(sqrt(MOD_INT::MOD)), 1);
     as.resize(pow2);
     for (size_t i = 0; i < xs.size(); ++i) {
       as[i].init(xs[i]._v / cut, xs[i]._v % cut);
@@ -92,9 +92,9 @@ struct FFTMulModUtils {
       xs.resize(n);
     }
     for (int i = 0; i < n; ++i) {
-      int64_t v1 = static_cast<int64_t>(cs[i].real / pow2 + 0.5) % MOD;
-      int64_t v2 = static_cast<int64_t>(ds[i].real / pow2 + 0.5) % MOD;
-      int64_t v3 = static_cast<int64_t>(cs[i].imag / pow2 + 0.5) % MOD;
+      int64_t v1 = static_cast<int64_t>(cs[i].real / pow2 + 0.5) % MOD_INT::MOD;
+      int64_t v2 = static_cast<int64_t>(ds[i].real / pow2 + 0.5) % MOD_INT::MOD;
+      int64_t v3 = static_cast<int64_t>(cs[i].imag / pow2 + 0.5) % MOD_INT::MOD;
       xs[i] = (((v1 * cut) + v2) * cut) + v3;
     }
   }

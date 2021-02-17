@@ -21,7 +21,7 @@ struct ModInt {
   typedef _V_SQR V_SQR;
 #endif
 #ifdef MOD_INT_CONST_MOD // ^
-  static const V MOD = _MOD;
+  static const _V MOD = _MOD;
 #endif
 
   template<typename T>

@@ -6,6 +6,7 @@
 #define COMPLEX_ADD
 #define COMPLEX_CONJ
 #define COMPLEX_SUB
+#define MOD_INT_CONST_MOD
 #define _FFT_MUL_MOD_UTILS_MOD_INT
 #endif
 

@@ -33,13 +33,13 @@ struct FFTOnlineModUtils {
 
 #ifdef FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT // ^
   // FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT => _FFT_ONLINE_MOD_UTILS_MOD_INT
-  template<typename V, typename V_SQR, V MOD>
+  template<typename MOD_INT>
   inline void onlineInlineModInt(
-      vector<ModInt<V, V_SQR, MOD>>& fs,
-      const vector<ModInt<V, V_SQR, MOD>>& gs,
+      vector<MOD_INT>& fs,
+      const vector<MOD_INT>& gs,
       int computedBound,
       int toComputeBound,
-      const function<void(ModInt<V, V_SQR, MOD>& f, int idx)>& transform) {
+      const function<void(MOD_INT& f, int idx)>& transform) {
     if (fs.size() < toComputeBound) {
       int n = fs.size();
       fs.resize(toComputeBound);
@@ -47,19 +47,19 @@ struct FFTOnlineModUtils {
         fs[i] = 0;
       }
     }
-    static vector<ModInt<V, V_SQR, MOD>> gsCopy;
+    static vector<MOD_INT> gsCopy;
     gsCopy = gs;
     _onlineInlineModInt(fs, gsCopy, computedBound, 0, toComputeBound, transform);
   }
 
-  template<typename V, typename V_SQR, V MOD>
+  template<typename MOD_INT>
   inline void _onlineInlineModInt(
-      vector<ModInt<V, V_SQR, MOD>>& fs,
-      const vector<ModInt<V, V_SQR, MOD>>& gs,
+      vector<MOD_INT>& fs,
+      const vector<MOD_INT>& gs,
       int computedBound,
       int lower,
       int upper,
-      const function<void(ModInt<V, V_SQR, MOD>& f, int idx)>& transform) {
+      const function<void(MOD_INT& f, int idx)>& transform) {
     if (lower + 1 == upper) {
       if (lower >= computedBound) {
         transform(fs[lower], lower);
@@ -69,12 +69,12 @@ struct FFTOnlineModUtils {
     int medium = (lower + upper) >> 1;
     _onlineInlineModInt(fs, gs, computedBound, lower, medium, transform);
     size_t pow2 = nextPow2_32(upper - lower);
-    static vector<ModInt<V, V_SQR, MOD>> delta;
+    static vector<MOD_INT> delta;
     delta.assign(pow2, 0);
     FOR(i, lower, medium) {
       delta[i - lower] = fs[i];
     }
-    static vector<ModInt<V, V_SQR, MOD>> tmpGs;
+    static vector<MOD_INT> tmpGs;
     tmpGs.assign(pow2, 0);
     for (int i = min(pow2, gs.size()) - 1; i >= 0; --i) {
       tmpGs[i] = gs[i];
