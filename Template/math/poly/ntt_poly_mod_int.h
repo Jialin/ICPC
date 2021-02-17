@@ -81,11 +81,8 @@ struct NTTPolyModInt : public vector<MOD_INT> {
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
-    // NTT_POLY_MOD_INT_MUL_INLINE => MOD_INT_TYPEDEF_V_SQR
-    // NTT_POLY_MOD_INT_MUL_INLINE => MOD_INT_CONST_MOD
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .mulInlineModInt(*this, o, false);
+    NTTMulUtils<MOD_INT, ROOT>::instance().mulInlineModInt(*this, o, false);
   }
 #endif
 
@@ -199,11 +196,8 @@ struct NTTPolyModInt : public vector<MOD_INT> {
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
-    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => MOD_INT_TYPEDEF_V_SQR
-    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => MOD_INT_CONST_MOD
     // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .mulInlineModInt(*this, o, true);
+    NTTMulUtils<MOD_INT, ROOT>::instance().mulInlineModInt(*this, o, true);
   }
 #endif
 
@@ -361,11 +355,8 @@ struct NTTPolyModInt : public vector<MOD_INT> {
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_DERIVE_INLINE
     deriveInline();
     // NTT_POLY_MOD_INT_LN_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
-    // NTT_POLY_MOD_INT_LN_INLINE => MOD_INT_TYPEDEF_V_SQR
-    // NTT_POLY_MOD_INT_LN_INLINE => MOD_INT_CONST_MOD
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .mulInlineModInt(*this, invP, false);
+    NTTMulUtils<MOD_INT, ROOT>::instance().mulInlineModInt(*this, invP, false);
     this->resize(n);
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_INTEGRAL_INLINE
     integralInline();
@@ -491,11 +482,8 @@ struct NTTPolyModInt : public vector<MOD_INT> {
     // _NTT_POLY_MOD_INT_EXP => MOD_INT_ADD_INLINE
     tmpP[0] += 1;
     // _NTT_POLY_MOD_INT_EXP => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
-    // _NTT_POLY_MOD_INT_EXP => MOD_INT_TYPEDEF_V_SQR
-    // _NTT_POLY_MOD_INT_EXP => MOD_INT_CONST_MOD
     // _NTT_POLY_MOD_INT_EXP => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .mulInlineModInt(res, tmpP, false);
+    NTTMulUtils<MOD_INT, ROOT>::instance().mulInlineModInt(res, tmpP, false);
     res.resize(n);
   }
 #endif

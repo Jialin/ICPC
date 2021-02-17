@@ -4,38 +4,27 @@
 
 #include "common/macros.h"
 
-#ifdef _NTT_MUL_UTILS_MOD_INT
-// _NTT_MUL_UTILS_MOD_INT => INCLUDE math/mod/mod_int_macros.h
-#include "math/mod/mod_int_macros.h"
-#endif
-
 #include "math/fft/ntt_utils_macros.h" // INCLUDE
-
-#ifdef _NTT_MUL_UTILS_MOD_INT
-#include "math/mod/mod_int.h"
-#endif
+#include "math/mod/mod_int_macros.h"
 
 #include "math/bit/next_pow2_32.h"
 #include "math/fft/ntt_utils.h"
+#include "math/mod/mod_int.h"
 
 using namespace std;
 
 namespace math {
 
-template<typename V, typename V_SQR, V PRIME, V ROOT>
+// => MOD_INT_TYPEDEF_V
+template<typename MOD_INT, typename MOD_INT::V ROOT>
 struct NTTMulUtils {
-#ifdef _NTT_MUL_UTILS_MOD_INT
-  using _ModInt = ModInt<V, V_SQR, PRIME>;
-#endif
-
   inline static NTTMulUtils& instance() {
     static NTTMulUtils instance;
     return instance;
   }
 
 #ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT // ^
-  // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => _NTT_MUL_UTILS_MOD_INT
-  inline void mulInlineModInt(vector<_ModInt>& xs, const vector<_ModInt>& ys, bool cyclic) {
+  inline void mulInlineModInt(vector<MOD_INT>& xs, const vector<MOD_INT>& ys, bool cyclic) {
     if (xs.empty() || ys.empty()) {
       xs.assign(1, 0);
       return;
@@ -50,8 +39,11 @@ struct NTTMulUtils {
       }
     }
     int pow2 = nextPow2_32(cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
-    auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
-    static vector<_ModInt> ys2;
+    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_TYPEDEF_V_SQR
+    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_CONST_MOD
+    auto& ntt =
+        NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
+    static vector<MOD_INT> ys2;
     if (!isSame) {
       ys2.resize(pow2);
       FOR(i, 0, pow2) {
@@ -74,7 +66,7 @@ struct NTTMulUtils {
     _shrinkModInt(xs);
   }
 
-  inline void _shrinkModInt(vector<_ModInt>& vs) {
+  inline void _shrinkModInt(vector<MOD_INT>& vs) {
     for (; vs.size() > 1 && !vs.back()._v; vs.pop_back()) {}
   }
 #endif

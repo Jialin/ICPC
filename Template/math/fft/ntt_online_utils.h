@@ -73,11 +73,8 @@ struct NTTOnlineUtils {
     for (int i = min(pow2, gs.size()) - 1; i >= 0; --i) {
       tmpGs[i] = gs[i];
     }
-    // NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT => MOD_INT_TYPEDEF_V_SQR
-    // NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT => MOD_INT_CONST_MOD
     // NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .mulInlineModInt(delta, tmpGs, true);
+    NTTMulUtils<MOD_INT, ROOT>::instance().mulInlineModInt(delta, tmpGs, true);
     for (int i = medium; i < upper; ++i) {
       // NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT => MOD_INT_ADD_INLINE
       fs[i] += delta[i - lower];

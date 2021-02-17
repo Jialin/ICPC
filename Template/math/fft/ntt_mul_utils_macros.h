@@ -2,14 +2,13 @@
 #define NTT_MUL_UTILS_MUL_INLINE_MOD_INT
 #endif
 
-#ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-#define MOD_INT_MUL_INLINE
-#define NTT_UTILS_NTT_MOD_INT
-#define _NTT_MUL_UTILS_MOD_INT
-#endif
+#define MOD_INT_TYPEDEF_V
 
-#ifdef _NTT_MUL_UTILS_MOD_INT
-#include "math/mod/mod_int_macros.h"
+#ifdef NTT_MUL_UTILS_MUL_INLINE_MOD_INT
+#define MOD_INT_CONST_MOD
+#define MOD_INT_MUL_INLINE
+#define MOD_INT_TYPEDEF_V_SQR
+#define NTT_UTILS_NTT_MOD_INT
 #endif
 
 #include "math/fft/ntt_utils_macros.h"

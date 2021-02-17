@@ -9,8 +9,10 @@ namespace math {
 
 TEST(NTTMulUtilsTest, mulInlineModInt) {
   const int MOD = 7340033;
-  vector<ModInt<int, int64_t, MOD>> xs = {1, 2}, ys = {3, 4};
-  NTTMulUtils<int, int64_t, MOD, 5>::instance().mulInlineModInt(xs, ys, false);
+  using ModInt = ModInt<int, int64_t, MOD>;
+  using NTTMulUtils = NTTMulUtils<ModInt, 5>;
+  vector<ModInt> xs = {1, 2}, ys = {3, 4};
+  NTTMulUtils::instance().mulInlineModInt(xs, ys, false);
   ASSERT_EQ(3, xs.size());
   EXPECT_EQ(3, xs[0]._v);
   EXPECT_EQ(10, xs[1]._v);
@@ -18,7 +20,7 @@ TEST(NTTMulUtilsTest, mulInlineModInt) {
 
   xs = {31772, 371773, 371721, 81631};
   ys = {348484, 28481838, 381872, 59492};
-  NTTMulUtils<int, int64_t, MOD, 5>::instance().mulInlineModInt(xs, ys, false);
+  NTTMulUtils::instance().mulInlineModInt(xs, ys, false);
   ASSERT_EQ(7, xs.size());
   EXPECT_EQ(3263884, xs[0]._v);
   EXPECT_EQ(7008180, xs[1]._v);
@@ -29,7 +31,7 @@ TEST(NTTMulUtilsTest, mulInlineModInt) {
   EXPECT_EQ(4629639, xs[6]._v);
 
   xs = {1, 2, 3, 4};
-  NTTMulUtils<int, int64_t, MOD, 5>::instance().mulInlineModInt(xs, xs, false);
+  NTTMulUtils::instance().mulInlineModInt(xs, xs, false);
   ASSERT_EQ(7, xs.size());
   EXPECT_EQ(1, xs[0]._v);
   EXPECT_EQ(4, xs[1]._v);
@@ -42,8 +44,9 @@ TEST(NTTMulUtilsTest, mulInlineModInt) {
 
 TEST(NTTMulUtilsTest, mulInlineModIntCyclic) {
   const int MOD = 104857601;
-  vector<ModInt<int, int64_t, MOD>> xs = {4, 1}, ys = {104857595, 104857596, 104857597, 1};
-  NTTMulUtils<int, int64_t, MOD, 21>::instance().mulInlineModInt(xs, ys, true);
+  using ModInt = ModInt<int, int64_t, MOD>;
+  vector<ModInt> xs = {4, 1}, ys = {104857595, 104857596, 104857597, 1};
+  NTTMulUtils<ModInt, 21>::instance().mulInlineModInt(xs, ys, true);
   ASSERT_EQ(3, xs.size());
   EXPECT_EQ(104857578, xs[0]._v);
   EXPECT_EQ(104857575, xs[1]._v);
