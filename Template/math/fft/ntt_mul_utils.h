@@ -39,10 +39,7 @@ struct NTTMulUtils {
       }
     }
     int pow2 = nextPow2_32(cyclic ? max(xs.size(), ys.size()) : xs.size() + ys.size() - 1);
-    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_TYPEDEF_V_SQR
-    // NTT_MUL_UTILS_MUL_INLINE_MOD_INT => MOD_INT_CONST_MOD
-    auto& ntt =
-        NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
+    auto& ntt = NTTUtils<MOD_INT, ROOT>::instance();
     static vector<MOD_INT> ys2;
     if (!isSame) {
       ys2.resize(pow2);

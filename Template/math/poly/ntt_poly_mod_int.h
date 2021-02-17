@@ -252,11 +252,8 @@ struct NTTPolyModInt : public vector<MOD_INT> {
       static NTTPolyModInt qsNegate;
       int pow2 = nextPow2_32(max(ps.size(), qs.size()) + qs.size() - 1);
       qsNegate = qs;
-      // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_CONST_MOD
-      // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_TYPEDEF_V_SQR
       // NTT_POLY_MOD_INT_RECURRENCE => _NTT_POLY_MOD_INT_NTT_UTILS
-      auto& ntt =
-          NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
+      auto& ntt = NTTUtils<MOD_INT, ROOT>::instance();
       // NTT_POLY_MOD_INT_RECURRENCE => NTT_UTILS_NTT_MOD_INT
       ntt.nttModInt(qsNegate, false, pow2);
       qs.resize(pow2);
@@ -432,10 +429,7 @@ struct NTTPolyModInt : public vector<MOD_INT> {
       tmpP[i] = 0;
     }
     // _NTT_POLY_MOD_INT_INV => _NTT_POLY_MOD_INT_NTT_UTILS
-    // _NTT_POLY_MOD_INT_INV => MOD_INT_TYPEDEF_V_SQR
-    // _NTT_POLY_MOD_INT_INV => MOD_INT_CONST_MOD
-    auto& ntt =
-        NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
+    auto& ntt = NTTUtils<MOD_INT, ROOT>::instance();
     // _NTT_POLY_MOD_INT_INV => NTT_UTILS_NTT_MOD_INT
     ntt.nttModInt(tmpP, false, pow2);
     ntt.nttModInt(res, false, pow2);

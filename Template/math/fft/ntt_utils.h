@@ -20,24 +20,23 @@ namespace math {
 // |924844033|3597|(441<<21)+1|
 // |998244353| 31 |(119<<23)+1|
 ////////////////////////////////
-template<typename V, typename V_SQR, V PRIME, V ROOT>
+// => MOD_INT_TYPEDEF_V
+template<typename MOD_INT, typename MOD_INT::V ROOT>
 struct NTTUtils {
-  using _ModInt = ModInt<V, V_SQR, PRIME>;
-
   inline static NTTUtils& instance() {
 #ifdef LOCAL
-    int _rootPow = 1 << __builtin_ctz(PRIME - 1);
-    if (ROOT < 0 || _ModInt(ROOT).exp(_rootPow)._v != 1 ||
-        _ModInt(ROOT).exp(_rootPow >> 1)._v == 1) {
+    int _rootPow = 1 << __builtin_ctz(MOD_INT::MOD - 1);
+    if (ROOT < 0 || MOD_INT(ROOT).exp(_rootPow)._v != 1 ||
+        MOD_INT(ROOT).exp(_rootPow >> 1)._v == 1) {
       DEBUGF(
           "Invalid ROOT(%d). PRIME %d = (%d << %d) + 1. Computing the right "
           "one ...\n",
           ROOT,
-          PRIME,
-          (PRIME - 1) / _rootPow,
-          __builtin_ctz(PRIME - 1));
+          MOD_INT::MOD,
+          (MOD_INT::MOD - 1) / _rootPow,
+          __builtin_ctz(MOD_INT::MOD - 1));
       for (V root = 2;; ++root) {
-        if (_ModInt(root).exp(_rootPow)._v == 1 && _ModInt(root).exp(_rootPow >> 1)._v != 1) {
+        if (MOD_INT(root).exp(_rootPow)._v == 1 && MOD_INT(root).exp(_rootPow >> 1)._v != 1) {
           DEBUGF("!!! Set ROOT as %d !!!\n", root);
           assert(false);
         }
@@ -52,7 +51,8 @@ struct NTTUtils {
     if (_revs.size() >= capacity) {
       return;
     }
-    int _rootPow = 1 << __builtin_ctz(PRIME - 1);
+    // => MOD_INT_CONST_MOD
+    int _rootPow = 1 << __builtin_ctz(MOD_INT::MOD - 1);
     int pow2 = nextPow2_32(max(capacity, 2));
     DEBUG_GE(_rootPow, pow2);
     _revs.reserve(pow2);
@@ -71,23 +71,25 @@ struct NTTUtils {
       _revs[i] = (_revs[i >> 1] >> 1) + ((i & 1) << (lgN - 1));
     }
     _roots.resize(pow2);
-    _ModInt root(ROOT);
+    MOD_INT root(ROOT);
     for (int i = oldPow2; i < pow2; i <<= 1) {
+      // => MOD_INT_TYPEDEF_V_SQR
       // => MOD_INT_EXP
-      V_SQR v = root.exp((_rootPow / i) >> 1)._v;
+      typename MOD_INT::V_SQR v = root.exp((_rootPow / i) >> 1)._v;
       for (int j = i; j < i << 1; j += 2) {
         _roots[j] = _roots[j >> 1];
-        _roots[j | 1] = _roots[j] * v % PRIME;
+        _roots[j | 1] = _roots[j] * v % MOD_INT::MOD;
       }
     }
-    _quota = numeric_limits<uint64_t>::max() / PRIME / *max_element(_roots.begin(), _roots.end());
+    _quota =
+        numeric_limits<uint64_t>::max() / MOD_INT::MOD / *max_element(_roots.begin(), _roots.end());
   }
 
 #ifdef NTT_UTILS_NTT_MOD_INT // ^
   // NTT_UTILS_NTT_MOD_INT => _NTT_UTILS_MOD_INT
-  inline void nttModInt(vector<_ModInt>& vs, bool inverse, int n = -1) {
+  inline void nttModInt(vector<MOD_INT>& vs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
-    static vector<V> vsI;
+    static vector<typename MOD_INT::V> vsI;
     vsI.resize(pow2);
     for (int i = 0; i < pow2; ++i) {
       vsI[i] = i < vs.size() ? vs[i]._v : 0;
@@ -102,7 +104,7 @@ struct NTTUtils {
   }
 #endif
 
-  inline void ntt(vector<V>& vs, bool inverse, int n = -1) {
+  inline void ntt(vector<typename MOD_INT::V>& vs, bool inverse, int n = -1) {
     int pow2 = nextPow2_32(n < 0 ? vs.size() : n);
     initCapacity(pow2);
     static vector<uint64_t> vs64;
@@ -111,9 +113,9 @@ struct NTTUtils {
     if (inverse) {
       reverse(vs.begin() + 1, vs.begin() + pow2);
       // => MOD_INT_INV
-      V_SQR v = _ModInt(pow2).inv()._v;
+      typename MOD_INT::V_SQR v = MOD_INT(pow2).inv()._v;
       for (int i = 0; i < pow2; ++i) {
-        vs64[i] = vs[_revs[i] >> shift] * v % PRIME;
+        vs64[i] = vs[_revs[i] >> shift] * v % MOD_INT::MOD;
       }
     } else {
       for (int i = 0; i < pow2; ++i) {
@@ -123,14 +125,14 @@ struct NTTUtils {
     for (int l = 1, cnt = 0; l < pow2; l <<= 1, ++cnt) {
       for (int i = 0; i < pow2; i += l << 1) {
         for (int j = 0; j < l; ++j) {
-          uint64_t v = vs64[i + j + l] * _roots[j + l] % PRIME;
-          vs64[i + j + l] = PRIME - v + vs64[i + j];
+          uint64_t v = vs64[i + j + l] * _roots[j + l] % MOD_INT::MOD;
+          vs64[i + j + l] = MOD_INT::MOD - v + vs64[i + j];
           vs64[i + j] += v;
         }
       }
       if (cnt == _quota) {
         FOR(i, 0, pow2) {
-          vs64[i] %= PRIME;
+          vs64[i] %= MOD_INT::MOD;
         }
         cnt = 0;
       }
@@ -139,7 +141,7 @@ struct NTTUtils {
       vs.resize(pow2);
     }
     FOR(i, 0, pow2) {
-      vs[i] = vs64[i] % PRIME;
+      vs[i] = vs64[i] % MOD_INT::MOD;
     }
   }
 
@@ -153,7 +155,7 @@ struct NTTUtils {
   }
 
   vector<int> _revs;
-  vector<V_SQR> _roots;
+  vector<typename MOD_INT::V_SQR> _roots;
   uint64_t _quota;
 };
 
