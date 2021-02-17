@@ -36,10 +36,11 @@
 
 namespace math {
 
-template<typename V, typename V_SQR, V PRIME, V ROOT>
-struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
+// => MOD_INT_TYPEDEF_V
+template<typename MOD_INT, typename MOD_INT::V ROOT>
+struct NTTPolyModInt : public vector<MOD_INT> {
 #ifdef NTT_POLY_MOD_INT_CONSTRUCT // ^
-  inline NTTPolyModInt(int size = 0, V v = 0) {
+  inline NTTPolyModInt(int size = 0, typename MOD_INT::V v = 0) {
     this->assign(size, v);
   }
 #endif
@@ -80,8 +81,11 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE // ^
   inline void operator*=(const NTTPolyModInt& o) {
     // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+    // NTT_POLY_MOD_INT_MUL_INLINE => MOD_INT_TYPEDEF_V_SQR
+    // NTT_POLY_MOD_INT_MUL_INLINE => MOD_INT_CONST_MOD
     // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, false);
+    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
+        .mulInlineModInt(*this, o, false);
   }
 #endif
 
@@ -194,9 +198,12 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC // ^
   inline void mulInlineCyclic(const NTTPolyModInt& o) {
-    // NTT_POLY_MOD_INT_MUL_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
-    // NTT_POLY_MOD_INT_MUL_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, o, true);
+    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => MOD_INT_TYPEDEF_V_SQR
+    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => MOD_INT_CONST_MOD
+    // NTT_POLY_MOD_INT_MUL_INLINE_CYCLIC => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
+    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
+        .mulInlineModInt(*this, o, true);
   }
 #endif
 
@@ -208,11 +215,13 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       const NTTPolyModInt& o,
       int computedBound,
       int toComputeBound,
-      const function<void(ModInt<V, V_SQR, PRIME>& f, int idx)>& transform) {
+      const function<void(MOD_INT& f, int idx)>& transform) {
+    // NTT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_CONST_MOD
+    // NTT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_TYPEDEF_V_SQR
     // NTT_POLY_MOD_INT_ONLINE_INLINE => _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
     // NTT_POLY_MOD_INT_ONLINE_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
-    NTTOnlineUtils<V, V_SQR, PRIME, ROOT>::instance().onlineInlineModInt(
-        *this, o, computedBound, toComputeBound, transform);
+    NTTOnlineUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
+        .onlineInlineModInt(*this, o, computedBound, toComputeBound, transform);
   }
 #endif
 
@@ -223,7 +232,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 // Reference: https://discuss.codechef.com/t/rng-editorial/10068/5
 #ifdef NTT_POLY_MOD_INT_RECURRENCE // ^
   template<typename K>
-  inline ModInt<V, V_SQR, PRIME> recurrence(const NTTPolyModInt& xs, K k) const {
+  inline MOD_INT recurrence(const NTTPolyModInt& xs, K k) const {
     DEBUG_GE(k, 0);
     DEBUG_EQ(this->size(), xs.size());
     int n = this->size();
@@ -251,8 +260,11 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       static NTTPolyModInt qsNegate;
       int pow2 = nextPow2_32(max(ps.size(), qs.size()) + qs.size() - 1);
       qsNegate = qs;
+      // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_CONST_MOD
+      // NTT_POLY_MOD_INT_RECURRENCE => MOD_INT_TYPEDEF_V_SQR
       // NTT_POLY_MOD_INT_RECURRENCE => _NTT_POLY_MOD_INT_NTT_UTILS
-      auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
+      auto& ntt =
+          NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
       // NTT_POLY_MOD_INT_RECURRENCE => NTT_UTILS_NTT_MOD_INT
       ntt.nttModInt(qsNegate, false, pow2);
       qs.resize(pow2);
@@ -310,7 +322,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     if (this->empty()) {
       return;
     }
-    static vector<ModInt<V, V_SQR, PRIME>> invs;
+    static vector<MOD_INT> invs;
     if (invs.size() < this->size() + 1) {
       int n = invs.size();
       invs.resize(this->size() + 1);
@@ -318,14 +330,15 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
         invs[1] = 1;
       }
       FOR(i, max(n, 2), SIZE(invs)) {
-        invs[i] = invs[PRIME % i];
+        // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_CONST_MOD
+        invs[i] = invs[MOD_INT::MOD % i];
         // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_MUL_INLINE
-        invs[i] *= PRIME / i;
+        invs[i] *= MOD_INT::MOD / i;
         // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_NEGATE_INLINE
         invs[i].negateInline();
       }
     }
-    this->insert(this->begin(), ModInt<V, V_SQR, PRIME>(0));
+    this->insert(this->begin(), MOD_INT(0));
     FOR(i, 1, SIZE(*this)) {
       // NTT_POLY_MOD_INT_INTEGRAL_INLINE => MOD_INT_MUL_INLINE
       (*this)[i] *= invs[i];
@@ -350,8 +363,11 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_DERIVE_INLINE
     deriveInline();
     // NTT_POLY_MOD_INT_LN_INLINE => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+    // NTT_POLY_MOD_INT_LN_INLINE => MOD_INT_TYPEDEF_V_SQR
+    // NTT_POLY_MOD_INT_LN_INLINE => MOD_INT_CONST_MOD
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(*this, invP, false);
+    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
+        .mulInlineModInt(*this, invP, false);
     this->resize(n);
     // NTT_POLY_MOD_INT_LN_INLINE => NTT_POLY_MOD_INT_INTEGRAL_INLINE
     integralInline();
@@ -427,12 +443,15 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
       tmpP[i] = 0;
     }
     // _NTT_POLY_MOD_INT_INV => _NTT_POLY_MOD_INT_NTT_UTILS
-    auto& ntt = NTTUtils<V, V_SQR, PRIME, ROOT>::instance();
+    // _NTT_POLY_MOD_INT_INV => MOD_INT_TYPEDEF_V_SQR
+    // _NTT_POLY_MOD_INT_INV => MOD_INT_CONST_MOD
+    auto& ntt =
+        NTTUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance();
     // _NTT_POLY_MOD_INT_INV => NTT_UTILS_NTT_MOD_INT
     ntt.nttModInt(tmpP, false, pow2);
     ntt.nttModInt(res, false, pow2);
     FOR(i, 0, pow2) {
-      V v = res[i]._v;
+      typename MOD_INT::V v = res[i]._v;
       // _NTT_POLY_MOD_INT_INV => MOD_INT_MUL_INLINE
       res[i] *= tmpP[i];
       // _NTT_POLY_MOD_INT_INV => MOD_INT_NEGATE_INLINE
@@ -474,17 +493,20 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
     // _NTT_POLY_MOD_INT_EXP => MOD_INT_ADD_INLINE
     tmpP[0] += 1;
     // _NTT_POLY_MOD_INT_EXP => _NTT_POLY_MOD_INT_NTT_MUL_UTILS
+    // _NTT_POLY_MOD_INT_EXP => MOD_INT_TYPEDEF_V_SQR
+    // _NTT_POLY_MOD_INT_EXP => MOD_INT_CONST_MOD
     // _NTT_POLY_MOD_INT_EXP => NTT_MUL_UTILS_MUL_INLINE_MOD_INT
-    NTTMulUtils<V, V_SQR, PRIME, ROOT>::instance().mulInlineModInt(res, tmpP, false);
+    NTTMulUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
+        .mulInlineModInt(res, tmpP, false);
     res.resize(n);
   }
 #endif
 
 #ifdef NTT_POLY_MOD_INT_DOT // ^
-  inline ModInt<V, V_SQR, PRIME> dot(const NTTPolyModInt& o) const {
-    ModInt<V, V_SQR, PRIME> res = 0;
+  inline MOD_INT dot(const NTTPolyModInt& o) const {
+    MOD_INT res = 0;
     for (int i = min(SIZE(*this), SIZE(o)) - 1; i >= 0; --i) {
-      static ModInt<V, V_SQR, PRIME> subRes;
+      static MOD_INT subRes;
       // NTT_POLY_MOD_INT_DOT => MOD_INT_INIT_MUL
       subRes.initMul((*this)[i], o[i]);
       // NTT_POLY_MOD_INT_DOT => MOD_INT_ADD_INLINE
@@ -516,7 +538,7 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 
 #ifdef LOCAL
   friend ostream& operator<<(ostream& o, const NTTPolyModInt& vs) {
-    o << tostring(static_cast<vector<ModInt<V, V_SQR, PRIME>>>(vs));
+    o << tostring(static_cast<vector<MOD_INT>>(vs));
     return o;
   }
 #endif
@@ -525,9 +547,9 @@ struct NTTPolyModInt : public vector<ModInt<V, V_SQR, PRIME>> {
 } // namespace math
 
 #ifdef LOCAL
-template<typename V, typename V_SQR, V PRIME, V ROOT>
-inline string totype(const math::NTTPolyModInt<V, V_SQR, PRIME, ROOT>& v) {
-  return "NTTPolyModInt<" + totype(V()) + "," + totype(V_SQR()) + "," + tostring(PRIME) + "," +
-         tostring(ROOT) + ">";
+template<typename MOD_INT, typename MOD_INT::V ROOT>
+inline string totype(const math::NTTPolyModInt<MOD_INT, ROOT>& v) {
+  return "NTTPolyModInt<" + totype(MOD_INT::V()) + "," + totype(MOD_INT::V_SQR()) + "," +
+         tostring(MOD_INT::PRIME) + "," + tostring(ROOT) + ">";
 }
 #endif

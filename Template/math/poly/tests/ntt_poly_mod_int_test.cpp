@@ -10,7 +10,7 @@ namespace math {
 
 TEST(NTTPolyModIntTest, mulInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> xs, ys;
 
   xs = vector<int>{1, 2, 3};
   ys = vector<int>{0, 0};
@@ -41,7 +41,7 @@ TEST(NTTPolyModIntTest, mulInline) {
 
 TEST(NTTPolyModIntTest, divInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> xs, ys;
   xs = vector<int>{15, 22, 27, 18};
   ys = vector<int>{2, 3};
   xs /= ys;
@@ -60,7 +60,7 @@ TEST(NTTPolyModIntTest, divInline) {
 
 TEST(NTTPolyModIntTest, modInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> xs, ys;
   xs = vector<int>{15, 22, 27, 18};
   ys = vector<int>{2, 3};
   xs %= ys;
@@ -77,7 +77,7 @@ TEST(NTTPolyModIntTest, modInline) {
 
 TEST(NTTPolyModIntTest, recurrence) {
   const int MOD = 104857601;
-  NTTPolyModInt<int, int64_t, MOD, 21> xs, coefs;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 21> xs, coefs;
   xs = vector<int>{1, 2, 3};
   coefs = vector<int>{6, 5, 4};
   EXPECT_EQ(1, coefs.recurrence(xs, 0)._v);
@@ -93,7 +93,7 @@ TEST(NTTPolyModIntTest, recurrence) {
 
 TEST(NTTPolyModIntTest, mulInlineCyclic) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> xs, ys;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> xs, ys;
   xs = vector<int>{135624671, 381862};
   ys = vector<int>{356513, 125683, 1215655};
   xs.mulInlineCyclic(ys);
@@ -106,7 +106,7 @@ TEST(NTTPolyModIntTest, mulInlineCyclic) {
 
 TEST(NTTPolyModIntTest, inv) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> xs;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> xs;
   xs = vector<int>{1, 7340032, 7340032, 0, 7340032, 0, 7340031, 0, 0, 0, 0};
   const auto& res1 = xs.inv();
   ASSERT_EQ(11, res1.size());
@@ -144,7 +144,7 @@ TEST(NTTPolyModIntTest, inv) {
 
 TEST(NTTPolyModIntTest, invInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> res;
   res = vector<int>{1, 0};
   res.invInline();
   ASSERT_EQ(2, res.size());
@@ -188,7 +188,7 @@ TEST(NTTPolyModIntTest, invInline) {
 
 TEST(NTTPolyModIntTest, expInline) {
   const int MOD = 924844033;
-  NTTPolyModInt<int, int64_t, MOD, 3597> res;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 3597> res;
   res = vector<int>{0, 0, 1, 3, 616562698};
   res.expInline();
   ASSERT_EQ(5, res.size());
@@ -201,7 +201,7 @@ TEST(NTTPolyModIntTest, expInline) {
 
 TEST(NTTPolyModIntTest, deriveInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> res;
   res = vector<int>{1283, 1331, 14322, 112315, 1812};
   res.deriveInline();
   ASSERT_EQ(4, res.size());
@@ -213,7 +213,7 @@ TEST(NTTPolyModIntTest, deriveInline) {
 
 TEST(NTTPolyModIntTest, integralInline) {
   const int MOD = 7340033;
-  NTTPolyModInt<int, int64_t, MOD, 5> res;
+  NTTPolyModInt<ModInt<int, int64_t, MOD>, 5> res;
   res = vector<int>{12, 13, 14, 15};
   res.integralInline();
   ASSERT_EQ(5, res.size());
@@ -226,11 +226,12 @@ TEST(NTTPolyModIntTest, integralInline) {
 
 TEST(NTTPolyModIntTest, onlineInline) {
   const int MOD = 924844033;
-  NTTPolyModInt<int, int64_t, MOD, 3597> fs, bases;
+  using ModInt = ModInt<int, int64_t, MOD>;
+  NTTPolyModInt<ModInt, 3597> fs, bases;
 
   fs = vector<int>{1};
   bases = vector<int>{0, 0, 2, 9, 616562726, 693633181, 739875896, 161850647, 346462722, 125987923};
-  fs.onlineInline(bases, 1, 10, [](ModInt<int, int64_t, MOD>& f, int idx) {
+  fs.onlineInline(bases, 1, 10, [](ModInt& f, int idx) {
     f /= idx;
   });
   ASSERT_GE(fs.size(), 10);
@@ -248,7 +249,7 @@ TEST(NTTPolyModIntTest, onlineInline) {
   fs = vector<int>{1};
   bases = vector<int>{
       0, 1, 1, 462422018, 308281347, 732168198, 369937624, 52664753, 358193614, 161641386};
-  fs.onlineInline(bases, 1, 10, [](ModInt<int, int64_t, MOD>& f, int idx) {
+  fs.onlineInline(bases, 1, 10, [](ModInt& f, int idx) {
     f /= idx;
   });
   ASSERT_GE(fs.size(), 10);

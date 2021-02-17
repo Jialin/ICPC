@@ -347,9 +347,9 @@ struct FFTPolyModInt : public vector<MOD_INT> {
       int computedBound,
       int toComputeBound,
       const function<void(MOD_INT& f, int idx)>& transform) {
-    // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_CONST_MOD
-    // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_TYPEDEF_V
-    // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_TYPEDEF_V_SQR
+    // FFT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_CONST_MOD
+    // FFT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_TYPEDEF_V
+    // FFT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_TYPEDEF_V_SQR
     // FFT_POLY_MOD_INT_ONLINE_INLINE => FFT_ONLINE_MOD_UTILS_ONLINE_INLINE_MOD_INT
     FFTOnlineModUtils<FFT_T>::instance()
         .template onlineInlineModInt<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD>(
@@ -364,9 +364,9 @@ struct FFTPolyModInt : public vector<MOD_INT> {
 // Reference: https://discuss.codechef.com/t/rng-editorial/10068/5
 #ifdef FFT_POLY_MOD_INT_RECURRENCE // ^
 
-  // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_CONST_MOD
-  // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_TYPEDEF_V
-  // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_TYPEDEF_V_SQR
+  // FFT_POLY_MOD_INT_RECURRENCE => MOD_INT_CONST_MOD
+  // FFT_POLY_MOD_INT_RECURRENCE => MOD_INT_TYPEDEF_V
+  // FFT_POLY_MOD_INT_RECURRENCE => MOD_INT_TYPEDEF_V_SQR
   template<typename K>
   inline ModInt<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD>
   recurrence(const FFTPolyModInt& xs, K k) const {
