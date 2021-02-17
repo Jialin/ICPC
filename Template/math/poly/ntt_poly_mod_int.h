@@ -216,12 +216,10 @@ struct NTTPolyModInt : public vector<MOD_INT> {
       int computedBound,
       int toComputeBound,
       const function<void(MOD_INT& f, int idx)>& transform) {
-    // NTT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_CONST_MOD
-    // NTT_POLY_MOD_INT_ONLINE_INLINE => MOD_INT_TYPEDEF_V_SQR
     // NTT_POLY_MOD_INT_ONLINE_INLINE => _NTT_POLY_MOD_INT_NTT_ONLINE_UTILS
     // NTT_POLY_MOD_INT_ONLINE_INLINE => NTT_ONLINE_UTILS_ONLINE_INLINE_MOD_INT
-    NTTOnlineUtils<typename MOD_INT::V, typename MOD_INT::V_SQR, MOD_INT::MOD, ROOT>::instance()
-        .onlineInlineModInt(*this, o, computedBound, toComputeBound, transform);
+    NTTOnlineUtils<MOD_INT, ROOT>::instance().onlineInlineModInt(
+        *this, o, computedBound, toComputeBound, transform);
   }
 #endif
 
