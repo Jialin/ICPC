@@ -12,31 +12,41 @@ using namespace std;
 
 namespace math {
 
-template<typename V, typename V_SQR, V MOD>
+template<typename _V, typename _V_SQR, _V _MOD>
 struct ModInt {
+#ifdef MOD_INT_TYPEDEF_V // ^
+  typedef _V V;
+#endif
+#ifdef MOD_INT_TYPEDEF_V_SQR // ^
+  typedef _V_SQR V_SQR;
+#endif
+#ifdef MOD_INT_CONST_MOD // ^
+  static const V MOD = _MOD;
+#endif
+
   template<typename T>
-  inline static V fix(T v) {
+  inline static _V fix(T v) {
     if (v < 0) {
-      v += MOD;
-    } else if (v >= MOD) {
-      v -= MOD;
+      v += _MOD;
+    } else if (v >= _MOD) {
+      v -= _MOD;
     } else {
       return v;
     }
-    if (v < 0 || v >= MOD) {
-      v %= MOD;
+    if (v < 0 || v >= _MOD) {
+      v %= _MOD;
     } else {
       return v;
     }
     if (v < 0) {
-      v += MOD;
-    } else if (v >= MOD) {
-      v -= MOD;
+      v += _MOD;
+    } else if (v >= _MOD) {
+      v -= _MOD;
     }
     return v;
   }
 
-  inline ModInt(V_SQR v = 0) {
+  inline ModInt(_V_SQR v = 0) {
     _v = fix(v);
   }
 
@@ -48,14 +58,14 @@ struct ModInt {
 
 #ifdef MOD_INT_NEGATE // ^
   inline ModInt operator-() const {
-    return ModInt(_v ? MOD - _v : 0);
+    return ModInt(_v ? _MOD - _v : 0);
   }
 #endif
 
 #ifdef MOD_INT_NEGATE_INLINE // ^
   inline void negateInline() {
     if (_v) {
-      _v = MOD - _v;
+      _v = _MOD - _v;
     }
   }
 #endif
@@ -69,8 +79,8 @@ struct ModInt {
 #ifdef MOD_INT_ADD_INLINE // ^
   inline void operator+=(const ModInt& o) {
     _v += o._v;
-    if (_v >= MOD) {
-      _v -= MOD;
+    if (_v >= _MOD) {
+      _v -= _MOD;
     }
   }
 #endif
@@ -85,20 +95,20 @@ struct ModInt {
   inline void operator-=(const ModInt& o) {
     _v -= o._v;
     if (_v < 0) {
-      _v += MOD;
+      _v += _MOD;
     }
   }
 #endif
 
 #ifdef MOD_INT_MUL // ^
   inline ModInt operator*(const ModInt& o) const {
-    return ModInt(fix(static_cast<V_SQR>(_v) * o._v));
+    return ModInt(fix(static_cast<_V_SQR>(_v) * o._v));
   }
 #endif
 
 #ifdef MOD_INT_MUL_INLINE // ^
   inline void operator*=(const ModInt& o) {
-    _v = fix(static_cast<V_SQR>(_v) * o._v);
+    _v = fix(static_cast<_V_SQR>(_v) * o._v);
   }
 #endif
 
@@ -112,21 +122,21 @@ struct ModInt {
 #ifdef MOD_INT_DIV_INLINE // ^
   inline void operator/=(const ModInt& o) {
     // MOD_INT_DIV_INLINE => MOD_INT_INV
-    _v = fix(static_cast<V_SQR>(_v) * o.inv()._v);
+    _v = fix(static_cast<_V_SQR>(_v) * o.inv()._v);
   }
 #endif
 
 #ifdef MOD_INT_INIT_MUL // ^
   inline void initMul(const ModInt& x, const ModInt& y) {
-    _v = fix(static_cast<V_SQR>(x._v) * y._v);
+    _v = fix(static_cast<_V_SQR>(x._v) * y._v);
   }
 #endif
 
 #ifdef MOD_INT_INIT_ADD // ^
   inline void initAdd(const ModInt& x, const ModInt& y) {
     _v = x._v + y._v;
-    if (_v > MOD) {
-      _v -= MOD;
+    if (_v > _MOD) {
+      _v -= _MOD;
     }
   }
 #endif
@@ -135,7 +145,7 @@ struct ModInt {
   inline void initSub(const ModInt& x, const ModInt& y) {
     _v = x._v - y._v;
     if (_v < 0) {
-      _v += MOD;
+      _v += _MOD;
     }
   }
 #endif
@@ -151,12 +161,12 @@ struct ModInt {
 
 #ifdef MOD_INT_INV_INLINE // ^
   inline void invInline() {
-    V x0, x1;
+    _V x0, x1;
     // MOD_INT_INV_INLINE => _MOD_INT_EXTGCD
 #ifdef LOCAL
-    DEBUG_EQ(extGcd<V>(_v, MOD, x0, x1), 1);
+    DEBUG_EQ(extGcd<_V>(_v, _MOD, x0, x1), 1);
 #else
-    extGcd<V>(_v, MOD, x0, x1);
+    extGcd<_V>(_v, _MOD, x0, x1);
 #endif
     _v = fix(x0);
   }
@@ -169,14 +179,14 @@ struct ModInt {
       // MOD_INT_EXP => MOD_INT_INV
       return inv().exp(-e);
     }
-    V_SQR res = 1, mul = _v;
+    _V_SQR res = 1, mul = _v;
     while (e) {
       if (e & 1) {
-        res = res * mul % MOD;
+        res = res * mul % _MOD;
       }
       e >>= 1;
       if (e) {
-        mul = mul * mul % MOD;
+        mul = mul * mul % _MOD;
       }
     }
     return res;

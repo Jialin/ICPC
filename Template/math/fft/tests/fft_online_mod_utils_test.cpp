@@ -15,7 +15,7 @@ namespace math {
 TEST(FFTOnlineModUtilsTest, onlineInlineModInt) {
   const int MOD = 1000000007;
   auto& fft = FFTOnlineModUtils<double>::instance();
-  FFTPolyModInt<double, int, int64_t, MOD> bases, res;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> bases, res;
   bases = vector<int>{0, 1, 1, 0, 1, 0, 2, 0, 5};
   res = vector<int>{1};
   fft.onlineInlineModInt<int, int64_t, MOD>(

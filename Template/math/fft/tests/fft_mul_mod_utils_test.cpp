@@ -14,7 +14,7 @@ namespace math {
 
 TEST(FFTMulModUtilsTest, mulInlineModInt) {
   auto& fft = FFTMulModUtils<double>::instance();
-  FFTPolyModInt<double, int, int64_t, 1000000007> xs, ys;
+  FFTPolyModInt<double, ModInt<int, int64_t, 1000000007>> xs, ys;
   xs = vector<int>{1, 2};
   ys = vector<int>{3, 4};
   fft.mulInlineModInt(xs, ys, false);

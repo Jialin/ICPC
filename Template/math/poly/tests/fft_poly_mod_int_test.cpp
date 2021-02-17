@@ -10,7 +10,7 @@ using namespace std;
 namespace math {
 
 TEST(FFTPolyModIntTest, mulInline) {
-  FFTPolyModInt<double, int, int64_t, 1000000007> xs, ys;
+  FFTPolyModInt<double, ModInt<int, int64_t, 1000000007>> xs, ys;
   xs = vector<int>{1, 2};
   ys = vector<int>{3, 4};
   xs *= ys;
@@ -34,7 +34,7 @@ TEST(FFTPolyModIntTest, mulInline) {
 
 TEST(FFTPolyModIntTest, onlineInline) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> bases, res;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> bases, res;
   bases = vector<int>{0, 1, 1, 0, 1, 0, 2, 0, 5};
   res = vector<int>{1};
   res.onlineInline(bases, 1, 10000, [](ModInt<int, int64_t, MOD>& f, int idx) {});
@@ -57,7 +57,7 @@ TEST(FFTPolyModIntTest, onlineInline) {
 
 TEST(FFTPolyModIntTest, invInline) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> res;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> res;
   res = vector<int>{1, 1000000006, 1000000006, 0, 1000000006, 0, 1000000005, 0, 0, 0, 0};
   res.invInline();
   ASSERT_EQ(11, res.size());
@@ -95,7 +95,7 @@ TEST(FFTPolyModIntTest, invInline) {
 
 TEST(FFTPolyModIntTest, recurrence) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> coefs, xs;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> coefs, xs;
   coefs = vector<int>{1, 1};
   xs = vector<int>{1, 1};
   EXPECT_EQ(55, coefs.recurrence(xs, 9)._v);
@@ -111,7 +111,7 @@ TEST(FFTPolyModIntTest, recurrence) {
 
 TEST(FFTPolyModIntTest, divInline) {
   const int MOD = 7340033;
-  FFTPolyModInt<double, int, int64_t, MOD> xs, ys;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> xs, ys;
   xs = vector<int>{15, 22, 27, 18};
   ys = vector<int>{2, 3};
   xs /= ys;
@@ -130,7 +130,7 @@ TEST(FFTPolyModIntTest, divInline) {
 
 TEST(FFTPolyModIntTest, modInline) {
   const int MOD = 7340033;
-  FFTPolyModInt<double, int, int64_t, MOD> xs, ys;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> xs, ys;
   xs = vector<int>{15, 22, 27, 18};
   ys = vector<int>{2, 3};
   xs %= ys;
@@ -147,7 +147,7 @@ TEST(FFTPolyModIntTest, modInline) {
 
 TEST(FFTPolyModIntTest, powModInline) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> baseP, modP;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> baseP, modP;
   modP = vector<int>{1, 1000000005, 1000000004, 1000000002};
 
   baseP = vector<int>{0, 1};
@@ -174,8 +174,8 @@ TEST(FFTPolyModIntTest, powModInline) {
 
 TEST(FFTPolyModIntTest, initPowModMemo) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> baseP, modP, invRevModP, res;
-  vector<FFTPolyModInt<double, int, int64_t, MOD>> memo;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> baseP, modP, invRevModP, res;
+  vector<FFTPolyModInt<double, ModInt<int, int64_t, MOD>>> memo;
   baseP = vector<int>{0, 1};
   modP = vector<int>{1, 1000000005, 1000000004, 1000000002};
   invRevModP = modP;
@@ -203,7 +203,7 @@ TEST(FFTPolyModIntTest, initPowModMemo) {
 
 TEST(FFTPolyModIntTest, resultantModify) {
   const int MOD = 1000000007;
-  FFTPolyModInt<double, int, int64_t, MOD> aP, bP;
+  FFTPolyModInt<double, ModInt<int, int64_t, MOD>> aP, bP;
 
   aP = vector<int>{2, 1};
   bP = vector<int>{MOD - 1, 0, 1};
