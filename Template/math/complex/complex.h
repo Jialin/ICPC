@@ -2,6 +2,8 @@
 // ALL COMPLEX_ALL
 #pragma once
 
+#include <cmath>
+
 #include "debug/debug_basic.h"
 #include "math/complex/complex_macros.h"
 

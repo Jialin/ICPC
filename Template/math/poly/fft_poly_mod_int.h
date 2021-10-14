@@ -6,6 +6,8 @@
 #define _FFT_POLY_MOD_INT_MOD_THRESHOLD 16
 #endif
 
+#include "debug/debug_basic.h"
+
 #ifdef _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
 // _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS => INCLUDE math/fft/fft_mul_mod_utils_macros.h
 #include "math/fft/fft_mul_mod_utils_macros.h"
@@ -18,8 +20,10 @@
 
 #include "math/mod/mod_int_macros.h" // INCLUDE
 #include "math/poly/fft_poly_mod_int_macros.h"
+#include "math/poly/poly_macros.h" // INCLUDE
 
 #include "math/mod/mod_int.h"
+#include "math/poly/poly.h"
 
 #ifdef _FFT_POLY_MOD_INT_FFT_MUL_MOD_UTILS
 #include "math/fft/fft_mul_mod_utils.h"
@@ -32,7 +36,7 @@
 namespace math {
 
 template<typename FFT_T, typename MOD_INT>
-struct FFTPolyModInt : public vector<MOD_INT> {
+struct FFTPolyModInt : public Poly<MOD_INT> {
 #ifdef FFT_POLY_MOD_INT_CONSTRUCT // ^
 
   // FFT_POLY_MOD_INT_CONSTRUCT => MOD_INT_TYPEDEF_V
@@ -466,21 +470,19 @@ struct FFTPolyModInt : public vector<MOD_INT> {
     }
   }
 #endif
-
-#ifdef LOCAL
-  friend ostream& operator<<(ostream& o, const FFTPolyModInt& vs) {
-    o << tostring(static_cast<vector<MOD_INT>>(vs));
-    return o;
-  }
-#endif
 };
 
 } // namespace math
 
 #ifdef LOCAL
+// LOCAL => MOD_INT_TYPEDEF_V
+// LOCAL => MOD_INT_TYPEDEF_V_SQR
+// LOCAL => MOD_INT_CONST_MOD
 template<typename FFT_T, typename MOD_INT>
-inline string totype(const math::FFTPolyModInt<FFT_T, MOD_INT>& v) {
-  return "FFTPolyModInt<" + totype(FFT_T()) + "," + totype(MOD_INT::V()) + "," +
-         totype(MOD_INT::V_SQR()) + "," + tostring(MOD_INT::MOD) + ">";
+inline string totype(const math::FFTPolyModInt<FFT_T, MOD_INT>& _) {
+  typename MOD_INT::V v = 0;
+  typename MOD_INT::V_SQR vSqr = 0;
+  return "FFTPolyModInt<" + totype(FFT_T()) + "," + totype(v) + "," + totype(vSqr) + "," +
+         tostring(MOD_INT::MOD) + ">";
 }
 #endif

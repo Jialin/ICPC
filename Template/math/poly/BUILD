@@ -16,6 +16,7 @@ cc_library(
     hdrs = ["fft_poly_mod_int.h"],
     deps = [
         ":fft_poly_mod_int_macros",
+        ":poly",
         "//math/fft:fft_mul_mod_utils",
         "//math/fft:fft_online_mod_utils",
     ],
@@ -37,5 +38,19 @@ cc_library(
         ":ntt_poly_mod_int_macros",
         "//math/fft:ntt_mul_utils",
         "//math/fft:ntt_online_utils",
+    ],
+)
+
+cc_library(
+    name = "poly_macros",
+    hdrs = ["poly_macros.h"],
+)
+
+cc_library(
+    name = "poly",
+    hdrs = ["poly.h"],
+    deps = [
+        ":poly_macros",
+        "//common:macros",
     ],
 )

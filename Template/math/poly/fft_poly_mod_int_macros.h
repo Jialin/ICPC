@@ -193,6 +193,12 @@
 #define MOD_INT_SUB_INLINE
 #endif
 
+#ifdef LOCAL
+#define MOD_INT_CONST_MOD
+#define MOD_INT_TYPEDEF_V
+#define MOD_INT_TYPEDEF_V_SQR
+#endif
+
 #ifdef _FFT_POLY_MOD_INT_MOD_SUB_INLINE_MUL
 #define FFT_MUL_MOD_UTILS_MUL_INLINE_MOD_INT
 #define FFT_POLY_MOD_INT_EXTEND
@@ -210,3 +216,4 @@
 #endif
 
 #include "math/mod/mod_int_macros.h"
+#include "math/poly/poly_macros.h"
