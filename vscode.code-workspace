@@ -35,7 +35,8 @@
 			"unordered_set": "cpp",
 			"utility": "cpp",
 			"valarray": "cpp",
-			"iosfwd": "cpp"
+			"iosfwd": "cpp",
+			"algorithm": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",

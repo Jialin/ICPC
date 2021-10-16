@@ -21,6 +21,7 @@ Use 2 minimum stacks to maintain minimum queue.
 
 ### 1.1.3. Problems
 - [ ] [CodeChef - Binary Land](https://www.codechef.com/MAY20A/problems/BINLAND)
+- [ ] [AtCoder - Knapsack And Queries](https://atcoder.jp/contests/jag2018summer-day2/tasks/jag2018summer_day2_d)
 
 # 2. Algorithms
 
