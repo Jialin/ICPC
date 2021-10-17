@@ -11,31 +11,31 @@ TEST(MaxSlidingWindowTest, basic) {
   MaxSlidingWindow<int> sw;
   sw.init(3);
 
-  sw.add(0, 4);
+  sw.push_back(0, 4);
   EXPECT_EQ(0, sw.get().first);
   EXPECT_EQ(4, sw.get().second);
 
-  sw.add(1, 3);
+  sw.push_back(1, 3);
   EXPECT_EQ(0, sw.get().first);
   EXPECT_EQ(4, sw.get().second);
 
-  sw.add(2, 5);
+  sw.push_back(2, 5);
   EXPECT_EQ(2, sw.get().first);
   EXPECT_EQ(5, sw.get().second);
 
-  sw.add(3, 2);
+  sw.push_back(3, 2);
   EXPECT_EQ(2, sw.get().first);
   EXPECT_EQ(5, sw.get().second);
 
-  sw.add(4, 1);
+  sw.push_back(4, 1);
   EXPECT_EQ(2, sw.get().first);
   EXPECT_EQ(5, sw.get().second);
 
-  sw.add(5, 0);
+  sw.push_back(5, 0);
   EXPECT_EQ(3, sw.get().first);
   EXPECT_EQ(2, sw.get().second);
 
-  sw.add(6, 2);
+  sw.push_back(6, 2);
   EXPECT_EQ(6, sw.get().first);
   EXPECT_EQ(2, sw.get().second);
 }
