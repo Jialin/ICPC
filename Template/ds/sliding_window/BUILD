@@ -13,6 +13,7 @@ cc_library(
     deps = [
         ":base_sliding_window_macros",
         "//common:macros",
+        "//debug:debug_basic",
     ],
 )
 

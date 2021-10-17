@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "common/macros.h"
+#include "debug/debug_basic.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ struct BaseSlidingWindow {
 #endif
 
   inline void init(int windowSize) {
+    DEBUG_GT(windowSize, 1);
     _delta = windowSize - 1;
     _startPnt = 0;
     _vs.clear();
@@ -33,6 +35,7 @@ struct BaseSlidingWindow {
   }
 
   inline const pair<int, V>& get() const {
+    DEBUG_LT(_startPnt, SIZE(_vs));
     return _vs[_startPnt];
   }
 
