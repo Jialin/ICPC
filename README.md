@@ -14,8 +14,8 @@
 ## 1.1. Minimum Stack / Minimum Queue ([Template/ds/min_queue/](Template/ds/min_queue))
 
 ### 1.1.1. Notes
-- Online: Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue))
-- Offline (i.e. when values and queries are known ahead): Split queries into non-overlap blocks and further split each block into 2 parts. ([Template/ds/min_queue/base_min_queue_offline](Template/ds/min_queue/base_min_queue_offline))
+- Online Queries: Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue))
+- Offline Queries: Split queries into non-overlap blocks and further split each block into 2 parts. ([Template/ds/min_queue/base_min_queue_offline](Template/ds/min_queue/base_min_queue_offline))
 
 ### 1.1.2. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/stack_queue_modification.html)
