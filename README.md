@@ -1,7 +1,7 @@
 # Table of Contents <!-- omit in toc -->
 
 - [1. Data Structures](#1-data-structures)
-  - [1.1. Minimum Stack / Minimum Queue (Template/collections/)](#11-minimum-stack--minimum-queue-templatecollections)
+  - [1.1. Minimum Stack / Minimum Queue (Template/ds/min_queue/)](#11-minimum-stack--minimum-queue-templatedsmin_queue)
     - [1.1.1. Notes](#111-notes)
     - [1.1.2. Resources](#112-resources)
     - [1.1.3. Problems](#113-problems)
@@ -11,10 +11,11 @@
 
 # 1. Data Structures
 
-## 1.1. Minimum Stack / Minimum Queue ([Template/collections/](Template/collections/))
+## 1.1. Minimum Stack / Minimum Queue ([Template/ds/min_queue/](Template/ds/min_queue))
 
 ### 1.1.1. Notes
-Use 2 minimum stacks to maintain minimum queue.
+- Online: Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue))
+- Offline (i.e. when values and queries are known ahead): Split queries into non-overlap blocks and further split each block into 2 parts. ([Template/ds/min_queue/base_min_queue_offline](Template/ds/min_queue/base_min_queue_offline))
 
 ### 1.1.2. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/stack_queue_modification.html)
