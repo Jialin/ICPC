@@ -7,6 +7,11 @@
 
 using namespace std;
 
+template<typename X, typename Y>
+inline string totype(const pair<X, Y>& vs) {
+  return "pair<" + totype(vs.first) + "," + totype(vs.second) + ">";
+}
+
 template<typename T>
 inline string totype(const vector<T>& vs) {
   return "vector<" + (!vs.empty() ? totype(*vs.data()) : "") + ">";
@@ -16,6 +21,11 @@ template<typename K, typename V>
 inline string totype(const unordered_map<K, V>& vs) {
   return "unordered_map<" +
          (vs.empty() ? "" : totype(vs.begin()->first) + "," + totype(vs.begin()->second)) + ">";
+}
+
+template<typename X, typename Y>
+inline string tostring(const pair<X, Y>& vs) {
+  return "<" + tostring(vs.first) + "," + tostring(vs.second) + ">";
 }
 
 template<typename T>
