@@ -1,0 +1,4 @@
+#ifdef BASE_MIN_QUEUE_ALL
+#define BASE_MIN_QUEUE_CLEAR
+#define BASE_MIN_QUEUE_RESERVE
+#endif
