@@ -36,7 +36,9 @@
 			"utility": "cpp",
 			"valarray": "cpp",
 			"iosfwd": "cpp",
-			"algorithm": "cpp"
+			"algorithm": "cpp",
+			"filesystem": "cpp",
+			"ios": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
