@@ -1,5 +1,6 @@
 #pragma once
 
+#include "debug/debug_basic.h"
 #include "ds/min_queue/base_min_queue.h"
 
 namespace ds {
@@ -13,6 +14,10 @@ struct MaxQueue : BaseMinQueue<V> {
       dirtyValue.second = max(dirtyValue.first, stack.back().second);
     }
     stack.push_back(std::move(dirtyValue));
+  }
+
+  inline void calcEmpty(V& res) const override {
+    DEBUG_TRUE(false);
   }
 
   inline void calcTailStackOnly(const pair<V, V>& tailValue, V& res) const override {

@@ -16,6 +16,9 @@ struct BaseMinQueue {
   // Appends <value> to stack
   virtual inline void addToStack(vector<pair<UPDATE, V>>& stack, pair<UPDATE, V>&& value) const = 0;
 
+  // Caculates result when the queue is empty
+  virtual inline void calcEmpty(RES& res) const = 0;
+
   // Caculates result when head stack is empty
   virtual inline void calcTailStackOnly(const pair<UPDATE, V>& tailValue, RES& res) const = 0;
 
@@ -58,16 +61,12 @@ struct BaseMinQueue {
 
   inline void calc(RES& res) {
     if (_headStack.empty()) {
-      DEBUG_FALSE(_tailStack.empty());
-      calcTailStackOnly(_tailStack.back(), res);
-      return;
-    }
-    if (_tailStack.empty()) {
-      DEBUG_FALSE(_headStack.empty());
+      _tailStack.empty() ? calcEmpty(res) : calcTailStackOnly(_tailStack.back(), res);
+    } else if (_tailStack.empty()) {
       calcHeadStackOnly(_headStack.back(), res);
-      return;
+    } else {
+      combine(_headStack.back(), _tailStack.back(), res);
     }
-    combine(_headStack.back(), _tailStack.back(), res);
   }
 
   vector<pair<UPDATE, V>> _headStack, _tailStack;
