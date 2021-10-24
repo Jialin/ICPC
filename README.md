@@ -14,15 +14,14 @@
 ## 1.1. Minimum Stack / Minimum Queue ([Template/ds/min_queue/](Template/ds/min_queue))
 
 ### 1.1.1. Notes
-- Online Queries: Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue))
-- Offline Queries: Split queries into non-overlap blocks and further split each block into 2 parts. ([Template/ds/min_queue/base_min_queue_offline](Template/ds/min_queue/base_min_queue_offline))
+- Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue))
 
 ### 1.1.2. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/stack_queue_modification.html)
 
 ### 1.1.3. Problems
-- [ ] [CodeChef - Binary Land](https://www.codechef.com/MAY20A/problems/BINLAND)
-- [ ] [AtCoder - Knapsack And Queries](https://atcoder.jp/contests/jag2018summer-day2/tasks/jag2018summer_day2_d)
+- [x] [CodeChef - Binary Land](https://www.codechef.com/MAY20A/problems/BINLAND)
+- [x] [AtCoder - Knapsack And Queries](https://atcoder.jp/contests/jag2018summer-day2/tasks/jag2018summer_day2_d)
 
 # 2. Algorithms
 
