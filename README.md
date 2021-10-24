@@ -14,7 +14,7 @@
 ## 1.1. Minimum Stack / Minimum Queue ([Template/ds/min_queue/](Template/ds/min_queue))
 
 ### 1.1.1. Notes
-- Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue](Template/ds/min_queue/base_min_queue.h))
+- Use 2 minimum stacks to simulate and maintain minimum queue. ([Template/ds/min_queue/base_min_queue.h](Template/ds/min_queue/base_min_queue.h))
 
 ### 1.1.2. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/stack_queue_modification.html)
