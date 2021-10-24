@@ -22,7 +22,7 @@ struct BaseSlidingWindow {
 #endif
 
   inline void init(int windowSize) {
-    DEBUG_GT(windowSize, 1);
+    DEBUG_GE(windowSize, 1);
     _delta = windowSize - 1;
     _startPnt = 0;
     _vs.clear();
