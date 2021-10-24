@@ -38,7 +38,8 @@
 			"iosfwd": "cpp",
 			"algorithm": "cpp",
 			"filesystem": "cpp",
-			"ios": "cpp"
+			"ios": "cpp",
+			"istream": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
