@@ -39,7 +39,8 @@
 			"algorithm": "cpp",
 			"filesystem": "cpp",
 			"ios": "cpp",
-			"istream": "cpp"
+			"istream": "cpp",
+			"__locale": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
