@@ -17,6 +17,12 @@ cc_library(
 )
 
 cc_library(
+    name = "max_rmq",
+    hdrs = ["max_rmq.h"],
+    deps = [":base_rmq"],
+)
+
+cc_library(
     name = "min_rmq",
     hdrs = ["min_rmq.h"],
     deps = [":base_rmq"],
