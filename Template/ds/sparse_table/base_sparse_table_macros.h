@@ -1,0 +1,3 @@
+#ifdef BASE_SPARSE_TABLE_ALL
+#define BASE_SPARSE_TABLE_RESERVE
+#endif
