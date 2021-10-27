@@ -43,6 +43,7 @@ struct BaseSparseTable {
 
   inline void _initLog(int capacity) {
     int oldSize = _log.size();
+    capacity = max(capacity, 1);
     if (capacity <= oldSize) {
       return;
     }
