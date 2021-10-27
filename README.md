@@ -72,5 +72,5 @@
 
 ## 3.1. GCD
 
-- Given a sequence A, for a new sequence B where <img src="https://latex.codecogs.com/gif.latex?b_0=a_0"/>, <img src="https://latex.codecogs.com/gif.latex?b_i=gcd(b_{i-1},a_i)" />. There will be no more than <img src="https://latex.codecogs.com/gif.latex?1+log_2a_0" /> distinct value in the sequence B
+- Given a sequence A, for a new sequence B where <img src="https://render.githubusercontent.com/render/math?math=b_0=a_0"/>, <img src="https://render.githubusercontent.com/render/math?math=b_i=gcd(b_{i-1},a_i)" />. There will be no more than <img src="https://render.githubusercontent.com/render/math?math=1%2Blog_2a_0" /> distinct value in the sequence B
   - Example Problems: [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
