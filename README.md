@@ -44,7 +44,6 @@
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/) - Segment Tree Revisit
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
-- [ ] [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D) - [GCD Trick](#31-gcd)
 - [ ] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D)
 - [ ] [Codeforces - Maximum of Maximums of Minimums](http://codeforces.com/problemset/problem/872/B)
 - [ ] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
@@ -74,4 +73,5 @@
 
 - Prefix GCD of a sequence has no more than <img src="https://render.githubusercontent.com/render/math?math=1%2Blog_2a_0" /> distinct values
   - Given a sequence A, its prefix GCD sequence B is defined as <img src="https://render.githubusercontent.com/render/math?math=b_0=a_0"/>, <img src="https://render.githubusercontent.com/render/math?math=b_i=gcd(b_{i-1},a_i)" />
-  - Example Problem: [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
+  - Problems:
+    - [x] [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
