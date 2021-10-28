@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common/macros.h"
+#include "debug/debug_basic.h"
 
 using namespace std;
 
@@ -36,7 +37,19 @@ struct BaseSparseTable {
     }
   }
 
+#ifdef BASE_SPARSE_TABLE_CALC // ^
+  inline V calc(int l, int r) {
+    V res;
+    calc(l, r, res);
+    return res;
+  }
+#endif
+
   inline void calc(int l, int r, V& res) {
+    DEBUG_LT(l, r);
+    if (l >= r) {
+      return;
+    }
     int bit = _log[r - l];
     combine(_st[bit][l], _st[bit][r - (1 << bit)], res);
   }

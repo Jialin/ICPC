@@ -13,6 +13,7 @@ cc_library(
     deps = [
         ":base_sparse_table_macros",
         "//common:macros",
+        "//debug:debug_basic",
     ],
 )
 
