@@ -5,7 +5,7 @@
 namespace ds {
 
 template<typename V>
-struct MaxSparseTable : BaseSparseTable<V> {
+struct MaxSparseTable final : BaseSparseTable<V> {
   inline void combine(const V& leftValue, const V& rightValue, V& res) const override {
     res = max(leftValue, rightValue);
   }
