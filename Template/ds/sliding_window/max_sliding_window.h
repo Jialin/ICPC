@@ -7,7 +7,7 @@
 namespace ds {
 
 template<typename V>
-struct MaxSlidingWindow : BaseSlidingWindow<V> {
+struct MaxSlidingWindow final : BaseSlidingWindow<V> {
   inline bool cmp(const V& append, const V& last) const override {
     return append >= last;
   }

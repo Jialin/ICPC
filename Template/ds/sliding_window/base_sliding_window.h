@@ -21,6 +21,10 @@ struct BaseSlidingWindow {
   }
 #endif
 
+  inline bool empty() {
+    return _startPnt >= SIZE(_vs);
+  }
+
   inline void init(int windowSize) {
     DEBUG_GE(windowSize, 1);
     _delta = windowSize - 1;
@@ -29,14 +33,19 @@ struct BaseSlidingWindow {
   }
 
   inline void push_back(int idx, V v) {
-    for (; _startPnt < SIZE(_vs) && cmp(v, _vs.back().second); _vs.pop_back()) {}
-    for (; _startPnt < SIZE(_vs) && idx - _vs[_startPnt].first > _delta; ++_startPnt) {}
+    for (; !empty() && cmp(v, _vs.back().second); _vs.pop_back()) {}
+    popFrontUntilIdx(idx - _delta);
     _vs.emplace_back(idx, std::move(v));
   }
 
   inline const pair<int, V>& get() const {
     DEBUG_LT(_startPnt, SIZE(_vs));
     return _vs[_startPnt];
+  }
+
+  // Pops front for all index less than <idx>
+  inline void popFrontUntilIdx(int idx) {
+    for (; !empty() && _vs[_startPnt].first < idx; ++_startPnt) {}
   }
 
   int _delta, _startPnt;

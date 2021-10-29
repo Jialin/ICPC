@@ -40,11 +40,10 @@
 - [Disjoint Sparse Table](https://discuss.codechef.com/t/tutorial-disjoint-sparse-table/17404)
 
 ### 1.2.3. Problems
-- [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/) - Segment Tree Revisit
-- [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/) - Segment Tree Revisit
+- [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/): TODO: Segment Tree Revisit
+- [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/): TODO: Segment Tree Revisit
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
-- [ ] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D)
 - [ ] [Codeforces - Maximum of Maximums of Minimums](http://codeforces.com/problemset/problem/872/B)
 - [ ] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19)
@@ -66,6 +65,7 @@
 
 ### 2.1.1. Problems
 - [x] [HackerRank - Queries with Fixed Length](https://www.hackerrank.com/challenges/queries-with-fixed-length/problem)
+- [x] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D): Modified sliding window without fix window size
 
 # 3. Tricks
 
