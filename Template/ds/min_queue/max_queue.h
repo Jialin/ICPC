@@ -6,7 +6,7 @@
 namespace ds {
 
 template<typename V>
-struct MaxQueue : BaseMinQueue<V> {
+struct MaxQueue final : BaseMinQueue<V> {
   inline void addToStack(vector<pair<V, V>>& stack, pair<V, V>&& dirtyValue) const override {
     if (stack.empty()) {
       dirtyValue.second = dirtyValue.first;

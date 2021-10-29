@@ -2,9 +2,6 @@
 // ALL BASE_MIN_QUEUE_ALL
 #pragma once
 
-#include <utility>
-#include <vector>
-
 #include "debug/debug_basic.h"
 
 using namespace std;
@@ -58,6 +55,14 @@ struct BaseMinQueue {
     }
     _tailStack.clear();
   }
+
+#ifdef BASE_MIN_QUEUE_CALC // ^
+  inline RES calc() {
+    RES res;
+    calc(res);
+    return res;
+  }
+#endif
 
   inline void calc(RES& res) {
     if (_headStack.empty()) {
