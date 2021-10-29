@@ -44,7 +44,6 @@
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/): TODO: Segment Tree Revisit
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
-- [ ] [Codeforces - Maximum of Maximums of Minimums](http://codeforces.com/problemset/problem/872/B)
 - [ ] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19)
 - [ ] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
