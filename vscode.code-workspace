@@ -41,7 +41,8 @@
 			"ios": "cpp",
 			"istream": "cpp",
 			"__locale": "cpp",
-			"memory": "cpp"
+			"memory": "cpp",
+			"type_traits": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
