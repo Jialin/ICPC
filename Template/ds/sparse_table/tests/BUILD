@@ -31,6 +31,16 @@ cc_test(
 )
 
 cc_test(
+    name = "min_sparse_table_array_test",
+    srcs = ["min_sparse_table_array_test.cpp"],
+    deps = [
+        "//ds/sparse_table:min_sparse_table_array",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "min_sparse_table_test",
     srcs = ["min_sparse_table_test.cpp"],
     deps = [

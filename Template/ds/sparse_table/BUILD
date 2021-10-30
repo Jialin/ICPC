@@ -21,6 +21,21 @@ cc_library(
 )
 
 cc_library(
+    name = "base_sparse_table_array_macros",
+    hdrs = ["base_sparse_table_array_macros.h"],
+)
+
+cc_library(
+    name = "base_sparse_table_array",
+    hdrs = ["base_sparse_table_array.h"],
+    deps = [
+        ":base_sparse_table_array_macros",
+        "//common:macros",
+        "//debug:debug_basic",
+    ],
+)
+
+cc_library(
     name = "base_sparse_table_macros",
     hdrs = ["base_sparse_table_macros.h"],
 )
@@ -51,6 +66,12 @@ cc_library(
     name = "max_sparse_table",
     hdrs = ["max_sparse_table.h"],
     deps = [":base_sparse_table"],
+)
+
+cc_library(
+    name = "min_sparse_table_array",
+    hdrs = ["min_sparse_table_array.h"],
+    deps = [":base_sparse_table_array"],
 )
 
 cc_library(
