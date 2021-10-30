@@ -2,8 +2,6 @@
 // ALL BASE_SLIDING_WINDOW_ALL
 #pragma once
 
-#include <utility>
-
 #include "common/macros.h"
 #include "debug/debug_basic.h"
 
@@ -35,10 +33,10 @@ struct BaseSlidingWindow {
   inline void push_back(int idx, V v) {
     for (; !empty() && cmp(v, _vs.back().second); _vs.pop_back()) {}
     popFrontUntilIdx(idx - _delta);
-    _vs.emplace_back(idx, std::move(v));
+    _vs.emplace_back(idx, move(v));
   }
 
-  inline const pair<int, V>& get() const {
+  inline const pair<int, V>& calc() const {
     DEBUG_LT(_startPnt, SIZE(_vs));
     return _vs[_startPnt];
   }

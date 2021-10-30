@@ -22,3 +22,9 @@ cc_library(
     hdrs = ["max_sliding_window.h"],
     deps = [":base_sliding_window"],
 )
+
+cc_library(
+    name = "min_sliding_window",
+    hdrs = ["min_sliding_window.h"],
+    deps = [":base_sliding_window"],
+)
