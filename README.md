@@ -44,8 +44,7 @@
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/): TODO: Segment Tree Revisit
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
-- [ ] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
-- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19)
+- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
 - [ ] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
 - [ ] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
 - [ ] [SPOJ - Postering](https://www.spoj.com/problems/POSTERIN/)
@@ -65,6 +64,7 @@
 ### 2.1.1. Problems
 - [x] [HackerRank - Queries with Fixed Length](https://www.hackerrank.com/challenges/queries-with-fixed-length/problem)
 - [x] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D): Modified sliding window without fix window size
+- [x] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
 
 # 3. Tricks
 
