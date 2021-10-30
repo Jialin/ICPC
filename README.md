@@ -45,9 +45,8 @@
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
-- [ ] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
+- [x] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
 - [ ] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
-- [ ] [SPOJ - Postering](https://www.spoj.com/problems/POSTERIN/)
 - [ ] [SPOJ - Negative Score](https://www.spoj.com/problems/RPLN/)
 - [ ] [SPOJ - A Famous City](https://www.spoj.com/problems/CITY2/)
 - [ ] [SPOJ - Diferencija](https://www.spoj.com/problems/DIFERENC/)
