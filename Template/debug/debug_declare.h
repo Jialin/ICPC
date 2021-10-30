@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef LOCAL
+using namespace std;
+
 template<typename T>
 inline string tostring(const vector<T>& vs);
 
