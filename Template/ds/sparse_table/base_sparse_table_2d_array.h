@@ -26,18 +26,18 @@ struct BaseSparseTable2DArray {
     int boundN = _log[n] + 1;
     int boundM = _log[m] + 1;
     FOR(bitN, 0, boundN) FOR(bitM, 0, boundM) {
+      int sizeN = n - (1 << bitN) + 1;
+      int sizeM = m - (1 << bitM) + 1;
       if (bitN) {
-        int sizeM = m - (1 << bitM) + 1;
-        for (int i = 0, ii = 1 << (bitN - 1); ii < n; ++i, ++ii) {
+        for (int i = 0, ii = 1 << (bitN - 1); i < sizeN; ++i, ++ii) {
           FOR(j, 0, sizeM) {
             combineUpperLower(
                 _st[bitN - 1][bitM][i][j], _st[bitN - 1][bitM][ii][j], _st[bitN][bitM][i][j]);
           }
         }
       } else if (bitM) {
-        int sizeN = n - (1 << bitN) + 1;
         FOR(i, 0, sizeN) {
-          for (int j = 0, jj = 1 << (bitM - 1); jj < m; ++j, ++jj) {
+          for (int j = 0, jj = 1 << (bitM - 1); j < sizeN; ++j, ++jj) {
             combineLeftRight(
                 _st[bitN][bitM - 1][i][j], _st[bitN][bitM - 1][i][jj], _st[bitN][bitM][i][j]);
           }

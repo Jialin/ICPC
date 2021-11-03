@@ -13,6 +13,12 @@ template<typename V, int MAXBIT, int MAXN>
 struct BaseSparseTableArray {
   virtual inline void combine(const V& leftValue, const V& rightValue, V& res) const = 0;
 
+#ifdef BASE_SPARSE_TABLE_ARRAY_RESERVE // ^
+  inline void reserve(int capacity) {
+    _initLog(capacity);
+  }
+#endif
+
   inline void init(vector<V>&& vs) {
     DEBUG_LT(MAXN, 1 << MAXBIT);
     int n = vs.size();
@@ -22,7 +28,8 @@ struct BaseSparseTableArray {
       _st[0][i] = move(vs[i]);
     }
     FOR(bit, 1, m) {
-      for (int i = 0, ii = 1 << (bit - 1); ii < n; ++i, ++ii) {
+      int bound = n - (1 << bit) + 1;
+      for (int i = 0, ii = 1 << (bit - 1); i < bound; ++i, ++ii) {
         combine(_st[bit - 1][i], _st[bit - 1][ii], _st[bit][i]);
       }
     }

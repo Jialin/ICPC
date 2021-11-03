@@ -63,6 +63,12 @@ cc_library(
 )
 
 cc_library(
+    name = "max_sparse_table_array",
+    hdrs = ["max_sparse_table_array.h"],
+    deps = [":base_sparse_table_array"],
+)
+
+cc_library(
     name = "max_sparse_table",
     hdrs = ["max_sparse_table.h"],
     deps = [":base_sparse_table"],

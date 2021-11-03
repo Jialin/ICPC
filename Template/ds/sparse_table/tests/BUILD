@@ -21,6 +21,16 @@ cc_test(
 )
 
 cc_test(
+    name = "max_sparse_table_array_test",
+    srcs = ["max_sparse_table_array_test.cpp"],
+    deps = [
+        "//ds/sparse_table:max_sparse_table_array",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "max_sparse_table_test",
     srcs = ["max_sparse_table_test.cpp"],
     deps = [
