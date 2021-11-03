@@ -44,16 +44,13 @@
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/): TODO: Segment Tree Revisit
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
-- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
 - [x] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
 - [ ] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
-- [ ] [SPOJ - Negative Score](https://www.spoj.com/problems/RPLN/)
-- [ ] [SPOJ - A Famous City](https://www.spoj.com/problems/CITY2/)
-- [ ] [SPOJ - Diferencija](https://www.spoj.com/problems/DIFERENC/)
+- [x] [SPOJ - Negative Score](https://www.spoj.com/problems/RPLN/)
 - [ ] [Codeforces - Turn off the TV](http://codeforces.com/contest/863/problem/E)
 - [ ] [Codeforces - Map](http://codeforces.com/contest/15/problem/D)
 - [ ] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
-- [ ] [Codeforces - Longest Regular Bracket Sequence](http://codeforces.com/contest/5/problem/C)
+- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
 - [ ] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
 
 # 2. Algorithms
