@@ -47,7 +47,6 @@
 - [x] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
 - [ ] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
 - [x] [SPOJ - Negative Score](https://www.spoj.com/problems/RPLN/)
-- [ ] [Codeforces - Turn off the TV](http://codeforces.com/contest/863/problem/E)
 - [ ] [Codeforces - Map](http://codeforces.com/contest/15/problem/D)
 - [ ] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
