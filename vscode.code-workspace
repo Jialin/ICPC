@@ -42,7 +42,8 @@
 			"istream": "cpp",
 			"__locale": "cpp",
 			"memory": "cpp",
-			"type_traits": "cpp"
+			"type_traits": "cpp",
+			"tuple": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
