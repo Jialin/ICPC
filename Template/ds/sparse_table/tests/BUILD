@@ -1,6 +1,17 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "base_disjoint_sparse_table_test",
+    srcs = ["base_disjoint_sparse_table_test.cpp"],
+    deps = [
+        "//ds/sparse_table:base_disjoint_sparse_table",
+        "//math/mod:mul",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "max_sparse_table_2d_array_test",
     srcs = ["max_sparse_table_2d_array_test.cpp"],
     deps = [
