@@ -1,80 +1,37 @@
-#include <algorithm>
-#include <bitset>
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <utility>
-#include <vector>
-using namespace std;
+// First batch includes
+#include "common/include.h"
+#include "common/macros.h"
+#include "debug/debug_declare.h"
 
-#define FOR(i,l,r) for(int i=(l);i<(r);++i)
+#define BASE_SPARSE_TABLE_ARRAY_RESERVE
+#define BASE_SPARSE_TABLE_ARRAY_CALC
+#include "ds/sparse_table/base_sparse_table_array_macros.h"
 
-namespace cs { namespace rmq {
+#include "ds/sparse_table/min_sparse_table_array.h"
+#include "io/read_int.h"
+#include "io/write_char.h"
+#include "io/write_int.h"
 
-template<typename T>
-class RMQ {
-  int n;
-  T* vs;
-  vector<vector<int>> rmqIdx;
-
-  static inline int highestBit(int n) {
-    return 31 - __builtin_clz(n);
-  }
-
-  inline void _init() {
-    int bit = highestBit(n);
-    rmqIdx.resize(bit + 1);
-    for (int i = 0; i <= bit; ++i) rmqIdx[i].resize(n - (1 << i) + 1);
-    for (int i = 0; i < n; ++i) rmqIdx[0][i] = i;
-    for (int i = 1; i <= bit; ++i) for (int j = n - (1 << i), k = j + (1 << (i - 1)); j >= 0; --j, --k) {
-      int jIdx = rmqIdx[i - 1][j];
-      int kIdx = rmqIdx[i - 1][k];
-      rmqIdx[i][j] = vs[jIdx] < vs[kIdx] ? jIdx : kIdx;
-    }
-  }
-public:
-  inline void init(int _n, T* _vs) {
-    n = _n;
-    vs = _vs;
-    _init();
-  }
-
-  inline int calcMinIndex(int lower, int upper) {
-    int bit = highestBit(upper - lower + 1);
-    int lowerIdx = rmqIdx[bit][lower];
-    int upperIdx = rmqIdx[bit][upper - (1 << bit) + 1];
-    return vs[lowerIdx] < vs[upperIdx] ? lowerIdx : upperIdx;
-  }
-
-  inline T& calcMin(int lower, int upper) {
-    return vs[calcMinIndex(lower, upper)];
-  }
-}; // class RMQ
-}} // namespace cs::rmq
-
-const int MAXN = 100000;
-
-int a[MAXN];
-cs::rmq::RMQ<int> rmq;
+// Last include
+#include "debug/debug.h"
 
 int main() {
-  int n; scanf("%d", &n);
-  FOR(i, 0, n) scanf("%d", a + i);
-  rmq.init(n, a);
-  int q; scanf("%d", &q);
-  FOR(i, 0, q) {
-    int lower, upper; scanf("%d%d", &lower, &upper);
-    printf("%d\n", rmq.calcMin(lower, upper));
+  int n;
+  io::readInt(n);
+  vector<int> vs(n);
+  FOR(i, 0, n) {
+    io::readInt(vs[i]);
   }
-  return 0;
+  ds::MinSparseTableArray<int, 17, 100000> st;
+  st.reserve(n);
+  st.init(move(vs));
+  int q;
+  io::readInt(q);
+  FOR(_, 0, q) {
+    int l, r;
+    io::readInt(l);
+    io::readInt(r);
+    io::writeInt(st.calc(l, r + 1));
+    io::writeChar('\n');
+  }
 }

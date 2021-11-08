@@ -14,6 +14,7 @@
     - [2.1.1. Problems](#211-problems)
 - [3. Tricks](#3-tricks)
   - [3.1. GCD](#31-gcd)
+  - [3.2. Modular Fast Division](#32-modular-fast-division)
 
 # 1. Data Structures
 
@@ -45,12 +46,12 @@
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
 - [x] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
-- [ ] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
+- [x] [Codeforces - Trains and Statistics](http://codeforces.com/contest/675/problem/E)
 - [x] [SPOJ - Negative Score](https://www.spoj.com/problems/RPLN/)
-- [ ] [Codeforces - Map](http://codeforces.com/contest/15/problem/D)
-- [ ] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
-- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): Disjoint Sparse Table
-- [ ] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
+- [x] [Codeforces - Map](http://codeforces.com/contest/15/problem/D)
+- [x] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
+- [x] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
+- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): TODO: Segment Tree
 
 # 2. Algorithms
 
@@ -69,3 +70,7 @@
   - Given a sequence A, its prefix GCD sequence B is defined as <img src="https://render.githubusercontent.com/render/math?math=b_0=a_0"/>, <img src="https://render.githubusercontent.com/render/math?math=b_i=gcd(b_{i-1},a_i)" />
   - Problems:
     - [x] [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
+
+## 3.2. Modular Fast Division
+
+- [Code Example](https://www.codechef.com/viewsolution/16271015)
