@@ -187,6 +187,14 @@ inline string totype(uint64_t v) {
   return "uint64";
 }
 
+inline string totype(__int128_t v) {
+  return "int128";
+}
+
+inline string totype(__uint128_t v) {
+  return "uint128";
+}
+
 inline string totype(double v) {
   return "double";
 }
@@ -210,6 +218,19 @@ inline string totype(const string& v) {
 template<typename T>
 inline string totype(const T& v) {
   return typeid(decltype(v)).name();
+}
+
+ostream& operator<<(ostream& o, __int128_t x) {
+  if (x == std::numeric_limits<__int128_t>::min()) {
+    return o << "-170141183460469231731687303715884105728";
+  }
+  if (x < 0) {
+    return o << "-" << -x;
+  }
+  if (x < 10) {
+    return o << (char)(x + '0');
+  }
+  return o << x / 10 << (char)(x % 10 + '0');
 }
 
 template<typename T>
