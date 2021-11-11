@@ -19,20 +19,21 @@ struct DisjointSetSizeParity {
     _parities.assign(n, false);
   }
 
-  inline bool unionSet(int u, int v, bool parity, bool& invalid) {
+  inline bool unionSet(int u, int v, bool parity, bool& valid) {
     int rootU = findSet(u);
     int rootV = findSet(v);
     if (rootU == rootV) {
-      invalid = (_parities[u] ^ _parities[v]) == parity;
+      valid = (_parities[u] ^ _parities[v]) == parity;
       return false;
     }
     if (_parents[rootU] > _parents[rootV]) {
       swap(rootU, rootV);
+      swap(u, v);
     }
     _parents[rootU] += _parents[rootV];
     _parents[rootV] = rootU;
     _parities[rootV] = _parities[u] ^ _parities[v] ^ parity;
-    invalid = true;
+    valid = true;
     return true;
   }
 

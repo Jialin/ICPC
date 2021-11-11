@@ -1,6 +1,17 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "disjoint_set_size_groups_test",
+    srcs = ["disjoint_set_size_groups_test.cpp"],
+    deps = [
+        "//ds/disjoint_set:disjoint_set_size_groups",
+        "//ds/disjoint_set:disjoint_set_size_groups_macros",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "disjoint_set_size_parity_test",
     srcs = ["disjoint_set_size_parity_test.cpp"],
     deps = [
