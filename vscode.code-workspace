@@ -46,7 +46,8 @@
 			"tuple": "cpp",
 			"chrono": "cpp",
 			"limits": "cpp",
-			"locale": "cpp"
+			"locale": "cpp",
+			"future": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
