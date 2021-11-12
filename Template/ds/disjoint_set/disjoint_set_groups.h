@@ -1,5 +1,5 @@
 // !macro_gen
-// ALL DISJOINT_SET_SIZE_GROUPS_ALL
+// ALL DISJOINT_SET_GROUPS_ALL
 #pragma once
 
 using namespace std;
@@ -8,8 +8,8 @@ namespace ds {
 
 // Each node belongs to one of the group [0, groupCnt), and group diff equals to group index
 // difference mod <groupCnt>
-struct DisjointSetSizeGroups {
-#ifdef DISJOINT_SET_SIZE_GROUPS_RESERVE // ^
+struct DisjointSetGroups {
+#ifdef DISJOINT_SET_GROUPS_RESERVE // ^
   inline void reserve(int n) {
     _parents.reserve(n);
     _diffs.reserve(n);
@@ -43,13 +43,13 @@ struct DisjointSetSizeGroups {
     return true;
   }
 
-#ifdef DISJOINT_SET_SIZE_GROUPS_IS_IN_SAME_SET // ^
+#ifdef DISJOINT_SET_GROUPS_IS_IN_SAME_SET // ^
   inline bool isInSameSet(int u, int v) {
     return findSet(u) == findSet(v);
   }
 #endif
 
-#ifdef DISJOINT_SET_SIZE_GROUPS_CALC_GROUP_DIFF // ^
+#ifdef DISJOINT_SET_GROUPS_CALC_GROUP_DIFF // ^
   inline int calcGroupDiff(int u, int v) {
     if (findSet(u) != findSet(v)) {
       return -1;

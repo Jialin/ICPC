@@ -1,13 +1,13 @@
 // !macro_gen
-// ALL DISJOINT_SET_SIZE_PARITY_ALL
+// ALL DISJOINT_SET_PARITY_ALL
 #pragma once
 
 using namespace std;
 
 namespace ds {
 
-struct DisjointSetSizeParity {
-#ifdef DISJOINT_SET_SIZE_PARITY_RESERVE // ^
+struct DisjointSetParity {
+#ifdef DISJOINT_SET_PARITY_RESERVE // ^
   inline void reserve(int n) {
     _parents.reserve(n);
     _parities.reserve(n);
@@ -37,13 +37,13 @@ struct DisjointSetSizeParity {
     return true;
   }
 
-#ifdef DISJOINT_SET_SIZE_PARITY_IS_IN_SAME_SET // ^
+#ifdef DISJOINT_SET_PARITY_IS_IN_SAME_SET // ^
   inline bool isInSameSet(int u, int v) {
     return findSet(u) == findSet(v);
   }
 #endif
 
-#ifdef DISJOINT_SET_SIZE_PARITY_IS_SAME_PARITY // ^
+#ifdef DISJOINT_SET_PARITY_IS_SAME_PARITY // ^
   inline bool isSameParity(int u, int v) {
     if (findSet(u) != findSet(v)) {
       return false;

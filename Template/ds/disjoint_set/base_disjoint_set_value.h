@@ -1,20 +1,26 @@
 // !macro_gen
-// ALL DISJOINT_SET_SIZE_ALL
+// ALL BASE_DISJOINT_SET_VALUE_ALL
 #pragma once
+
+#include "common/macros.h"
 
 using namespace std;
 
 namespace ds {
 
-struct DisjointSetSize {
-#ifdef DISJOINT_SET_SIZE_RESERVE // ^
+template<typename V>
+struct BaseDisjointSetValue {
+  virtual inline void combine(const V& fromV, V& toV) const = 0;
+
+#ifdef BASE_DISJOINT_SET_VALUE_RESERVE // ^
   inline void reserve(int n) {
     _parents.reserve(n);
   }
 #endif
 
-  inline void init(int n) {
-    _parents.assign(n, -1);
+  inline void init(vector<V>&& vs) {
+    _parents.assign(SIZE(vs), -1);
+    _vs = move(vs);
   }
 
   inline bool unionSet(int u, int v) {
@@ -28,14 +34,13 @@ struct DisjointSetSize {
     }
     _parents[u] += _parents[v];
     _parents[v] = u;
+    combine(_vs[v], _vs[u]);
     return true;
   }
 
-#ifdef DISJOINT_SET_SIZE_IS_IN_SAME_SET // ^
-  inline bool isInSameSet(int u, int v) {
-    return findSet(u) == findSet(v);
+  inline const V& calcSetValue(int u) {
+    return _vs[findSet(u)];
   }
-#endif
 
   inline int findSet(int v) {
     int& res = _parents[v];
@@ -47,6 +52,7 @@ struct DisjointSetSize {
   }
 
   vector<int> _parents;
+  vector<V> _vs;
 };
 
 } // namespace ds

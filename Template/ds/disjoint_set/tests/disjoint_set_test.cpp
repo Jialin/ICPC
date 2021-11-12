@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 
-#define DISJOINT_SET_SIZE_ALL
-#include "ds/disjoint_set/disjoint_set_size_macros.h"
+#define DISJOINT_SET_ALL
+#include "ds/disjoint_set/disjoint_set_macros.h"
 
-#include "ds/disjoint_set/disjoint_set_size.h"
+#include "ds/disjoint_set/disjoint_set.h"
 
 using namespace std;
 
 namespace ds {
 
-TEST(DisjointSetSizeTest, basic) {
-  ds::DisjointSetSize dset;
+TEST(DisjointSetTest, basic) {
+  ds::DisjointSet dset;
   dset.init(5);
 
   EXPECT_TRUE(dset.unionSet(1, 2));

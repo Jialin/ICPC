@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 
-#define DISJOINT_SET_SIZE_GROUPS_ALL
-#include "ds/disjoint_set/disjoint_set_size_groups_macros.h"
+#define DISJOINT_SET_GROUPS_ALL
+#include "ds/disjoint_set/disjoint_set_groups_macros.h"
 
-#include "ds/disjoint_set/disjoint_set_size_groups.h"
+#include "ds/disjoint_set/disjoint_set_groups.h"
 
 using namespace std;
 
 namespace ds {
 
-TEST(DisjointSetSizeGroupsTest, basic) {
-  DisjointSetSizeGroups dset;
+TEST(DisjointSetGroupsTest, basic) {
+  DisjointSetGroups dset;
   dset.init(5, 3);
   bool valid;
 
@@ -24,8 +24,8 @@ TEST(DisjointSetSizeGroupsTest, basic) {
   EXPECT_FALSE(valid);
 }
 
-TEST(DisjointSetSizeGroupsTest, selfCheck) {
-  DisjointSetSizeGroups dset;
+TEST(DisjointSetGroupsTest, selfCheck) {
+  DisjointSetGroups dset;
   dset.init(3, 3);
   bool valid;
 

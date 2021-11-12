@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 
-#define DISJOINT_SET_SIZE_PARITY_ALL
-#include "ds/disjoint_set/disjoint_set_size_parity_macros.h"
+#define DISJOINT_SET_PARITY_ALL
+#include "ds/disjoint_set/disjoint_set_parity_macros.h"
 
-#include "ds/disjoint_set/disjoint_set_size_parity.h"
+#include "ds/disjoint_set/disjoint_set_parity.h"
 
 using namespace std;
 
 namespace ds {
 
-TEST(DisjointSetSizeParityTest, basic) {
-  DisjointSetSizeParity dset;
+TEST(DisjointSetParityTest, basic) {
+  DisjointSetParity dset;
   dset.init(5);
   bool valid;
 
@@ -34,8 +34,8 @@ TEST(DisjointSetSizeParityTest, basic) {
   EXPECT_TRUE(valid);
 }
 
-TEST(DisjointSetSizeParityTest, selfCheck) {
-  DisjointSetSizeParity dset;
+TEST(DisjointSetParityTest, selfCheck) {
+  DisjointSetParity dset;
   dset.init(2);
   bool valid;
 
