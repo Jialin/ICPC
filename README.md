@@ -10,8 +10,9 @@
     - [1.2.2. Resources](#122-resources)
     - [1.2.3. Problems](#123-problems)
   - [1.3. Disjoint Set Union (Template/ds/disjoint_set/)](#13-disjoint-set-union-templatedsdisjoint_set)
-    - [1.3.1. Resources](#131-resources)
-    - [1.3.2. Problems](#132-problems)
+    - [1.3.1. Notes](#131-notes)
+    - [1.3.2. Resources](#132-resources)
+    - [1.3.3. Problems](#133-problems)
 - [2. Algorithms](#2-algorithms)
   - [2.1. Sliding Window (Template/ds/sliding_window/)](#21-sliding-window-templatedssliding_window)
     - [2.1.1. Problems](#211-problems)
@@ -58,19 +59,23 @@
 
 ## 1.3. Disjoint Set Union ([Template/ds/disjoint_set/](Template/ds/disjoint_set/))
 
-### 1.3.1. Resources
+### 1.3.1. Notes
+- [Compress jumps along a segment](https://cp-algorithms.com/data_structures/disjoint_set_union.html#toc-tgt-10): each set keeps track of the next empty index ()
+- [Arpa's tricks](https://cp-algorithms.com/data_structures/disjoint_set_union.html#arpa): Offline RMQ using Disjoint set
+
+### 1.3.2. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/disjoint_set_union.html)
 
-### 1.3.2. Problems
-- [ ] [TIMUS - Anansi's Cobweb](https://acm.timus.ru/problem.aspx?space=1&num=1671)
-- [ ] [Codeforces - Roads not only in Berland](http://codeforces.com/contest/25/problem/D)
-- [ ] [TIMUS - Parity](https://acm.timus.ru/problem.aspx?space=1&num=1003)
-- [ ] [SPOJ - Strange Food Chain](https://www.spoj.com/problems/CHAIN/)
-- [ ] [SPOJ - COLORFUL ARRAY](https://www.spoj.com/problems/CLFLARR/)
-- [ ] [SPOJ - Consecutive Letters](https://www.spoj.com/problems/CONSEC/)
-- [ ] [Toph - Unbelievable Array](https://toph.co/p/unbelievable-array)
-- [ ] [HackerEarth - Lexicographically minimal string](https://www.hackerearth.com/practice/data-structures/disjoint-data-strutures/basics-of-disjoint-data-structures/practice-problems/algorithm/lexicographically-minimal-string-6edc1406/)
-- [ ] [HackerEarth - Fight in Ninja World](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/containers-of-choclates-1/)
+### 1.3.3. Problems
+- [x] [TIMUS - Anansi's Cobweb](https://acm.timus.ru/problem.aspx?space=1&num=1671)
+- [x] [Codeforces - Roads not only in Berland](http://codeforces.com/contest/25/problem/D)
+- [x] [TIMUS - Parity](https://acm.timus.ru/problem.aspx?space=1&num=1003)
+- [x] [SPOJ - Strange Food Chain](https://www.spoj.com/problems/CHAIN/)
+- [x] [SPOJ - COLORFUL ARRAY](https://www.spoj.com/problems/CLFLARR/): Compress jumps along a segment
+- [x] [SPOJ - Consecutive Letters](https://www.spoj.com/problems/CONSEC/)
+- [x] [Toph - Unbelievable Array](https://toph.co/p/unbelievable-array)
+- [x] [HackerEarth - Lexicographically minimal string](https://www.hackerearth.com/practice/data-structures/disjoint-data-strutures/basics-of-disjoint-data-structures/practice-problems/algorithm/lexicographically-minimal-string-6edc1406/)
+- [x] [HackerEarth - Fight in Ninja World](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/containers-of-choclates-1/)
 
 # 2. Algorithms
 
