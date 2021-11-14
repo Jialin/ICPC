@@ -12,7 +12,7 @@ template<typename V, int MAXN, int MAXM>
 struct BaseFenwick2DArray {
   virtual inline void initV(V& v) = 0;
 
-  virtual inline void updateV(V& v, const V& deltaV) = 0;
+  virtual inline void addV(V& v, const V& deltaV) = 0;
 
   inline void init(int n, int m) {
     _n = n;
@@ -25,7 +25,7 @@ struct BaseFenwick2DArray {
   inline void update(int x, int y, const V& deltaV) {
     for (int i = x; i < _n; i |= i + 1) {
       for (int j = y; j < _m; j |= j + 1) {
-        updateV(_vs[i][j], deltaV);
+        addV(_vs[i][j], deltaV);
       }
     }
   }
@@ -42,7 +42,7 @@ struct BaseFenwick2DArray {
     initV(res);
     for (int i = x; i >= 0; --i) {
       for (int j = y; j >= 0; --j) {
-        updateV(res, _vs[i][j]);
+        addV(res, _vs[i][j]);
         j &= j + 1;
       }
       i &= i + 1;
@@ -50,19 +50,19 @@ struct BaseFenwick2DArray {
   }
 
 #ifdef BASE_FENWICK_2D_ARRAY_CALC_RANGE // ^
-  virtual inline V subV(const V& upperV, const V& lowerV) const = 0;
+  virtual inline void subV(V& v, const V& deltaV) const = 0;
 
   inline V calcRange(int x1, int y1, int x2, int y2) {
     // BASE_FENWICK_2D_ARRAY_CALC_RANGE => BASE_FENWICK_2D_ARRAY_CALC_PREFIX_RETURN
     V res = calcPrefix(x2 - 1, y2 - 1);
     if (x1) {
-      res = subV(res, calcPrefix(x1 - 1, y2 - 1));
+      subV(res, calcPrefix(x1 - 1, y2 - 1));
     }
     if (y1) {
-      res = subV(res, calcPrefix(x2 - 1, y1 - 1));
+      subV(res, calcPrefix(x2 - 1, y1 - 1));
     }
     if (x1 && y1) {
-      updateV(res, calcPrefix(x1 - 1, y1 - 1));
+      addV(res, calcPrefix(x1 - 1, y1 - 1));
     }
     return res;
   }
