@@ -63,9 +63,9 @@ def merge_adjacent_same_namespaces(lines):
     res = []
     for namespace, namespace_lines in named_lines:
         if namespace:
-            res.append("namespace %s {" % namespace)
+            res.append(f"namespace {namespace} {{")
             res.extend(namespace_lines)
-            res.append("} // %s" % namespace)
+            res.append(f"}} // {namespace}")
         else:
             res.extend(namespace_lines)
     return res
@@ -112,12 +112,7 @@ def gen_file(
     subprocess.Popen(["clang-format", "-i", output_file_name]).wait()
     with open(output_file_name, "r") as input_file:
         subprocess.Popen(["pbcopy"], stdin=input_file).wait()
-    print(
-        "\033[92m!!! {output_file_name} {info}\033[0m".format(
-            output_file_name=output_file_name,
-            info=info,
-        )
-    )
+    print(f"\033[92m!!! {output_file_name} {info}\033[0m")
 
 
 def gen_no_stl_include_file(input_file_name, output_file_name):

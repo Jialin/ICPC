@@ -15,7 +15,7 @@ def generate_dep_lines(dep_from, dep_tos):
 def generate_include_lines(dep, includes):
     return (
         ["#ifdef " + dep]
-        + sorted(['#include "{}"'.format(include) for include in includes])
+        + sorted([f'#include "{include}"' for include in includes])
         + ["#endif"]
     )
 
