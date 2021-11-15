@@ -53,12 +53,15 @@ cc_library(
 )
 
 cc_library(
+    name = "fenwick_max",
+    hdrs = ["fenwick_max.h"],
+    deps = [":base_fenwick"],
+)
+
+cc_library(
     name = "fenwick_min",
     hdrs = ["fenwick_min.h"],
-    deps = [
-        ":base_fenwick",
-        ":base_fenwick_macros",
-    ],
+    deps = [":base_fenwick"],
 )
 
 cc_library(
