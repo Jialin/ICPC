@@ -47,7 +47,8 @@
 			"chrono": "cpp",
 			"limits": "cpp",
 			"locale": "cpp",
-			"future": "cpp"
+			"future": "cpp",
+			"numeric": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
