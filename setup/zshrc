@@ -177,6 +177,22 @@ function CPP-gen-run17 {
   fi
 }
 
+##############################################
+# Example usage:
+#   > CPP-gen-run17-multi A.cpp input1 input2
+##############################################
+function CPP-gen-run17-multi {
+  CPP-gen $@
+  if [ $? = 0 ]
+  then
+    CPP-compile gen/gendebug-$1 c++17
+    for input in ${@:2}
+    do
+      _CPP-run gen/gendebug-$1 $input
+    done
+  fi
+}
+
 ########################
 # Example usage:
 #   > cpp-compact A.cpp
