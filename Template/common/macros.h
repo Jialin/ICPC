@@ -13,4 +13,4 @@
 #define SORTUNIQUE(vs)                                                                             \
   SORT(vs);                                                                                        \
   UNIQUE(vs)
-#define INDEX(vs, v) lower_bound(ALL(vs), v) - vs.begin()
+#define INDEX(vs, v) CAST<int>(lower_bound(ALL(vs), v) - vs.begin())

@@ -16,6 +16,9 @@
   - [1.4. Fenwick Tree (Template/ds/fenwick/)](#14-fenwick-tree-templatedsfenwick)
     - [1.4.1. Resources](#141-resources)
     - [1.4.2. Problems](#142-problems)
+  - [1.5. Stairs Container (Template/ds/stair_container.h)](#15-stairs-container-templatedsstair_containerh)
+    - [1.5.1. Notes](#151-notes)
+    - [1.5.2. Problems](#152-problems)
 - [2. Algorithms](#2-algorithms)
   - [2.1. Sliding Window (Template/ds/sliding_window/)](#21-sliding-window-templatedssliding_window)
     - [2.1.1. Problems](#211-problems)
@@ -86,33 +89,31 @@
 - [CP Algorithm](https://cp-algorithms.com/data_structures/fenwick.html)
 
 ### 1.4.2. Problems
-- [ ] [UVA 12086 - Potentiometers](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3238)
-- [ ] [LOJ 1112 - Curious Robin Hood](https://lightoj.com/problem/curious-robin-hood)
-- [ ] [LOJ 1266 - Points in Rectangle](https://lightoj.com/problem/points-in-rectangle)
-- [ ] [Codechef - SPREAD](https://www.codechef.com/problems/SPREAD)
-- [ ] [SPOJ - CTRICK](https://www.spoj.com/problems/CTRICK/)
-- [ ] [SPOJ - MATSUM](https://www.spoj.com/problems/MATSUM/)
-- [ ] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
-- [ ] [SPOJ - NKTEAM](https://www.spoj.com/problems/NKTEAM/)
-- [ ] [SPOJ - YODANESS](https://www.spoj.com/problems/YODANESS/)
-- [ ] [SRM 310 - FloatingMedian](https://community.topcoder.com/stat?c=problem_statement&pm=6551&rd=9990)
-- [ ] [SPOJ - Ada and Behives](https://www.spoj.com/problems/ADABEHIVE/)
-- [ ] [Hackerearth - Counting in Byteland](https://www.hackerearth.com/practice/data-structures/advanced-data-structures/fenwick-binary-indexed-trees/practice-problems/algorithm/counting-in-byteland/)
-- [ ] [DevSkills - Shan and String](https://devskill.com/CodingProblems/ViewProblem/300)
-- [ ] [Codeforces - Little Artem and Time Machine](http://codeforces.com/contest/669/problem/E)
-- [ ] [Codeforces - Hanoi Factory](http://codeforces.com/contest/777/problem/E)
-- [ ] [SPOJ - Tulip and Numbers](https://www.spoj.com/problems/TULIPNUM/)
-- [ ] [SPOJ - SUMSUM](https://www.spoj.com/problems/SUMSUM/)
-- [ ] [SPOJ - Sabir and Gifts](https://www.spoj.com/problems/SGIFT/)
-- [ ] [SPOJ - The Permutation Game Again](https://www.spoj.com/problems/TPGA/)
+- [x] [UVA 12086 - Potentiometers](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3238)
+- [x] [LOJ 1112 - Curious Robin Hood](https://lightoj.com/problem/curious-robin-hood)
+- [x] [LOJ 1266 - Points in Rectangle](https://lightoj.com/problem/points-in-rectangle)
+- [x] [Codechef - SPREAD](https://www.codechef.com/problems/SPREAD)
+- [ ] [SPOJ - CTRICK](https://www.spoj.com/problems/CTRICK/): TODO: Segment Tree
+- [x] [SPOJ - MATSUM](https://www.spoj.com/problems/MATSUM/)
+- [x] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
+- [x] [SPOJ - YODANESS](https://www.spoj.com/problems/YODANESS/)
+- [ ] [SRM 310 - FloatingMedian](https://community.topcoder.com/stat?c=problem_statement&pm=6551&rd=9990): TODO: Medium
+- [x] [SPOJ - Ada and Behives](https://www.spoj.com/problems/ADABEHIVE/)
+- [x] [Hackerearth - Counting in Byteland](https://www.hackerearth.com/practice/data-structures/advanced-data-structures/fenwick-binary-indexed-trees/practice-problems/algorithm/counting-in-byteland/)
+- [ ] [DevSkills - Shan and String](https://devskill.com/CodingProblems/ViewProblem/300): Pending for judge
+- [x] [Codeforces - Little Artem and Time Machine](http://codeforces.com/contest/669/problem/E)
+- [x] [Codeforces - Hanoi Factory](http://codeforces.com/contest/777/problem/E)
+- [x] [SPOJ - Tulip and Numbers](https://www.spoj.com/problems/TULIPNUM/)
+- [x] [SPOJ - SUMSUM](https://www.spoj.com/problems/SUMSUM/)
+- [x] [SPOJ - Sabir and Gifts](https://www.spoj.com/problems/SGIFT/)
+- [x] [SPOJ - The Permutation Game Again](https://www.spoj.com/problems/TPGA/)
 - [ ] [SPOJ - Zig when you Zag](https://www.spoj.com/problems/ZIGZAG2/)
-- [ ] [SPOJ - Cryon](https://www.spoj.com/problems/CRAYON/)
-- [ ] [SPOJ - Weird Points](https://www.spoj.com/problems/DCEPC705/)
-- [ ] [SPOJ - Its a Murder](https://www.spoj.com/problems/DCEPC206/)
-- [ ] [SPOJ - Bored of Suffixes and Prefixes](https://www.spoj.com/problems/KOPC12G/)
-- [ ] [SPOJ - Mega Inversions](https://www.spoj.com/problems/TRIPINV/)
-- [ ] [Codeforces - Subsequences](http://codeforces.com/contest/597/problem/C)
-- [ ] [Codeforces - Ball](http://codeforces.com/contest/12/problem/D)
+- [x] [SPOJ - Cryon](https://www.spoj.com/problems/CRAYON/)
+- [x] [SPOJ - Weird Points](https://www.spoj.com/problems/DCEPC705/)
+- [x] [SPOJ - Its a Murder](https://www.spoj.com/problems/DCEPC206/)
+- [x] [SPOJ - Bored of Suffixes and Prefixes](https://www.spoj.com/problems/KOPC12G/)
+- [x] [SPOJ - Mega Inversions](https://www.spoj.com/problems/TRIPINV/)
+- [x] [Codeforces - Subsequences](http://codeforces.com/contest/597/problem/C)
 - [ ] [GYM - The Kamphaeng Phet's Chedis](http://codeforces.com/gym/101047/problem/J)
 - [ ] [Codeforces - Garlands](http://codeforces.com/contest/707/problem/E)
 - [ ] [Codeforces - Inversions after Shuffle](http://codeforces.com/contest/749/problem/E)
@@ -124,6 +125,15 @@
 - [ ] [Codeforces - Greg and Array](https://codeforces.com/problemset/problem/296/C)
 - [ ] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/)
 - [ ] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/)
+
+## 1.5. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
+
+### 1.5.1. Notes
+- Maintains contour of stairs
+
+### 1.5.2. Problems
+- [x] [Codeforces - Ball](http://codeforces.com/contest/12/problem/D)
+- [x] [SPOJ - NKTEAM](https://www.spoj.com/problems/NKTEAM/)
 
 # 2. Algorithms
 
