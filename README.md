@@ -87,6 +87,7 @@
 
 ### 1.4.1. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/fenwick.html)
+- [Range updates and queries](https://cp-algorithms.com/data_structures/fenwick.html#toc-tgt-11): Use multiple fenwick trees
 
 ### 1.4.2. Problems
 - [x] [UVA 12086 - Potentiometers](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3238)
@@ -117,14 +118,12 @@
 - [ ] [GYM - The Kamphaeng Phet's Chedis](http://codeforces.com/gym/101047/problem/J)
 - [ ] [Codeforces - Garlands](http://codeforces.com/contest/707/problem/E)
 - [ ] [Codeforces - Inversions after Shuffle](http://codeforces.com/contest/749/problem/E)
-- [ ] [GYM - Cairo Market](http://codeforces.com/problemset/gymProblem/101055/D)
+- [x] [GYM - Cairo Market](http://codeforces.com/problemset/gymProblem/101055/D)
 - [ ] [Codeforces - Goodbye Souvenir](http://codeforces.com/contest/849/problem/E)
 - [ ] [SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/)
-- [ ] [Codeforces - Thor](https://codeforces.com/problemset/problem/704/A)
-- [ ] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
-- [ ] [Codeforces - Greg and Array](https://codeforces.com/problemset/problem/296/C)
-- [ ] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/)
-- [ ] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/)
+- [x] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
+- [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
+- [ ] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
 
 ## 1.5. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
 
