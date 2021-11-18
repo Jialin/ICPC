@@ -35,6 +35,12 @@ cc_library(
 )
 
 cc_library(
+    name = "fenwick_2d_array_max",
+    hdrs = ["fenwick_2d_array_max.h"],
+    deps = [":base_fenwick_2d_array"],
+)
+
+cc_library(
     name = "fenwick_2d_array_sum",
     hdrs = ["fenwick_2d_array_sum.h"],
     deps = [
