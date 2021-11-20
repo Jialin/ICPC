@@ -48,7 +48,10 @@
 			"limits": "cpp",
 			"locale": "cpp",
 			"future": "cpp",
-			"numeric": "cpp"
+			"numeric": "cpp",
+			"any": "cpp",
+			"optional": "cpp",
+			"variant": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
