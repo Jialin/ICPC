@@ -116,11 +116,10 @@
 - [x] [SPOJ - Bored of Suffixes and Prefixes](https://www.spoj.com/problems/KOPC12G/)
 - [x] [SPOJ - Mega Inversions](https://www.spoj.com/problems/TRIPINV/)
 - [x] [Codeforces - Subsequences](http://codeforces.com/contest/597/problem/C)
-- [ ] [Codeforces - Garlands](http://codeforces.com/contest/707/problem/E)
-- [ ] [Codeforces - Inversions after Shuffle](http://codeforces.com/contest/749/problem/E)
+- [x] [Codeforces - Inversions after Shuffle](http://codeforces.com/contest/749/problem/E)
 - [x] [GYM - Cairo Market](http://codeforces.com/problemset/gymProblem/101055/D)
-- [ ] [Codeforces - Goodbye Souvenir](http://codeforces.com/contest/849/problem/E)
-- [ ] [SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/)
+- [ ] [Codeforces - Goodbye Souvenir](http://codeforces.com/contest/849/problem/E): TODO: Segment Tree + Fenwick
+- [x] [SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/): Fenwick + Stairs Container
 - [x] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
 - [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
 - [x] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
