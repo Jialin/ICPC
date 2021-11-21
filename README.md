@@ -88,7 +88,7 @@
 ### 1.4.1. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/fenwick.html)
 - [Range updates and queries](https://cp-algorithms.com/data_structures/fenwick.html#toc-tgt-11): Use multiple fenwick trees
-- Lazy computation when restricted by memory: Only compute the point in use ([SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/))
+- Lazy computation when restricted by memory: Only compute the points in use ([SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/)), [SPOJ - Zig when you Zag](https://www.spoj.com/problems/ZIGZAG2/)
 
 ### 1.4.2. Problems
 - [x] [UVA 12086 - Potentiometers](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3238)
@@ -102,14 +102,13 @@
 - [ ] [SRM 310 - FloatingMedian](https://community.topcoder.com/stat?c=problem_statement&pm=6551&rd=9990): TODO: Medium
 - [x] [SPOJ - Ada and Behives](https://www.spoj.com/problems/ADABEHIVE/)
 - [x] [Hackerearth - Counting in Byteland](https://www.hackerearth.com/practice/data-structures/advanced-data-structures/fenwick-binary-indexed-trees/practice-problems/algorithm/counting-in-byteland/)
-- [ ] [DevSkills - Shan and String](https://devskill.com/CodingProblems/ViewProblem/300): Pending for judge
 - [x] [Codeforces - Little Artem and Time Machine](http://codeforces.com/contest/669/problem/E)
 - [x] [Codeforces - Hanoi Factory](http://codeforces.com/contest/777/problem/E)
 - [x] [SPOJ - Tulip and Numbers](https://www.spoj.com/problems/TULIPNUM/)
 - [x] [SPOJ - SUMSUM](https://www.spoj.com/problems/SUMSUM/)
 - [x] [SPOJ - Sabir and Gifts](https://www.spoj.com/problems/SGIFT/)
 - [x] [SPOJ - The Permutation Game Again](https://www.spoj.com/problems/TPGA/)
-- [ ] [SPOJ - Zig when you Zag](https://www.spoj.com/problems/ZIGZAG2/)
+- [x] [SPOJ - Zig when you Zag](https://www.spoj.com/problems/ZIGZAG2/): Update and calculate the necessary points only
 - [x] [SPOJ - Cryon](https://www.spoj.com/problems/CRAYON/)
 - [x] [SPOJ - Weird Points](https://www.spoj.com/problems/DCEPC705/)
 - [x] [SPOJ - Its a Murder](https://www.spoj.com/problems/DCEPC206/)
