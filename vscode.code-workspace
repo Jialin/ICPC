@@ -51,7 +51,8 @@
 			"numeric": "cpp",
 			"any": "cpp",
 			"optional": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"__node_handle": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
