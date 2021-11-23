@@ -16,12 +16,18 @@
   - [1.4. Fenwick Tree (Template/ds/fenwick/)](#14-fenwick-tree-templatedsfenwick)
     - [1.4.1. Resources](#141-resources)
     - [1.4.2. Problems](#142-problems)
-  - [1.5. Stairs Container (Template/ds/stair_container.h)](#15-stairs-container-templatedsstair_containerh)
-    - [1.5.1. Notes](#151-notes)
+  - [1.5. Treap (Template/ds/treap/)](#15-treap-templatedstreap)
+    - [1.5.1. Resources](#151-resources)
     - [1.5.2. Problems](#152-problems)
+  - [1.6. Stairs Container (Template/ds/stair_container.h)](#16-stairs-container-templatedsstair_containerh)
+    - [1.6.1. Notes](#161-notes)
+    - [1.6.2. Problems](#162-problems)
+  - [1.7. Sliding Window (Template/ds/sliding_window/)](#17-sliding-window-templatedssliding_window)
+    - [1.7.1. Problems](#171-problems)
 - [2. Algorithms](#2-algorithms)
-  - [2.1. Sliding Window (Template/ds/sliding_window/)](#21-sliding-window-templatedssliding_window)
-    - [2.1.1. Problems](#211-problems)
+  - [2.1. Sqrt Decomposition (Template/algo/sqrt/)](#21-sqrt-decomposition-templatealgosqrt)
+    - [2.1.1. Resources](#211-resources)
+    - [2.1.2. Problems](#212-problems)
 - [3. Tricks](#3-tricks)
   - [3.1. GCD](#31-gcd)
   - [3.2. Modular Fast Division](#32-modular-fast-division)
@@ -123,23 +129,61 @@
 - [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
 - [x] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
 
-## 1.5. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
+## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
-### 1.5.1. Notes
-- Maintains contour of stairs
+### 1.5.1. Resources
+- [CP Algorithm](https://cp-algorithms.com/data_structures/treap.html)
 
 ### 1.5.2. Problems
+- [x] [SPOJ - Ada and Aphids](https://www.spoj.com/problems/ADAAPHID/)
+- [ ] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
+- [ ] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E)
+- [ ] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
+- [ ] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/)
+- [ ] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
+- [ ] [Codeforces - Dog Show](https://codeforces.com/contest/847/problem/D)
+- [ ] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D)
+- [ ] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
+- [ ] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/)
+- [ ] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/)
+- [ ] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
+- [ ] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F)
+- [ ] [Codeforces - Wizards and Roads](https://codeforces.com/problemset/problem/167/D)
+- [ ] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E)
+
+## 1.6. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
+
+### 1.6.1. Notes
+- Maintains contour of stairs
+
+### 1.6.2. Problems
 - [x] [Codeforces - Ball](http://codeforces.com/contest/12/problem/D)
 - [x] [SPOJ - NKTEAM](https://www.spoj.com/problems/NKTEAM/)
 
-# 2. Algorithms
+## 1.7. Sliding Window ([Template/ds/sliding_window/](Template/ds/sliding_window/))
 
-## 2.1. Sliding Window ([Template/ds/sliding_window/](Template/ds/sliding_window/))
-
-### 2.1.1. Problems
+### 1.7.1. Problems
 - [x] [HackerRank - Queries with Fixed Length](https://www.hackerrank.com/challenges/queries-with-fixed-length/problem)
 - [x] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D): Modified sliding window without fix window size
 - [x] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
+
+# 2. Algorithms
+
+## 2.1. Sqrt Decomposition ([Template/algo/sqrt/](Template/algo/sqrt/))
+
+### 2.1.1. Resources
+- [CP Algorithm](https://cp-algorithms.com/data_structures/sqrt_decomposition.html)
+
+### 2.1.2. Problems
+- [ ] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=242&page=show_problem&problem=3154)
+- [ ] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=229&page=show_problem&problem=3141)
+- [ ] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
+- [ ] [Codeforces - Till I Collapse](https://codeforces.com/contest/786/problem/C)
+- [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D)
+- [ ] [Codeforces - Holes](https://codeforces.com/contest/13/problem/E)
+- [ ] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
+- [ ] [Codeforces - Powerful array](https://codeforces.com/contest/86/problem/D)
+- [ ] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
 
 # 3. Tricks
 
