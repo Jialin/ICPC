@@ -2,6 +2,8 @@
 // ALL BASE_TREAP_ALL
 #pragma once
 
+#include "debug/debug_basic.h"
+
 using namespace std;
 
 namespace ds {
@@ -35,57 +37,79 @@ struct BaseTreap {
   // Appends the range value to the result
   virtual inline void _appendRange(RANGE_V& res, const _Node& idx) = 0;
 
-  inline BaseTreap() {
+  inline BaseTreap() : _rootCnt(1) {
     clear();
   }
 
-#ifdef BASE_TREAP_RESERVE // ^
-  inline void reserve(int n) {
+#ifdef BASE_TREAP_RESERVE_NODES // ^
+  inline void reserveNodes(int n) {
     _nodes.reserve(n);
   }
 #endif
 
+#ifdef BASE_TREAP_RESERVE_ROOTS // ^
+  inline void reserveRoots(int n) {
+    _roots.reserve(n);
+  }
+#endif
+
   inline void clear() {
-    _root = -1;
+    _roots.assign(_rootCnt, -1);
     _nodes.clear();
   }
 
+#ifdef BASE_TREAP_INIT_ROOTS // ^
+  inline void initRoots(int rootCnt) {
+    _rootCnt = rootCnt;
+    clear();
+  }
+#endif
+
 #ifdef BASE_TREAP_UPDATE // ^
-  inline void update(KEY key, const NODE_V& delta) {
-    _update(_root, key, delta);
+  inline void update(KEY key, const NODE_V& delta, int rootIdx = 0) {
+    DEBUG_LT(rootIdx, SIZE(_roots));
+    _roots[rootIdx] = _update(_roots[rootIdx], key, delta);
   }
 
-  // Returns whether the parent node need to check rotation
-  inline bool _update(int& idx, KEY key, const NODE_V& delta) {
+  // Returns the new root index
+  inline int _update(int idx, KEY key, const NODE_V& delta) {
     if (idx < 0) {
       idx = _nodes.size();
       _nodes.emplace_back(key);
       auto& node = _nodes.back();
       _initV(node);
       _updateV(node, delta);
-      return true;
+      return idx;
     }
     auto& node = _nodes[idx];
     if (node._key == key) {
       _updateV(node, delta);
-      return false;
+      return idx;
     }
     if (node._key > key) {
-      if (_update(node._lIdx, key, delta) && _nodes[node._lIdx]._priority > node._priority) {
-        _rotateLeft(idx, node._lIdx);
-        return true;
+      int newIdx = _update(node._lIdx, key, delta);
+      // _update might invalidate the vector reference
+      auto& node2 = _nodes[idx];
+      node2._lIdx = newIdx;
+      if (_nodes[newIdx]._priority > node2._priority) {
+        _rotateLeft(idx, newIdx);
+        return newIdx;
       }
     } else {
-      if (_update(node._rIdx, key, delta) && _nodes[node._rIdx]._priority > node._priority) {
-        _rotateRight(idx, node._rIdx);
-        return true;
+      int newIdx = _update(node._rIdx, key, delta);
+      // _update might invalidate the vector reference
+      auto& node2 = _nodes[idx];
+      node2._rIdx = newIdx;
+      if (_nodes[newIdx]._priority > node2._priority) {
+        _rotateRight(idx, node2._rIdx);
+        return newIdx;
       }
     }
     _mergeRangeV(_nodes[idx]);
-    return false;
+    return idx;
   }
 
-  inline void _rotateLeft(int& idx, int lIdx) {
+  inline void _rotateLeft(int idx, int lIdx) {
     auto& node = _nodes[idx];
     auto& lNode = _nodes[lIdx];
     node._lIdx = lNode._rIdx;
@@ -95,10 +119,10 @@ struct BaseTreap {
     _mergeRangeV(lNode);
   }
 
-  inline void _rotateRight(int& idx, int rIdx) {
+  inline void _rotateRight(int idx, int rIdx) {
     auto& node = _nodes[idx];
     auto& rNode = _nodes[rIdx];
-    _nodes[idx]._rIdx = rNode._lIdx;
+    node._rIdx = rNode._lIdx;
     rNode._lIdx = idx;
     _mergeRangeV(node);
     idx = rIdx;
@@ -106,21 +130,58 @@ struct BaseTreap {
   }
 #endif
 
-#ifdef BASE_TREAP_CALC_PREFIX_RETURN // ^
-  // Calculates prefix from [-inf, upper1]. NOTE: <upper1> is included
-  inline RANGE_V calcPrefix(KEY upper1) {
-    RANGE_V res;
-    // BASE_TREAP_CALC_PREFIX_RETURN => BASE_TREAP_CALC_PREFIX
-    calcPrefix(upper1, res);
-    return res;
+#ifdef BASE_TREAP_ERASE // ^
+  inline void erase(KEY key, int rootIdx = 0) {
+    DEBUG_LT(rootIdx, SIZE(_roots));
+    _roots[rootIdx] = _erase(_roots[rootIdx], key);
+  }
+
+  inline int _erase(int idx, KEY key) {
+    if (idx < 0) {
+      return -1;
+    }
+    auto& node = _nodes[idx];
+    if (node._key == key) {
+      return _merge(node._lIdx, node._rIdx);
+    }
+    if (node._key > key) {
+      node._lIdx = _erase(node._lIdx, key);
+    } else {
+      node._rIdx = _erase(node._rIdx, key);
+    }
+    _mergeRangeV(node);
+    return idx;
+  }
+
+  inline int _merge(int lIdx, int rIdx) {
+    if (lIdx < 0) {
+      return rIdx;
+    }
+    if (rIdx < 0) {
+      return lIdx;
+    }
+    auto& lNode = _nodes[lIdx];
+    auto& rNode = _nodes[rIdx];
+    if (lNode._priority > rNode._priority) {
+      lNode._rIdx = _merge(lNode._rIdx, rIdx);
+      _mergeRangeV(lNode);
+      return lIdx;
+    } else {
+      rNode._lIdx = _merge(lIdx, rNode._lIdx);
+      _mergeRangeV(rNode);
+      return rIdx;
+    }
   }
 #endif
 
 #ifdef BASE_TREAP_CALC_PREFIX // ^
   // Calculates prefix from [-inf, upper1]. NOTE: <upper1> is included
-  inline void calcPrefix(KEY upper1, RANGE_V& res) {
+  inline RANGE_V calcPrefix(KEY upper1, int rootIdx = 0) {
+    DEBUG_LT(rootIdx, SIZE(_roots));
+    RANGE_V res;
     _initRangeV(res);
-    _calcPrefix(_root, upper1, res);
+    _calcPrefix(_roots[rootIdx], upper1, res);
+    return res;
   }
 
   inline void _calcPrefix(int idx, KEY upper1, RANGE_V& res) {
@@ -143,7 +204,8 @@ struct BaseTreap {
 #endif
 
   vector<_Node> _nodes;
-  int _root;
+  vector<int> _roots;
+  int _rootCnt;
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const _Node& node) {
@@ -153,8 +215,10 @@ struct BaseTreap {
   }
 
   inline friend ostream& operator<<(ostream& o, const BaseTreap& treap) {
-    o << "root index:" << treap._root;
-    treap._output(0, treap._root, o);
+    o << "total root cnt:" << treap._roots.size();
+    for (int root : treap._roots) {
+      treap._output(0, root, o);
+    }
     return o;
   }
 

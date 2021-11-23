@@ -10,6 +10,13 @@ cc_library(
 cc_library(
     name = "base_treap",
     hdrs = ["base_treap.h"],
+    deps = ["//debug:debug_basic"],
+)
+
+cc_library(
+    name = "treap_size",
+    hdrs = ["treap_size.h"],
+    deps = [":base_treap"],
 )
 
 cc_library(
