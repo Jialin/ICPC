@@ -186,10 +186,13 @@ function CPP-gen-run17-multi {
   if [ $? = 0 ]
   then
     CPP-compile gen/gendebug-$1 c++17
-    for input in ${@:2}
-    do
-      _CPP-run gen/gendebug-$1 $input
-    done
+    if [ $? = 0 ]
+    then
+      for input in ${@:2}
+      do
+        _CPP-run gen/gendebug-$1 $input
+      done
+    fi
   fi
 }
 
