@@ -1,19 +1,20 @@
 #pragma once
 
-#define BASE_TREAP_UPDATE
+#include "ds/treap/base_treap_forest_macros.h"
+
 #include "ds/treap/base_treap_macros.h"
 
-#include "ds/treap/base_treap.h"
+#include "ds/treap/base_treap_forest.h"
 
 namespace ds {
 
 template<typename KEY = int>
-struct TreapSet : BaseTreap<bool, int, KEY> {
-  inline void insert(KEY key) {
-    this->update(key, true);
+struct TreapForestSet : BaseTreapForest<bool, int, KEY> {
+  inline void insert(KEY key, int rootIdx) {
+    this->update(key, true, rootIdx);
   }
 
-  using _Node = typename TreapSet::_Node;
+  using _Node = typename BaseTreap<bool, int, KEY>::_Node;
 
   inline void _initRangeV(int& res) override {
     res = 0;

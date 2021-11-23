@@ -3,7 +3,6 @@
 #pragma once
 
 #include "common/macros.h"
-#include "debug/debug_basic.h"
 
 using namespace std;
 
@@ -38,7 +37,17 @@ struct BaseTreap {
   // Appends the range value to the result
   virtual inline void _appendRange(RANGE_V& res, const _Node& idx) = 0;
 
-  inline BaseTreap() : _rootCnt(1) {
+  inline BaseTreap() {
+    init();
+  }
+
+  inline void clear() {
+    _roots.assign(_rootCnt, -1);
+    _nodes.clear();
+  }
+
+  inline void init() {
+    _rootCnt = 1;
     clear();
   }
 
@@ -48,30 +57,14 @@ struct BaseTreap {
   }
 #endif
 
-#ifdef BASE_TREAP_RESERVE_ROOTS // ^
-  inline void reserveRoots(int n) {
-    _roots.reserve(n);
-  }
-#endif
-
-  inline void clear() {
-    _roots.assign(_rootCnt, -1);
-    _nodes.clear();
-  }
-
-#ifdef BASE_TREAP_INIT_ROOTS // ^
-  inline void initRoots(int rootCnt) {
-    _rootCnt = rootCnt;
-    clear();
-  }
-#endif
-
 #ifdef BASE_TREAP_INIT_ITEMS // ^
-  inline void initItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx = 0) {
-    DEBUG_LT(rootIdx, SIZE(_roots));
-    _roots[rootIdx] = _initItems(vs, 0, SIZE(vs));
+  inline void initItems(const vector<pair<KEY, NODE_V>>& vs) {
+    // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_INIT_ITEMS
+    _roots[0] = _initItems(vs, 0, SIZE(vs));
   }
+#endif
 
+#ifdef _BASE_TREAP_INIT_ITEMS // ^
   inline int _initItems(const vector<pair<KEY, NODE_V>>& vs, int from, int to) {
     if (from >= to) {
       return -1;
@@ -121,15 +114,17 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_UPDATE // ^
-  inline void update(KEY key, const NODE_V& delta, int rootIdx = 0) {
-    DEBUG_LT(rootIdx, SIZE(_roots));
-    _roots[rootIdx] = _update(_roots[rootIdx], key, delta);
+  inline void update(KEY key, const NODE_V& delta) {
+    // BASE_TREAP_UPDATE => _BASE_TREAP_UPDATE
+    _roots[0] = _update(_roots[0], key, delta);
   }
+#endif
 
+#ifdef _BASE_TREAP_UPDATE // ^
   // Returns the new root index
   inline int _update(int idx, KEY key, const NODE_V& delta) {
     if (idx < 0) {
-      // BASE_TREAP_UPDATE => _BASE_TREAP_NEW_NODE
+      // _BASE_TREAP_UPDATE => _BASE_TREAP_NEW_NODE
       return _newNode(key, delta);
     }
     auto& node = _nodes[idx];
@@ -143,7 +138,7 @@ struct BaseTreap {
       auto& node2 = _nodes[idx];
       node2._lIdx = newIdx;
       if (_nodes[newIdx]._priority > node2._priority) {
-        // BASE_TREAP_UPDATE => _BASE_TREAP_ROTATE
+        // _BASE_TREAP_UPDATE => _BASE_TREAP_ROTATE
         _rotateLeft(idx, newIdx);
         return newIdx;
       }
@@ -185,11 +180,13 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_ERASE // ^
-  inline void erase(KEY key, int rootIdx = 0) {
-    DEBUG_LT(rootIdx, SIZE(_roots));
-    _roots[rootIdx] = _erase(_roots[rootIdx], key);
+  inline void erase(KEY key) {
+    // BASE_TREAP_ERASE => _BASE_TREAP_ERASE
+    _roots[0] = _erase(_roots[0], key);
   }
+#endif
 
+#ifdef _BASE_TREAP_ERASE // ^
   inline int _erase(int idx, KEY key) {
     if (idx < 0) {
       return -1;
@@ -229,43 +226,47 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_PREFIX // ^
-  // Calculates prefix from [-inf, upper1]. NOTE: <upper1> is included
-  inline RANGE_V calcPrefix(KEY upper1, int rootIdx = 0) {
-    DEBUG_LT(rootIdx, SIZE(_roots));
+  // Calculates prefix from (-inf, upper_1] (i.e. (-inf, upper)). NOTE: <upper_1> is included
+  inline RANGE_V calcPrefix(KEY upper_1) {
     RANGE_V res;
     _initRangeV(res);
-    _calcPrefix(_roots[rootIdx], upper1, res);
+    // BASE_TREAP_CALC_PREFIX => _BASE_TREAP_CALC_PREFIX
+    _calcPrefix(_roots[0], upper_1, res);
     return res;
   }
+#endif
 
-  inline void _calcPrefix(int idx, KEY upper1, RANGE_V& res) {
+#ifdef _BASE_TREAP_CALC_PREFIX // ^
+  inline void _calcPrefix(int idx, KEY upper_1, RANGE_V& res) {
     if (idx < 0) {
       return;
     }
     const auto& node = _nodes[idx];
-    if (node._key > upper1) {
-      _calcPrefix(node._lIdx, upper1, res);
+    if (node._key > upper_1) {
+      _calcPrefix(node._lIdx, upper_1, res);
     } else {
       if (node._lIdx >= 0) {
         _appendRange(res, _nodes[node._lIdx]);
       }
       _appendNode(res, node);
-      if (node._key < upper1) {
-        _calcPrefix(node._rIdx, upper1, res);
+      if (node._key < upper_1) {
+        _calcPrefix(node._rIdx, upper_1, res);
       }
     }
   }
 #endif
 
 #ifdef BASE_TREAP_CALC_SUFFIX // ^
-  inline RANGE_V calcSuffix(KEY lower, int rootIdx = 0) {
-    DEBUG_LT(rootIdx, SIZE(_roots));
+  inline RANGE_V calcSuffix(KEY lower) {
     RANGE_V res;
     _initRangeV(res);
-    _calcSuffix(_roots[rootIdx], lower, res);
+    // BASE_TREAP_CALC_SUFFIX => _BASE_TREAP_CALC_SUFFIX
+    _calcSuffix(_roots[0], lower, res);
     return res;
   }
+#endif
 
+#ifdef _BASE_TREAP_CALC_SUFFIX // ^
   inline void _calcSuffix(int idx, KEY lower, RANGE_V& res) {
     if (idx < 0) {
       return;
@@ -282,6 +283,21 @@ struct BaseTreap {
         _appendRange(res, _nodes[node._rIdx]);
       }
     }
+  }
+#endif
+
+#ifdef BASE_TREAP_CALC_RANGE // ^
+  inline RANGE_V calcRange(KEY lower, KEY upper) {
+    RANGE_V res;
+    _initRangeV(res);
+    _calcRange(_roots[0], lower, upper, res);
+    return res;
+  }
+#endif
+
+#ifdef _BASE_TREAP_CALC_RANGE // ^
+  inline void _calcRange(int idx, KEY lower, KEY upper, RANGE_V& res) {
+    // TODO: WIP
   }
 #endif
 
