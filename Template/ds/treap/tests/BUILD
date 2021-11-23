@@ -1,11 +1,11 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
-    name = "treap_size_test",
-    srcs = ["treap_size_test.cpp"],
+    name = "treap_set_test",
+    srcs = ["treap_set_test.cpp"],
     deps = [
         "//ds/treap:base_treap_macros",
-        "//ds/treap:treap_size",
+        "//ds/treap:treap_set",
         "@gtest",
         "@gtest//:gtest_main",
     ],

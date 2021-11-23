@@ -2,6 +2,7 @@
 // ALL BASE_TREAP_ALL
 #pragma once
 
+#include "common/macros.h"
 #include "debug/debug_basic.h"
 
 using namespace std;
@@ -65,6 +66,60 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef BASE_TREAP_INIT_ITEMS // ^
+  inline void initItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx = 0) {
+    DEBUG_LT(rootIdx, SIZE(_roots));
+    _roots[rootIdx] = _initItems(vs, 0, SIZE(vs));
+  }
+
+  inline int _initItems(const vector<pair<KEY, NODE_V>>& vs, int from, int to) {
+    if (from >= to) {
+      return -1;
+    }
+    int medium = (from + to) >> 1;
+    // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_NEW_NODE
+    int newIdx = _newNode(vs[medium].first, vs[medium].second);
+    _nodes[newIdx]._lIdx = _initItems(vs, from, medium);
+    _nodes[newIdx]._rIdx = _initItems(vs, medium + 1, to);
+    return _heapify(newIdx);
+  }
+
+  inline int _heapify(int idx) {
+    if (idx < 0) {
+      return -1;
+    }
+    auto& node = _nodes[idx];
+    int lIdx = node._lIdx;
+    auto& lNode = _nodes[lIdx];
+    int rIdx = node._rIdx;
+    auto& rNode = _nodes[rIdx];
+    if (lIdx >= 0 && lNode._priority > node._priority &&
+        (rIdx < 0 || lNode._priority > rNode._priority)) {
+      // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_ROTATE
+      _rotateLeft(idx, lIdx);
+      return lIdx;
+    }
+    if (rIdx >= 0 && rNode._priority > node._priority &&
+        (lIdx < 0 || rNode._priority > lNode._priority)) {
+      _rotateRight(idx, rIdx);
+      return rIdx;
+    }
+    _mergeRangeV(node);
+    return idx;
+  }
+#endif
+
+#ifdef _BASE_TREAP_NEW_NODE // ^
+  inline int _newNode(KEY key, const NODE_V& delta) {
+    int idx = SIZE(_nodes);
+    _nodes.emplace_back(key);
+    auto& node = _nodes.back();
+    _initV(node);
+    _updateV(node, delta);
+    return idx;
+  }
+#endif
+
 #ifdef BASE_TREAP_UPDATE // ^
   inline void update(KEY key, const NODE_V& delta, int rootIdx = 0) {
     DEBUG_LT(rootIdx, SIZE(_roots));
@@ -74,12 +129,8 @@ struct BaseTreap {
   // Returns the new root index
   inline int _update(int idx, KEY key, const NODE_V& delta) {
     if (idx < 0) {
-      idx = _nodes.size();
-      _nodes.emplace_back(key);
-      auto& node = _nodes.back();
-      _initV(node);
-      _updateV(node, delta);
-      return idx;
+      // BASE_TREAP_UPDATE => _BASE_TREAP_NEW_NODE
+      return _newNode(key, delta);
     }
     auto& node = _nodes[idx];
     if (node._key == key) {
@@ -92,6 +143,7 @@ struct BaseTreap {
       auto& node2 = _nodes[idx];
       node2._lIdx = newIdx;
       if (_nodes[newIdx]._priority > node2._priority) {
+        // BASE_TREAP_UPDATE => _BASE_TREAP_ROTATE
         _rotateLeft(idx, newIdx);
         return newIdx;
       }
@@ -108,7 +160,9 @@ struct BaseTreap {
     _mergeRangeV(_nodes[idx]);
     return idx;
   }
+#endif
 
+#ifdef _BASE_TREAP_ROTATE // ^
   inline void _rotateLeft(int idx, int lIdx) {
     auto& node = _nodes[idx];
     auto& lNode = _nodes[lIdx];
@@ -198,6 +252,34 @@ struct BaseTreap {
       _appendNode(res, node);
       if (node._key < upper1) {
         _calcPrefix(node._rIdx, upper1, res);
+      }
+    }
+  }
+#endif
+
+#ifdef BASE_TREAP_CALC_SUFFIX // ^
+  inline RANGE_V calcSuffix(KEY lower, int rootIdx = 0) {
+    DEBUG_LT(rootIdx, SIZE(_roots));
+    RANGE_V res;
+    _initRangeV(res);
+    _calcSuffix(_roots[rootIdx], lower, res);
+    return res;
+  }
+
+  inline void _calcSuffix(int idx, KEY lower, RANGE_V& res) {
+    if (idx < 0) {
+      return;
+    }
+    const auto& node = _nodes[idx];
+    if (node._key < lower) {
+      _calcSuffix(node._rIdx, lower, res);
+    } else {
+      if (node._key > lower) {
+        _calcSuffix(node._lIdx, lower, res);
+      }
+      _appendNode(res, node);
+      if (node._rIdx >= 0) {
+        _appendRange(res, _nodes[node._rIdx]);
       }
     }
   }
