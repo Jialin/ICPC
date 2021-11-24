@@ -12,6 +12,17 @@ cc_test(
 )
 
 cc_test(
+    name = "treap_multiset_test",
+    srcs = ["treap_multiset_test.cpp"],
+    deps = [
+        "//ds/treap:base_treap_macros",
+        "//ds/treap:treap_multiset",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "treap_set_test",
     srcs = ["treap_set_test.cpp"],
     deps = [

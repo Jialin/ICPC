@@ -324,6 +324,43 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef BASE_TREAP_CALC_KTH // ^
+  template<typename KTH>
+  inline const _Node* calcKth(const KTH& kth) {
+    // BASE_TREAP_CALC_KTH => _BASE_TREAP_CALC_KTH
+    return _calcKth(_roots[0], kth);
+  }
+#endif
+
+#ifdef _BASE_TREAP_CALC_KTH // ^
+  template<typename KTH>
+  inline const _Node* _calcKth(int idx, KTH kth) {
+    if (idx < 0 || kth < 0 || !(kth < _nodes[idx]._rangeV)) {
+      return nullptr;
+    }
+    while (true) {
+      const auto& node = _nodes[idx];
+      if (node._lIdx >= 0) {
+        const auto& lNode = _nodes[node._lIdx];
+        if (kth < lNode._rangeV) {
+          idx = node._lIdx;
+          continue;
+        }
+        kth -= lNode._rangeV;
+      }
+      RANGE_V tmpRangeV;
+      _initRangeV(tmpRangeV);
+      _appendNode(tmpRangeV, node);
+      if (kth < tmpRangeV) {
+        return &node;
+      }
+      kth -= tmpRangeV;
+      idx = node._rIdx;
+    }
+    return nullptr;
+  }
+#endif
+
   vector<_Node> _nodes;
   vector<int> _roots;
   int _rootCnt;

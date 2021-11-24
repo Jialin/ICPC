@@ -39,6 +39,12 @@ cc_library(
 )
 
 cc_library(
+    name = "treap_multiset",
+    hdrs = ["treap_multiset.h"],
+    deps = [":base_treap"],
+)
+
+cc_library(
     name = "treap_set",
     hdrs = ["treap_set.h"],
     deps = [":base_treap"],
