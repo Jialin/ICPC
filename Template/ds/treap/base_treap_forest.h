@@ -32,7 +32,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #endif
 
 #ifdef BASE_TREAP_FOREST_UPDATE // ^
-  inline void update(KEY key, const NODE_V& delta, int rootIdx) {
+  inline void update(const KEY& key, const NODE_V& delta, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     // BASE_TREAP_FOREST_UPDATE => _BASE_TREAP_UPDATE
     this->_roots[rootIdx] = this->_update(this->_roots[rootIdx], key, delta);
@@ -40,7 +40,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #endif
 
 #ifdef BASE_TREAP_FOREST_ERASE // ^
-  inline void erase(KEY key, int rootIdx) {
+  inline void erase(const KEY& key, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     // BASE_TREAP_FOREST_ERASE => _BASE_TREAP_ERASE
     this->_roots[rootIdx] = this->_erase(this->_roots[rootIdx], key);
@@ -49,7 +49,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_CALC_PREFIX // ^
   // Calculates prefix from [-inf, upper1]. NOTE: <upper1> is included
-  inline RANGE_V calcPrefix(KEY upper1, int rootIdx) {
+  inline RANGE_V calcPrefix(const KEY& upper1, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     RANGE_V res;
     this->_initRangeV(res);
@@ -60,7 +60,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #endif
 
 #ifdef BASE_TREAP_FOREST_CALC_SUFFIX // ^
-  inline RANGE_V calcSuffix(KEY lower, int rootIdx) {
+  inline RANGE_V calcSuffix(const KEY& lower, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     RANGE_V res;
     this->_initRangeV(res);
@@ -71,7 +71,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #endif
 
 #ifdef BASE_TREAP_FOREST_CALC_RANGE // ^
-  inline RANGE_V calcRange(KEY lower, KEY upper, int rootIdx) {
+  inline RANGE_V calcRange(const KEY& lower, const KEY& upper, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     RANGE_V res;
     _initRangeV(res);

@@ -29,14 +29,14 @@ TEST(TreapSetTest, calcPrefix) {
   EXPECT_EQ(1, treap.calcPrefix(20));
   EXPECT_EQ(2, treap.calcPrefix(21));
 
-  treap.update(15, false);
+  treap.erase(15);
   EXPECT_EQ(0, treap.calcPrefix(1));
   EXPECT_EQ(0, treap.calcPrefix(10));
   EXPECT_EQ(1, treap.calcPrefix(11));
   EXPECT_EQ(1, treap.calcPrefix(20));
   EXPECT_EQ(2, treap.calcPrefix(21));
 
-  treap.update(10, false);
+  treap.erase(10);
   EXPECT_EQ(0, treap.calcPrefix(1));
   EXPECT_EQ(0, treap.calcPrefix(10));
   EXPECT_EQ(0, treap.calcPrefix(11));
@@ -220,7 +220,7 @@ TEST(TreapSetTest, calcRange) {
 
 TEST(TreapSetTest, initItems) {
   TreapSet<int> treap;
-  treap.initItems({{5, true}, {10, true}, {11, true}});
+  treap.initItems({{5, nullptr}, {10, nullptr}, {11, nullptr}});
   EXPECT_EQ(0, treap.calcPrefix(5));
   EXPECT_EQ(1, treap.calcPrefix(6));
   EXPECT_EQ(1, treap.calcPrefix(7));

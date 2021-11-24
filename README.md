@@ -139,7 +139,7 @@
 
 ### 1.5.2. Problems
 - [x] [SPOJ - Ada and Aphids](https://www.spoj.com/problems/ADAAPHID/)
-- [ ] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
+- [x] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
 - [ ] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
 - [ ] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/)
 - [ ] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)

@@ -16,7 +16,7 @@ struct BaseTreap {
     NODE_V _v;
     RANGE_V _rangeV;
 
-    inline _Node(KEY key) : _key(key), _priority(rand()), _lIdx(-1), _rIdx(-1) {}
+    inline _Node(const KEY& key) : _key(key), _priority(rand()), _lIdx(-1), _rIdx(-1) {}
   };
 
   // Initializes range value
@@ -103,7 +103,7 @@ struct BaseTreap {
 #endif
 
 #ifdef _BASE_TREAP_NEW_NODE // ^
-  inline int _newNode(KEY key, const NODE_V& delta) {
+  inline int _newNode(const KEY& key, const NODE_V& delta) {
     int idx = SIZE(_nodes);
     _nodes.emplace_back(key);
     auto& node = _nodes.back();
@@ -114,7 +114,7 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_UPDATE // ^
-  inline void update(KEY key, const NODE_V& delta) {
+  inline void update(const KEY& key, const NODE_V& delta) {
     // BASE_TREAP_UPDATE => _BASE_TREAP_UPDATE
     _roots[0] = _update(_roots[0], key, delta);
   }
@@ -122,7 +122,7 @@ struct BaseTreap {
 
 #ifdef _BASE_TREAP_UPDATE // ^
   // Returns the new root index
-  inline int _update(int idx, KEY key, const NODE_V& delta) {
+  inline int _update(int idx, const KEY& key, const NODE_V& delta) {
     if (idx < 0) {
       // _BASE_TREAP_UPDATE => _BASE_TREAP_NEW_NODE
       return _newNode(key, delta);
@@ -132,7 +132,7 @@ struct BaseTreap {
       _updateV(node, delta);
       return idx;
     }
-    if (node._key > key) {
+    if (key < node._key) {
       int newIdx = _update(node._lIdx, key, delta);
       // _update might invalidate the vector reference
       auto& node2 = _nodes[idx];
@@ -180,14 +180,14 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_ERASE // ^
-  inline void erase(KEY key) {
+  inline void erase(const KEY& key) {
     // BASE_TREAP_ERASE => _BASE_TREAP_ERASE
     _roots[0] = _erase(_roots[0], key);
   }
 #endif
 
 #ifdef _BASE_TREAP_ERASE // ^
-  inline int _erase(int idx, KEY key) {
+  inline int _erase(int idx, const KEY& key) {
     if (idx < 0) {
       return -1;
     }
@@ -196,7 +196,7 @@ struct BaseTreap {
       // _BASE_TREAP_ERASE => _BASE_TREAP_MERGE
       return _merge(node._lIdx, node._rIdx);
     }
-    if (node._key > key) {
+    if (key < node._key) {
       node._lIdx = _erase(node._lIdx, key);
     } else {
       node._rIdx = _erase(node._rIdx, key);
@@ -229,7 +229,7 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_PREFIX // ^
-  inline RANGE_V calcPrefix(KEY upper) {
+  inline RANGE_V calcPrefix(const KEY& upper) {
     RANGE_V res;
     _initRangeV(res);
     // BASE_TREAP_CALC_PREFIX => _BASE_TREAP_CALC_PREFIX
@@ -239,7 +239,7 @@ struct BaseTreap {
 #endif
 
 #ifdef _BASE_TREAP_CALC_PREFIX // ^
-  inline void _calcPrefix(int idx, KEY upper, RANGE_V& res) {
+  inline void _calcPrefix(int idx, const KEY& upper, RANGE_V& res) {
     if (idx < 0) {
       return;
     }
@@ -257,7 +257,7 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_SUFFIX // ^
-  inline RANGE_V calcSuffix(KEY lower) {
+  inline RANGE_V calcSuffix(const KEY& lower) {
     RANGE_V res;
     _initRangeV(res);
     // BASE_TREAP_CALC_SUFFIX => _BASE_TREAP_CALC_SUFFIX
@@ -267,7 +267,7 @@ struct BaseTreap {
 #endif
 
 #ifdef _BASE_TREAP_CALC_SUFFIX // ^
-  inline void _calcSuffix(int idx, KEY lower, RANGE_V& res) {
+  inline void _calcSuffix(int idx, const KEY& lower, RANGE_V& res) {
     if (idx < 0) {
       return;
     }
@@ -275,7 +275,7 @@ struct BaseTreap {
     if (node._key < lower) {
       _calcSuffix(node._rIdx, lower, res);
     } else {
-      if (node._key > lower) {
+      if (lower < node._key) {
         _calcSuffix(node._lIdx, lower, res);
       }
       _appendNode(res, node);
@@ -287,14 +287,14 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_RANGE // ^
-  inline RANGE_V calcRange(KEY lower, KEY upper) {
+  inline RANGE_V calcRange(const KEY& lower, const KEY& upper) {
     // BASE_TREAP_CALC_RANGE => _BASE_TREAP_CALC_RANGE
     return _calcRange(_roots[0], lower, upper);
   }
 #endif
 
 #ifdef _BASE_TREAP_CALC_RANGE // ^
-  inline RANGE_V _calcRange(int& idx, KEY lower, KEY upper) {
+  inline RANGE_V _calcRange(int& idx, const KEY& lower, const KEY& upper) {
     int lIdx, rIdx;
     _split(idx, upper, lIdx, rIdx);
     RANGE_V res;
@@ -307,7 +307,7 @@ struct BaseTreap {
   }
 
   // Splits into 2 parts, all keys in the left hand side should be smaller than <upper>
-  inline void _split(int idx, KEY upper, int& lIdx, int& rIdx) {
+  inline void _split(int idx, const KEY& upper, int& lIdx, int& rIdx) {
     if (idx < 0) {
       lIdx = rIdx = -1;
       return;
