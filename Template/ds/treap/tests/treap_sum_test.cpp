@@ -9,39 +9,39 @@ namespace ds {
 
 TEST(TreapSumTest, basic) {
   TreapSum<int> treap;
-  EXPECT_EQ(0, treap.calcPrefix(0));
-  EXPECT_EQ(0, treap.calcPrefix(9));
+  EXPECT_EQ(0, treap.calcPrefix(1));
   EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(0, treap.calcPrefix(19));
+  EXPECT_EQ(0, treap.calcPrefix(11));
   EXPECT_EQ(0, treap.calcPrefix(20));
+  EXPECT_EQ(0, treap.calcPrefix(21));
 
   treap.update(10, 100);
-  EXPECT_EQ(0, treap.calcPrefix(0));
-  EXPECT_EQ(0, treap.calcPrefix(9));
-  EXPECT_EQ(100, treap.calcPrefix(10));
-  EXPECT_EQ(100, treap.calcPrefix(19));
+  EXPECT_EQ(0, treap.calcPrefix(1));
+  EXPECT_EQ(0, treap.calcPrefix(10));
+  EXPECT_EQ(100, treap.calcPrefix(11));
   EXPECT_EQ(100, treap.calcPrefix(20));
+  EXPECT_EQ(100, treap.calcPrefix(21));
 
   treap.update(20, 200);
-  EXPECT_EQ(0, treap.calcPrefix(0));
-  EXPECT_EQ(0, treap.calcPrefix(9));
-  EXPECT_EQ(100, treap.calcPrefix(10));
-  EXPECT_EQ(100, treap.calcPrefix(19));
-  EXPECT_EQ(300, treap.calcPrefix(20));
+  EXPECT_EQ(0, treap.calcPrefix(1));
+  EXPECT_EQ(0, treap.calcPrefix(10));
+  EXPECT_EQ(100, treap.calcPrefix(11));
+  EXPECT_EQ(100, treap.calcPrefix(20));
+  EXPECT_EQ(300, treap.calcPrefix(21));
 
   treap.update(5, 300);
-  EXPECT_EQ(0, treap.calcPrefix(0));
-  EXPECT_EQ(300, treap.calcPrefix(9));
-  EXPECT_EQ(400, treap.calcPrefix(10));
-  EXPECT_EQ(400, treap.calcPrefix(19));
-  EXPECT_EQ(600, treap.calcPrefix(20));
+  EXPECT_EQ(0, treap.calcPrefix(1));
+  EXPECT_EQ(300, treap.calcPrefix(10));
+  EXPECT_EQ(400, treap.calcPrefix(11));
+  EXPECT_EQ(400, treap.calcPrefix(20));
+  EXPECT_EQ(600, treap.calcPrefix(21));
 
   treap.update(-5, 400);
-  EXPECT_EQ(400, treap.calcPrefix(0));
-  EXPECT_EQ(700, treap.calcPrefix(9));
-  EXPECT_EQ(800, treap.calcPrefix(10));
-  EXPECT_EQ(800, treap.calcPrefix(19));
-  EXPECT_EQ(1000, treap.calcPrefix(20));
+  EXPECT_EQ(400, treap.calcPrefix(1));
+  EXPECT_EQ(700, treap.calcPrefix(10));
+  EXPECT_EQ(800, treap.calcPrefix(11));
+  EXPECT_EQ(800, treap.calcPrefix(20));
+  EXPECT_EQ(1000, treap.calcPrefix(21));
 }
 
 } // namespace ds

@@ -193,6 +193,7 @@ struct BaseTreap {
     }
     auto& node = _nodes[idx];
     if (node._key == key) {
+      // _BASE_TREAP_ERASE => _BASE_TREAP_MERGE
       return _merge(node._lIdx, node._rIdx);
     }
     if (node._key > key) {
@@ -203,7 +204,9 @@ struct BaseTreap {
     _mergeRangeV(node);
     return idx;
   }
+#endif
 
+#ifdef _BASE_TREAP_MERGE // ^
   inline int _merge(int lIdx, int rIdx) {
     if (lIdx < 0) {
       return rIdx;
@@ -226,32 +229,29 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_PREFIX // ^
-  // Calculates prefix from (-inf, upper_1] (i.e. (-inf, upper)). NOTE: <upper_1> is included
-  inline RANGE_V calcPrefix(KEY upper_1) {
+  inline RANGE_V calcPrefix(KEY upper) {
     RANGE_V res;
     _initRangeV(res);
     // BASE_TREAP_CALC_PREFIX => _BASE_TREAP_CALC_PREFIX
-    _calcPrefix(_roots[0], upper_1, res);
+    _calcPrefix(_roots[0], upper, res);
     return res;
   }
 #endif
 
 #ifdef _BASE_TREAP_CALC_PREFIX // ^
-  inline void _calcPrefix(int idx, KEY upper_1, RANGE_V& res) {
+  inline void _calcPrefix(int idx, KEY upper, RANGE_V& res) {
     if (idx < 0) {
       return;
     }
     const auto& node = _nodes[idx];
-    if (node._key > upper_1) {
-      _calcPrefix(node._lIdx, upper_1, res);
-    } else {
+    if (node._key < upper) {
       if (node._lIdx >= 0) {
         _appendRange(res, _nodes[node._lIdx]);
       }
       _appendNode(res, node);
-      if (node._key < upper_1) {
-        _calcPrefix(node._rIdx, upper_1, res);
-      }
+      _calcPrefix(node._rIdx, upper, res);
+    } else {
+      _calcPrefix(node._lIdx, upper, res);
     }
   }
 #endif
@@ -288,16 +288,39 @@ struct BaseTreap {
 
 #ifdef BASE_TREAP_CALC_RANGE // ^
   inline RANGE_V calcRange(KEY lower, KEY upper) {
-    RANGE_V res;
-    _initRangeV(res);
-    _calcRange(_roots[0], lower, upper, res);
-    return res;
+    // BASE_TREAP_CALC_RANGE => _BASE_TREAP_CALC_RANGE
+    return _calcRange(_roots[0], lower, upper);
   }
 #endif
 
 #ifdef _BASE_TREAP_CALC_RANGE // ^
-  inline void _calcRange(int idx, KEY lower, KEY upper, RANGE_V& res) {
-    // TODO: WIP
+  inline RANGE_V _calcRange(int& idx, KEY lower, KEY upper) {
+    int lIdx, rIdx;
+    _split(idx, upper, lIdx, rIdx);
+    RANGE_V res;
+    _initRangeV(res);
+    // _BASE_TREAP_CALC_RANGE => _BASE_TREAP_CALC_SUFFIX
+    _calcSuffix(lIdx, lower, res);
+    // _BASE_TREAP_CALC_RANGE => _BASE_TREAP_MERGE
+    idx = _merge(lIdx, rIdx);
+    return res;
+  }
+
+  // Splits into 2 parts, all keys in the left hand side should be smaller than <upper>
+  inline void _split(int idx, KEY upper, int& lIdx, int& rIdx) {
+    if (idx < 0) {
+      lIdx = rIdx = -1;
+      return;
+    }
+    auto& node = _nodes[idx];
+    if (node._key < upper) {
+      _split(node._rIdx, upper, node._rIdx, rIdx);
+      lIdx = idx;
+    } else {
+      _split(node._lIdx, upper, lIdx, node._lIdx);
+      rIdx = idx;
+    }
+    _mergeRangeV(_nodes[idx]);
   }
 #endif
 
