@@ -140,10 +140,9 @@
 ### 1.5.2. Problems
 - [x] [SPOJ - Ada and Aphids](https://www.spoj.com/problems/ADAAPHID/)
 - [x] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
-- [ ] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
-- [ ] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/)
-- [ ] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
-- [ ] [Codeforces - Dog Show](https://codeforces.com/contest/847/problem/D)
+- [x] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
+- [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): TODO: Segment Tree Revisit
+- [x] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
 - [ ] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D)
 - [ ] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
 - [ ] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/)
