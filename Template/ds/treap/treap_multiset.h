@@ -1,7 +1,8 @@
+// !macro_gen
+// ALL TREAP_MULTISET_ALL
 #pragma once
 
-#define BASE_TREAP_UPDATE
-#include "ds/treap/base_treap_macros.h"
+#include "ds/treap/base_treap_macros.h" // INCLUDE
 
 #include "ds/treap/base_treap.h"
 
@@ -9,9 +10,12 @@ namespace ds {
 
 template<typename KEY = int>
 struct TreapMultiset : BaseTreap<int, int, KEY> {
+#ifdef TREAP_MULTISET_INSERT // ^
   inline void insert(const KEY& key) {
+    // TREAP_MULTISET_INSERT => BASE_TREAP_UPDATE
     this->update(key, 1);
   }
+#endif
 
   using _Node = typename TreapMultiset::_Node;
 

@@ -6,6 +6,7 @@ cc_test(
     deps = [
         "//ds/treap:base_treap_forest_macros",
         "//ds/treap:treap_forest_set",
+        "//ds/treap:treap_forest_set_macros",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -17,6 +18,7 @@ cc_test(
     deps = [
         "//ds/treap:base_treap_macros",
         "//ds/treap:treap_multiset",
+        "//ds/treap:treap_multiset_macros",
         "@gtest",
         "@gtest//:gtest_main",
     ],
@@ -28,6 +30,7 @@ cc_test(
     deps = [
         "//ds/treap:base_treap_macros",
         "//ds/treap:treap_set",
+        "//ds/treap:treap_set_macros",
         "@gtest",
         "@gtest//:gtest_main",
     ],

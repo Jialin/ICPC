@@ -29,6 +29,11 @@ cc_library(
 )
 
 cc_library(
+    name = "treap_forest_set_macros",
+    hdrs = ["treap_forest_set_macros.h"],
+)
+
+cc_library(
     name = "treap_forest_set",
     hdrs = ["treap_forest_set.h"],
     deps = [
@@ -39,9 +44,21 @@ cc_library(
 )
 
 cc_library(
+    name = "treap_multiset_macros",
+    hdrs = ["treap_multiset_macros.h"],
+    deps = [":base_treap_macros"],
+)
+
+cc_library(
     name = "treap_multiset",
     hdrs = ["treap_multiset.h"],
     deps = [":base_treap"],
+)
+
+cc_library(
+    name = "treap_set_macros",
+    hdrs = ["treap_set_macros.h"],
+    deps = [":base_treap_macros"],
 )
 
 cc_library(

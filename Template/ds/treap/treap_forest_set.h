@@ -1,7 +1,8 @@
+// !macro_gen
+// ALL TREAP_FOREST_SET_ALL
 #pragma once
 
-#define BASE_TREAP_FOREST_UPDATE
-#include "ds/treap/base_treap_forest_macros.h"
+#include "ds/treap/base_treap_forest_macros.h" // INCLUDE
 
 #include "ds/treap/base_treap_forest.h"
 
@@ -9,9 +10,12 @@ namespace ds {
 
 template<typename KEY = int>
 struct TreapForestSet : BaseTreapForest<nullptr_t, int, KEY> {
+#ifdef TREAP_FOREST_SET_INSERT // ^
   inline void insert(const KEY& key, int rootIdx) {
+    // TREAP_FOREST_SET_INSERT => BASE_TREAP_FOREST_UPDATE
     this->update(key, nullptr, rootIdx);
   }
+#endif
 
   using _Node = typename BaseTreap<nullptr_t, int, KEY>::_Node;
 

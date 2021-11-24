@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 
 #define BASE_TREAP_ALL
+#define TREAP_MULTISET_ALL
 #include "ds/treap/base_treap_macros.h"
+#include "ds/treap/treap_multiset_macros.h"
 
 #include "ds/treap/treap_multiset.h"
 
