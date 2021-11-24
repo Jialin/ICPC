@@ -1,8 +1,7 @@
 #pragma once
 
+#define BASE_TREAP_FOREST_UPDATE
 #include "ds/treap/base_treap_forest_macros.h"
-
-#include "ds/treap/base_treap_macros.h"
 
 #include "ds/treap/base_treap_forest.h"
 

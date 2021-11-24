@@ -2,6 +2,8 @@
 // ALL BASE_TREAP_FOREST_ALL
 #pragma once
 
+#include "ds/treap/base_treap_macros.h" // INCLUDE
+
 #include "common/macros.h"
 #include "debug/debug_basic.h"
 #include "ds/treap/base_treap.h"

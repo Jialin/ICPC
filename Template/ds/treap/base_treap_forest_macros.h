@@ -31,3 +31,5 @@
 #ifdef BASE_TREAP_FOREST_UPDATE
 #define _BASE_TREAP_UPDATE
 #endif
+
+#include "ds/treap/base_treap_macros.h"
