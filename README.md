@@ -28,6 +28,9 @@
   - [2.1. Sqrt Decomposition (Template/algo/sqrt/)](#21-sqrt-decomposition-templatealgosqrt)
     - [2.1.1. Resources](#211-resources)
     - [2.1.2. Problems](#212-problems)
+  - [2.2. Divide and Conquer](#22-divide-and-conquer)
+    - [2.2.1. Notes](#221-notes)
+    - [2.2.2. Problems](#222-problems)
 - [3. Tricks](#3-tricks)
   - [3.1. GCD](#31-gcd)
   - [3.2. Modular Fast Division](#32-modular-fast-division)
@@ -137,7 +140,6 @@
 ### 1.5.2. Problems
 - [x] [SPOJ - Ada and Aphids](https://www.spoj.com/problems/ADAAPHID/)
 - [ ] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
-- [ ] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E)
 - [ ] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
 - [ ] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/)
 - [ ] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
@@ -184,6 +186,17 @@
 - [ ] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
 - [ ] [Codeforces - Powerful array](https://codeforces.com/contest/86/problem/D)
 - [ ] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
+
+## 2.2. Divide and Conquer
+
+### 2.2.1. Notes
+- Typical steps:
+  - Split problems into 2 sub-problems
+  - Solve sub-problems recurresively
+  - Merge 2 sub-problems in certain ways (e.g. sorted)
+
+### 2.2.2. Problems
+- [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
 
 # 3. Tricks
 
