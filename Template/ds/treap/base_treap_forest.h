@@ -25,11 +25,11 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
   }
 #endif
 
-#ifdef BASE_TREAP_FOREST_INIT_ITEMS // ^
-  inline void initItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx) {
+#ifdef BASE_TREAP_FOREST_INIT_ORDERED_ITEMS // ^
+  inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
-    // BASE_TREAP_FOREST_INIT_ITEMS => _BASE_TREAP_INIT_ITEMS
-    this->_roots[rootIdx] = this->_initItems(vs, 0, SIZE(vs));
+    // BASE_TREAP_FOREST_INIT_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
+    this->_roots[rootIdx] = this->_initOrderedItems(vs, 0, SIZE(vs));
   }
 #endif
 

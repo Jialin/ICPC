@@ -144,9 +144,9 @@
 - [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): TODO: Segment Tree Revisit
 - [x] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
 - [ ] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D)
-- [ ] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
+- [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 - [ ] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/)
-- [ ] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/)
+- [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
 - [ ] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
 - [ ] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F)
 - [ ] [Codeforces - Wizards and Roads](https://codeforces.com/problemset/problem/167/D)

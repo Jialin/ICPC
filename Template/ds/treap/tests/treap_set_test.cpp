@@ -220,9 +220,9 @@ TEST(TreapSetTest, calcRange) {
   EXPECT_EQ(1, treap.calcRange(20, 21));
 }
 
-TEST(TreapSetTest, initItems) {
+TEST(TreapSetTest, initOrderedItems) {
   TreapSet<int> treap;
-  treap.initItems({{5, nullptr}, {10, nullptr}, {11, nullptr}});
+  treap.initOrderedItems({{5, nullptr}, {10, nullptr}, {11, nullptr}});
   EXPECT_EQ(0, treap.calcPrefix(5));
   EXPECT_EQ(1, treap.calcPrefix(6));
   EXPECT_EQ(1, treap.calcPrefix(7));

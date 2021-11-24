@@ -57,23 +57,23 @@ struct BaseTreap {
   }
 #endif
 
-#ifdef BASE_TREAP_INIT_ITEMS // ^
-  inline void initItems(const vector<pair<KEY, NODE_V>>& vs) {
-    // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_INIT_ITEMS
-    _roots[0] = _initItems(vs, 0, SIZE(vs));
+#ifdef BASE_TREAP_INIT_ORDERED_ITEMS // ^
+  inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& vs) {
+    // BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
+    _roots[0] = _initOrderedItems(vs, 0, SIZE(vs));
   }
 #endif
 
-#ifdef _BASE_TREAP_INIT_ITEMS // ^
-  inline int _initItems(const vector<pair<KEY, NODE_V>>& vs, int from, int to) {
+#ifdef _BASE_TREAP_INIT_ORDERED_ITEMS // ^
+  inline int _initOrderedItems(const vector<pair<KEY, NODE_V>>& vs, int from, int to) {
     if (from >= to) {
       return -1;
     }
     int medium = (from + to) >> 1;
     // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_NEW_NODE
     int newIdx = _newNode(vs[medium].first, vs[medium].second);
-    _nodes[newIdx]._lIdx = _initItems(vs, from, medium);
-    _nodes[newIdx]._rIdx = _initItems(vs, medium + 1, to);
+    _nodes[newIdx]._lIdx = _initOrderedItems(vs, from, medium);
+    _nodes[newIdx]._rIdx = _initOrderedItems(vs, medium + 1, to);
     return _heapify(newIdx);
   }
 
