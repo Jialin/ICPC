@@ -13,32 +13,32 @@ TEST(FenwickMin, basic) {
   ds::FenwickMin<int> fen;
   fen.init(5);
 
-  EXPECT_EQ(2147483647, fen.calcPrefix(0));
   EXPECT_EQ(2147483647, fen.calcPrefix(1));
   EXPECT_EQ(2147483647, fen.calcPrefix(2));
   EXPECT_EQ(2147483647, fen.calcPrefix(3));
   EXPECT_EQ(2147483647, fen.calcPrefix(4));
+  EXPECT_EQ(2147483647, fen.calcPrefix(5));
 
   fen.update(1, 40);
-  EXPECT_EQ(2147483647, fen.calcPrefix(0));
-  EXPECT_EQ(40, fen.calcPrefix(1));
+  EXPECT_EQ(2147483647, fen.calcPrefix(1));
   EXPECT_EQ(40, fen.calcPrefix(2));
   EXPECT_EQ(40, fen.calcPrefix(3));
   EXPECT_EQ(40, fen.calcPrefix(4));
+  EXPECT_EQ(40, fen.calcPrefix(5));
 
   fen.update(3, 30);
-  EXPECT_EQ(2147483647, fen.calcPrefix(0));
-  EXPECT_EQ(40, fen.calcPrefix(1));
+  EXPECT_EQ(2147483647, fen.calcPrefix(1));
   EXPECT_EQ(40, fen.calcPrefix(2));
-  EXPECT_EQ(30, fen.calcPrefix(3));
+  EXPECT_EQ(40, fen.calcPrefix(3));
   EXPECT_EQ(30, fen.calcPrefix(4));
+  EXPECT_EQ(30, fen.calcPrefix(5));
 
   fen.update(4, 20);
-  EXPECT_EQ(2147483647, fen.calcPrefix(0));
-  EXPECT_EQ(40, fen.calcPrefix(1));
+  EXPECT_EQ(2147483647, fen.calcPrefix(1));
   EXPECT_EQ(40, fen.calcPrefix(2));
-  EXPECT_EQ(30, fen.calcPrefix(3));
-  EXPECT_EQ(20, fen.calcPrefix(4));
+  EXPECT_EQ(40, fen.calcPrefix(3));
+  EXPECT_EQ(30, fen.calcPrefix(4));
+  EXPECT_EQ(20, fen.calcPrefix(5));
 }
 
 } // namespace ds

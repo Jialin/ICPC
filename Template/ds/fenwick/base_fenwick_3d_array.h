@@ -24,10 +24,12 @@ struct BaseFenwick3DArray {
   }
 
   inline void update(int x, int y, int z, const V& deltaV) {
-    for (int i = x; i < _n; i |= i + 1) {
-      for (int j = y; j < _m; j |= j + 1) {
-        for (int k = z; k < _l; k |= k + 1) {
-          addV(_vs[i][j][k], deltaV);
+    if (y < _m && z < _l) {
+      for (int i = x; i < _n; i |= i + 1) {
+        for (int j = y; j < _m; j |= j + 1) {
+          for (int k = z; k < _l; k |= k + 1) {
+            addV(_vs[i][j][k], deltaV);
+          }
         }
       }
     }
@@ -43,15 +45,19 @@ struct BaseFenwick3DArray {
 
   inline void calcPrefix(int x, int y, int z, V& res) {
     initV(res);
-    for (int i = x; i >= 0; --i) {
-      for (int j = y; j >= 0; --j) {
-        for (int k = z; k >= 0; --k) {
-          addV(res, _vs[i][j][k]);
-          k &= k + 1;
+    y = min(y, _m) - 1;
+    z = min(z, _l) - 1;
+    if (y >= 0 && z >= 0) {
+      for (int i = min(x, _n) - 1; i >= 0; --i) {
+        for (int j = y; j >= 0; --j) {
+          for (int k = z; k >= 0; --k) {
+            addV(res, _vs[i][j][k]);
+            k &= k + 1;
+          }
+          j &= j + 1;
         }
-        j &= j + 1;
+        i &= i + 1;
       }
-      i &= i + 1;
     }
   }
 
@@ -60,32 +66,31 @@ struct BaseFenwick3DArray {
 
   inline V calcRange(int x1, int y1, int z1, int x2, int y2, int z2) {
     // BASE_FENWICK_3D_ARRAY_CALC_RANGE => BASE_FENWICK_3D_ARRAY_CALC_PREFIX_RETURN
-    --x1;
-    --y1;
-    --z1;
-    --x2;
-    --y2;
-    --z2;
+    if (x1 >= x2 || y1 >= y2 || z1 >= z2 || x1 >= _n || y1 >= _m || z1 >= _l) {
+      V res;
+      initV(res);
+      return res;
+    }
     V res = calcPrefix(x2, y2, z2);
-    if (x1 >= 0) {
+    if (x1 > 0) {
       subV(res, calcPrefix(x1, y2, z2));
     }
-    if (y1 >= 0) {
+    if (y1 > 0) {
       subV(res, calcPrefix(x2, y1, z2));
     }
-    if (z1 >= 0) {
+    if (z1 > 0) {
       subV(res, calcPrefix(x2, y2, z1));
     }
-    if (x1 >= 0 && y1 >= 0) {
+    if (x1 > 0 && y1 > 0) {
       addV(res, calcPrefix(x1, y1, z2));
     }
-    if (x1 >= 0 && z1 >= 0) {
+    if (x1 > 0 && z1 > 0) {
       addV(res, calcPrefix(x1, y2, z1));
     }
-    if (y1 >= 0 && z1 >= 0) {
+    if (y1 > 0 && z1 > 0) {
       addV(res, calcPrefix(x2, y1, z1));
     }
-    if (x1 >= 0 && y1 >= 0 && z1 >= 0) {
+    if (x1 > 0 && y1 > 0 && z1 > 0) {
       subV(res, calcPrefix(x1, y1, z1));
     }
     return res;

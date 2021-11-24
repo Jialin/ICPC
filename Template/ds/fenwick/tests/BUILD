@@ -1,6 +1,17 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "fenwick_2d_array_max_test",
+    srcs = ["fenwick_2d_array_max_test.cpp"],
+    deps = [
+        "//ds/fenwick:base_fenwick_2d_array_macros",
+        "//ds/fenwick:fenwick_2d_array_max",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "fenwick_2d_array_sum_test",
     srcs = ["fenwick_2d_array_sum_test.cpp"],
     deps = [

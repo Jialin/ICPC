@@ -42,7 +42,7 @@ struct BaseFenwick {
 
   inline void calcPrefix(int x, V& res) {
     initV(res);
-    for (int i = x; i >= 0; --i) {
+    for (int i = min(x, _n) - 1; i >= 0; --i) {
       updateV(res, _vs[i]);
       i &= i + 1;
     }
@@ -52,8 +52,13 @@ struct BaseFenwick {
   virtual inline V subV(const V& upperV, const V& lowerV) const = 0;
 
   inline V calcRange(int lower, int upper) {
+    if (lower >= upper || lower >= _n) {
+      V res;
+      initV(res);
+      return res;
+    }
     // BASE_FENWICK_CALC_RANGE => BASE_FENWICK_CALC_PREFIX_RETURN
-    return lower ? subV(calcPrefix(upper - 1), calcPrefix(lower - 1)) : calcPrefix(upper - 1);
+    return lower ? subV(calcPrefix(upper), calcPrefix(lower)) : calcPrefix(upper);
   }
 #endif
 
