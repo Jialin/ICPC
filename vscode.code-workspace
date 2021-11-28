@@ -53,7 +53,8 @@
 			"optional": "cpp",
 			"variant": "cpp",
 			"__node_handle": "cpp",
-			"__nullptr": "cpp"
+			"__nullptr": "cpp",
+			"functional": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
