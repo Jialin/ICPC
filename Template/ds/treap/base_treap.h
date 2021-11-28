@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common/macros.h"
+#include "debug/debug_basic.h"
 
 using namespace std;
 
@@ -58,25 +59,28 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_INIT_ORDERED_ITEMS // ^
-  inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& vs) {
+  inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& items) {
     // BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
-    _roots[0] = _initOrderedItems(vs, 0, SIZE(vs));
+    _roots[0] = _initOrderedItems(items, 0, SIZE(items));
   }
 #endif
 
 #ifdef _BASE_TREAP_INIT_ORDERED_ITEMS // ^
-  inline int _initOrderedItems(const vector<pair<KEY, NODE_V>>& vs, int from, int to) {
+  inline int _initOrderedItems(const vector<pair<KEY, NODE_V>>& items, int from, int to) {
     if (from >= to) {
       return -1;
     }
     int medium = (from + to) >> 1;
-    // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_NEW_NODE
-    int newIdx = _newNode(vs[medium].first, vs[medium].second);
-    _nodes[newIdx]._lIdx = _initOrderedItems(vs, from, medium);
-    _nodes[newIdx]._rIdx = _initOrderedItems(vs, medium + 1, to);
+    // _BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_NEW_NODE
+    int newIdx = _newNode(items[medium].first, items[medium].second);
+    _nodes[newIdx]._lIdx = _initOrderedItems(items, from, medium);
+    _nodes[newIdx]._rIdx = _initOrderedItems(items, medium + 1, to);
+    // _BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_HEAPIFY
     return _heapify(newIdx);
   }
+#endif
 
+#ifdef _BASE_TREAP_HEAPIFY // ^
   inline int _heapify(int idx) {
     if (idx < 0) {
       return -1;
@@ -88,7 +92,7 @@ struct BaseTreap {
     auto& rNode = _nodes[rIdx];
     if (lIdx >= 0 && lNode._priority > node._priority &&
         (rIdx < 0 || lNode._priority > rNode._priority)) {
-      // BASE_TREAP_INIT_ITEMS => _BASE_TREAP_ROTATE
+      // _BASE_TREAP_HEAPIFY => _BASE_TREAP_ROTATE
       _rotateLeft(idx, lIdx);
       return lIdx;
     }
@@ -99,6 +103,28 @@ struct BaseTreap {
     }
     _mergeRangeV(node);
     return idx;
+  }
+#endif
+
+#ifdef BASE_TREAP_INIT_ORDERED_VALUES // ^
+  inline void initOrderedValues(const vector<NODE_V>& vs) {
+    // BASE_TREAP_INIT_ORDERED_VALUES => _BASE_TREAP_INIT_ORDERED_VALUES
+    _roots[0] = _initOrderedValues(vs, 0, SIZE(vs));
+  }
+#endif
+
+#ifdef _BASE_TREAP_INIT_ORDERED_VALUES // ^
+  inline int _initOrderedValues(const vector<NODE_V>& vs, int from, int to) {
+    if (from >= to) {
+      return -1;
+    }
+    int medium = (from + to) >> 1;
+    // _BASE_TREAP_INIT_ORDERED_VALUES => _BASE_TREAP_NEW_NODE
+    int newIdx = _newNode(medium, vs[medium]);
+    _nodes[newIdx]._lIdx = _initOrderedValues(vs, from, medium);
+    _nodes[newIdx]._rIdx = _initOrderedValues(vs, medium + 1, to);
+    // _BASE_TREAP_INIT_ORDERED_VALUES => _BASE_TREAP_HEAPIFY
+    return _heapify(newIdx);
   }
 #endif
 
@@ -228,6 +254,64 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef BASE_TREAP_LOWER_BOUND_BOUNDED // ^
+  // Finds the first node whose range value from <lower> is NOT less than <rangeV>
+  inline const _Node* lowerBoundBounded(const KEY& lower, const RANGE_V& rangeV) {
+    // _BASE_TREAP_LOWER_BOUND_BOUNDED => _BASE_TREAP_TMP_RANGE_V
+    _initRangeV(_tmpRangeV);
+    // BASE_TREAP_LOWER_BOUND_BOUNDED => _BASE_TREAP_LOWER_BOUND_BOUNDED
+    return _lowerBoundBounded(_roots[0], lower, rangeV, _tmpRangeV);
+  }
+#endif
+
+#ifdef _BASE_TREAP_LOWER_BOUND_BOUNDED // ^
+  inline const _Node*
+  _lowerBoundBounded(int& idx, const KEY& lower, const RANGE_V& rangeV, RANGE_V& curRangeV) {
+    int lIdx, rIdx;
+    // _BASE_TREAP_LOWER_BOUND_BOUNDED => _BASE_TREAP_SPLIT
+    _split(idx, lower, lIdx, rIdx);
+    // _BASE_TREAP_LOWER_BOUND_BOUNDED => _BASE_TREAP_LOWER_BOUND
+    const auto* res = _lowerBound(rIdx, rangeV, curRangeV);
+    // _BASE_TREAP_LOWER_BOUND_BOUNDED => _BASE_TREAP_MERGE
+    idx = _merge(lIdx, rIdx);
+    return res;
+  }
+#endif
+
+#ifdef _BASE_TREAP_LOWER_BOUND // ^
+  inline const _Node* _lowerBound(int idx, const RANGE_V& rangeV, RANGE_V& curRangeV) {
+    if (idx < 0) {
+      return nullptr;
+    }
+    const auto& node = _nodes[idx];
+    if (node._lIdx >= 0) {
+      DEBUG_NE(&curRangeV, &_tmpRangeV2);
+      // _BASE_TREAP_LOWER_BOUND => _BASE_TREAP_TMP_RANGE_V2
+      _tmpRangeV2 = curRangeV;
+      _appendRange(curRangeV, _nodes[node._lIdx]);
+      if (!(curRangeV < rangeV)) {
+        swap(curRangeV, _tmpRangeV2);
+        return _lowerBound(node._lIdx, rangeV, curRangeV);
+      }
+    }
+    _appendNode(curRangeV, node);
+    if (!(curRangeV < rangeV)) {
+      return &node;
+    }
+    if (node._rIdx >= 0) {
+      DEBUG_NE(&curRangeV, &_tmpRangeV2);
+      // _BASE_TREAP_LOWER_BOUND => _BASE_TREAP_TMP_RANGE_V2
+      _tmpRangeV2 = curRangeV;
+      _appendRange(curRangeV, _nodes[node._rIdx]);
+      if (!(curRangeV < rangeV)) {
+        swap(curRangeV, _tmpRangeV2);
+        return _lowerBound(node._rIdx, rangeV, curRangeV);
+      }
+    }
+    return nullptr;
+  }
+#endif
+
 #ifdef BASE_TREAP_CALC_PREFIX // ^
   inline RANGE_V calcPrefix(const KEY& upper) {
     RANGE_V res;
@@ -287,25 +371,28 @@ struct BaseTreap {
 #endif
 
 #ifdef BASE_TREAP_CALC_RANGE // ^
-  inline RANGE_V calcRange(const KEY& lower, const KEY& upper) {
+  inline const RANGE_V& calcRange(const KEY& lower, const KEY& upper) {
+    // BASE_TREAP_CALC_RANGE => _BASE_TREAP_TMP_RANGE_V
     // BASE_TREAP_CALC_RANGE => _BASE_TREAP_CALC_RANGE
-    return _calcRange(_roots[0], lower, upper);
+    _calcRange(_roots[0], lower, upper, _tmpRangeV);
+    return _tmpRangeV;
   }
 #endif
 
 #ifdef _BASE_TREAP_CALC_RANGE // ^
-  inline RANGE_V _calcRange(int& idx, const KEY& lower, const KEY& upper) {
+  inline void _calcRange(int& idx, const KEY& lower, const KEY& upper, RANGE_V& res) {
     int lIdx, rIdx;
+    // _BASE_TREAP_CALC_RANGE => _BASE_TREAP_SPLIT
     _split(idx, upper, lIdx, rIdx);
-    RANGE_V res;
     _initRangeV(res);
     // _BASE_TREAP_CALC_RANGE => _BASE_TREAP_CALC_SUFFIX
     _calcSuffix(lIdx, lower, res);
     // _BASE_TREAP_CALC_RANGE => _BASE_TREAP_MERGE
     idx = _merge(lIdx, rIdx);
-    return res;
   }
+#endif
 
+#ifdef _BASE_TREAP_SPLIT // ^
   // Splits into 2 parts, all keys in the left hand side should be smaller than <upper>
   inline void _split(int idx, const KEY& upper, int& lIdx, int& rIdx) {
     if (idx < 0) {
@@ -364,6 +451,12 @@ struct BaseTreap {
   vector<_Node> _nodes;
   vector<int> _roots;
   int _rootCnt;
+#ifdef _BASE_TREAP_TMP_RANGE_V
+  RANGE_V _tmpRangeV;
+#endif
+#ifdef _BASE_TREAP_TMP_RANGE_V2
+  RANGE_V _tmpRangeV2;
+#endif
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const _Node& node) {
@@ -381,11 +474,13 @@ struct BaseTreap {
   }
 
   inline void _output(int depth, int idx, ostream& o) const {
+    o << endl << string(depth, '\t');
     if (idx < 0) {
+      o << '-';
       return;
     }
     const auto& node = _nodes[idx];
-    o << endl << string(depth, '\t') << "idx:" << idx << ' ' << node;
+    o << "idx:" << idx << ' ' << node;
     _output(depth + 1, node._lIdx, o);
     _output(depth + 1, node._rIdx, o);
   }

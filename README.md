@@ -144,13 +144,12 @@
 - [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): TODO: Segment Tree Revisit
 - [x] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
 - [ ] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D)
-- [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 - [ ] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/)
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
 - [ ] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
 - [ ] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F)
-- [ ] [Codeforces - Wizards and Roads](https://codeforces.com/problemset/problem/167/D)
-- [ ] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E)
+- [ ] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
+- [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E): TODO: Segment Tree Revisit
 
 ## 1.6. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
 
@@ -196,6 +195,7 @@
 
 ### 2.2.2. Problems
 - [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
+- [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 
 # 3. Tricks
 
