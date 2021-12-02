@@ -87,17 +87,15 @@ struct BaseTreap {
     }
     auto& node = _nodes[idx];
     int lIdx = node._lIdx;
-    auto& lNode = _nodes[lIdx];
     int rIdx = node._rIdx;
-    auto& rNode = _nodes[rIdx];
-    if (lIdx >= 0 && lNode._priority > node._priority &&
-        (rIdx < 0 || lNode._priority > rNode._priority)) {
+    if (lIdx >= 0 && _nodes[lIdx]._priority > node._priority &&
+        (rIdx < 0 || _nodes[lIdx]._priority > _nodes[rIdx]._priority)) {
       // _BASE_TREAP_HEAPIFY => _BASE_TREAP_ROTATE
       _rotateLeft(idx, lIdx);
       return lIdx;
     }
-    if (rIdx >= 0 && rNode._priority > node._priority &&
-        (lIdx < 0 || rNode._priority > lNode._priority)) {
+    if (rIdx >= 0 && _nodes[rIdx]._priority > node._priority &&
+        (lIdx < 0 || _nodes[rIdx]._priority > _nodes[lIdx]._priority)) {
       _rotateRight(idx, rIdx);
       return rIdx;
     }
@@ -190,7 +188,6 @@ struct BaseTreap {
     node._lIdx = lNode._rIdx;
     lNode._rIdx = idx;
     _mergeRangeV(node);
-    idx = lIdx;
     _mergeRangeV(lNode);
   }
 
@@ -200,7 +197,6 @@ struct BaseTreap {
     node._rIdx = rNode._lIdx;
     rNode._lIdx = idx;
     _mergeRangeV(node);
-    idx = rIdx;
     _mergeRangeV(rNode);
   }
 #endif

@@ -3,6 +3,20 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "base_lazy_treap_macros",
+    hdrs = ["base_lazy_treap_macros.h"],
+)
+
+cc_library(
+    name = "base_lazy_treap",
+    hdrs = ["base_lazy_treap.h"],
+    deps = [
+        "//common:macros",
+        "//debug:debug_basic",
+    ],
+)
+
+cc_library(
     name = "base_treap_forest_macros",
     hdrs = ["base_treap_forest_macros.h"],
 )
@@ -29,6 +43,12 @@ cc_library(
         "//common:macros",
         "//debug:debug_basic",
     ],
+)
+
+cc_library(
+    name = "lazy_treap_reverse",
+    hdrs = ["lazy_treap_reverse.h"],
+    deps = [":base_lazy_treap"],
 )
 
 cc_library(

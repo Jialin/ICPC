@@ -1,6 +1,17 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
 cc_test(
+    name = "lazy_treap_reverse_test",
+    srcs = ["lazy_treap_reverse_test.cpp"],
+    deps = [
+        "//ds/treap:base_lazy_treap_macros",
+        "//ds/treap:lazy_treap_reverse",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "treap_forest_set_test",
     srcs = ["treap_forest_set_test.cpp"],
     deps = [
