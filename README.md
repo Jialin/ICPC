@@ -143,11 +143,11 @@
 - [x] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
 - [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): TODO: Segment Tree Revisit
 - [x] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
-- [ ] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D)
-- [ ] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/)
+- [x] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D): TODO: Splay Tree Revisit
+- [x] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/): TODO: Splay Tree Revisit
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
 - [ ] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
-- [ ] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F)
+- [x] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F): TODO: Splay Tree Revisit
 - [ ] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
 - [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E): TODO: Segment Tree Revisit
 

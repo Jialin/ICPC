@@ -100,6 +100,27 @@ struct BaseLazyTreap {
   }
 #endif
 
+#ifdef BASE_LAZY_TREAP_PUSH_ALL // ^
+  inline void pushAll() {
+    // BASE_LAZY_TREAP_PUSH_ALL => _BASE_LAZY_TREAP_PUSH_ALL
+    _pushAll(_roots[0]);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_PUSH_ALL // ^
+  inline void _pushAll(int idx) {
+    if (idx < 0) {
+      return;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    _pushAll(node._lIdx);
+    _pushAll(node._rIdx);
+    // _BASE_LAZY_TREAP_PUSH_ALL => _BASE_LAZY_TREAP_MERGE_V
+    _mergeV(node);
+  }
+#endif
+
 #ifdef BASE_LAZY_TREAP_INSERT_LEFTMOST // ^
   inline void insertLeftmost(const KEY& key, const NODE_V& v) {
     // BASE_LAZY_TREAP_INSERT_LEFTMOST => _BASE_LAZY_TREAP_INSERT_LEFTMOST
@@ -155,6 +176,33 @@ struct BaseLazyTreap {
   }
 #endif
 
+#ifdef BASE_LAZY_TREAP_ERASE_LEFTMOST // ^
+  inline _Node* eraseLeftmost() {
+    // BASE_LAZY_TREAP_ERASE_LEFTMOST => _BASE_LAZY_TREAP_ERASE_LEFTMOST
+    return _eraseLeftmost(_roots[0]);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_ERASE_LEFTMOST // ^
+  inline _Node* _eraseLeftmost(int& idx) {
+    if (idx < 0) {
+      return nullptr;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    if (node._lIdx < 0) {
+      idx = node._rIdx;
+      node._rIdx = -1;
+      // _BASE_LAZY_TREAP_ERASE_LEFTMOST => _BASE_LAZY_TREAP_MERGE_V
+      _mergeV(node);
+      return &node;
+    }
+    auto* res = _eraseLeftmost(node._lIdx);
+    _mergeV(node);
+    return res;
+  }
+#endif
+
 #ifdef BASE_LAZY_TREAP_ERASE_RIGHTMOST // ^
   inline _Node* eraseRightmost() {
     // BASE_LAZY_TREAP_ERASE_RIGHTMOST => _BASE_LAZY_TREAP_ERASE_RIGHTMOST
@@ -171,10 +219,12 @@ struct BaseLazyTreap {
     _pushAndClearUpdate(node);
     if (node._rIdx < 0) {
       idx = node._lIdx;
+      node._lIdx = -1;
+      // _BASE_LAZY_TREAP_ERASE_RIGHTMOST => _BASE_LAZY_TREAP_MERGE_V
+      _mergeV(node);
       return &node;
     }
     auto* res = _eraseRightmost(node._rIdx);
-    // _BASE_LAZY_TREAP_ERASE_RIGHTMOST => _BASE_LAZY_TREAP_MERGE_V
     _mergeV(node);
     return res;
   }
@@ -233,6 +283,58 @@ struct BaseLazyTreap {
     rNode._lIdx = idx;
     _mergeV(node);
     _mergeV(rNode);
+  }
+#endif
+
+#ifdef BASE_LAZY_TREAP_CALC_LEFTMOST // ^
+  inline const _Node* calcLeftmost() {
+    // BASE_LAZY_TREAP_CALC_LEFTMOST => _BASE_LAZY_TREAP_CALC_LEFTMOST
+    return _calcLeftmost(_roots[0]);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_CALC_LEFTMOST // ^
+  inline const _Node* _calcLeftmost(int idx) {
+    if (idx < 0) {
+      return nullptr;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    if (node._lIdx >= 0) {
+      const auto* res = _calcLeftmost(node._lIdx);
+      // _BASE_LAZY_TREAP_CALC_LEFTMOST => _BASE_LAZY_TREAP_MERGE_V
+      _mergeV(node);
+      return res;
+    } else {
+      _mergeV(node);
+      return &node;
+    }
+  }
+#endif
+
+#ifdef BASE_LAZY_TREAP_CALC_RIGHTMOST // ^
+  inline const _Node* calcRightmost() {
+    // BASE_LAZY_TREAP_CALC_RIGHTMOST => _BASE_LAZY_TREAP_CALC_RIGHTMOST
+    return _calcRightmost(_roots[0]);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_CALC_RIGHTMOST // ^
+  inline const _Node* _calcRightmost(int idx) {
+    if (idx < 0) {
+      return nullptr;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    if (node._rIdx >= 0) {
+      const auto* res = _calcRightmost(node._rIdx);
+      // _BASE_LAZY_TREAP_CALC_RIGHTMOST => _BASE_LAZY_TREAP_MERGE_V
+      _mergeV(node);
+      return res;
+    } else {
+      _mergeV(node);
+      return &node;
+    }
   }
 #endif
 
@@ -319,6 +421,51 @@ struct BaseLazyTreap {
     }
     // _BASE_LAZY_TREAP_UPDATE_RANGE_BY_KTH => _BASE_LAZY_TREAP_MERGE
     return _merge(_merge(lIdx, mIdx), rIdx);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_SPLIT // ^
+  inline void _split(int idx, const KEY& bound, int& lIdx, int& rIdx) {
+    if (idx < 0) {
+      lIdx = -1;
+      rIdx = -1;
+      return;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    if (bound < node._key) {
+      _split(node._lIdx, bound, lIdx, node._lIdx);
+      rIdx = idx;
+    } else if (bound == node._key) {
+      lIdx = node._lIdx;
+      node._lIdx = -1;
+      rIdx = idx;
+    } else {
+      _split(node._rIdx, bound, node._rIdx, rIdx);
+      lIdx = idx;
+    }
+    // _BASE_LAZY_TREAP_SPLIT => _BASE_LAZY_TREAP_MERGE
+    _mergeV(node);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_INSERT_NODE // ^
+  inline int _insertNode(int idx, int insertIdx) {
+    if (idx < 0) {
+      return insertIdx;
+    }
+    auto& node = _nodes[idx];
+    _pushAndClearUpdate(node);
+    auto& iNode = _nodes[insertIdx];
+    if (iNode._key < node._key) {
+      _nodes[idx]._lIdx = _insertNode(node._lIdx, insertIdx);
+    } else if (node._key == iNode._key) {
+      _initAllVs(node, iNode._v);
+    } else {
+      _nodes[idx]._rIdx = _insertNode(node._rIdx, insertIdx);
+    }
+    // BASE_LAZY_TREAP_INSERT => _BASE_LAZY_TREAP_HEAPIFY
+    return _heapify(idx);
   }
 #endif
 

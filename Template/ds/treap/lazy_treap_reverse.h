@@ -10,9 +10,7 @@ struct LazyTreapReverse : BaseLazyTreap<nullptr_t, bool, nullptr_t, int> {
   using RangeV = nullptr_t;
   using Node = typename LazyTreapReverse::_Node;
 
-  inline void _initRangeV(RangeV& rangeV) override {
-    rangeV = 0;
-  }
+  inline void _initRangeV(RangeV& rangeV) override {}
 
   inline void _initAllVs(Node& node, const NodeV& nodeV) override {
     node._updateV = false;
