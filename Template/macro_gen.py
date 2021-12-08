@@ -99,11 +99,17 @@ class TemplateConfigs:
 
 
 def handle(template_filepath):
+    if os.path.split(template_filepath)[-1].startswith("."):
+        return
     configs = TemplateConfigs()
     # Load all_deps and deps
     with open(template_filepath, "r") as template_file:
-        for line in template_file.readlines():
-            configs.handle_line(line)
+        try:
+            for line in template_file.readlines():
+                configs.handle_line(line)
+        except UnicodeDecodeError as e:
+            print(f"Error when handling file {template_filepath}")
+            raise e
     if not configs.should_macro_gen:
         return
     # Propagage deps

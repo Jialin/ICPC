@@ -81,6 +81,7 @@ def gen_file(
     input_file_name,
     output_file_name,
     info,
+    should_copy=False,
     additional_contents=None,
     additional_args=None,
 ):
@@ -110,8 +111,9 @@ def gen_file(
         + lines,
     )
     subprocess.Popen(["clang-format", "-i", output_file_name]).wait()
-    with open(output_file_name, "r") as input_file:
-        subprocess.Popen(["pbcopy"], stdin=input_file).wait()
+    if should_copy:
+        with open(output_file_name, "r") as input_file:
+            subprocess.Popen(["pbcopy"], stdin=input_file).wait()
     print(f"\033[92m!!! {output_file_name} {info}\033[0m")
 
 
@@ -152,4 +154,5 @@ gen_file(
     input_file_name=os.path.join(GEN_PATH, "gen-" + input_file_name),
     output_file_name=os.path.join(GEN_PATH, "gencpp-" + input_file_name),
     info="is generated and copied to clipboard",
+    should_copy=True,
 )

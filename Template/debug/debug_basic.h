@@ -215,6 +215,14 @@ inline string totype(const string& v) {
   return "string";
 }
 
+inline string totype(const nullptr_t& v) {
+  return "null_t";
+}
+
+inline string tostring(const nullptr_t& v) {
+  return "null";
+}
+
 template<typename A, typename B, typename C>
 inline string totype(const tuple<A, B, C>& v) {
   return "tuple<" + totype(get<0>(v)) + "," + totype(get<1>(v)) + "," + totype(get<2>(v)) + ">";
