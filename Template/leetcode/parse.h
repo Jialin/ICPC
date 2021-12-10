@@ -66,6 +66,21 @@ inline void _parse(const string& s, int& shift, int& v) {
   _parseInt(s, shift, v);
 }
 
+inline void _parse(const string& s, int& shift, string& v) {
+  _skipSpaces(s, shift);
+  DEBUGF_TRUE(
+      shift < SIZE(s) && s[shift] == '"', "Expect begging '\"' @%d in '%s'\n", shift, s.c_str());
+  ++shift;
+  stringstream ss;
+  while (shift < SIZE(s) && s[shift] != '"') {
+    ss << s[shift++];
+  }
+  v = ss.str();
+  DEBUGF_TRUE(
+      shift < SIZE(s) && s[shift] == '"', "Expect ending '\"' @%d in '%s'\n", shift, s.c_str());
+  ++shift;
+}
+
 template<typename T>
 inline void _parse(const string& s, int& shift, vector<T>& res) {
   DEBUGF_TRUE(shift < SIZE(s), "'shift' out of bound. '%s'\n", s.c_str());
