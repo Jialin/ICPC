@@ -56,7 +56,6 @@ struct TreeNode {
     }
     auto address = int64_t(node);
     if (containsLoop) {
-      // TODO: output in hex format
       o << "(@" << hex << address << dec << ')';
     }
     if (visited.count(address)) {

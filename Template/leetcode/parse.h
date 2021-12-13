@@ -4,6 +4,7 @@
 #include "common/macros.h"
 #include "debug/debug_basic.h"
 #include "leetcode/binary_tree.h"
+#include "leetcode/interval.h"
 #include "leetcode/linked_list.h"
 
 using namespace std;
@@ -78,6 +79,21 @@ inline void _parse(const string& s, int& shift, string& v) {
   v = ss.str();
   DEBUGF_TRUE(
       shift < SIZE(s) && s[shift] == '"', "Expect ending '\"' @%d in '%s'\n", shift, s.c_str());
+  ++shift;
+}
+
+inline void _parse(const string& s, int& shift, Interval& v) {
+  _skipSpaces(s, shift);
+  DEBUGF_TRUE(
+      shift < SIZE(s) && s[shift] == '(', "Expect begging '(' @%d in '%s'\n", shift, s.c_str());
+  ++shift;
+  _parse(s, shift, v.start);
+  DEBUGF_TRUE(
+      shift < SIZE(s) && s[shift] == ',', "Expect begging ',' @%d in '%s'\n", shift, s.c_str());
+  ++shift;
+  _parse(s, shift, v.end);
+  DEBUGF_TRUE(
+      shift < SIZE(s) && s[shift] == ')', "Expect begging ')' @%d in '%s'\n", shift, s.c_str());
   ++shift;
 }
 
