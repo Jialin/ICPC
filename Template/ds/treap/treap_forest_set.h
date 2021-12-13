@@ -9,7 +9,7 @@
 namespace ds {
 
 template<typename KEY = int>
-struct TreapForestSet : BaseTreapForest<nullptr_t, int, KEY> {
+struct TreapForestSet : BaseTreapForest<nullptr_t, nullptr_t, KEY> {
 #ifdef TREAP_FOREST_SET_INSERT // ^
   inline void insert(const KEY& key, int rootIdx) {
     // TREAP_FOREST_SET_INSERT => BASE_TREAP_FOREST_UPDATE
@@ -17,32 +17,23 @@ struct TreapForestSet : BaseTreapForest<nullptr_t, int, KEY> {
   }
 #endif
 
-  using _Node = typename BaseTreap<nullptr_t, int, KEY>::_Node;
+  using NodeV = nullptr_t;
+  using RangeV = nullptr_t;
+  using Node = typename TreapForestSet::_Node;
 
-  inline void _initRangeV(int& res) override {
-    res = 0;
-  }
+  inline void _initRangeV(RangeV& res) override {}
 
-  inline void _initV(_Node& node) override {
-    node._rangeV = 0;
-  }
+  inline void _initAllVs(Node& node, const NodeV& v) override {}
 
-  inline void _updateV(_Node& node, const nullptr_t& delta) override {
-    _mergeRangeV(node);
-  }
+  inline void _updateAllVs(Node& node, const NodeV& delta) override {}
 
-  inline void _mergeRangeV(_Node& node) override {
-    node._rangeV = (node._lIdx < 0 ? 0 : this->_nodes[node._lIdx]._rangeV) + 1 +
-                   (node._rIdx < 0 ? 0 : this->_nodes[node._rIdx]._rangeV);
-  }
+  inline void _mergeRangeV(Node& node) override {}
 
-  inline void _appendNode(int& res, const _Node& node) override {
-    ++res;
-  }
+#ifdef _BASE_TREAP_CALC_APPEND
+  inline void _appendNode(RangeV& res, const Node& node) override {}
 
-  inline void _appendRange(int& res, const _Node& node) override {
-    res += node._rangeV;
-  }
+  inline void _appendRange(RangeV& res, const Node& node) override {}
+#endif
 };
 
 } // namespace ds

@@ -28,7 +28,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #ifdef BASE_TREAP_FOREST_INIT_ORDERED_ITEMS // ^
   inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
-    // BASE_TREAP_FOREST_INIT_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
+    // BASE_TREAP_FOREST_INIT_ORDERED_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
     this->_roots[rootIdx] = this->_initOrderedItems(vs, 0, SIZE(vs));
   }
 #endif
@@ -50,14 +50,22 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #endif
 
 #ifdef BASE_TREAP_FOREST_CALC_PREFIX // ^
-  // Calculates prefix from [-inf, upper1]. NOTE: <upper1> is included
-  inline RANGE_V calcPrefix(const KEY& upper1, int rootIdx) {
+  // Calculates prefix from [-inf, upper)
+  inline RANGE_V calcPrefix(const KEY& upper, int rootIdx) {
     DEBUG_LT(rootIdx, SIZE(this->_roots));
     RANGE_V res;
     this->_initRangeV(res);
     // BASE_TREAP_FOREST_CALC_PREFIX => _BASE_TREAP_CALC_PREFIX
-    this->_calcPrefix(this->_roots[rootIdx], upper1, res);
+    this->_calcPrefix(this->_roots[rootIdx], upper, res);
     return res;
+  }
+#endif
+
+#ifdef BASE_TREAP_FOREST_COUNT_PREFIX // ^
+  inline int countPrefix(const KEY& upper, int rootIdx) {
+    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    // BASE_TREAP_FOREST_COUNT_PREFIX => _BASE_TREAP_COUNT_PREFIX
+    return this->_countPrefix(this->_roots[rootIdx], upper);
   }
 #endif
 

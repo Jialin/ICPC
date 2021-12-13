@@ -16,9 +16,20 @@ struct BaseTreap {
     int _priority, _lIdx, _rIdx;
     NODE_V _v;
     RANGE_V _rangeV;
+#ifdef _BASE_TREAP_SIZE
+    int _size;
+#endif
 
-    inline _Node(const KEY& key) : _key(key), _priority(rand()), _lIdx(-1), _rIdx(-1) {}
+    inline _Node(const KEY& key)
+        : _key(key), _priority(rand()), _lIdx(-1), _rIdx(-1)
+#ifdef _BASE_TREAP_SIZE
+          ,
+          _size(1)
+#endif
+    {
+    }
 
+// TODO: get rid of, update the priority in initAllVs
 #ifdef _BASE_TREAP_NEW_NODE_WITH_PRIORITY
     inline _Node(const KEY& key, int priority)
         : _key(key), _priority(priority), _lIdx(-1), _rIdx(-1) {}
@@ -28,20 +39,22 @@ struct BaseTreap {
   // Initializes range value
   virtual inline void _initRangeV(RANGE_V& res) = 0;
 
-  // Initializes the values of node
-  virtual inline void _initV(_Node& node) = 0;
+  // Given <nodeV>, initializes all values for new node
+  virtual inline void _initAllVs(_Node& node, const NODE_V& nodeV) = 0;
 
-  // Given delta, updates the values of the node
-  virtual inline void _updateV(_Node& node, const NODE_V& delta) = 0;
+  // Given delta, updates all values of the node
+  virtual inline void _updateAllVs(_Node& node, const NODE_V& delta) = 0;
 
   // Merges the range value of the node from descendent nodes
   virtual inline void _mergeRangeV(_Node& node) = 0;
 
+#ifdef _BASE_TREAP_CALC_APPEND
   // Appends the node value to the result
   virtual inline void _appendNode(RANGE_V& res, const _Node& idx) = 0;
 
   // Appends the range value to the result
   virtual inline void _appendRange(RANGE_V& res, const _Node& idx) = 0;
+#endif
 
   inline BaseTreap() {
     init();
@@ -71,15 +84,17 @@ struct BaseTreap {
 #endif
 
 #ifdef _BASE_TREAP_INIT_ORDERED_ITEMS // ^
-  inline int _initOrderedItems(const vector<pair<KEY, NODE_V>>& items, int from, int to) {
-    if (from >= to) {
+  inline int _initOrderedItems(const vector<pair<KEY, NODE_V>>& items, int lower, int upper) {
+    if (lower >= upper) {
       return -1;
     }
-    int medium = (from + to) >> 1;
+    int medium = (lower + upper) >> 1;
     // _BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_NEW_NODE
     int newIdx = _newNode(items[medium].first, items[medium].second);
-    _nodes[newIdx]._lIdx = _initOrderedItems(items, from, medium);
-    _nodes[newIdx]._rIdx = _initOrderedItems(items, medium + 1, to);
+    int lIdx = _initOrderedItems(items, lower, medium);
+    int rIdx = _initOrderedItems(items, medium + 1, upper);
+    _nodes[newIdx]._lIdx = lIdx;
+    _nodes[newIdx]._rIdx = rIdx;
     // _BASE_TREAP_INIT_ORDERED_ITEMS => _BASE_TREAP_HEAPIFY
     return _heapify(newIdx);
   }
@@ -122,7 +137,8 @@ struct BaseTreap {
       auto& lNode = _nodes[lIdx];
       node._lIdx = lNode._rIdx;
       lNode._rIdx = _heapify(idx);
-      _mergeRangeV(lNode);
+      // _BASE_TREAP_HEAPIFY => _BASE_TREAP_MERGE_V
+      _mergeV(lNode);
       return lIdx;
     }
     if (rIdx >= 0 && _nodes[rIdx]._priority > node._priority &&
@@ -130,10 +146,10 @@ struct BaseTreap {
       auto& rNode = _nodes[rIdx];
       node._rIdx = rNode._lIdx;
       rNode._lIdx = _heapify(idx);
-      _mergeRangeV(rNode);
+      _mergeV(rNode);
       return rIdx;
     }
-    _mergeRangeV(node);
+    _mergeV(node);
     return idx;
   }
 #endif
@@ -161,23 +177,21 @@ struct BaseTreap {
 #endif
 
 #ifdef _BASE_TREAP_NEW_NODE // ^
-  inline int _newNode(const KEY& key, const NODE_V& delta) {
+  inline int _newNode(const KEY& key, const NODE_V& v) {
     int idx = SIZE(_nodes);
     _nodes.emplace_back(key);
     auto& node = _nodes.back();
-    _initV(node);
-    _updateV(node, delta);
+    _initAllVs(node, v);
     return idx;
   }
 #endif
 
 #ifdef _BASE_TREAP_NEW_NODE_WITH_PRIORITY // ^
-  inline int _newNodeWithPriority(const KEY& key, int priority, const NODE_V& delta) {
+  inline int _newNodeWithPriority(const KEY& key, int priority, const NODE_V& v) {
     int idx = SIZE(_nodes);
     _nodes.emplace_back(key, priority);
     auto& node = _nodes.back();
-    _initV(node);
-    _updateV(node, delta);
+    _initAllVs(node, v);
     return idx;
   }
 #endif
@@ -198,7 +212,7 @@ struct BaseTreap {
     }
     auto& node = _nodes[idx];
     if (node._key == key) {
-      _updateV(node, delta);
+      _updateAllVs(node, delta);
       return idx;
     }
     if (key < node._key) {
@@ -221,7 +235,8 @@ struct BaseTreap {
         return newIdx;
       }
     }
-    _mergeRangeV(_nodes[idx]);
+    // _BASE_TREAP_UPDATE => _BASE_TREAP_MERGE_V
+    _mergeV(_nodes[idx]);
     return idx;
   }
 #endif
@@ -232,8 +247,9 @@ struct BaseTreap {
     auto& lNode = _nodes[lIdx];
     node._lIdx = lNode._rIdx;
     lNode._rIdx = idx;
-    _mergeRangeV(node);
-    _mergeRangeV(lNode);
+    // _BASE_TREAP_ROTATE => _BASE_TREAP_MERGE_V
+    _mergeV(node);
+    _mergeV(lNode);
   }
 
   inline void _rotateRight(int idx, int rIdx) {
@@ -241,8 +257,9 @@ struct BaseTreap {
     auto& rNode = _nodes[rIdx];
     node._rIdx = rNode._lIdx;
     rNode._lIdx = idx;
-    _mergeRangeV(node);
-    _mergeRangeV(rNode);
+    // _BASE_TREAP_ROTATE => _BASE_TREAP_MERGE_V
+    _mergeV(node);
+    _mergeV(rNode);
   }
 #endif
 
@@ -268,7 +285,8 @@ struct BaseTreap {
     } else {
       node._rIdx = _erase(node._rIdx, key);
     }
-    _mergeRangeV(node);
+    // _BASE_TREAP_ERASE => _BASE_TREAP_MERGE_V
+    _mergeV(node);
     return idx;
   }
 #endif
@@ -285,11 +303,12 @@ struct BaseTreap {
     auto& rNode = _nodes[rIdx];
     if (lNode._priority > rNode._priority) {
       lNode._rIdx = _merge(lNode._rIdx, rIdx);
-      _mergeRangeV(lNode);
+      // _BASE_TREAP_MERGE => _BASE_TREAP_MERGE_V
+      _mergeV(lNode);
       return lIdx;
     } else {
       rNode._lIdx = _merge(lIdx, rNode._lIdx);
-      _mergeRangeV(rNode);
+      _mergeV(rNode);
       return rIdx;
     }
   }
@@ -370,6 +389,7 @@ struct BaseTreap {
     }
     const auto& node = _nodes[idx];
     if (node._key < upper) {
+      // _BASE_TREAP_CALC_PREFIX => _BASE_TREAP_CALC_APPEND
       if (node._lIdx >= 0) {
         _appendRange(res, _nodes[node._lIdx]);
       }
@@ -377,6 +397,21 @@ struct BaseTreap {
       _calcPrefix(node._rIdx, upper, res);
     } else {
       _calcPrefix(node._lIdx, upper, res);
+    }
+  }
+#endif
+
+#ifdef _BASE_TREAP_COUNT_PREFIX // ^
+  inline int _countPrefix(int idx, const KEY& upper) {
+    if (idx < 0) {
+      return 0;
+    }
+    const auto& node = _nodes[idx];
+    if (node._key < upper) {
+      // _BASE_TREAP_COUNT_PREFIX => _BASE_TREAP_SIZE
+      return _calcSize(node._lIdx) + 1 + _countPrefix(node._rIdx, upper);
+    } else {
+      return _countPrefix(node._lIdx, upper);
     }
   }
 #endif
@@ -433,6 +468,36 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef BASE_TREAP_SPLIT_RANGE // ^
+  inline void splitRange(const KEY& lower, const KEY& upper, int& lIdx, int& mIdx, int& rIdx) {
+    // BASE_TREAP_SPLIT_RANGE => _BASE_TREAP_SPLIT_RANGE
+    _splitRange(_roots[0], lower, upper, lIdx, mIdx, rIdx);
+  }
+#endif
+
+#ifdef _BASE_TREAP_SPLIT_RANGE // ^
+  inline void
+  _splitRange(int idx, const KEY& lower, const KEY& upper, int& lIdx, int& mIdx, int& rIdx) {
+    // _BASE_TREAP_SPLIT_RANGE => _BASE_TREAP_SPLIT
+    _split(idx, upper, mIdx, rIdx);
+    _split(mIdx, lower, lIdx, mIdx);
+  }
+#endif
+
+#ifdef BASE_TREAP_MERGE3 // ^
+  inline void merge3(int lIdx, int mIdx, int rIdx) {
+    // BASE_TREAP_MERGE3 => _BASE_TREAP_MERGE3
+    _roots[0] = _merge3(lIdx, mIdx, rIdx);
+  }
+#endif
+
+#ifdef _BASE_TREAP_MERGE3 // ^
+  inline int _merge3(int lIdx, int mIdx, int rIdx) {
+    // _BASE_TREAP_MERGE3 => _BASE_TREAP_MERGE
+    return _merge(_merge(lIdx, mIdx), rIdx);
+  }
+#endif
+
 #ifdef _BASE_TREAP_SPLIT // ^
   // Splits into 2 parts, all keys in the left hand side should be smaller than <upper>
   inline void _split(int idx, const KEY& upper, int& lIdx, int& rIdx) {
@@ -448,7 +513,8 @@ struct BaseTreap {
       _split(node._lIdx, upper, lIdx, node._lIdx);
       rIdx = idx;
     }
-    _mergeRangeV(_nodes[idx]);
+    // _BASE_TREAP_SPLIT => _BASE_TREAP_MERGE_V
+    _mergeV(_nodes[idx]);
   }
 #endif
 
@@ -489,6 +555,21 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef _BASE_TREAP_MERGE_V // ^
+  inline void _mergeV(_Node& node) {
+    _mergeRangeV(node);
+#ifdef _BASE_TREAP_SIZE
+    node._size = _calcSize(node._lIdx) + 1 + _calcSize(node._rIdx);
+#endif
+  }
+#endif
+
+#ifdef _BASE_TREAP_SIZE // ^
+  inline int _calcSize(int idx) {
+    return idx >= 0 ? _nodes[idx]._size : 0;
+  }
+#endif
+
   vector<_Node> _nodes;
   vector<int> _roots;
   int _rootCnt;
@@ -501,30 +582,47 @@ struct BaseTreap {
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const _Node& node) {
-    o << "[key:" << node._key << " v:" << node._v << " rangeV:" << node._rangeV
-      << " priority:" << node._priority << " lIdx:" << node._lIdx << " rIdx:" << node._rIdx << "]";
+    o << "[key:" << node._key << "] (v:" << tostring(node._v)
+      << " rangeV:" << tostring(node._rangeV) << " priority:" << node._priority << ")";
     return o;
   }
 
   inline friend ostream& operator<<(ostream& o, const BaseTreap& treap) {
     o << "total root cnt:" << treap._roots.size();
+    vector<bool> toRight;
+    unordered_set<int> visited;
     for (int root : treap._roots) {
-      treap._output(0, root, o);
+      treap._output(0, root, toRight, visited, o);
     }
     return o;
   }
 
-  inline void _output(int depth, int idx, ostream& o) const {
-    o << endl << string(depth, '\t');
+  inline void _output(
+      int depth, int idx, vector<bool>& toRight, unordered_set<int>& visited, ostream& o) const {
+    o << endl;
+    FOR(i, 0, SIZE(toRight) - 1) {
+      o << (toRight[i] ? ' ' : '|') << "   ";
+    }
+    if (!toRight.empty()) {
+      o << (toRight.back() ? 'L' : '|') << "---";
+    }
     if (idx < 0) {
-      o << '-';
+      o << "NULL";
       return;
     }
     const auto& node = _nodes[idx];
-    o << "idx:" << idx << ' ' << node;
+    o << node << " @" << idx;
+    if (visited.count(idx)) {
+      o << " **LOOP**";
+      return;
+    }
+    visited.insert(idx);
     if (node._lIdx >= 0 || node._rIdx >= 0) {
-      _output(depth + 1, node._lIdx, o);
-      _output(depth + 1, node._rIdx, o);
+      toRight.push_back(false);
+      _output(depth + 1, node._lIdx, toRight, visited, o);
+      toRight.back() = true;
+      _output(depth + 1, node._rIdx, toRight, visited, o);
+      toRight.pop_back();
     }
   }
 #endif

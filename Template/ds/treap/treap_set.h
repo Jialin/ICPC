@@ -17,32 +17,37 @@ struct TreapSet : BaseTreap<nullptr_t, int, KEY> {
   }
 #endif
 
-  using _Node = typename TreapSet::_Node;
+  using NodeV = nullptr_t;
+  // TODO: move most of the logic as `size`
+  using RangeV = int;
+  using Node = typename TreapSet::_Node;
 
-  inline void _initRangeV(int& res) override {
+  inline void _initRangeV(RangeV& res) override {
     res = 0;
   }
 
-  inline void _initV(_Node& node) override {
-    node._rangeV = 0;
+  inline void _initAllVs(Node& node, const NodeV& nodeV) override {
+    node._rangeV = 1;
   }
 
-  inline void _updateV(_Node& node, const nullptr_t& delta) override {
+  inline void _updateAllVs(Node& node, const NodeV& delta) override {
     _mergeRangeV(node);
   }
 
-  inline void _mergeRangeV(_Node& node) override {
+  inline void _mergeRangeV(Node& node) override {
     node._rangeV = (node._lIdx < 0 ? 0 : this->_nodes[node._lIdx]._rangeV) + 1 +
                    (node._rIdx < 0 ? 0 : this->_nodes[node._rIdx]._rangeV);
   }
 
-  inline void _appendNode(int& res, const _Node& node) override {
+#ifdef _BASE_TREAP_CALC_APPEND
+  inline void _appendNode(RangeV& res, const Node& node) override {
     ++res;
   }
 
-  inline void _appendRange(int& res, const _Node& node) override {
+  inline void _appendRange(RangeV& res, const Node& node) override {
     res += node._rangeV;
   }
+#endif
 };
 
 } // namespace ds
