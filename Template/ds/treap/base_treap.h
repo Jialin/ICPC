@@ -18,6 +18,11 @@ struct BaseTreap {
     RANGE_V _rangeV;
 
     inline _Node(const KEY& key) : _key(key), _priority(rand()), _lIdx(-1), _rIdx(-1) {}
+
+#ifdef _BASE_TREAP_NEW_NODE_WITH_PRIORITY
+    inline _Node(const KEY& key, int priority)
+        : _key(key), _priority(priority), _lIdx(-1), _rIdx(-1) {}
+#endif
   };
 
   // Initializes range value
@@ -80,6 +85,30 @@ struct BaseTreap {
   }
 #endif
 
+#ifdef BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY // ^
+  inline void initOrderedItemsWithPriority(const vector<tuple<KEY, int, NODE_V>>& items) {
+    // BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY => _BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY
+    _roots[0] = _initOrderedItemsWithPriority(items, 0, SIZE(items));
+  }
+#endif
+
+#ifdef _BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY // ^
+  inline int
+  _initOrderedItemsWithPriority(const vector<tuple<KEY, int, NODE_V>>& items, int from, int to) {
+    if (from >= to) {
+      return -1;
+    }
+    int medium = (from + to) >> 1;
+    // _BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY => _BASE_TREAP_NEW_NODE_WITH_PRIORITY
+    int newIdx =
+        _newNodeWithPriority(get<0>(items[medium]), get<1>(items[medium]), get<2>(items[medium]));
+    _nodes[newIdx]._lIdx = _initOrderedItemsWithPriority(items, from, medium);
+    _nodes[newIdx]._rIdx = _initOrderedItemsWithPriority(items, medium + 1, to);
+    // _BASE_TREAP_INIT_ORDERED_ITEMS_WITH_PRIORITY => _BASE_TREAP_HEAPIFY
+    return _heapify(newIdx);
+  }
+#endif
+
 #ifdef _BASE_TREAP_HEAPIFY // ^
   inline int _heapify(int idx) {
     if (idx < 0) {
@@ -90,13 +119,18 @@ struct BaseTreap {
     int rIdx = node._rIdx;
     if (lIdx >= 0 && _nodes[lIdx]._priority > node._priority &&
         (rIdx < 0 || _nodes[lIdx]._priority > _nodes[rIdx]._priority)) {
-      // _BASE_TREAP_HEAPIFY => _BASE_TREAP_ROTATE
-      _rotateLeft(idx, lIdx);
+      auto& lNode = _nodes[lIdx];
+      node._lIdx = lNode._rIdx;
+      lNode._rIdx = _heapify(idx);
+      _mergeRangeV(lNode);
       return lIdx;
     }
     if (rIdx >= 0 && _nodes[rIdx]._priority > node._priority &&
         (lIdx < 0 || _nodes[rIdx]._priority > _nodes[lIdx]._priority)) {
-      _rotateRight(idx, rIdx);
+      auto& rNode = _nodes[rIdx];
+      node._rIdx = rNode._lIdx;
+      rNode._lIdx = _heapify(idx);
+      _mergeRangeV(rNode);
       return rIdx;
     }
     _mergeRangeV(node);
@@ -130,6 +164,17 @@ struct BaseTreap {
   inline int _newNode(const KEY& key, const NODE_V& delta) {
     int idx = SIZE(_nodes);
     _nodes.emplace_back(key);
+    auto& node = _nodes.back();
+    _initV(node);
+    _updateV(node, delta);
+    return idx;
+  }
+#endif
+
+#ifdef _BASE_TREAP_NEW_NODE_WITH_PRIORITY // ^
+  inline int _newNodeWithPriority(const KEY& key, int priority, const NODE_V& delta) {
+    int idx = SIZE(_nodes);
+    _nodes.emplace_back(key, priority);
     auto& node = _nodes.back();
     _initV(node);
     _updateV(node, delta);
@@ -477,8 +522,10 @@ struct BaseTreap {
     }
     const auto& node = _nodes[idx];
     o << "idx:" << idx << ' ' << node;
-    _output(depth + 1, node._lIdx, o);
-    _output(depth + 1, node._rIdx, o);
+    if (node._lIdx >= 0 || node._rIdx >= 0) {
+      _output(depth + 1, node._lIdx, o);
+      _output(depth + 1, node._rIdx, o);
+    }
   }
 #endif
 };

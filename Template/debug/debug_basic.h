@@ -179,6 +179,12 @@ inline string tostring(int v) {
   return ss.str();
 }
 
+inline string tostring(int64_t v) {
+  stringstream ss;
+  ss << v;
+  return ss.str();
+}
+
 inline string totype(int64_t v) {
   return "int64";
 }

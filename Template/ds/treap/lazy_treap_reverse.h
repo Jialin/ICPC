@@ -20,10 +20,6 @@ struct LazyTreapReverse : BaseLazyTreap<nullptr_t, bool, nullptr_t, int> {
     updateV ^= srcUpdateV;
   }
 
-  inline void _appendNodeVWithUpdate(RangeV& rangeV, const Node& node) override {}
-
-  inline void _appendRangeVWithUpdate(RangeV& rangeV, const Node& node) override {}
-
   inline void _mergeRangeV(_Node& node) override {}
 
   inline void _pushAndClearUpdate(_Node& node) override {

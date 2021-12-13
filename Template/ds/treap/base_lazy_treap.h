@@ -47,12 +47,6 @@ struct BaseLazyTreap {
   // Pushes update value to decendent nodes and clear update
   virtual inline void _pushAndClearUpdate(_Node& node) = 0;
 
-  // Appends range value (update might not be pushed yet)
-  virtual inline void _appendNodeVWithUpdate(RANGE_V& rangeV, const _Node& node) = 0;
-
-  // Appends node value (update might not be pushed yet)
-  virtual inline void _appendRangeVWithUpdate(RANGE_V& rangeV, const _Node& node) = 0;
-
   // Merges range value from decendent nodes
   virtual inline void _mergeRangeV(_Node& node) = 0;
 
@@ -86,15 +80,17 @@ struct BaseLazyTreap {
 #endif
 
 #ifdef _BASE_LAZY_TREAP_INIT_ORDERED_VALUES // ^
-  inline int _initOrderedValues(const vector<NODE_V>& vs, int from, int to) {
-    if (from >= to) {
+  inline int _initOrderedValues(const vector<NODE_V>& vs, int lower, int upper) {
+    if (lower >= upper) {
       return -1;
     }
-    int medium = (from + to) >> 1;
+    int medium = (lower + upper) >> 1;
     // _BASE_LAZY_TREAP_INIT_ORDERED_VALUES => _BASE_LAZY_TREAP_NEW_NODE
     int newIdx = _newNode(medium, vs[medium]);
-    _nodes[newIdx]._lIdx = _initOrderedValues(vs, from, medium);
-    _nodes[newIdx]._rIdx = _initOrderedValues(vs, medium + 1, to);
+    int lIdx = _initOrderedValues(vs, lower, medium);
+    int rIdx = _initOrderedValues(vs, medium + 1, upper);
+    _nodes[newIdx]._lIdx = lIdx;
+    _nodes[newIdx]._rIdx = rIdx;
     // _BASE_LAZY_TREAP_INIT_ORDERED_VALUES => _BASE_LAZY_TREAP_HEAPIFY
     return _heapify(newIdx);
   }
@@ -149,7 +145,8 @@ struct BaseLazyTreap {
     }
     auto& node = _nodes[idx];
     _pushAndClearUpdate(node);
-    _nodes[idx]._lIdx = _insertNodeLeftmost(node._lIdx, insertIdx);
+    int lIdx = _insertNodeLeftmost(node._lIdx, insertIdx);
+    _nodes[idx]._lIdx = lIdx;
     // _BASE_LAZY_TREAP_INSERT_NODE_LEFTMOST => _BASE_LAZY_TREAP_HEAPIFY
     return _heapify(idx);
   }
@@ -170,7 +167,8 @@ struct BaseLazyTreap {
     }
     auto& node = _nodes[idx];
     _pushAndClearUpdate(node);
-    _nodes[idx]._rIdx = _insertRightmost(node._rIdx, key, v);
+    int rIdx = _insertRightmost(node._rIdx, key, v);
+    _nodes[idx]._rIdx = rIdx;
     // _BASE_LAZY_TREAP_INSERT_RIGHTMOST => _BASE_LAZY_TREAP_HEAPIFY
     return _heapify(idx);
   }
@@ -241,48 +239,31 @@ struct BaseLazyTreap {
 
 #ifdef _BASE_LAZY_TREAP_HEAPIFY // ^
   inline int _heapify(int idx) {
+    if (idx < 0) {
+      return -1;
+    }
     auto& node = _nodes[idx];
     int lIdx = node._lIdx;
     int rIdx = node._rIdx;
     if (lIdx >= 0 && _nodes[lIdx]._priority > node._priority &&
         (rIdx < 0 || _nodes[lIdx]._priority > _nodes[rIdx]._priority)) {
-      // _BASE_LAZY_TREAP_HEAPIFY => _BASE_LAZY_TREAP_ROTATE
-      _rotateLeft(idx, lIdx);
+      auto& lNode = _nodes[lIdx];
+      node._lIdx = lNode._rIdx;
+      lNode._rIdx = _heapify(idx);
+      // _BASE_TREAP_HEAPIFY => _BASE_LAZY_TREAP_MERGE_V
+      _mergeV(lNode);
       return lIdx;
     }
     if (rIdx >= 0 && _nodes[rIdx]._priority > node._priority &&
         (lIdx < 0 || _nodes[rIdx]._priority > _nodes[lIdx]._priority)) {
-      _rotateRight(idx, rIdx);
+      auto& rNode = _nodes[rIdx];
+      node._rIdx = rNode._lIdx;
+      rNode._lIdx = _heapify(idx);
+      _mergeV(rNode);
       return rIdx;
     }
-    // _BASE_LAZY_TREAP_HEAPIFY => _BASE_LAZY_TREAP_MERGE_V
     _mergeV(node);
     return idx;
-  }
-#endif
-
-#ifdef _BASE_LAZY_TREAP_ROTATE // ^
-  inline void _rotateLeft(int idx, int lIdx) {
-    auto& node = _nodes[idx];
-    auto& lNode = _nodes[lIdx];
-    _pushAndClearUpdate(node);
-    _pushAndClearUpdate(lNode);
-    node._lIdx = lNode._rIdx;
-    lNode._rIdx = idx;
-    // _BASE_LAZY_TREAP_ROTATE => _BASE_LAZY_TREAP_MERGE_V
-    _mergeV(node);
-    _mergeV(lNode);
-  }
-
-  inline void _rotateRight(int idx, int rIdx) {
-    auto& node = _nodes[idx];
-    auto& rNode = _nodes[rIdx];
-    _pushAndClearUpdate(node);
-    _pushAndClearUpdate(rNode);
-    node._rIdx = rNode._lIdx;
-    rNode._lIdx = idx;
-    _mergeV(node);
-    _mergeV(rNode);
   }
 #endif
 
@@ -381,9 +362,8 @@ struct BaseLazyTreap {
       return idx;
     }
     int lIdx, mIdx, rIdx;
-    // _BASE_LAZY_TREAP_CYCLIC_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_SPLIT_BY_KTH
-    _splitByKth(idx, upper, mIdx, rIdx);
-    _splitByKth(mIdx, lower, lIdx, mIdx);
+    // _BASE_LAZY_TREAP_CYCLIC_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH
+    _splitRangeByKth(idx, lower, upper, lIdx, mIdx, rIdx);
     if (mIdx >= 0) {
       // _BASE_LAZY_TREAP_CYCLIC_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_ERASE_RIGHTMOST
       auto* node = _eraseRightmost(mIdx);
@@ -395,8 +375,8 @@ struct BaseLazyTreap {
       // _BASE_LAZY_TREAP_CYCLIC_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_INSERT_NODE_LEFTMOST
       mIdx = _insertNodeLeftmost(mIdx, node - _nodes.data());
     }
-    // _BASE_LAZY_TREAP_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_MERGE
-    return _merge(_merge(lIdx, mIdx), rIdx);
+    // _BASE_LAZY_TREAP_ROTATE_RIGHT_BY_KTH => _BASE_LAZY_TREAP_MERGE3
+    return _merge3(lIdx, mIdx, rIdx);
   }
 #endif
 
@@ -413,14 +393,13 @@ struct BaseLazyTreap {
       return -1;
     }
     int lIdx, mIdx, rIdx;
-    // _BASE_LAZY_TREAP_UPDATE_RANGE_BY_KTH => _BASE_LAZY_TREAP_SPLIT_BY_KTH
-    _splitByKth(idx, upper, mIdx, rIdx);
-    _splitByKth(mIdx, lower, lIdx, mIdx);
+    // _BASE_LAZY_TREAP_UPDATE_RANGE_BY_KTH => _BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH
+    _splitRangeByKth(idx, lower, upper, lIdx, mIdx, rIdx);
     if (mIdx >= 0) {
       _pushUpdate(_nodes[mIdx]._updateV, updateV);
     }
-    // _BASE_LAZY_TREAP_UPDATE_RANGE_BY_KTH => _BASE_LAZY_TREAP_MERGE
-    return _merge(_merge(lIdx, mIdx), rIdx);
+    // _BASE_LAZY_TREAP_UPDATE_RANGE_BY_KTH => _BASE_LAZY_TREAP_MERGE3
+    return _merge3(lIdx, mIdx, rIdx);
   }
 #endif
 
@@ -444,7 +423,7 @@ struct BaseLazyTreap {
       _split(node._rIdx, bound, node._rIdx, rIdx);
       lIdx = idx;
     }
-    // _BASE_LAZY_TREAP_SPLIT => _BASE_LAZY_TREAP_MERGE
+    // _BASE_LAZY_TREAP_SPLIT => _BASE_LAZY_TREAP_MERGE_V
     _mergeV(node);
   }
 #endif
@@ -498,6 +477,35 @@ struct BaseLazyTreap {
   }
 #endif
 
+#ifdef BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH // ^
+  inline void splitRangeByKth(int lower, int upper, int& lIdx, int& mIdx, int& rIdx) {
+    // BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH => _BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH
+    _splitRangeByKth(_roots[0], lower, upper, lIdx, mIdx, rIdx);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH // ^
+  inline void _splitRangeByKth(int idx, int lower, int upper, int& lIdx, int& mIdx, int& rIdx) {
+    // _BASE_LAZY_TREAP_SPLIT_RANGE_BY_KTH => _BASE_LAZY_TREAP_SPLIT_BY_KTH
+    _splitByKth(idx, upper, mIdx, rIdx);
+    _splitByKth(mIdx, lower, lIdx, mIdx);
+  }
+#endif
+
+#ifdef BASE_LAZY_TREAP_MERGE3 // ^
+  inline void merge3(int lIdx, int mIdx, int rIdx) {
+    // BASE_LAZY_TREAP_MERGE3 => _BASE_LAZY_TREAP_MERGE3
+    _roots[0] = _merge3(lIdx, mIdx, rIdx);
+  }
+#endif
+
+#ifdef _BASE_LAZY_TREAP_MERGE3 // ^
+  inline int _merge3(int lIdx, int mIdx, int rIdx) {
+    // _BASE_LAZY_TREAP_MERGE3 => _BASE_LAZY_TREAP_MERGE
+    return _merge(_merge(lIdx, mIdx), rIdx);
+  }
+#endif
+
 #ifdef _BASE_LAZY_TREAP_MERGE // ^
   inline int _merge(int lIdx, int rIdx) {
     if (lIdx < 0) {
@@ -544,12 +552,12 @@ struct BaseLazyTreap {
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const _Node& node) {
-    o << "[key:" << node._key << " v:" << tostring(node._v)
-      << " updateV:" << tostring(node._updateV) << " rangeV:" << node._rangeV;
+    o << "[key:" << node._key << "] (v:" << tostring(node._v)
+      << " updateV:" << tostring(node._updateV) << " rangeV:" << tostring(node._rangeV);
 #ifdef _BASE_LAZY_TREAP_SIZE
     o << " size:" << node._size;
 #endif
-    o << " priority:" << node._priority << " lIdx:" << node._lIdx << " rIdx:" << node._rIdx << "]";
+    o << " priority:" << node._priority << ")";
     return o;
   }
 
@@ -568,7 +576,7 @@ struct BaseLazyTreap {
       return;
     }
     const auto& node = _nodes[idx];
-    o << "idx:" << idx << ' ' << node;
+    o << node << " @" << idx;
     if (node._lIdx >= 0 || node._rIdx >= 0) {
       _output(depth + 1, node._lIdx, o);
       _output(depth + 1, node._rIdx, o);
