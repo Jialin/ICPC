@@ -15,20 +15,45 @@ struct ListNode {
   inline ListNode(int x) : val(x), next(nullptr) {}
   inline ListNode(int x, ListNode* next) : val(x), next(next) {}
 
-  inline void _output(bool first, ostream& o) const {
+  inline bool _containsLoop() const {
+    auto* slow = this;
+    auto* fast = this;
+    do {
+      if (fast && fast->next) {
+        fast = fast->next->next;
+      } else {
+        return false;
+      }
+      slow = slow->next;
+    } while (slow != fast);
+    return true;
+  }
+
+  inline void
+  _output(bool first, bool containsLoop, unordered_set<int64_t>& visited, ostream& o) const {
     if (!first) {
       o << ',';
     }
     o << val;
+    auto address = int64_t(this);
+    if (containsLoop) {
+      o << "(@" << hex << address << dec << ')';
+    }
+    if (visited.count(address)) {
+      o << "**LOOP**";
+      return;
+    }
+    visited.insert(address);
     if (next) {
-      next->_output(false, o);
+      next->_output(false, containsLoop, visited, o);
     }
   }
 
   inline friend ostream& operator<<(ostream& o, const ListNode* node) {
     o << '[';
     if (node) {
-      node->_output(true, o);
+      unordered_set<int64_t> visited;
+      node->_output(true, node->_containsLoop(), visited, o);
     }
     o << ']';
     return o;
@@ -60,4 +85,26 @@ inline ListNode* calcKth(ListNode* head, int idx) {
 }
 
 } // namespace leetcode
+#endif
+
+#ifdef LEETCODE_LINKED_LIST_CONTAINS_LOOP // ^
+namespace leetcode {
+
+inline bool containsLoop(ListNode* head) {
+  if (!head) {
+    return false;
+  }
+  auto* slow = head;
+  auto* fast = head;
+  do {
+    if (fast->next) {
+      fast = fast->next->next;
+    } else {
+      return true;
+    }
+    slow = slow->next;
+  } while (slow != fast);
+  return false;
+}
+
 #endif
