@@ -9,227 +9,227 @@
 
 namespace ds {
 
-TEST(TreapSetTest, calcPrefix) {
+TEST(TreapSetTest, countPrefix) {
   TreapSet<int> treap;
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(0, treap.calcPrefix(11));
-  EXPECT_EQ(0, treap.calcPrefix(20));
-  EXPECT_EQ(0, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(0, treap.countPrefix(11));
+  EXPECT_EQ(0, treap.countPrefix(20));
+  EXPECT_EQ(0, treap.countPrefix(21));
 
   treap.insert(10);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(1, treap.calcPrefix(11));
-  EXPECT_EQ(1, treap.calcPrefix(20));
-  EXPECT_EQ(1, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(1, treap.countPrefix(11));
+  EXPECT_EQ(1, treap.countPrefix(20));
+  EXPECT_EQ(1, treap.countPrefix(21));
 
   treap.insert(20);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(1, treap.calcPrefix(11));
-  EXPECT_EQ(1, treap.calcPrefix(20));
-  EXPECT_EQ(2, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(1, treap.countPrefix(11));
+  EXPECT_EQ(1, treap.countPrefix(20));
+  EXPECT_EQ(2, treap.countPrefix(21));
 
   treap.erase(15);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(1, treap.calcPrefix(11));
-  EXPECT_EQ(1, treap.calcPrefix(20));
-  EXPECT_EQ(2, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(1, treap.countPrefix(11));
+  EXPECT_EQ(1, treap.countPrefix(20));
+  EXPECT_EQ(2, treap.countPrefix(21));
 
   treap.erase(10);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(0, treap.calcPrefix(11));
-  EXPECT_EQ(0, treap.calcPrefix(20));
-  EXPECT_EQ(1, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(0, treap.countPrefix(11));
+  EXPECT_EQ(0, treap.countPrefix(20));
+  EXPECT_EQ(1, treap.countPrefix(21));
 
   treap.insert(5);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(1, treap.calcPrefix(10));
-  EXPECT_EQ(1, treap.calcPrefix(11));
-  EXPECT_EQ(1, treap.calcPrefix(20));
-  EXPECT_EQ(2, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(1, treap.countPrefix(10));
+  EXPECT_EQ(1, treap.countPrefix(11));
+  EXPECT_EQ(1, treap.countPrefix(20));
+  EXPECT_EQ(2, treap.countPrefix(21));
 
   treap.insert(-5);
-  EXPECT_EQ(1, treap.calcPrefix(1));
-  EXPECT_EQ(2, treap.calcPrefix(10));
-  EXPECT_EQ(2, treap.calcPrefix(11));
-  EXPECT_EQ(2, treap.calcPrefix(20));
-  EXPECT_EQ(3, treap.calcPrefix(21));
+  EXPECT_EQ(1, treap.countPrefix(1));
+  EXPECT_EQ(2, treap.countPrefix(10));
+  EXPECT_EQ(2, treap.countPrefix(11));
+  EXPECT_EQ(2, treap.countPrefix(20));
+  EXPECT_EQ(3, treap.countPrefix(21));
 
   treap.erase(10);
-  EXPECT_EQ(1, treap.calcPrefix(1));
-  EXPECT_EQ(2, treap.calcPrefix(10));
-  EXPECT_EQ(2, treap.calcPrefix(11));
-  EXPECT_EQ(2, treap.calcPrefix(20));
-  EXPECT_EQ(3, treap.calcPrefix(21));
+  EXPECT_EQ(1, treap.countPrefix(1));
+  EXPECT_EQ(2, treap.countPrefix(10));
+  EXPECT_EQ(2, treap.countPrefix(11));
+  EXPECT_EQ(2, treap.countPrefix(20));
+  EXPECT_EQ(3, treap.countPrefix(21));
 
   treap.erase(-5);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(1, treap.calcPrefix(10));
-  EXPECT_EQ(1, treap.calcPrefix(11));
-  EXPECT_EQ(1, treap.calcPrefix(20));
-  EXPECT_EQ(2, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(1, treap.countPrefix(10));
+  EXPECT_EQ(1, treap.countPrefix(11));
+  EXPECT_EQ(1, treap.countPrefix(20));
+  EXPECT_EQ(2, treap.countPrefix(21));
 
   treap.erase(5);
-  EXPECT_EQ(0, treap.calcPrefix(1));
-  EXPECT_EQ(0, treap.calcPrefix(10));
-  EXPECT_EQ(0, treap.calcPrefix(11));
-  EXPECT_EQ(0, treap.calcPrefix(20));
-  EXPECT_EQ(1, treap.calcPrefix(21));
+  EXPECT_EQ(0, treap.countPrefix(1));
+  EXPECT_EQ(0, treap.countPrefix(10));
+  EXPECT_EQ(0, treap.countPrefix(11));
+  EXPECT_EQ(0, treap.countPrefix(20));
+  EXPECT_EQ(1, treap.countPrefix(21));
 }
 
-TEST(TreapSetTest, calcSuffix) {
+TEST(TreapSetTest, countSuffix) {
   TreapSet<int> treap;
-  EXPECT_EQ(0, treap.calcSuffix(0));
-  EXPECT_EQ(0, treap.calcSuffix(9));
-  EXPECT_EQ(0, treap.calcSuffix(10));
-  EXPECT_EQ(0, treap.calcSuffix(19));
-  EXPECT_EQ(0, treap.calcSuffix(20));
+  EXPECT_EQ(0, treap.countSuffix(0));
+  EXPECT_EQ(0, treap.countSuffix(9));
+  EXPECT_EQ(0, treap.countSuffix(10));
+  EXPECT_EQ(0, treap.countSuffix(19));
+  EXPECT_EQ(0, treap.countSuffix(20));
 
   treap.insert(10);
-  EXPECT_EQ(1, treap.calcSuffix(0));
-  EXPECT_EQ(1, treap.calcSuffix(9));
-  EXPECT_EQ(1, treap.calcSuffix(10));
-  EXPECT_EQ(0, treap.calcSuffix(19));
-  EXPECT_EQ(0, treap.calcSuffix(20));
+  EXPECT_EQ(1, treap.countSuffix(0));
+  EXPECT_EQ(1, treap.countSuffix(9));
+  EXPECT_EQ(1, treap.countSuffix(10));
+  EXPECT_EQ(0, treap.countSuffix(19));
+  EXPECT_EQ(0, treap.countSuffix(20));
 
   treap.insert(20);
-  EXPECT_EQ(2, treap.calcSuffix(0));
-  EXPECT_EQ(2, treap.calcSuffix(9));
-  EXPECT_EQ(2, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(2, treap.countSuffix(0));
+  EXPECT_EQ(2, treap.countSuffix(9));
+  EXPECT_EQ(2, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.insert(5);
-  EXPECT_EQ(3, treap.calcSuffix(0));
-  EXPECT_EQ(2, treap.calcSuffix(9));
-  EXPECT_EQ(2, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(3, treap.countSuffix(0));
+  EXPECT_EQ(2, treap.countSuffix(9));
+  EXPECT_EQ(2, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.insert(-5);
-  EXPECT_EQ(3, treap.calcSuffix(0));
-  EXPECT_EQ(2, treap.calcSuffix(9));
-  EXPECT_EQ(2, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(3, treap.countSuffix(0));
+  EXPECT_EQ(2, treap.countSuffix(9));
+  EXPECT_EQ(2, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.erase(10);
-  EXPECT_EQ(2, treap.calcSuffix(0));
-  EXPECT_EQ(1, treap.calcSuffix(9));
-  EXPECT_EQ(1, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(2, treap.countSuffix(0));
+  EXPECT_EQ(1, treap.countSuffix(9));
+  EXPECT_EQ(1, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.erase(10);
-  EXPECT_EQ(2, treap.calcSuffix(0));
-  EXPECT_EQ(1, treap.calcSuffix(9));
-  EXPECT_EQ(1, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(2, treap.countSuffix(0));
+  EXPECT_EQ(1, treap.countSuffix(9));
+  EXPECT_EQ(1, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.erase(-5);
-  EXPECT_EQ(2, treap.calcSuffix(0));
-  EXPECT_EQ(1, treap.calcSuffix(9));
-  EXPECT_EQ(1, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(2, treap.countSuffix(0));
+  EXPECT_EQ(1, treap.countSuffix(9));
+  EXPECT_EQ(1, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 
   treap.erase(5);
-  EXPECT_EQ(1, treap.calcSuffix(0));
-  EXPECT_EQ(1, treap.calcSuffix(9));
-  EXPECT_EQ(1, treap.calcSuffix(10));
-  EXPECT_EQ(1, treap.calcSuffix(19));
-  EXPECT_EQ(1, treap.calcSuffix(20));
+  EXPECT_EQ(1, treap.countSuffix(0));
+  EXPECT_EQ(1, treap.countSuffix(9));
+  EXPECT_EQ(1, treap.countSuffix(10));
+  EXPECT_EQ(1, treap.countSuffix(19));
+  EXPECT_EQ(1, treap.countSuffix(20));
 }
 
-TEST(TreapSetTest, calcRange) {
+TEST(TreapSetTest, countRange) {
   TreapSet<int> treap;
-  EXPECT_EQ(0, treap.calcRange(0, 21));
-  EXPECT_EQ(0, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(0, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(0, treap.calcRange(20, 21));
+  EXPECT_EQ(0, treap.countRange(0, 21));
+  EXPECT_EQ(0, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(0, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(0, treap.countRange(20, 21));
 
   treap.insert(10);
-  EXPECT_EQ(1, treap.calcRange(0, 21));
-  EXPECT_EQ(0, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(1, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(0, treap.calcRange(20, 21));
+  EXPECT_EQ(1, treap.countRange(0, 21));
+  EXPECT_EQ(0, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(1, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(0, treap.countRange(20, 21));
 
   treap.insert(20);
-  EXPECT_EQ(2, treap.calcRange(0, 21));
-  EXPECT_EQ(0, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(1, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(2, treap.countRange(0, 21));
+  EXPECT_EQ(0, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(1, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.insert(5);
-  EXPECT_EQ(3, treap.calcRange(0, 21));
-  EXPECT_EQ(1, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(1, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(3, treap.countRange(0, 21));
+  EXPECT_EQ(1, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(1, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.insert(-5);
-  EXPECT_EQ(3, treap.calcRange(0, 21));
-  EXPECT_EQ(1, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(1, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(3, treap.countRange(0, 21));
+  EXPECT_EQ(1, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(1, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.erase(10);
-  EXPECT_EQ(2, treap.calcRange(0, 21));
-  EXPECT_EQ(1, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(0, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(2, treap.countRange(0, 21));
+  EXPECT_EQ(1, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(0, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.erase(10);
-  EXPECT_EQ(2, treap.calcRange(0, 21));
-  EXPECT_EQ(1, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(0, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(2, treap.countRange(0, 21));
+  EXPECT_EQ(1, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(0, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.erase(-5);
-  EXPECT_EQ(2, treap.calcRange(0, 21));
-  EXPECT_EQ(1, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(0, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(2, treap.countRange(0, 21));
+  EXPECT_EQ(1, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(0, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 
   treap.erase(5);
-  EXPECT_EQ(1, treap.calcRange(0, 21));
-  EXPECT_EQ(0, treap.calcRange(0, 9));
-  EXPECT_EQ(0, treap.calcRange(9, 10));
-  EXPECT_EQ(0, treap.calcRange(10, 19));
-  EXPECT_EQ(0, treap.calcRange(19, 20));
-  EXPECT_EQ(1, treap.calcRange(20, 21));
+  EXPECT_EQ(1, treap.countRange(0, 21));
+  EXPECT_EQ(0, treap.countRange(0, 9));
+  EXPECT_EQ(0, treap.countRange(9, 10));
+  EXPECT_EQ(0, treap.countRange(10, 19));
+  EXPECT_EQ(0, treap.countRange(19, 20));
+  EXPECT_EQ(1, treap.countRange(20, 21));
 }
 
 TEST(TreapSetTest, initOrderedItems) {
   TreapSet<int> treap;
   treap.initOrderedItems({{5, nullptr}, {10, nullptr}, {11, nullptr}});
-  EXPECT_EQ(0, treap.calcPrefix(5));
-  EXPECT_EQ(1, treap.calcPrefix(6));
-  EXPECT_EQ(1, treap.calcPrefix(7));
-  EXPECT_EQ(1, treap.calcPrefix(10));
-  EXPECT_EQ(2, treap.calcPrefix(11));
-  EXPECT_EQ(3, treap.calcPrefix(12));
-  EXPECT_EQ(3, treap.calcPrefix(13));
+  EXPECT_EQ(0, treap.countPrefix(5));
+  EXPECT_EQ(1, treap.countPrefix(6));
+  EXPECT_EQ(1, treap.countPrefix(7));
+  EXPECT_EQ(1, treap.countPrefix(10));
+  EXPECT_EQ(2, treap.countPrefix(11));
+  EXPECT_EQ(3, treap.countPrefix(12));
+  EXPECT_EQ(3, treap.countPrefix(13));
 }
 
 } // namespace ds

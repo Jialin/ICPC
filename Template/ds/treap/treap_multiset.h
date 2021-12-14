@@ -21,8 +21,8 @@ struct TreapMultiset : BaseTreap<int, int, KEY> {
   using RangeV = int;
   using Node = typename TreapMultiset::_Node;
 
-  inline void _initRangeV(RangeV& res) override {
-    res = 0;
+  inline void _initRangeV(RangeV& rangeV) override {
+    rangeV = 0;
   }
 
   inline void _initAllVs(Node& node, const NodeV& v) override {

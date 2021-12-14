@@ -146,9 +146,9 @@
 - [x] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D): TODO: Splay Tree Revisit
 - [x] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/): TODO: Splay Tree Revisit
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
-- [ ] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
+- [x] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
 - [x] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F): TODO: Splay Tree Revisit
-- [ ] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
+- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D): TODO: Followup with sparse table
 - [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E): TODO: Segment Tree Revisit
 
 ## 1.6. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
