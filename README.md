@@ -71,6 +71,7 @@
 - [x] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
 - [x] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): TODO: Segment Tree
+- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
 
 ## 1.3. Disjoint Set Union ([Template/ds/disjoint_set/](Template/ds/disjoint_set/))
 
@@ -148,7 +149,6 @@
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
 - [x] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
 - [x] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F): TODO: Splay Tree Revisit
-- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D): TODO: Followup with sparse table
 - [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E): TODO: Segment Tree Revisit
 
 ## 1.6. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))

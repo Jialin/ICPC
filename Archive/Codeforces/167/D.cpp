@@ -68,26 +68,7 @@ inline pair<int, int> calc(int idx, int lower, int upper) {
   if (idx < 0 || R <= positions[lower].first || positions[upper - 1].first < L) {
     return {0, -1};
   }
-  // DEBUGF(
-  //     "idx:%d [%d,%d) [%d,%d] L:%d R:%d\n",
-  //     idx,
-  //     lower,
-  //     upper,
-  //     positions[lower].first,
-  //     positions[upper - 1].first,
-  //     L,
-  //     R);
   if (L <= positions[lower].first && positions[upper - 1].first < R) {
-    // DEBUGF(
-    //     "!!!! covered [%d,%d) [%d,%d] L:%d R:%d: %d, %d\n",
-    //     lower,
-    //     upper,
-    //     positions[lower].first,
-    //     positions[upper - 1].first,
-    //     L,
-    //     R,
-    //     results[idx],
-    //     unused[idx]);
     return {results[idx], unused[idx]};
   }
   int mediumX = positions[mediums[idx]].first;
@@ -98,16 +79,6 @@ inline pair<int, int> calc(int idx, int lower, int upper) {
   }
   auto lv = calc(leftIdxs[idx], lower, mediums[idx]);
   auto rv = calc(rightIdxs[idx], mediums[idx] + 1, upper);
-  // DEBUGF(
-  //     "!!!! [%d,%d) [%d,%d] L:%d R:%d: %d, %d\n",
-  //     lower,
-  //     upper,
-  //     positions[lower].first,
-  //     positions[upper - 1].first,
-  //     L,
-  //     R,
-  //     max(max(lv.first + rv.second, lv.second + rv.first) + 1, lv.first + rv.first),
-  //     lv.first + rv.first);
   return {
       max(max(lv.first + rv.second, lv.second + rv.first) + 1, lv.first + rv.first),
       lv.first + rv.first};
@@ -144,10 +115,8 @@ int main() {
     idxs[i] = i;
   }
   st.init(move(idxs));
-  // DEBUGF("init start\n");
   pnt = 0;
   init(0, n);
-  // DEBUGF("init end pnt:%d\n", pnt);
   int q;
   io::readInt(q);
   FOR(_, 0, q) {

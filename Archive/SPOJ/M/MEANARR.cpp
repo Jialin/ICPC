@@ -4,9 +4,10 @@
 #include "debug/debug_declare.h"
 
 #define BASE_TREAP_CALC_SUFFIX
-#define BASE_TREAP_INIT_ITEMS
 #define BASE_TREAP_RESERVE_NODES
+#define TREAP_MULTISET_INSERT
 #include "ds/treap/base_treap_macros.h"
+#include "ds/treap/treap_multiset_macros.h"
 
 #include "ds/treap/treap_multiset.h"
 #include "io/read_int.h"
@@ -17,8 +18,6 @@
 
 int threshold;
 vector<int> as;
-vector<int64_t> updates;
-vector<pair<int64_t, int>> updateCnts;
 ds::TreapMultiset<int64_t> treap;
 
 inline int64_t calc(int lower, int upper) {
@@ -31,27 +30,14 @@ inline int64_t calc(int lower, int upper) {
   int medium = (lower + upper) >> 1;
   auto res = calc(lower, medium) + calc(medium, upper);
   treap.clear();
-  updates.clear();
   int64_t x = 0;
   FOR(i, medium, upper) {
-    x += as[i];
-    x -= threshold;
-    updates.emplace_back(x);
+    x += as[i] - threshold;
+    treap.insert(x);
   }
-  SORT(updates);
-  updateCnts.clear();
-  for (auto u : updates) {
-    if (updateCnts.empty() || updateCnts.back().first != u) {
-      updateCnts.emplace_back(u, 1);
-    } else {
-      ++updateCnts.back().second;
-    }
-  }
-  treap.initItems(updateCnts);
   x = 0;
   for (int i = medium - 1; i >= lower; --i) {
-    x -= as[i];
-    x += threshold;
+    x -= as[i] - threshold;
     res += treap.calcSuffix(x);
   }
   return res;
@@ -62,8 +48,6 @@ int main() {
   io::readInt(n);
   io::readInt(threshold);
   treap.reserveNodes(n);
-  updates.reserve(n);
-  updateCnts.reserve(n);
   as.resize(n);
   FOR(i, 0, n) {
     io::readInt(as[i]);
