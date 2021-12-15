@@ -175,8 +175,8 @@
 - [CP Algorithm](https://cp-algorithms.com/data_structures/sqrt_decomposition.html)
 
 ### 2.1.2. Problems
-- [ ] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=242&page=show_problem&problem=3154)
-- [ ] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=229&page=show_problem&problem=3141)
+- [ ] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3154)
+- [ ] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141)
 - [ ] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
 - [ ] [Codeforces - Till I Collapse](https://codeforces.com/contest/786/problem/C)
 - [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D)
