@@ -3,60 +3,67 @@
 
 using namespace std;
 
-struct TreapPairwiseGapNode {
+struct TreapPairwiseGapRangeV {
   int cnt;
-  int64_t xSum, oddSum, sum;
+  int64_t sum, sum2;
 
 #ifdef LOCAL
-  inline friend ostream& operator<<(ostream& o, const TreapPairwiseGapNode& node) {
-    o << "[cnt:" << node.cnt << " sum:" << node.sum << " xSum:" << node.xSum << "]";
+  inline friend ostream& operator<<(ostream& o, const TreapPairwiseGapRangeV& node) {
+    o << "[sum: " << node.sum << " sum2:" << node.sum2 << "]";
     return o;
   }
 #endif
 };
 
-struct TreapPairwiseGap : ds::BaseTreap<nullptr_t, TreapPairwiseGapNode, int> {
-  using _Node = typename TreapPairwiseGap::_Node;
+struct TreapPairwiseGap : ds::BaseTreap<nullptr_t, TreapPairwiseGapRangeV, int> {
+  using NodeV = nullptr_t;
+  using RangeV = TreapPairwiseGapRangeV;
+  using Node = typename TreapPairwiseGap::_Node;
 
-  inline void _initRangeV(TreapPairwiseGapNode& res) override {
-    res.cnt = 0;
-    res.xSum = 0;
-    res.oddSum = 0;
-    res.sum = 0;
+  inline void _initRangeV(RangeV& rangeV) override {
+    rangeV.cnt = 0;
+    rangeV.sum = 0;
+    rangeV.sum2 = 0;
   }
 
-  inline void _initV(_Node& node) override {
-    _initRangeV(node._rangeV);
+  inline void _initAllVs(Node& node, const NodeV& v) override {
+    auto& rangeV = node._rangeV;
+    rangeV.sum = node._key;
+    rangeV.sum2 = 0;
   }
 
-  inline void _updateV(_Node& node, const nullptr_t& delta) override {
-    _mergeRangeV(node);
+  inline void _updateAllVs(Node& node, const NodeV& delta) override {
+    assert(false);
   }
 
-  inline void _mergeRangeV(_Node& node) override {
-    auto& range = node._rangeV;
-    _initRangeV(range);
-    if (node._lIdx >= 0) {
-      _appendRange(range, this->_nodes[node._lIdx]);
-    }
-    _appendNode(range, node);
-    if (node._rIdx >= 0) {
-      _appendRange(range, this->_nodes[node._rIdx]);
-    }
+  inline int64_t _calcSum(int idx) {
+    return idx >= 0 ? _nodes[idx]._rangeV.sum : 0;
   }
 
-  inline void _appendNode(TreapPairwiseGapNode& res, const _Node& node) override {
-    res.sum += res.cnt * (node._key + 0LL) - res.xSum;
-    res.xSum += node._key;
-    res.oddSum += ((res.cnt << 1) | 1LL) * node._key;
+  inline int64_t _calcSum2(int idx) {
+    return idx >= 0 ? _nodes[idx]._rangeV.sum2 : 0;
+  }
+
+  inline void _mergeRangeV(Node& node) override {
+    auto& rangeV = node._rangeV;
+    int lIdx = node._lIdx, rIdx = node._rIdx;
+    rangeV.sum = _calcSum(lIdx) + node._key + _calcSum(rIdx);
+    rangeV.sum2 = _calcSum2(lIdx) + _calcSum2(rIdx) +
+                  (_calcSum(rIdx) + node._key) * _calcSize(lIdx) -
+                  (_calcSum(lIdx) + node._key) * _calcSize(rIdx) + _calcSum(rIdx) - _calcSum(lIdx);
+  }
+
+#ifdef _BASE_TREAP_CALC_APPEND
+  inline void _appendNode(RangeV& res, const Node& node) override {
+    res.sum2 += node._key * CAST<int64_t>(res.cnt) - res.sum;
     ++res.cnt;
+    res.sum += node._key;
   }
 
-  inline void _appendRange(TreapPairwiseGapNode& res, const _Node& node) override {
-    const auto& range = node._rangeV;
-    res.sum += (res.cnt - range.cnt) * range.xSum - res.xSum * range.cnt + range.oddSum;
-    res.xSum += range.xSum;
-    res.oddSum += range.oddSum + range.xSum * (res.cnt << 1);
-    res.cnt += range.cnt;
+  inline void _appendRange(RangeV& res, const Node& node) override {
+    res.sum2 += node._rangeV.sum2 + node._rangeV.sum * res.cnt - res.sum * node._size;
+    res.cnt += node._size;
+    res.sum += node._rangeV.sum;
   }
+#endif
 };
