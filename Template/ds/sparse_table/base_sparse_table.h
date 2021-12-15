@@ -11,7 +11,7 @@ namespace ds {
 
 template<typename V>
 struct BaseSparseTable {
-  virtual inline void combine(const V& leftValue, const V& rightValue, V& res) const = 0;
+  virtual inline void combine(const V& lv, const V& rv, V& res) const = 0;
 
 #ifdef BASE_SPARSE_TABLE_RESERVE // ^
   inline void reserve(int capacity) {
@@ -40,12 +40,14 @@ struct BaseSparseTable {
 #ifdef BASE_SPARSE_TABLE_CALC // ^
   inline V calc(int l, int r) {
     V res;
-    calc(l, r, res);
+    // BASE_SPARSE_TABLE_CALC => _BASE_SPARSE_TABLE_CALC
+    _calc(l, r, res);
     return res;
   }
 #endif
 
-  inline void calc(int l, int r, V& res) {
+#ifdef _BASE_SPARSE_TABLE_CALC // ^
+  inline void _calc(int l, int r, V& res) {
     DEBUG_LT(l, r);
     if (l >= r) {
       return;
@@ -53,6 +55,7 @@ struct BaseSparseTable {
     int bit = _log[r - l];
     combine(_st[bit][l], _st[bit][r - (1 << bit)], res);
   }
+#endif
 
   inline void _initLog(int capacity) {
     int oldSize = _log.size();

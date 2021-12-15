@@ -9,9 +9,9 @@ namespace ds {
 
 template<typename V, int MAXNBIT, int MAXMBIT, int MAXN, int MAXM>
 struct BaseSparseTable2DArray {
-  virtual inline void combineLeftRight(const V& leftValue, const V& rightValue, V& res) const = 0;
+  virtual inline void combineLeftRight(const V& lv, const V& rv, V& res) const = 0;
 
-  virtual inline void combineUpperLower(const V& upperValue, const V& lowerValue, V& res) const = 0;
+  virtual inline void combineUpperLower(const V& uv, const V& lv, V& res) const = 0;
 
   inline void init(vector<vector<V>>&& vs) {
     DEBUG_LT(MAXN, 1 << MAXNBIT);

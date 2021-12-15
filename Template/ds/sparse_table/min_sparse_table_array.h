@@ -6,8 +6,8 @@ namespace ds {
 
 template<typename V, int MAXBIT, int MAXN>
 struct MinSparseTableArray : BaseSparseTableArray<V, MAXBIT, MAXN> {
-  inline void combine(const V& leftValue, const V& rightValue, V& res) const override {
-    res = min(leftValue, rightValue);
+  inline void combine(const V& lv, const V& rv, V& res) const override {
+    res = min(lv, rv);
   }
 };
 

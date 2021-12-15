@@ -12,7 +12,7 @@ namespace ds {
 
 template<typename V, int MAXNBIT, int MAXN>
 struct BaseDisjointSparseTable {
-  virtual inline void combine(const V& leftValue, const V& rightValue, V& res) const = 0;
+  virtual inline void combine(const V& lv, const V& rv, V& res) const = 0;
 
   inline void init(const vector<V>& vs) {
     DEBUG_GE(1 << MAXNBIT, MAXN);
@@ -22,20 +22,23 @@ struct BaseDisjointSparseTable {
     _dfs(0, 0, pow2, n, vs);
   }
 
-  inline void calc(int lower, int upper, V& res) const {
+#ifdef BASE_DISJOINT_SPARSE_TABLE_CALC // ^
+  inline V calc(int lower, int upper) {
+    V res;
+    // BASE_DISJOINT_SPARSE_TABLE_CALC => _BASE_DISJOINT_SPARSE_TABLE_CALC
+    _calc(lower, upper, res);
+    return res;
+  }
+#endif
+
+#ifdef _BASE_DISJOINT_SPARSE_TABLE_CALC // ^
+  inline void _calc(int lower, int upper, V& res) const {
     if (lower + 1 == upper) {
       res = _st[_bit][lower];
       return;
     }
     int depth = _bit - 1 - (31 ^ __builtin_clz(lower ^ (upper - 1)));
     combine(_st[depth][lower], _st[depth][upper - 1], res);
-  }
-
-#ifdef BASE_DISJOINT_SPARSE_TABLE_CALC // ^
-  inline V calc(int lower, int upper) {
-    V res;
-    calc(lower, upper, res);
-    return res;
   }
 #endif
 

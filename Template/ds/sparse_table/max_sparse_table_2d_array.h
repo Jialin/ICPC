@@ -6,12 +6,12 @@ namespace ds {
 
 template<typename V, int MAXNBIT, int MAXMBIT, int MAXN, int MAXM>
 struct MaxSparseTable2DArray final : BaseSparseTable2DArray<V, MAXNBIT, MAXMBIT, MAXN, MAXM> {
-  inline void combineLeftRight(const V& leftValue, const V& rightValue, V& res) const override {
-    res = max(leftValue, rightValue);
+  inline void combineLeftRight(const V& lv, const V& rv, V& res) const override {
+    res = max(lv, rv);
   }
 
-  inline void combineUpperLower(const V& upperValue, const V& lowerValue, V& res) const override {
-    res = max(upperValue, lowerValue);
+  inline void combineUpperLower(const V& uv, const V& lv, V& res) const override {
+    res = max(uv, lv);
   }
 };
 
