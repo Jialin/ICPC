@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#define BASE_FENWICK_2D_ARRAY_CALC_PREFIX_RETURN
+#define BASE_FENWICK_2D_ARRAY_CALC_PREFIX
 #include "ds/fenwick/base_fenwick_2d_array_macros.h"
 
 #include "ds/fenwick/fenwick_2d_array_max.h"

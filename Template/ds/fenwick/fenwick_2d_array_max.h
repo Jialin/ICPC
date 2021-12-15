@@ -8,11 +8,11 @@ namespace ds {
 
 template<typename V, int MAXN, int MAXM>
 struct Fenwick2DArrayMax : BaseFenwick2DArray<V, MAXN, MAXM> {
-  inline void initV(V& v) override {
+  inline void _initV(V& v) override {
     v = numeric_limits<V>::min();
   }
 
-  inline void addV(V& v, const V& deltaV) override {
+  inline void _addV(V& v, const V& deltaV) override {
     v = max(v, deltaV);
   }
 };

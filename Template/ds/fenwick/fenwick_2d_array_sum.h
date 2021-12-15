@@ -8,16 +8,16 @@ namespace ds {
 
 template<typename V, int MAXN, int MAXM>
 struct Fenwick2DArraySum : BaseFenwick2DArray<V, MAXN, MAXM> {
-  inline void initV(V& v) override {
+  inline void _initV(V& v) override {
     v = 0;
   }
 
-  inline void addV(V& v, const V& deltaV) override {
+  inline void _addV(V& v, const V& deltaV) override {
     v += deltaV;
   }
 
 #ifdef BASE_FENWICK_2D_ARRAY_CALC_RANGE // ^
-  inline void subV(V& v, const V& deltaV) const override {
+  inline void _subV(V& v, const V& deltaV) const override {
     v -= deltaV;
   }
 #endif

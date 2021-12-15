@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#define BASE_FENWICK_CALC_PREFIX_RETURN
+#define BASE_FENWICK_CALC_PREFIX
 #include "ds/fenwick/base_fenwick_macros.h"
 
 #include "ds/fenwick/fenwick_min.h"
