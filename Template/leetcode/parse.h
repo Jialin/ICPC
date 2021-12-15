@@ -67,6 +67,23 @@ inline void _parse(const string& s, int& shift, int& v) {
   _parseInt(s, shift, v);
 }
 
+inline void _parse(const string& s, int& shift, char& v) {
+  _skipSpaces(s, shift);
+  DEBUGF_TRUE(
+      shift < SIZE(s) && (s[shift] == '"' || s[shift] == '\''),
+      "Expect begging '\"' or ''' @%d in '%s'\n",
+      shift,
+      s.c_str());
+  ++shift;
+  v = s[shift++];
+  DEBUGF_TRUE(
+      shift < SIZE(s) && (s[shift] == '"' || s[shift] == '\''),
+      "Expect begging '\"' or ''' @%d in '%s'\n",
+      shift,
+      s.c_str());
+  ++shift;
+}
+
 inline void _parse(const string& s, int& shift, string& v) {
   _skipSpaces(s, shift);
   DEBUGF_TRUE(
@@ -100,11 +117,13 @@ inline void _parse(const string& s, int& shift, Interval& v) {
 template<typename T>
 inline void _parse(const string& s, int& shift, vector<T>& res) {
   DEBUGF_TRUE(shift < SIZE(s), "'shift' out of bound. '%s'\n", s.c_str());
+  _skipSpaces(s, shift);
   DEBUGF_TRUE(s[shift] == '[', "Expect '[' @%d in '%s'\n", shift, s.c_str());
   ++shift;
   res.clear();
   bool first = true;
   while (shift < SIZE(s)) {
+    _skipSpaces(s, shift);
     if (s[shift] == ']') {
       ++shift;
       break;
