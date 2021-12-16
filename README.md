@@ -175,10 +175,10 @@
 - [CP Algorithm](https://cp-algorithms.com/data_structures/sqrt_decomposition.html)
 
 ### 2.1.2. Problems
-- [ ] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3154)
-- [ ] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141)
-- [ ] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
-- [ ] [Codeforces - Till I Collapse](https://codeforces.com/contest/786/problem/C)
+- [x] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3154)
+- [x] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141): Follow up with Partition Tree
+- [x] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
+- [x] [SPOJ - Race Against Time](https://www.spoj.com/problems/RACETIME/)
 - [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D)
 - [ ] [Codeforces - Holes](https://codeforces.com/contest/13/problem/E)
 - [ ] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
