@@ -1,4 +1,17 @@
 {
+    "Min Heap": {
+        "prefix": "MINHEAP",
+        "body": [
+            "priority_queue<$1, vector<$1>, greater<$1>>"
+        ]
+    },
+    "format toggle": {
+        "prefix": "FORMATTOGGLE",
+        "body": [
+            "// clang-format off",
+            "// clang-format on"
+        ]
+    },
     "Single Test Case Template": {
         "prefix": "CF",
         "body": [
@@ -14,13 +27,6 @@
             "  $1;",
             "  return 0;",
             "}"
-        ]
-    },
-    "format toggle": {
-        "prefix": "FORMATTOGGLE",
-        "body": [
-            "// clang-format off",
-            "// clang-format on"
         ]
     },
     "Multiple Test Cases Template": {
