@@ -14,3 +14,5 @@
   SORT(vs);                                                                                        \
   UNIQUE(vs)
 #define INDEX(vs, v) CAST<int>(lower_bound(ALL(vs), v) - vs.begin())
+#define MMIN(a, b) a = min(a, b);
+#define MMAX(a, b) a = max(a, b);
