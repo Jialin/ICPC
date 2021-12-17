@@ -71,7 +71,7 @@
 - [x] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
 - [x] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
 - [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): TODO: Segment Tree
-- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
+- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D): TODO: Segment Tree
 
 ## 1.3. Disjoint Set Union ([Template/ds/disjoint_set/](Template/ds/disjoint_set/))
 
@@ -179,11 +179,10 @@
 - [x] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141): Follow up with Partition Tree
 - [x] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
 - [x] [SPOJ - Race Against Time](https://www.spoj.com/problems/RACETIME/)
-- [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D)
-- [ ] [Codeforces - Holes](https://codeforces.com/contest/13/problem/E)
-- [ ] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
-- [ ] [Codeforces - Powerful array](https://codeforces.com/contest/86/problem/D)
-- [ ] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
+- [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D): TODO: Implicit Segment Tree
+- [x] [Codeforces - Holes](https://codeforces.com/contest/13/problem/E): TODO: Link Cut Tree
+- [x] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
+- [x] [Codeforces - Powerful array](https://codeforces.com/contest/86/problem/D)
 
 ## 2.2. Divide and Conquer
 
