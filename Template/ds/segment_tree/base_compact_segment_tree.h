@@ -12,6 +12,7 @@ template<typename V>
 struct BaseCompactSegmentTree {
   struct _Node {
     V v;
+    int lower, upper;
   };
 
   virtual inline void _mergeVs(const _Node& lNode, const _Node& rNode, V& res) = 0;
@@ -43,13 +44,15 @@ struct BaseCompactSegmentTree {
 #ifdef _BASE_COMPACT_SEGMENT_TREE_INIT // ^
   inline void _init(int idx, int lower, int upper, vector<V>& leafVs) {
     auto& node = _nodes[idx];
+    node.lower = lower;
+    node.upper = upper;
     if (lower + 1 == upper) {
       node.v = move(leafVs[lower]);
       return;
     }
     int medium = (lower + upper) >> 1;
     _init(idx + 1, lower, medium, leafVs);
-    int rIdx = idx + ((medium - lower) << 1);
+    int rIdx = idx + ((upper - lower) & ~1);
     _init(rIdx, medium, upper, leafVs);
     _mergeVs(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
@@ -58,24 +61,23 @@ struct BaseCompactSegmentTree {
 #ifdef BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
   inline void update(int pos, const V& update) {
     // BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE
-    _update(0, 0, _n, pos, update);
+    _update(0, pos, update);
   }
 #endif
 
 #ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
-  inline void _update(int idx, int lower, int upper, int pos, const V& update) {
+  inline void _update(int idx, int pos, const V& update) {
     auto& node = _nodes[idx];
-    if (lower + 1 == upper) {
+    if (node.lower + 1 == node.upper) {
       // _BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
       _updateV(node, update);
       return;
     }
-    int medium = (lower + upper) >> 1;
-    int rIdx = idx + ((upper - lower) & ~1);
-    if (pos < medium) {
-      _update(idx + 1, lower, medium, pos, update);
+    int rIdx = idx + ((node.upper - node.lower) & ~1);
+    if (pos < ((node.lower + node.upper) >> 1)) {
+      _update(idx + 1, pos, update);
     } else {
-      _update(rIdx, medium, upper, pos, update);
+      _update(rIdx, pos, update);
     }
     _mergeVs(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
@@ -87,27 +89,28 @@ struct BaseCompactSegmentTree {
     // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_INIT_V
     _initV(res);
     // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE
-    _calcRange(0, 0, _n, lower, upper, res);
+    _calcRange(0, lower, upper, res);
     return res;
   }
 #endif
 
 #ifdef _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
-  inline void _calcRange(int idx, int lower, int upper, int subLower, int subUpper, V& res) {
-    if (subLower >= subUpper) {
+  inline void _calcRange(int idx, int lower, int upper, V& res) {
+    if (lower >= upper) {
       return;
     }
-    if (subLower <= lower && upper <= subUpper) {
-      // _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CALC_APPEND_V
-      _appendV(_nodes[idx], res);
+    auto& node = _nodes[idx];
+    if (lower <= node.lower && node.upper <= upper) {
+      // _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_APPEND_V
+      _appendV(node, res);
       return;
     }
-    int medium = (lower + upper) >> 1;
-    if (subLower < medium) {
-      _calcRange(idx + 1, lower, medium, subLower, subUpper, res);
+    int medium = (node.lower + node.upper) >> 1;
+    if (lower < medium) {
+      _calcRange(idx + 1, lower, upper, res);
     }
-    if (medium < subUpper) {
-      _calcRange(idx + ((medium - lower) << 1), medium, upper, subLower, subUpper, res);
+    if (medium < upper) {
+      _calcRange(idx + ((node.upper - node.lower) & ~1), lower, upper, res);
     }
   }
 #endif
@@ -123,12 +126,11 @@ struct BaseCompactSegmentTree {
 
   inline friend ostream& operator<<(ostream& o, const BaseCompactSegmentTree& st) {
     vector<bool> toRight;
-    st._output(0, 0, 0, st._n, toRight, o);
+    st._output(0, 0, toRight, o);
     return o;
   }
 
-  inline void
-  _output(int depth, int idx, int lower, int upper, vector<bool>& toRight, ostream& o) const {
+  inline void _output(int depth, int idx, vector<bool>& toRight, ostream& o) const {
     o << endl;
     FOR(i, 0, SIZE(toRight) - 1) {
       o << (toRight[i] ? ' ' : '|') << "   ";
@@ -136,13 +138,13 @@ struct BaseCompactSegmentTree {
     if (!toRight.empty()) {
       o << (toRight.back() ? 'L' : '|') << "---";
     }
-    o << '[' << lower << ',' << upper << "): " << _nodes[idx] << " @" << idx;
-    if (upper - lower > 1) {
-      int medium = (lower + upper) >> 1;
+    const auto& node = _nodes[idx];
+    o << '[' << node.lower << ',' << node.upper << "): " << node << " @" << idx;
+    if (node.lower + 1 != node.upper) {
       toRight.push_back(false);
-      _output(depth + 1, idx + 1, lower, medium, toRight, o);
+      _output(depth + 1, idx + 1, toRight, o);
       toRight.back() = true;
-      _output(depth + 1, idx + ((medium - lower) << 1), medium, upper, toRight, o);
+      _output(depth + 1, idx + ((node.upper - node.lower) & ~1), toRight, o);
       toRight.pop_back();
     }
   }
