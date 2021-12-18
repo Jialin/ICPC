@@ -176,28 +176,28 @@
 - [CP Algorithm](https://cp-algorithms.com/data_structures/segment_tree.html)
 
 ### 1.8.2. Problems
-- [x] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
-- [x] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
-- [x] [UVA 11402 - Ahoy, Pirates!]()
-- [x] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
-- [x] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
-- [x] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A) [For beginners]
+- [ ] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
+- [ ] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
+- [ ] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
+- [ ] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
+- [ ] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
+- [ ] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A) [For beginners]
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
-- [x] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
-- [x] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
-- [x] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
-- [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
-- [x] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C) [Lazy propagation]
-- [x] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
-- [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
-- [x] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
-- [x] [Codeforces - A Simple Task](https://codeforces.com/contest/558/problem/E)
-- [x] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
-- [x] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
-- [x] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
-- [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
-- [x] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
-- [x] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
+- [ ] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
+- [ ] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
+- [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
+- [ ] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
+- [ ] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C) [Lazy propagation]
+- [ ] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
+- [ ] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
+- [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
+- [ ] [Codeforces - A Simple Task](https://codeforces.com/contest/558/problem/E)
+- [ ] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
+- [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
+- [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
+- [ ] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
+- [ ] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
+- [ ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 
 # 2. Algorithms
 
