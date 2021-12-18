@@ -90,7 +90,8 @@
 			"stdexcept": "cpp",
 			"streambuf": "cpp",
 			"system_error": "cpp",
-			"typeinfo": "cpp"
+			"typeinfo": "cpp",
+			"thread": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
