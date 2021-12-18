@@ -183,7 +183,9 @@
 - [ ] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
 - [ ] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A) [For beginners]
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
-- [ ] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
+- [x] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
+- [ ] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
+- [ ] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042)
 - [ ] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
 - [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
 - [ ] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
