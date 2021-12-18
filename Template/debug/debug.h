@@ -66,4 +66,20 @@ inline string tostring(const unordered_map<K, V>& vs) {
   ss << "}(" << vs.size() << " tuples)";
   return ss.str();
 }
+
+template<typename... VS>
+inline string tostring2(VS const&... vs) {
+  stringstream ss;
+  int i = 0;
+  (
+      [&](const auto& v) {
+        if (i) {
+          ss << ((i & 1) ? ':' : ',');
+        }
+        ++i;
+        ss << tostring(v);
+      }(vs),
+      ...);
+  return ss.str();
+}
 #endif
