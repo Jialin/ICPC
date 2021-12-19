@@ -2,6 +2,8 @@
 // ALL BASE_DISJOINT_SET_VALUE_ALL
 #pragma once
 
+#include "ds/disjoint_set/base_disjoint_set_value_macros.h"
+
 #include "common/macros.h"
 
 using namespace std;
@@ -18,7 +20,7 @@ struct BaseDisjointSetValue {
   }
 #endif
 
-  inline void init(vector<V>&& vs) {
+  inline void init(vector<V> vs) {
     _parents.assign(SIZE(vs), -1);
     _vs = move(vs);
   }
