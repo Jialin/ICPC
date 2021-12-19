@@ -107,4 +107,5 @@ inline bool containsLoop(ListNode* head) {
   return false;
 }
 
+} // namespace leetcode
 #endif

@@ -140,36 +140,40 @@ inline void _parse(const string& s, int& shift, vector<T>& res) {
   }
 }
 
-} // namespace
-
-template<typename T>
-inline vector<T> parseVector(const string& s) {
-  vector<T> res;
-  int shift = 0;
-  _parse(s, shift, res);
-  return res;
-}
-
-ListNode* parseLinkedList(const string& s) {
+void _parse(const string& s, int& shift, ListNode*& v) {
   vector<int> vs;
-  int shift = 0;
   _parse(s, shift, vs);
-  ListNode* last = nullptr;
-  for (int i = SIZE(vs) - 1; i >= 0; --i) {
-    ListNode* node = new ListNode(vs[i]);
-    node->next = last;
-    last = node;
+  v = nullptr;
+  if (vs.empty()) {
+    return;
   }
-  return last;
+  ListNode* tail = nullptr;
+  for (int i = SIZE(vs) - 1; i >= 0; --i) {
+    auto* node = new ListNode(vs[i]);
+    if (!tail) {
+      tail = node;
+    }
+    node->next = v;
+    v = node;
+  }
+  if (shift < s.size() && s[shift] == ':') {
+    // set up linked list with loop
+    ++shift;
+    int idx;
+    _parse(s, shift, idx);
+    auto* node = v;
+    FOR(i, 0, idx) {
+      node = node->next;
+    }
+    tail->next = node;
+  }
 }
 
-TreeNode* parseBinaryTree(const string& s) {
-  DEBUGF_TRUE(!s.empty(), "Binary tree representation should not be empty\n");
-  int shift = 0;
+void _parse(const string& s, int& shift, TreeNode*& v) {
   DEBUGF_TRUE(s[shift] == '[', "Expect '[' @%d in '%s'\n", shift, s.c_str());
   ++shift;
   bool first = true;
-  TreeNode* root = nullptr;
+  v = nullptr;
   deque<TreeNode*> q;
   while (shift < SIZE(s)) {
     if (s[shift] == ']') {
@@ -185,7 +189,7 @@ TreeNode* parseBinaryTree(const string& s) {
       q.push_back(node);
       if (first) {
         first = false;
-        root = node;
+        v = node;
         continue;
       }
       q.front()->left = node;
@@ -203,7 +207,20 @@ TreeNode* parseBinaryTree(const string& s) {
     }
     q.pop_front();
   }
-  return root;
+}
+
+} // namespace
+
+template<typename T>
+inline void parse(const string& s, vector<T>& v) {
+  int shift = 0;
+  _parse(s, shift, v);
+}
+
+template<typename T>
+inline void parse(const string& s, T& v) {
+  int shift = 0;
+  _parse(s, shift, v);
 }
 
 } // namespace leetcode
