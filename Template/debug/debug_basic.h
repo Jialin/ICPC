@@ -8,6 +8,7 @@
 #define DEBUGF(fmt, ...)
 
 #define DEBUGV(v)
+#define DEBUGVS(v, ...)
 #define DEBUGBIT(v)
 
 #define DEBUG_EQ(x, y)
@@ -86,6 +87,11 @@ using namespace std;
 #define DEBUGV(v)                                                                                  \
   DEBUG_BEGIN;                                                                                     \
   _DEBUGV(v);                                                                                      \
+  DEBUG_END
+
+#define DEBUGVS(v, ...)                                                                            \
+  DEBUG_BEGIN;                                                                                     \
+  fprintf(stderr, "%s\n", tostring1(v, ##__VA_ARGS__).c_str());                                    \
   DEBUG_END
 
 #define DEBUGBIT(v)                                                                                \
@@ -169,6 +175,10 @@ inline string totype(const vector<bool>& vs) {
   return "vector<bool>";
 }
 
+inline string totype(char v) {
+  return "char";
+}
+
 inline string totype(int v) {
   return "int";
 }
@@ -229,11 +239,6 @@ inline string tostring(const nullptr_t& v) {
   return "null";
 }
 
-template<typename A, typename B, typename C>
-inline string totype(const tuple<A, B, C>& v) {
-  return "tuple<" + totype(get<0>(v)) + "," + totype(get<1>(v)) + "," + totype(get<2>(v)) + ">";
-}
-
 template<typename T>
 inline string totype(const T& v) {
   return typeid(decltype(v)).name();
@@ -250,12 +255,6 @@ ostream& operator<<(ostream& o, __int128_t x) {
     return o << (char)(x + '0');
   }
   return o << x / 10 << (char)(x % 10 + '0');
-}
-
-template<typename A, typename B, typename C>
-ostream& operator<<(ostream& o, const tuple<A, B, C>& v) {
-  return o << '(' << tostring(get<0>(v)) << ',' << tostring(get<1>(v)) << ',' << tostring(get<2>(v))
-           << ')';
 }
 
 template<typename T>
