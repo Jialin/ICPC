@@ -8,23 +8,39 @@ using namespace std;
 
 namespace ds {
 
-template<typename V>
+template<
+    typename V,
+    typename InitV = V
+#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
+    ,
+    typename Update = InitV
+#endif
+    >
 struct BaseCompactSegmentTree {
   struct _Node {
     V v;
     int lower, upper;
+
+    inline int lSize() const {
+      return (upper - lower) & ~1;
+    }
+
+    inline bool isLeaf() const {
+      return lower + 1 == upper;
+    }
   };
 
-  virtual inline void _mergeVs(const _Node& lNode, const _Node& rNode, V& res) = 0;
-#ifdef _BASE_COMPACT_SEGMENT_TREE_INIT_V
-  virtual inline void _initV(V& res) = 0;
+#ifdef _BASE_COMPACT_SEGMENT_TREE_CLEAR_V // ^
+  virtual inline void _clearV(V& res) = 0;
 #endif
-#ifdef _BASE_COMPACT_SEGMENT_TREE_APPEND_V
+#ifdef _BASE_COMPACT_SEGMENT_TREE_APPEND_V // ^
   virtual inline void _appendV(const _Node& node, V& res) = 0;
 #endif
-#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
-  virtual inline void _updateV(_Node& node, const V& update) = 0;
+#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE_V // ^
+  virtual inline void _updateV(const Update& update, _Node& node) = 0;
 #endif
+  virtual inline void _initV(InitV initV, _Node& node) = 0;
+  virtual inline void _mergeV(const _Node& lNode, const _Node& rNode, V& res) = 0;
 
 #ifdef BASE_COMPACT_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
@@ -33,7 +49,7 @@ struct BaseCompactSegmentTree {
 #endif
 
 #ifdef BASE_COMPACT_SEGMENT_TREE_INIT // ^
-  inline void init(vector<V> leafVs) {
+  inline void init(vector<InitV> leafVs) {
     _n = leafVs.size();
     _nodes.resize(_n << 1);
     // BASE_COMPACT_SEGMENT_TREE_INIT => _BASE_COMPACT_SEGMENT_TREE_INIT
@@ -42,52 +58,52 @@ struct BaseCompactSegmentTree {
 #endif
 
 #ifdef _BASE_COMPACT_SEGMENT_TREE_INIT // ^
-  inline void _init(int idx, int lower, int upper, vector<V>& leafVs) {
+  inline void _init(int idx, int lower, int upper, vector<InitV>& leafVs) {
     auto& node = _nodes[idx];
     node.lower = lower;
     node.upper = upper;
     if (lower + 1 == upper) {
-      node.v = move(leafVs[lower]);
+      _initV(move(leafVs[lower]), node);
       return;
     }
     int medium = (lower + upper) >> 1;
     _init(idx + 1, lower, medium, leafVs);
-    int rIdx = idx + ((upper - lower) & ~1);
+    int rIdx = idx + node.lSize();
     _init(rIdx, medium, upper, leafVs);
-    _mergeVs(_nodes[idx + 1], _nodes[rIdx], node.v);
+    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
 #endif
 
 #ifdef BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
-  inline void update(int pos, const V& update) {
+  inline void update(int pos, const Update& update) {
     // BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE
     _update(0, pos, update);
   }
 #endif
 
 #ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
-  inline void _update(int idx, int pos, const V& update) {
+  inline void _update(int idx, int pos, const Update& update) {
     auto& node = _nodes[idx];
-    if (node.lower + 1 == node.upper) {
+    if (node.isLeaf()) {
       // _BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
-      _updateV(node, update);
+      _updateV(update, node);
       return;
     }
-    int rIdx = idx + ((node.upper - node.lower) & ~1);
+    int rIdx = idx + node.lSize();
     if (pos < ((node.lower + node.upper) >> 1)) {
       _update(idx + 1, pos, update);
     } else {
       _update(rIdx, pos, update);
     }
-    _mergeVs(_nodes[idx + 1], _nodes[rIdx], node.v);
+    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
 #endif
 
 #ifdef BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
   inline V calcRange(int lower, int upper) {
     V res;
-    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_INIT_V
-    _initV(res);
+    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CLEAR_V
+    _clearV(res);
     // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE
     _calcRange(0, lower, upper, res);
     return res;
@@ -110,7 +126,7 @@ struct BaseCompactSegmentTree {
       _calcRange(idx + 1, lower, upper, res);
     }
     if (medium < upper) {
-      _calcRange(idx + ((node.upper - node.lower) & ~1), lower, upper, res);
+      _calcRange(idx + node.lSize(), lower, upper, res);
     }
   }
 #endif
@@ -140,11 +156,11 @@ struct BaseCompactSegmentTree {
     }
     const auto& node = _nodes[idx];
     o << '[' << node.lower << ',' << node.upper << "): " << node << " @" << idx;
-    if (node.lower + 1 != node.upper) {
+    if (!node.isLeaf()) {
       toRight.push_back(false);
       _output(depth + 1, idx + 1, toRight, o);
       toRight.back() = true;
-      _output(depth + 1, idx + ((node.upper - node.lower) & ~1), toRight, o);
+      _output(depth + 1, idx + node.lSize(), toRight, o);
       toRight.pop_back();
     }
   }
