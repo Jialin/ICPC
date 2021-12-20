@@ -8,6 +8,12 @@
 #define DEBUGF(fmt, ...)
 
 #define DEBUGV(v)
+#define DEBUGV1(v)
+#define DEBUGV2(v1, v2)
+#define DEBUGV3(v1, v2, v3)
+#define DEBUGV4(v1, v2, v3, v4)
+#define DEBUGV5(v1, v2, v3, v4, v5)
+#define DEBUGV6(v1, v2, v3, v4, v5, v6)
 #define DEBUGVS(v, ...)
 #define DEBUGBIT(v)
 
@@ -87,6 +93,46 @@ using namespace std;
 #define DEBUGV(v)                                                                                  \
   DEBUG_BEGIN;                                                                                     \
   _DEBUGV(v);                                                                                      \
+  DEBUG_END
+
+#define DEBUGV2(v1, v2)                                                                            \
+  DEBUG_BEGIN;                                                                                     \
+  _DEBUGV(v1);                                                                                     \
+  _DEBUGV(v2);                                                                                     \
+  DEBUG_END
+
+#define DEBUGV3(v1, v2, v3)                                                                        \
+  DEBUG_BEGIN;                                                                                     \
+  _DEBUGV(v1);                                                                                     \
+  _DEBUGV(v2);                                                                                     \
+  _DEBUGV(v3);                                                                                     \
+  DEBUG_END
+
+#define DEBUGV4(v1, v2, v3, v4)                                                                    \
+  DEBUG_BEGIN;                                                                                     \
+  _DEBUGV(v1);                                                                                     \
+  _DEBUGV(v2);                                                                                     \
+  _DEBUGV(v3);                                                                                     \
+  _DEBUGV(v4);                                                                                     \
+  DEBUG_END
+
+#define DEBUGV5(v1, v2, v3, v4, v5)                                                                \
+  DEBUG_BEGIN;                                                                                     \
+  _DEBUGV(v1);                                                                                     \
+  _DEBUGV(v2);                                                                                     \
+  _DEBUGV(v3);                                                                                     \
+  _DEBUGV(v4);                                                                                     \
+  _DEBUGV(v5);                                                                                     \
+  DEBUG_END
+
+#define DEBUGV6(v1, v2, v3, v4, v5, v6)                                                            \
+  DEBUG_BEGIN;                                                                                     \
+  _DEBUGV(v1);                                                                                     \
+  _DEBUGV(v2);                                                                                     \
+  _DEBUGV(v3);                                                                                     \
+  _DEBUGV(v4);                                                                                     \
+  _DEBUGV(v5);                                                                                     \
+  _DEBUGV(v6);                                                                                     \
   DEBUG_END
 
 #define DEBUGVS(v, ...)                                                                            \
