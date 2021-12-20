@@ -258,6 +258,9 @@ for <img src="https://render.githubusercontent.com/render/math?math=n>1"/>
 ### 3.3.2. Properties
 - Partial sum:
   - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=1}^nF_i=F_{n%2B2}-1"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=0}^{n-1}F_{2i%2B1}=F_{2n}"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=1}^nF_{2i}=F_{2n%2B1}-1"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=1}^nF_i^2=F_nF_{n%2B1}"/>
 - d'Ocagne's identity:
   - <img src="https://render.githubusercontent.com/render/math?math=F_mF_{n%2B1}-F_{m%2B1}F_n=(-1)^nF_{m-n}"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{2n}=F_{n%2B1}^2-F_{n-1}^2=F_n(F_{n%2B1}%2BF_{n-1})"/>
