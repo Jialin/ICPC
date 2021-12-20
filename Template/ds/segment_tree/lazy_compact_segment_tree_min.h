@@ -8,20 +8,38 @@
 namespace ds {
 
 template<typename V, typename InitV = V, typename Update = InitV>
-struct LazyCompactSegmentTreeMin : ds::BaseLazyCompactSegmentTree<V, InitV, Update> {
+struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
+                                       V,
+                                       InitV,
+                                       Update
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+                                       ,
+                                       nullptr_t
+#endif
+                                       > {
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  using TraverseArgs = nullptr_t;
+#endif
   using Node = typename LazyCompactSegmentTreeMin::_Node;
 
   inline V getMin(const Node& node) {
     return node.v + node.update;
   }
 
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V // ^
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  inline typename LazyCompactSegmentTreeMin::Traverse
+  _traverse(Node& node, int lower, int upper, TraverseArgs& args) override {
+    return LazyCompactSegmentTreeMin::Traverse::NONE;
+  }
+#endif
+
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V
   inline void _clearV(V& res) override {
     res = numeric_limits<V>::max();
   }
 #endif
 
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V // ^
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
   inline void _appendV(const Node& node, V& res) override {
     MMIN(res, getMin(node));
   }

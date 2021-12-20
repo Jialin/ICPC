@@ -8,7 +8,15 @@ using namespace std;
 
 namespace ds {
 
-template<typename V, typename InitV = V, typename Update = InitV>
+template<
+    typename V,
+    typename InitV = V,
+    typename Update = InitV
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+    ,
+    typename TraverseArgs = nullptr_t
+#endif
+    >
 struct BaseLazyCompactSegmentTree {
   struct _Node {
     V v;
@@ -24,6 +32,14 @@ struct BaseLazyCompactSegmentTree {
     }
   };
 
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  enum Traverse { NONE, L, R, ALL };
+#endif
+
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  virtual inline Traverse _traverse(_Node& node, int lower, int upper, TraverseArgs& args) = 0;
+#endif
+
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V // ^
   virtual inline void _clearV(V& res) = 0;
 #endif
@@ -35,6 +51,10 @@ struct BaseLazyCompactSegmentTree {
   virtual inline void _clearUpdate(_Node& node) = 0;
   virtual inline void _initV(InitV initV, _Node& node) = 0;
   virtual inline void _mergeV(const _Node& lNode, const _Node& rNode, V& res) = 0;
+
+  virtual inline void _pushNode(const _Node& parent, _Node& node) {
+    _applyUpdate(parent.update, node);
+  }
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
@@ -78,27 +98,22 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE // ^
   inline void _updateRange(int idx, int lower, int upper, const Update& update) {
-    if (lower >= upper) {
+    auto& node = _nodes[idx];
+    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
       return;
     }
-    auto& node = _nodes[idx];
     if (lower <= node.lower && node.upper <= upper) {
       _applyUpdate(update, node);
       return;
     }
-    int medium = (node.lower + node.upper) >> 1;
     int rIdx = idx + node.lSize();
     if (_hasUpdate(node)) {
-      _applyUpdate(node.update, _nodes[idx + 1]);
-      _applyUpdate(node.update, _nodes[rIdx]);
+      _pushNode(node, _nodes[idx + 1]);
+      _pushNode(node, _nodes[rIdx]);
       _clearUpdate(node);
     }
-    if (lower < medium) {
-      _updateRange(idx + 1, lower, upper, update);
-    }
-    if (medium < upper) {
-      _updateRange(rIdx, lower, upper, update);
-    }
+    _updateRange(idx + 1, lower, upper, update);
+    _updateRange(rIdx, lower, upper, update);
     _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
 #endif
@@ -116,32 +131,62 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
   inline void _calcRange(int idx, int lower, int upper, V& res) {
-    if (lower >= upper) {
+    auto& node = _nodes[idx];
+    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
       return;
     }
-    auto& node = _nodes[idx];
     if (lower <= node.lower && node.upper <= upper) {
       // _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
       _appendV(node, res);
       return;
     }
-    int medium = (node.lower + node.upper) >> 1;
     int rIdx = idx + node.lSize();
     bool hasUpdate = _hasUpdate(node);
     if (hasUpdate) {
-      _applyUpdate(node.update, _nodes[idx + 1]);
-      _applyUpdate(node.update, _nodes[rIdx]);
+      _pushNode(node, _nodes[idx + 1]);
+      _pushNode(node, _nodes[rIdx]);
       _clearUpdate(node);
     }
-    if (lower < medium) {
-      _calcRange(idx + 1, lower, upper, res);
-    }
-    if (medium < upper) {
-      _calcRange(rIdx, lower, upper, res);
-    }
+    _calcRange(idx + 1, lower, upper, res);
+    _calcRange(rIdx, lower, upper, res);
     if (hasUpdate) {
       _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
     }
+  }
+#endif
+
+#ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
+  inline void traverse(int lower, int upper, TraverseArgs& args) {
+    // clang-format off
+    // BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+    // clang-format on
+    _traverse(0, lower, upper, args);
+  }
+#endif
+
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
+  inline void _traverse(int idx, int lower, int upper, TraverseArgs& args) {
+    auto& node = _nodes[idx];
+    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
+      return;
+    }
+    Traverse traverse = _traverse(node, lower, upper, args);
+    if (traverse == Traverse::NONE || node.lower + 1 == node.upper) {
+      return;
+    }
+    int rIdx = idx + node.lSize();
+    if (_hasUpdate(node)) {
+      _pushNode(node, _nodes[idx + 1]);
+      _pushNode(node, _nodes[rIdx]);
+      _clearUpdate(node);
+    }
+    if (traverse != Traverse::R) {
+      _traverse(idx + 1, lower, upper, args);
+    }
+    if (traverse != Traverse::L) {
+      _traverse(rIdx, lower, upper, args);
+    }
+    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
   }
 #endif
 
