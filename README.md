@@ -34,9 +34,12 @@
   - [2.2. Divide and Conquer](#22-divide-and-conquer)
     - [2.2.1. Notes](#221-notes)
     - [2.2.2. Problems](#222-problems)
-- [3. Tricks](#3-tricks)
+- [3. Math](#3-math)
   - [3.1. GCD](#31-gcd)
   - [3.2. Modular Fast Division](#32-modular-fast-division)
+  - [3.3. Fibonacci number](#33-fibonacci-number)
+    - [3.3.1. Definition](#331-definition)
+    - [3.3.2. Properties](#332-properties)
 
 # 1. Data Structures
 
@@ -95,6 +98,7 @@
 - [x] [Toph - Unbelievable Array](https://toph.co/p/unbelievable-array)
 - [x] [HackerEarth - Lexicographically minimal string](https://www.hackerearth.com/practice/data-structures/disjoint-data-strutures/basics-of-disjoint-data-structures/practice-problems/algorithm/lexicographically-minimal-string-6edc1406/)
 - [x] [HackerEarth - Fight in Ninja World](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/containers-of-choclates-1/)
+- [x] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A)
 
 ## 1.4. Fenwick Tree ([Template/ds/fenwick/](Template/ds/fenwick/))
 
@@ -135,6 +139,7 @@
 - [x] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
 - [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
 - [x] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
+- [x] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
@@ -177,19 +182,17 @@
 
 ### 1.8.2. Problems
 - [ ] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
-- [ ] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
+- [x] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
 - [ ] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
-- [ ] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
-- [ ] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
-- [ ] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A) [For beginners]
+- [x] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
+- [x] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
 - [x] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
-- [ ] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
+- [x] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
 - [ ] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042)
-- [ ] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
+- [x] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
 - [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
 - [ ] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
-- [ ] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C) [Lazy propagation]
 - [ ] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
 - [ ] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
@@ -197,7 +200,7 @@
 - [ ] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
 - [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
-- [ ] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
+- [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
 - [ ] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
 - [ ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 
@@ -230,11 +233,11 @@
 - [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
 - [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 
-# 3. Tricks
+# 3. Math
 
 ## 3.1. GCD
 
-- Prefix GCD of a sequence has no more than <img src="https://render.githubusercontent.com/render/math?math=1%2Blog_2a_0" /> distinct values
+- Prefix GCD of a sequence has no more than <img src="https://render.githubusercontent.com/render/math?math=1%2Blog_2a_0"/> distinct values
   - Given a sequence A, its prefix GCD sequence B is defined as <img src="https://render.githubusercontent.com/render/math?math=b_0=a_0"/>, <img src="https://render.githubusercontent.com/render/math?math=b_i=gcd(b_{i-1},a_i)" />
   - Problems:
     - [x] [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
@@ -242,3 +245,20 @@
 ## 3.2. Modular Fast Division
 
 - [Code Example](https://www.codechef.com/viewsolution/16271015)
+
+## 3.3. Fibonacci number
+
+### 3.3.1. Definition
+<img src="https://render.githubusercontent.com/render/math?math=F_0=0"/>, <img src="https://render.githubusercontent.com/render/math?math=F_1=1"/>
+and
+<img src="https://render.githubusercontent.com/render/math?math=F_{n}=F_{n-2}%2BF_{n-1}"/>
+for <img src="https://render.githubusercontent.com/render/math?math=n>1"/>
+
+### 3.3.2. Properties
+- d'Ocagne's identity:
+  - <img src="https://render.githubusercontent.com/render/math?math=F_mF_{n%2B1}-F_{m%2B1}F_n=(-1)^nF_{m-n}"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=F_{2n}=F_{n%2B1}^2-F_{n-1}^2=F_n(F_{n%2B1}%2BF_{n-1})"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c-i}F_n^iF_{n%2B1}^{k-i}"/>
+  - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c%2Bi}F_n^iF_{n-1}^{k-i}"/>
+  - Problems:
+    - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://../Archive/AtCoder/jag2018summer-day2/D.cppcodeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
