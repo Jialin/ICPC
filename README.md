@@ -40,6 +40,7 @@
   - [3.3. Fibonacci number](#33-fibonacci-number)
     - [3.3.1. Definition](#331-definition)
     - [3.3.2. Properties](#332-properties)
+    - [3.3.3. Problems](#333-problems)
 
 # 1. Data Structures
 
@@ -260,5 +261,6 @@ for <img src="https://render.githubusercontent.com/render/math?math=n>1"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{2n}=F_{n%2B1}^2-F_{n-1}^2=F_n(F_{n%2B1}%2BF_{n-1})"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c-i}F_n^iF_{n%2B1}^{k-i}"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c%2Bi}F_n^iF_{n-1}^{k-i}"/>
-  - Problems:
-    - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://../Archive/AtCoder/jag2018summer-day2/D.cppcodeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
+
+### 3.3.3. Problems
+- [x] [Codeforces - DZY Loves Fibonacci Numbers](https://../Archive/AtCoder/jag2018summer-day2/D.cppcodeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
