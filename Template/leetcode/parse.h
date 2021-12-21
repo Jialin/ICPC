@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace leetcode {
+namespace lc {
 
 namespace {
 
@@ -223,5 +223,5 @@ inline void parse(const string& s, T& v) {
   _parse(s, shift, v);
 }
 
-} // namespace leetcode
+} // namespace lc
 #endif

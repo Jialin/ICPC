@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace leetcode {
+namespace lc {
 
 namespace {
 const int ROW_SIZE = 100000;
@@ -135,7 +135,7 @@ inline void handle(string tests) {
 #endif
     );
 #if !RETURN_VOID
-    DEBUGV(res);
+    DEBUGV3("!!!!!!", res, "!!!!!!");
 #endif
   }
 
@@ -150,12 +150,10 @@ inline void handle(string tests) {
   {
     vector<vector<int>> v;
     parse("[[2],[3,4],[6,5,7],[4,1,8,3]]", v);
-    DEBUGV(v);
   }
   {
     vector<vector<char>> v;
     parse(R"([["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]])", v);
-    DEBUGV(v);
   }
   {
     vector<Interval> v;
@@ -175,5 +173,5 @@ inline void handle(string tests) {
   }
 }
 
-} // namespace leetcode
+} // namespace lc
 #endif

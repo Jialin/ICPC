@@ -1,5 +1,3 @@
-// !macro_gen
-// ALL LEETCODE_BINARY_TREE_ALL
 #pragma once
 
 #include "common/macros.h"

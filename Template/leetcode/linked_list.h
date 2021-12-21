@@ -62,7 +62,7 @@ struct ListNode {
 #endif
 
 #ifdef LEETCODE_LINKED_LIST_CALC_LENGTH // ^
-namespace leetcode {
+namespace lc {
 
 inline int calcLength(const ListNode* head) {
   int res = 0;
@@ -70,11 +70,11 @@ inline int calcLength(const ListNode* head) {
   return res;
 }
 
-} // namespace leetcode
+} // namespace lc
 #endif
 
 #ifdef LEETCODE_LINKED_LIST_CALC_KTH // ^
-namespace leetcode {
+namespace lc {
 
 inline ListNode* calcKth(ListNode* head, int idx) {
   auto* node = head;
@@ -84,11 +84,62 @@ inline ListNode* calcKth(ListNode* head, int idx) {
   return node;
 }
 
-} // namespace leetcode
+} // namespace lc
+#endif
+
+#ifdef LEETCODE_LINKED_LIST_REVERSE // ^
+namespace lc {
+
+inline ListNode* reverse(ListNode* head) {
+  if (!head) {
+    return nullptr;
+  }
+  ListNode* prev = nullptr;
+  for (auto* cur = head; cur;) {
+    auto* next = cur->next;
+    cur->next = prev;
+    prev = cur;
+    cur = next;
+  }
+  return prev;
+}
+
+} // namespace lc
+#endif
+
+#ifdef LEETCODE_LINKED_LIST_TO_VECTOR // ^
+namespace lc {
+
+inline vector<int> toVector(ListNode* head) {
+  vector<int> res;
+  for (auto* node = head; node; node = node->next) {
+    res.push_back(node->val);
+  }
+  return res;
+}
+
+} // namespace lc
+#endif
+
+#ifdef LEETCODE_LINKED_LIST_FROM_VECTOR // ^
+namespace lc {
+
+inline ListNode* fromVector(vector<int>& vs) {
+  auto* dummyHead = new ListNode(-1);
+  auto* tail = dummyHead;
+  for (int v : vs) {
+    auto* node = new ListNode(v);
+    tail->next = node;
+    tail = node;
+  }
+  return dummyHead->next;
+}
+
+} // namespace lc
 #endif
 
 #ifdef LEETCODE_LINKED_LIST_CONTAINS_LOOP // ^
-namespace leetcode {
+namespace lc {
 
 inline bool containsLoop(ListNode* head) {
   if (!head) {
@@ -107,5 +158,5 @@ inline bool containsLoop(ListNode* head) {
   return false;
 }
 
-} // namespace leetcode
+} // namespace lc
 #endif
