@@ -1,0 +1,4 @@
+#ifdef CALENDAR_ALL
+#define CALENDAR_DAYS_PER_MONTH
+#define CALENDAR_IS_LEAP_YEAR
+#endif
