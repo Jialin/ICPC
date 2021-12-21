@@ -2,6 +2,7 @@
 // ALL MOD_INT_ALL
 #pragma once
 
+#include "debug/debug_declare.h"
 #include "math/mod/mod_int_macros.h"
 
 #ifdef _MOD_INT_EXTGCD
