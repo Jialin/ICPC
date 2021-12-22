@@ -51,6 +51,12 @@ struct ModInt {
     _v = fix(v);
   }
 
+#ifdef MOD_INT_EQ // ^
+inline bool operator==(const ModInt& o) const {
+  return _v == o._v;
+}
+#endif
+
 #ifdef MOD_INT_ASSIGN // ^
   inline void operator=(const ModInt& o) {
     _v = o._v;

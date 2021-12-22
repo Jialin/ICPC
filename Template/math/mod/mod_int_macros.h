@@ -5,6 +5,7 @@
 #define MOD_INT_CONST_MOD
 #define MOD_INT_DIV
 #define MOD_INT_DIV_INLINE
+#define MOD_INT_EQ
 #define MOD_INT_EXP
 #define MOD_INT_INIT_ADD
 #define MOD_INT_INIT_MUL
