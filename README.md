@@ -34,6 +34,11 @@
   - [2.2. Divide and Conquer](#22-divide-and-conquer)
     - [2.2.1. Notes](#221-notes)
     - [2.2.2. Problems](#222-problems)
+- [String](#string)
+  - [Manacher Algorithm ([Template/string/manacher.h])](#manacher-algorithm-templatestringmanacherh)
+    - [Notes](#notes)
+    - [Resources](#resources)
+    - [Problems](#problems)
 - [3. Math](#3-math)
   - [3.1. GCD](#31-gcd)
   - [3.2. Modular Fast Division](#32-modular-fast-division)
@@ -184,7 +189,7 @@
 ### 1.8.2. Problems
 - [ ] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
 - [x] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
-- [ ] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
+- [x] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
 - [x] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
 - [x] [Codeforces - Distinct Characters Queries](https://codeforces.com/contest/1234/problem/D)
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
@@ -233,6 +238,22 @@
 ### 2.2.2. Problems
 - [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
 - [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
+
+# String
+
+## Manacher Algorithm ([Template/string/manacher.h])
+
+### Notes
+- Compute longest palindromes centered in all locations
+
+### Resources
+- [CP Algorithm](https://cp-algorithms.com/string/manacher.html)
+
+### Problems
+- [ ] [Longest Palindrome](https://cses.fi/problemset/task/1111)
+- [ ] [UVA 11475 - Extend to Palindrome](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2470)
+- [ ] [Codeforces - QueryreuQ](https://codeforces.com/gym/101806/problem/Q)
+- [ ] [Codeforces - Prefix-Suffix Palindrome](https://codeforces.com/contest/1326/problem/D2)
 
 # 3. Math
 
