@@ -29,11 +29,12 @@ function _CPP-run {
   fi
 }
 
-##############################
+####################################
 # Example usage:
 #   > CPP-compile A.cpp
 #   > CPP-compile A.cpp c++11
-##############################
+#   > CPP-compile A.cpp c++11 a.out
+####################################
 function CPP-compile {
   if [ -z "$1" ]
   then
@@ -47,9 +48,16 @@ function CPP-compile {
     std_version=$2
   fi
 
-  echo -e "\033[1;33m... Compiling $1 (-std=$std_version)...\033[0m"
+  local out=a.out
+  if [ -n "$3" ]
+  then
+    out=$3
+  fi
+
+  echo -e "\033[1;33m... Compiling $1 (-std=$std_version, -o=$out)...\033[0m"
   g++ "$1" -O3 -g3 \
       -std=$std_version \
+      -o $out \
       -isystem /usr/local/Cellar/boost/1.73.0/include \
       -Wall \
       -Wno-c++98-compat \
@@ -194,6 +202,52 @@ function CPP-gen-run17-multi {
       done
     fi
   fi
+}
+
+################################################
+# Example usage:
+#   > CPP-gen-diff17 A.cpp A-compare.cpp gen.py
+################################################
+function CPP-gen-diff17 {
+  CPP-gen $1
+  if [ $? -ne 0 ]
+  then
+    return $?
+  fi
+
+  CPP-gen $2
+  if [ $? -ne 0 ]
+  then
+    return $?
+  fi
+
+  CPP-compile gen/gendebug-$1 c++17
+  if [ $? -ne 0 ]
+  then
+    return $?
+  fi
+
+  CPP-compile gen/gendebug-$2 c++17 a-diff.out
+  if [ $? -ne 0 ]
+  then
+    return $?
+  fi
+
+  local i=0
+  while true
+  do
+    echo -e "\033[1;33m=== Compare #$i ===\033[0m"
+    ((i=i+1))
+    python3 $3 > diff-input
+    ./a.out < diff-input > diff-output
+    ./a-diff.out < diff-input > diff-compare
+    diff_output=$(diff diff-output diff-compare)
+    if [ "$diff_output" ]
+    then
+      echo $diff_output
+      return 0
+    fi
+  done
 }
 
 ########################
