@@ -1,7 +1,14 @@
 a.out*
+a-diff.out*
 input*
 output*
 answer*
+small-input*
+large-input*
+large-output*
+large-answer*
+large-compare*
+diff-*
 *.o
 *.pyc
 gen-*
