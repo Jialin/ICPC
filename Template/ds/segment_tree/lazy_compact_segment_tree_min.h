@@ -22,10 +22,6 @@ struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
 #endif
   using Node = typename LazyCompactSegmentTreeMin::_Node;
 
-  inline V getMin(const Node& node) {
-    return node.v + node.update;
-  }
-
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
   inline typename LazyCompactSegmentTreeMin::Traverse
   _traverse(Node& node, int lower, int upper, TraverseArgs& args) override {
@@ -41,7 +37,7 @@ struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
   inline void _appendV(const Node& node, V& res) override {
-    MMIN(res, getMin(node));
+    MMIN(res, node.v);
   }
 #endif
 
@@ -50,6 +46,7 @@ struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
   }
 
   inline void _applyUpdate(const Update& update, Node& node) override {
+    node.v += update;
     node.update += update;
   }
 
@@ -62,7 +59,7 @@ struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
   }
 
   inline void _mergeV(const Node& lNode, const Node& rNode, V& res) override {
-    res = min(getMin(lNode), getMin(rNode));
+    res = min(lNode.v, rNode.v);
   }
 };
 

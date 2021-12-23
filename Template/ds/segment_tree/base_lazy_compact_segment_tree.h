@@ -33,7 +33,7 @@ struct BaseLazyCompactSegmentTree {
   };
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-  enum Traverse { NONE, L, R, ALL };
+  enum Traverse { NONE, LEFT, RIGHT, ALL };
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
@@ -141,17 +141,13 @@ struct BaseLazyCompactSegmentTree {
       return;
     }
     int rIdx = idx + node.lSize();
-    bool hasUpdate = _hasUpdate(node);
-    if (hasUpdate) {
+    if (_hasUpdate(node)) {
       _pushNode(node, _nodes[idx + 1]);
       _pushNode(node, _nodes[rIdx]);
       _clearUpdate(node);
     }
     _calcRange(idx + 1, lower, upper, res);
     _calcRange(rIdx, lower, upper, res);
-    if (hasUpdate) {
-      _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
-    }
   }
 #endif
 
@@ -180,10 +176,10 @@ struct BaseLazyCompactSegmentTree {
       _pushNode(node, _nodes[rIdx]);
       _clearUpdate(node);
     }
-    if (traverse != Traverse::R) {
+    if (traverse != Traverse::RIGHT) {
       _traverse(idx + 1, lower, upper, args);
     }
-    if (traverse != Traverse::L) {
+    if (traverse != Traverse::LEFT) {
       _traverse(rIdx, lower, upper, args);
     }
     _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
