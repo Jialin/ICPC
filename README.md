@@ -35,7 +35,7 @@
     - [2.2.1. Notes](#221-notes)
     - [2.2.2. Problems](#222-problems)
 - [String](#string)
-  - [Manacher Algorithm ([Template/string/manacher.h])](#manacher-algorithm-templatestringmanacherh)
+  - [Palindrome ([Template/string/palindrome])](#palindrome-templatestringpalindrome)
     - [Notes](#notes)
     - [Resources](#resources)
     - [Problems](#problems)
@@ -241,19 +241,20 @@
 
 # String
 
-## Manacher Algorithm ([Template/string/manacher.h])
+## Palindrome ([Template/string/palindrome])
 
 ### Notes
-- Compute longest palindromes centered in all locations
+- Manacher's Algorithm: Compute longest palindromes centered in all locations
+- TODO: Hash-based longest palindrome computation ([Example Code for reference](https://cses.fi/problemset/hack/1111/entry/3129985/))
 
 ### Resources
-- [CP Algorithm](https://cp-algorithms.com/string/manacher.html)
+- [CP Algorithm - Manacher's Algorithm](https://cp-algorithms.com/string/manacher.html)
 
 ### Problems
-- [ ] [Longest Palindrome](https://cses.fi/problemset/task/1111)
-- [ ] [UVA 11475 - Extend to Palindrome](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2470)
+- [x] [Longest Palindrome](https://cses.fi/problemset/task/1111): Hash-based longest palidrome computation revisit
+- [x] [UVA 11475 - Extend to Palindrome](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2470)
 - [ ] [Codeforces - QueryreuQ](https://codeforces.com/gym/101806/problem/Q)
-- [ ] [Codeforces - Prefix-Suffix Palindrome](https://codeforces.com/contest/1326/problem/D2)
+- [x] [Codeforces - Prefix-Suffix Palindrome](https://codeforces.com/contest/1326/problem/D2)
 
 # 3. Math
 

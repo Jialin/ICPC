@@ -2,6 +2,7 @@
 #define CAST static_cast
 #define FILL(vs, v) fill(ALL(vs), v)
 #define FOR(i, a, b) for (int i = (a); i < (b); ++i)
+#define FORR(i, a, b) for (int i = (a); i >= (b); --i)
 #define FOREDGE(i, j, vs) for (int i = (vs).lastOut[j]; i >= 0; i = (vs).nxtOut[i])
 #define FORIF(i, a, b, condition)                                                                  \
   for (int i = (a); i < (b); ++i)                                                                  \

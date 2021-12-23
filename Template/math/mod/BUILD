@@ -121,6 +121,7 @@ cc_library(
     hdrs = ["mod_int.h"],
     deps = [
         ":mod_int_macros",
+        "//debug:debug_declare",
         "//math/gcd:ext_gcd",
         "@gtest",
         "@gtest//:gtest_main",
