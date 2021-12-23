@@ -20,13 +20,13 @@ struct Manacher {
 
 #ifdef MANACHER_CALC_CHAR_ARRAY // ^
   inline void calc(int n, char* s) {
-    _calc(n, s);
+    _calc(n, s, (n << 1) | 1);
   }
 #endif
 
 #ifdef MANACHER_CALC_STRING // ^
   inline void calc(const string& s) {
-    _calc(s.size(), s.data());
+    _calc(s.size(), s.data(), (s.size() << 1) | 1);
   }
 #endif
 
@@ -80,19 +80,24 @@ struct Manacher {
   }
 #endif
 
-  inline void _calc(int n, const char* s) {
+  inline void _calc(int n, const char* s, int upper) {
     int n2p1 = (n << 1) | 1;
     rs.resize(n2p1);
-    for (int i = 0, l = 0, r = 0; i < n2p1; ++i) {
+    for (int i = 0, l = 0, r = 0; i < upper; ++i) {
       int j = i >= r ? 0 : min(rs[r - i - 1 + l], r - i);
       int bound = min(i, n2p1 - 1 - i);
-      for (; j <= bound && (!((i - j) & 1) || s[(i - j) >> 1] == s[(i + j) >> 1]); ++j) {}
+      if (!((i - j) & 1)) {
+        ++j;
+      }
+      for (int x = (i - j) >> 1, y = (i + j) >> 1; j <= bound && s[x] == s[y]; j += 2, --x, ++y) {}
+      MMIN(j, bound + 1);
       rs[i] = j;
       if (r < i + j) {
         l = i - j + 1;
         r = i + j;
       }
     }
+    fill(rs.begin() + upper, rs.end(), 0);
   }
 
   vector<int> rs;
