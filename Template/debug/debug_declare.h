@@ -16,6 +16,11 @@ inline string totype(const pair<X, Y>& vs);
 template<typename X, typename Y>
 inline string tostring(const pair<X, Y>& vs);
 
+template<typename V>
+inline string totype(const set<V>& vs);
+template<typename V>
+inline string tostring(const set<V>& vs);
+
 template<typename... VS>
 inline string tostring1(VS const&... vs);
 

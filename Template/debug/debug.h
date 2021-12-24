@@ -33,6 +33,11 @@ inline string totype(const unordered_set<K>& vs) {
   return "unordered_set<" + (vs.empty() ? "" : totype(*vs.begin())) + ">";
 }
 
+template<typename K>
+inline string totype(const set<K>& vs) {
+  return "set<" + (vs.empty() ? "" : totype(*vs.begin())) + ">";
+}
+
 template<typename X, typename Y>
 inline string tostring(const pair<X, Y>& vs) {
   return "<" + tostring(vs.first) + "," + tostring(vs.second) + ">";
@@ -65,6 +70,26 @@ inline string tostring(const vector<T>& vs) {
 
 template<typename K>
 inline string tostring(const unordered_set<K>& vs) {
+  stringstream ss;
+  ss << "{";
+  int i = 0;
+  for (const auto& v : vs) {
+    if (i >= 16) {
+      ss << ",...";
+      break;
+    }
+    if (i) {
+      ss << ",";
+    }
+    ss << tostring(v);
+    ++i;
+  }
+  ss << "}(" << vs.size() << " elements)";
+  return ss.str();
+}
+
+template<typename K>
+inline string tostring(const set<K>& vs) {
   stringstream ss;
   ss << "{";
   int i = 0;
