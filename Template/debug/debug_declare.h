@@ -24,6 +24,11 @@ inline string totype(const set<V>& vs);
 template<typename V>
 inline string tostring(const set<V>& vs);
 
+template<typename K, typename V>
+inline string totype(const map<K, V>& vs);
+template<typename K, typename V>
+inline string tostring(const map<K, V>& vs);
+
 template<typename... VS>
 inline string tostring1(VS const&... vs);
 

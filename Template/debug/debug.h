@@ -28,6 +28,12 @@ inline string totype(const unordered_map<K, V>& vs) {
          (vs.empty() ? "" : totype(vs.begin()->first) + "," + totype(vs.begin()->second)) + ">";
 }
 
+template<typename K, typename V>
+inline string totype(const map<K, V>& vs) {
+  return "map<" + (vs.empty() ? "" : totype(vs.begin()->first) + "," + totype(vs.begin()->second)) +
+         ">";
+}
+
 template<typename K>
 inline string totype(const unordered_set<K>& vs) {
   return "unordered_set<" + (vs.empty() ? "" : totype(*vs.begin())) + ">";
@@ -132,6 +138,26 @@ inline string tostring(const set<K>& vs) {
 
 template<typename K, typename V>
 inline string tostring(const unordered_map<K, V>& vs) {
+  stringstream ss;
+  ss << "{";
+  int i = 0;
+  for (const auto& [k, v] : vs) {
+    if (i >= 16) {
+      ss << ",...";
+      break;
+    }
+    if (i) {
+      ss << ",";
+    }
+    ss << tostring(k) << ":" << tostring(v);
+    ++i;
+  }
+  ss << "}(" << vs.size() << " tuples)";
+  return ss.str();
+}
+
+template<typename K, typename V>
+inline string tostring(const map<K, V>& vs) {
   stringstream ss;
   ss << "{";
   int i = 0;
