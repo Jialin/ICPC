@@ -50,6 +50,28 @@ ostream& operator<<(ostream& o, const tuple<A, B, C>& v) {
 }
 
 template<typename T>
+inline string tostring(const vector<vector<T>>& vs) {
+  stringstream ss;
+  ss << "[";
+  if (!vs.empty()) {
+    for (size_t i = 0; i < vs.size(); ++i) {
+      if (!i) {
+        ss << endl;
+      }
+      ss << "  ";
+      if (i < 16) {
+        ss << tostring(vs[i]) << ',' << endl;
+      } else {
+        ss << "...," << endl;
+        break;
+      }
+    }
+  }
+  ss << "](" << vs.size() << " elements)";
+  return ss.str();
+}
+
+template<typename T>
 inline string tostring(const vector<T>& vs) {
   stringstream ss;
   ss << "[";

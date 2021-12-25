@@ -97,42 +97,28 @@ using namespace std;
 
 #define DEBUGV2(v1, v2)                                                                            \
   DEBUG_BEGIN;                                                                                     \
-  _DEBUGV(v1);                                                                                     \
-  _DEBUGV(v2);                                                                                     \
+  fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2).c_str());                                    \
   DEBUG_END
 
 #define DEBUGV3(v1, v2, v3)                                                                        \
   DEBUG_BEGIN;                                                                                     \
-  _DEBUGV(v1);                                                                                     \
-  _DEBUGV(v2);                                                                                     \
-  _DEBUGV(v3);                                                                                     \
+  fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3).c_str());                           \
   DEBUG_END
 
 #define DEBUGV4(v1, v2, v3, v4)                                                                    \
   DEBUG_BEGIN;                                                                                     \
-  _DEBUGV(v1);                                                                                     \
-  _DEBUGV(v2);                                                                                     \
-  _DEBUGV(v3);                                                                                     \
-  _DEBUGV(v4);                                                                                     \
+  fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4).c_str());                  \
   DEBUG_END
 
 #define DEBUGV5(v1, v2, v3, v4, v5)                                                                \
   DEBUG_BEGIN;                                                                                     \
-  _DEBUGV(v1);                                                                                     \
-  _DEBUGV(v2);                                                                                     \
-  _DEBUGV(v3);                                                                                     \
-  _DEBUGV(v4);                                                                                     \
-  _DEBUGV(v5);                                                                                     \
+  fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4, #v5, v5).c_str());         \
   DEBUG_END
 
 #define DEBUGV6(v1, v2, v3, v4, v5, v6)                                                            \
   DEBUG_BEGIN;                                                                                     \
-  _DEBUGV(v1);                                                                                     \
-  _DEBUGV(v2);                                                                                     \
-  _DEBUGV(v3);                                                                                     \
-  _DEBUGV(v4);                                                                                     \
-  _DEBUGV(v5);                                                                                     \
-  _DEBUGV(v6);                                                                                     \
+  fprintf(                                                                                         \
+      stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4, #v5, v5, #v6, v6).c_str());    \
   DEBUG_END
 
 #define DEBUGVS(v, ...)                                                                            \

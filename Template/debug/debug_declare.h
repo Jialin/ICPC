@@ -7,6 +7,9 @@ inline string totype(int v);
 inline string tostring(int v);
 
 template<typename T>
+inline string tostring(const vector<vector<T>>& vs);
+
+template<typename T>
 inline string totype(const vector<T>& vs);
 template<typename T>
 inline string tostring(const vector<T>& vs);
