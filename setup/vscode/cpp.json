@@ -79,7 +79,6 @@
             "#include \"common/macros.h\"",
             "#include \"debug/debug_declare.h\"",
             "",
-            "",
             "#ifdef LOCAL",
             "// Typical types:",
             "// - int",
