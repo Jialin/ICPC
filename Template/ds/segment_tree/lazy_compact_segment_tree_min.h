@@ -1,26 +1,29 @@
 #pragma once
 
+#include "common/macros.h"
 #include "ds/segment_tree/base_lazy_compact_segment_tree_macros.h"
 
-#include "common/macros.h"
 #include "ds/segment_tree/base_lazy_compact_segment_tree.h"
 
 namespace ds {
 
-template<typename V, typename InitV = V, typename Update = InitV>
+template<typename _V, typename _InitV = _V, typename _Update = _InitV>
 struct LazyCompactSegmentTreeMin : BaseLazyCompactSegmentTree<
-                                       V,
-                                       InitV,
-                                       Update
+                                       _V,
+                                       _InitV,
+                                       _Update
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
                                        ,
                                        nullptr_t
 #endif
                                        > {
+  using V = _V;
+  using InitV = _InitV;
+  using Update = _Update;
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
   using TraverseArgs = nullptr_t;
 #endif
-  using Node = typename LazyCompactSegmentTreeMin::_Node;
+  using Node = typename LazyCompactSegmentTreeMin::Node;
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
   inline typename LazyCompactSegmentTreeMin::Traverse

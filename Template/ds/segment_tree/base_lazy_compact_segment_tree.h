@@ -18,7 +18,7 @@ template<
 #endif
     >
 struct BaseLazyCompactSegmentTree {
-  struct _Node {
+  struct Node {
     V v;
     Update update;
     int lower, upper;
@@ -30,6 +30,12 @@ struct BaseLazyCompactSegmentTree {
     inline bool isLeaf() const {
       return lower + 1 == upper;
     }
+
+#ifdef LOCAL
+    inline friend ostream& operator<<(ostream& o, const Node& node) {
+      return o << tostring2("v", node.v, "update", node.update);
+    }
+#endif
   };
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
@@ -37,22 +43,22 @@ struct BaseLazyCompactSegmentTree {
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-  virtual inline Traverse _traverse(_Node& node, int lower, int upper, TraverseArgs& args) = 0;
+  virtual inline Traverse _traverse(Node& node, int lower, int upper, TraverseArgs& args) = 0;
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V // ^
   virtual inline void _clearV(V& res) = 0;
 #endif
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V // ^
-  virtual inline void _appendV(const _Node& node, V& res) = 0;
+  virtual inline void _appendV(const Node& node, V& res) = 0;
 #endif
-  virtual inline bool _hasUpdate(_Node& node) = 0;
-  virtual inline void _applyUpdate(const Update& update, _Node& node) = 0;
-  virtual inline void _clearUpdate(_Node& node) = 0;
-  virtual inline void _initV(InitV initV, _Node& node) = 0;
-  virtual inline void _mergeV(const _Node& lNode, const _Node& rNode, V& res) = 0;
+  virtual inline bool _hasUpdate(Node& node) = 0;
+  virtual inline void _applyUpdate(const Update& update, Node& node) = 0;
+  virtual inline void _clearUpdate(Node& node) = 0;
+  virtual inline void _initV(InitV initV, Node& node) = 0;
+  virtual inline void _mergeV(const Node& lNode, const Node& rNode, V& res) = 0;
 
-  virtual inline void _pushNode(const _Node& parent, _Node& node) {
+  virtual inline void _pushNode(const Node& parent, Node& node) {
     _applyUpdate(parent.update, node);
   }
 
@@ -77,7 +83,7 @@ struct BaseLazyCompactSegmentTree {
     node.lower = lower;
     node.upper = upper;
     _clearUpdate(node);
-    if (lower + 1 == upper) {
+    if (node.isLeaf()) {
       _initV(move(leafVs[lower]), node);
       return;
     }
@@ -167,7 +173,7 @@ struct BaseLazyCompactSegmentTree {
       return;
     }
     Traverse traverse = _traverse(node, lower, upper, args);
-    if (traverse == Traverse::NONE || node.lower + 1 == node.upper) {
+    if (traverse == Traverse::NONE || node.isLeaf()) {
       return;
     }
     int rIdx = idx + node.lSize();
@@ -187,14 +193,9 @@ struct BaseLazyCompactSegmentTree {
 #endif
 
   int _n;
-  vector<_Node> _nodes;
+  vector<Node> _nodes;
 
 #ifdef LOCAL
-  inline friend ostream& operator<<(ostream& o, const _Node& node) {
-    o << tostring2("v", node.v, "update", node.update);
-    return o;
-  }
-
   inline friend ostream& operator<<(ostream& o, const BaseLazyCompactSegmentTree& st) {
     vector<bool> toRight;
     st._output(0, 0, toRight, o);
