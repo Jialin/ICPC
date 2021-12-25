@@ -91,7 +91,8 @@
 			"streambuf": "cpp",
 			"system_error": "cpp",
 			"typeinfo": "cpp",
-			"thread": "cpp"
+			"thread": "cpp",
+			"forward_list": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
