@@ -24,9 +24,12 @@
     - [1.6.2. Problems](#162-problems)
   - [1.7. Sliding Window (Template/ds/sliding_window/)](#17-sliding-window-templatedssliding_window)
     - [1.7.1. Problems](#171-problems)
-  - [1.8. Segment Tree (Template/ds/segment_tree/)](#18-segment-tree-templatedssegment_tree)
-    - [1.8.1. Resources](#181-resources)
+  - [1.8. Intervals Container (Template/ds/base_valued_interval_container.h)](#18-intervals-container-templatedsbase_valued_interval_containerh)
+    - [1.8.1. Notes](#181-notes)
     - [1.8.2. Problems](#182-problems)
+  - [1.9. Segment Tree (Template/ds/segment_tree/)](#19-segment-tree-templatedssegment_tree)
+    - [1.9.1. Resources](#191-resources)
+    - [1.9.2. Problems](#192-problems)
 - [2. Algorithms](#2-algorithms)
   - [2.1. Sqrt Decomposition (Template/algo/sqrt/)](#21-sqrt-decomposition-templatealgosqrt)
     - [2.1.1. Resources](#211-resources)
@@ -34,18 +37,18 @@
   - [2.2. Divide and Conquer](#22-divide-and-conquer)
     - [2.2.1. Notes](#221-notes)
     - [2.2.2. Problems](#222-problems)
-- [String](#string)
-  - [Palindrome ([Template/string/palindrome])](#palindrome-templatestringpalindrome)
-    - [Notes](#notes)
-    - [Resources](#resources)
-    - [Problems](#problems)
-- [3. Math](#3-math)
-  - [3.1. GCD](#31-gcd)
-  - [3.2. Modular Fast Division](#32-modular-fast-division)
-  - [3.3. Fibonacci number](#33-fibonacci-number)
-    - [3.3.1. Definition](#331-definition)
-    - [3.3.2. Properties](#332-properties)
-    - [3.3.3. Problems](#333-problems)
+- [3. String](#3-string)
+  - [3.1. Palindrome ([Template/string/palindrome])](#31-palindrome-templatestringpalindrome)
+    - [3.1.1. Notes](#311-notes)
+    - [3.1.2. Resources](#312-resources)
+    - [3.1.3. Problems](#313-problems)
+- [4. Math](#4-math)
+  - [4.1. GCD](#41-gcd)
+  - [4.2. Modular Fast Division](#42-modular-fast-division)
+  - [4.3. Fibonacci number](#43-fibonacci-number)
+    - [4.3.1. Definition](#431-definition)
+    - [4.3.2. Properties](#432-properties)
+    - [4.3.3. Problems](#433-problems)
 
 # 1. Data Structures
 
@@ -181,12 +184,20 @@
 - [x] [Codeforces - R2D2 and Droid Army](http://codeforces.com/problemset/problem/514/D): Modified sliding window without fix window size
 - [x] [SPOJ - Miraculous](https://www.spoj.com/problems/TNVFC1M/)
 
-## 1.8. Segment Tree ([Template/ds/segment_tree/](Template/ds/segment_tree/))
+## 1.8. Intervals Container ([Template/ds/base_valued_interval_container.h](Template/ds/base_valued_interval_container.h))
 
-### 1.8.1. Resources
-- [CP Algorithm](https://cp-algorithms.com/data_structures/segment_tree.html)
+### 1.8.1. Notes
+- Maintain disjoint intervals
 
 ### 1.8.2. Problems
+- [x] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
+
+## 1.9. Segment Tree ([Template/ds/segment_tree/](Template/ds/segment_tree/))
+
+### 1.9.1. Resources
+- [CP Algorithm](https://cp-algorithms.com/data_structures/segment_tree.html)
+
+### 1.9.2. Problems
 - [ ] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
 - [x] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
 - [x] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
@@ -195,12 +206,11 @@
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
 - [x] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
 - [x] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
-- [ ] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042)
+- [x] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042): Segment Tree + Manacher's Algorithm
 - [x] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
 - [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
-- [ ] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
-- [ ] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
-- [ ] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
+- [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
+- [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
 - [ ] [Codeforces - A Simple Task](https://codeforces.com/contest/558/problem/E)
 - [ ] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
@@ -239,45 +249,45 @@
 - [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
 - [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 
-# String
+# 3. String
 
-## Palindrome ([Template/string/palindrome])
+## 3.1. Palindrome ([Template/string/palindrome])
 
-### Notes
+### 3.1.1. Notes
 - Manacher's Algorithm: Compute longest palindromes centered in all locations
 - TODO: Hash-based longest palindrome computation ([Example Code for reference](https://cses.fi/problemset/hack/1111/entry/3129985/))
 
-### Resources
+### 3.1.2. Resources
 - [CP Algorithm - Manacher's Algorithm](https://cp-algorithms.com/string/manacher.html)
 
-### Problems
+### 3.1.3. Problems
 - [x] [Longest Palindrome](https://cses.fi/problemset/task/1111): Hash-based longest palidrome computation revisit
 - [x] [UVA 11475 - Extend to Palindrome](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2470)
 - [ ] [Codeforces - QueryreuQ](https://codeforces.com/gym/101806/problem/Q)
 - [x] [Codeforces - Prefix-Suffix Palindrome](https://codeforces.com/contest/1326/problem/D2)
 
-# 3. Math
+# 4. Math
 
-## 3.1. GCD
+## 4.1. GCD
 
 - Prefix GCD of a sequence has no more than <img src="https://render.githubusercontent.com/render/math?math=1%2Blog_2a_0"/> distinct values
   - Given a sequence A, its prefix GCD sequence B is defined as <img src="https://render.githubusercontent.com/render/math?math=b_0=a_0"/>, <img src="https://render.githubusercontent.com/render/math?math=b_i=gcd(b_{i-1},a_i)" />
   - Problems:
     - [x] [Codeforces - CGCDSSQ](http://codeforces.com/contest/475/problem/D)
 
-## 3.2. Modular Fast Division
+## 4.2. Modular Fast Division
 
 - [Code Example](https://www.codechef.com/viewsolution/16271015)
 
-## 3.3. Fibonacci number
+## 4.3. Fibonacci number
 
-### 3.3.1. Definition
+### 4.3.1. Definition
 <img src="https://render.githubusercontent.com/render/math?math=F_0=0"/>, <img src="https://render.githubusercontent.com/render/math?math=F_1=1"/>
 and
 <img src="https://render.githubusercontent.com/render/math?math=F_{n}=F_{n-2}%2BF_{n-1}"/>
 for <img src="https://render.githubusercontent.com/render/math?math=n>1"/>
 
-### 3.3.2. Properties
+### 4.3.2. Properties
 - Partial sum:
   - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=1}^nF_i=F_{n%2B2}-1"/>
   - <img src="https://render.githubusercontent.com/render/math?math=\sum_{i=0}^{n-1}F_{2i%2B1}=F_{2n}"/>
@@ -289,5 +299,5 @@ for <img src="https://render.githubusercontent.com/render/math?math=n>1"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c-i}F_n^iF_{n%2B1}^{k-i}"/>
   - <img src="https://render.githubusercontent.com/render/math?math=F_{kn%2B+c}=\sum_{i=0}^{k}{k \choose i}F_{c%2Bi}F_n^iF_{n-1}^{k-i}"/>
 
-### 3.3.3. Problems
+### 4.3.3. Problems
 - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://../Archive/AtCoder/jag2018summer-day2/D.cppcodeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
