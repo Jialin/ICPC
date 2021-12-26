@@ -191,6 +191,7 @@
 
 ### 1.8.2. Problems
 - [x] [Codeforces - Alphabet Permutations](https://codeforces.com/contest/610/problem/E)
+- [x] [Codeforces - A Simple Task](https://codeforces.com/contest/558/problem/E)
 
 ## 1.9. Segment Tree ([Template/ds/segment_tree/](Template/ds/segment_tree/))
 
@@ -212,7 +213,6 @@
 - [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
 - [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
-- [ ] [Codeforces - A Simple Task](https://codeforces.com/contest/558/problem/E)
 - [ ] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
 - [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]

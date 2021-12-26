@@ -3,7 +3,7 @@
 #include "common/macros.h"
 #include "debug/debug_declare.h"
 
-#include "ds/base_valued_interval_container.h"
+#include "ds/interval/base_grouping_intervals_container.h"
 #include "io/read_char_array.h"
 #include "io/read_int.h"
 #include "io/write_int.h"
@@ -15,36 +15,36 @@ const int MAXSIGMA = 10 + 1;
 
 int cnts[MAXSIGMA][MAXSIGMA];
 
-struct Intervals : ds::BaseValuedIntervalContainer<int, int> {
-  inline void _insert(typename set<Interval>::iterator interval) override {
+struct Intervals : ds::BaseGroupingIntervalsContainer<int, int> {
+  inline void _beforeErase(IntervalIter interval) override {
     if (interval != _intervals.begin()) {
       auto prev = interval;
       --prev;
-      if (prev->upper == interval->lower) {
-        ++cnts[prev->v][interval->v];
+      if (prev->second.upper == interval->first) {
+        --cnts[prev->second.id][interval->second.id];
       }
     }
-    cnts[interval->v][interval->v] += interval->upper - interval->lower - 1;
+    cnts[interval->second.id][interval->second.id] -= interval->second.upper - interval->first - 1;
     auto next = interval;
     ++next;
-    if (next != _intervals.end() && interval->upper == next->lower) {
-      ++cnts[interval->v][next->v];
+    if (next != _intervals.end() && interval->second.upper == next->first) {
+      --cnts[interval->second.id][next->second.id];
     }
   }
 
-  inline void _remove(typename set<Interval>::iterator interval) override {
+  inline void _afterInsert(IntervalIter interval) override {
     if (interval != _intervals.begin()) {
       auto prev = interval;
       --prev;
-      if (prev->upper == interval->lower) {
-        --cnts[prev->v][interval->v];
+      if (prev->second.upper == interval->first) {
+        ++cnts[prev->second.id][interval->second.id];
       }
     }
-    cnts[interval->v][interval->v] -= interval->upper - interval->lower - 1;
+    cnts[interval->second.id][interval->second.id] += interval->second.upper - interval->first - 1;
     auto next = interval;
     ++next;
-    if (next != _intervals.end() && interval->upper == next->lower) {
-      --cnts[interval->v][next->v];
+    if (next != _intervals.end() && interval->second.upper == next->first) {
+      ++cnts[interval->second.id][next->second.id];
     }
   }
 };

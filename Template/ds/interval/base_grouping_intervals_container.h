@@ -8,32 +8,25 @@ namespace ds {
 template<typename GroupID, typename Key = int>
 struct BaseGroupingIntervalsContainer {
   struct _Interval {
-    Key lower, upper;
+    Key upper;
     GroupID id;
 
-    inline _Interval(Key lower, Key upper, GroupID id)
-        : lower(move(lower)), upper(move(upper)), id(move(id)) {}
-
-    inline bool operator<(const _Interval& o) const {
-      return lower < o.lower;
-    }
+    inline _Interval(Key upper, GroupID id) : upper(move(upper)), id(move(id)) {}
 
 #ifdef LOCAL
     inline friend ostream& operator<<(ostream& o, const _Interval& interval) {
-      return o << '[' << interval.lower << ',' << interval.upper << "):" << interval.id;
+      return o << interval.upper << "):" << interval.id;
     }
 #endif
   };
 
-  using Interval = _Interval;
-  using IntervalIter = typename set<Interval>::iterator;
+  using IntervalIter = typename map<Key, _Interval>::iterator;
 
   virtual inline void _beforeErase(IntervalIter interval) {}
   virtual inline void _afterInsert(IntervalIter interval) {}
 
   inline IntervalIter emplace(Key lower, Key upper, GroupID id) {
-    Interval interval(move(lower), move(upper), move(id));
-    auto it = _intervals.lower_bound(interval);
+    auto it = _intervals.lower_bound(lower);
     auto jt = it;
     Key frontLower = 0, frontUpper = 0;
     GroupID frontID;
@@ -41,35 +34,35 @@ struct BaseGroupingIntervalsContainer {
     GroupID backID;
     if (it != _intervals.begin()) {
       --it;
-      if (it->upper < interval.lower || (it->upper == interval.lower && it->id != interval.id)) {
+      if (it->second.upper < lower || (it->second.upper == lower && it->second.id != id)) {
         it = jt;
-      } else if (it->id == interval.id) {
-        if (interval.upper <= it->upper) {
+      } else if (it->second.id == id) {
+        if (upper <= it->second.upper) {
           return it;
         }
-        interval.lower = move(it->lower);
+        lower = it->first;
       } else {
-        frontLower = move(it->lower);
-        frontUpper = interval.lower;
-        frontID = it->id;
-        backLower = move(interval.upper);
-        backUpper = move(it->upper);
-        backID = move(it->id);
+        frontLower = it->first;
+        frontUpper = lower;
+        frontID = it->second.id;
+        backLower = upper;
+        backUpper = move(it->second.upper);
+        backID = move(it->second.id);
       }
     }
     for (; jt != _intervals.end(); ++jt) {
-      if (interval.upper < jt->lower || (interval.upper == jt->lower && jt->id != interval.id)) {
+      if (upper < jt->first || (upper == jt->first && jt->second.id != id)) {
         break;
       }
-      if (jt->upper <= interval.upper) {
+      if (jt->second.upper <= upper) {
         continue;
       }
-      if (jt->id == interval.id) {
-        interval.upper = move(jt->upper);
+      if (jt->second.id == id) {
+        upper = move(jt->second.upper);
       } else {
-        backLower = interval.upper;
-        backUpper = move(jt->upper);
-        backID = move(jt->id);
+        backLower = upper;
+        backUpper = move(jt->second.upper);
+        backID = move(jt->second.id);
       }
     }
     while (it != jt) {
@@ -77,17 +70,19 @@ struct BaseGroupingIntervalsContainer {
       it = _intervals.erase(it);
     }
     if (frontLower < frontUpper) {
-      _afterInsert(_intervals.emplace(move(frontLower), move(frontUpper), move(frontID)).first);
+      _afterInsert(_intervals.emplace_hint(
+          jt, move(frontLower), _Interval(move(frontUpper), move(frontID))));
     }
-    auto res = _intervals.insert(move(interval)).first;
+    auto res = _intervals.emplace_hint(jt, move(lower), _Interval(move(upper), move(id)));
     _afterInsert(res);
     if (backLower < backUpper) {
-      _afterInsert(_intervals.emplace(move(backLower), move(backUpper), move(backID)).first);
+      _afterInsert(
+          _intervals.emplace_hint(jt, move(backLower), _Interval(move(backUpper), move(backID))));
     }
     return res;
   }
 
-  set<Interval> _intervals;
+  map<Key, _Interval> _intervals;
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const BaseGroupingIntervalsContainer& c) {
