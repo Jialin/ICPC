@@ -148,6 +148,7 @@
 - [x] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
 - [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
 - [x] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
+- [x] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
 - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
@@ -217,7 +218,6 @@
 - [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
-- [ ] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
 - [ ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 
 # 2. Algorithms
