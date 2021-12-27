@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
 
-#define BASE_LAZY_COMPACT_SEGMENT_TREE_ALL
-#include "ds/segment_tree/base_lazy_compact_segment_tree_macros.h"
+#define BASE_LAZY_SEGMENT_TREE_ALL
+#include "ds/segment_tree/base_lazy_segment_tree_macros.h"
 
-#include "ds/segment_tree/lazy_compact_segment_tree_min.h"
+#include "ds/segment_tree/lazy_segment_tree_update_min.h"
 
 namespace ds {
 
-TEST(LazyCompactSegmentTreeMin, basic) {
-  LazyCompactSegmentTreeMin<int> st;
+TEST(LazySegmentTreeUpdateMin, basic) {
+  LazySegmentTreeUpdateMin<int> st;
   st.init(vector<int>{3, 2, 1, 4, 5});
   EXPECT_EQ(2, st.calcRange(1, 2));
   EXPECT_EQ(1, st.calcRange(0, 3));

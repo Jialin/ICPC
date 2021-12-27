@@ -2,29 +2,24 @@
 // ALL BASE_LAZY_COMPACT_SEGMENT_TREE_ALL
 #pragma once
 
+#include "common/macros.h"
 #include "ds/segment_tree/base_lazy_compact_segment_tree_macros.h"
+
+#include "math/bit/next_pow2_32.h"
 
 using namespace std;
 
 namespace ds {
 
-template<
-    typename V,
-    typename InitV = V,
-    typename Update = InitV
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-    ,
-    typename TraverseArgs = nullptr_t
-#endif
-    >
+template<typename V, typename InitV = V, typename Update = InitV>
 struct BaseLazyCompactSegmentTree {
   struct Node {
     V v;
     Update update;
     int lower, upper;
 
-    inline int lSize() const {
-      return (upper - lower) & ~1;
+    inline bool isValid() const {
+      return lower < upper;
     }
 
     inline bool isLeaf() const {
@@ -33,18 +28,11 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef LOCAL
     inline friend ostream& operator<<(ostream& o, const Node& node) {
-      return o << tostring2("v", node.v, "update", node.update);
+      return o << '[' << node.lower << ',' << node.upper
+               << "): " << tostring2("v", node.v, "update", node.update);
     }
 #endif
   };
-
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-  enum Traverse { NONE, LEFT, RIGHT, ALL };
-#endif
-
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-  virtual inline Traverse _traverse(Node& node, int lower, int upper, TraverseArgs& args) = 0;
-#endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V // ^
   virtual inline void _clearV(V& res) = 0;
@@ -58,69 +46,71 @@ struct BaseLazyCompactSegmentTree {
   virtual inline void _initV(InitV initV, Node& node) = 0;
   virtual inline void _mergeV(const Node& lNode, const Node& rNode, V& res) = 0;
 
-  virtual inline void _pushNode(const Node& parent, Node& node) {
-    _applyUpdate(parent.update, node);
-  }
-
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
-    _nodes.reserve(n << 1);
+    _nodes.reserve((n > 0 ? math::nextPow2_32(n - 1) : 1) << 1);
   }
 #endif
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_INIT // ^
-  inline void init(vector<InitV> leafVs) {
-    _n = leafVs.size();
-    _nodes.resize(_n << 1);
-    // BASE_LAZY_COMPACT_SEGMENT_TREE_INIT => _BASE_LAZY_COMPACT_SEGMENT_TREE_INIT
-    _init(0, 0, _n, leafVs);
-  }
-#endif
-
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_INIT // ^
-  inline void _init(int idx, int lower, int upper, vector<InitV>& leafVs) {
-    auto& node = _nodes[idx];
-    node.lower = lower;
-    node.upper = upper;
-    _clearUpdate(node);
-    if (node.isLeaf()) {
-      _initV(move(leafVs[lower]), node);
-      return;
+  inline void init(vector<InitV> initVs) {
+    _n = SIZE(initVs);
+    _offset = _n > 0 ? math::nextPow2_32(_n - 1) : 1;
+    _offsetBit = __builtin_ctz(_offset);
+    _nodes.resize(_offset << 1);
+    FOR(i, 0, _n) {
+      auto& node = _nodes[_offset + i];
+      node.lower = i;
+      node.upper = i + 1;
+      _clearUpdate(node);
+      _initV(move(initVs[i]), node);
     }
-    int medium = (lower + upper) >> 1;
-    _init(idx + 1, lower, medium, leafVs);
-    int rIdx = idx + node.lSize();
-    _init(rIdx, medium, upper, leafVs);
-    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
+    FOR(i, _n, _offset) {
+      auto& node = _nodes[_offset + i];
+      node.lower = -1;
+      node.upper = -2;
+    }
+    FORR(i, _offset - 1, 1) {
+      auto& node = _nodes[i];
+      const auto &lNode = _nodes[i << 1], rNode = _nodes[(i << 1) | 1];
+      if (lNode.upper == rNode.lower) {
+        node.lower = lNode.lower;
+        node.upper = rNode.upper;
+        _clearUpdate(node);
+        _mergeV(lNode, rNode, node.v);
+      } else {
+        node.lower = -1;
+        node.upper = -2;
+      }
+    }
   }
 #endif
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE // ^
   inline void updateRange(int lower, int upper, const Update& update) {
-    // BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE
-    _updateRange(0, lower, upper, update);
-  }
-#endif
-
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE // ^
-  inline void _updateRange(int idx, int lower, int upper, const Update& update) {
-    auto& node = _nodes[idx];
-    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
-      return;
+    lower += _offset;
+    upper += _offset;
+    int lowerCtz1 = __builtin_ctz(lower) + 1, upperCtz1 = __builtin_ctz(upper) + 1;
+    FORR(i, _offsetBit, lowerCtz1) {
+      _push(lower >> i);
     }
-    if (lower <= node.lower && node.upper <= upper) {
-      _applyUpdate(update, node);
-      return;
+    FORR(i, _offsetBit, upperCtz1) {
+      _push((upper - 1) >> i);
     }
-    int rIdx = idx + node.lSize();
-    if (_hasUpdate(node)) {
-      _pushNode(node, _nodes[idx + 1]);
-      _pushNode(node, _nodes[rIdx]);
-      _clearUpdate(node);
+    for (int l = lower, u = upper; l < u; l >>= 1, u >>= 1) {
+      if (l & 1) {
+        _applyUpdateImpl(update, _nodes[l++]);
+      }
+      if (u & 1) {
+        _applyUpdateImpl(update, _nodes[--u]);
+      }
     }
-    _updateRange(idx + 1, lower, upper, update);
-    _updateRange(rIdx, lower, upper, update);
-    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
+    for (int i = lowerCtz1; i <= _offsetBit; ++i) {
+      _mergeVImpl(lower >> i);
+    }
+    for (int i = upperCtz1; i <= _offsetBit; ++i) {
+      _mergeVImpl((upper - 1) >> i);
+    }
   }
 #endif
 
@@ -130,75 +120,74 @@ struct BaseLazyCompactSegmentTree {
     // BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V
     _clearV(res);
     // BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE
-    _calcRange(0, lower, upper, res);
+    _calcRange(lower, upper, res);
     return res;
   }
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
-  inline void _calcRange(int idx, int lower, int upper, V& res) {
+  inline void _calcRange(int lower, int upper, V& res) {
+    lower += _offset;
+    upper += _offset;
+    int lowerCtz = __builtin_ctz(lower), upperCtz = __builtin_ctz(upper);
+    FORR(i, _offsetBit, lowerCtz) {
+      _push(lower >> i);
+    }
+    FORR(i, _offsetBit, upperCtz) {
+      _push((upper - 1) >> i);
+    }
+    // TODO: append in order
+    for (int l = lower, u = upper; l < u; l >>= 1, u >>= 1) {
+      if (l & 1) {
+        _appendVImpl(_nodes[l++], res);
+      }
+      if (u & 1) {
+        _appendVImpl(_nodes[--u], res);
+      }
+    }
+  }
+#endif
+
+  inline void _push(int idx) {
     auto& node = _nodes[idx];
-    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
+    if (!node.isValid() || node.isLeaf() || !_hasUpdate(node)) {
       return;
     }
-    if (lower <= node.lower && node.upper <= upper) {
-      // _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
+    _applyUpdate(node.update, _nodes[idx << 1]);
+    _applyUpdate(node.update, _nodes[(idx << 1) | 1]);
+    _clearUpdate(node);
+  }
+
+  inline void _mergeVImpl(int idx) {
+    auto& node = _nodes[idx];
+    if (node.isValid()) {
+      _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
+    }
+  }
+
+  inline void _appendVImpl(const Node& node, V& res) {
+    if (node.isValid()) {
       _appendV(node, res);
-      return;
     }
-    int rIdx = idx + node.lSize();
-    if (_hasUpdate(node)) {
-      _pushNode(node, _nodes[idx + 1]);
-      _pushNode(node, _nodes[rIdx]);
-      _clearUpdate(node);
-    }
-    _calcRange(idx + 1, lower, upper, res);
-    _calcRange(rIdx, lower, upper, res);
   }
-#endif
 
-#ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
-  inline void traverse(int lower, int upper, TraverseArgs& args) {
-    // clang-format off
-    // BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-    // clang-format on
-    _traverse(0, lower, upper, args);
+  inline void _applyUpdateImpl(const Update& update, Node& node) {
+    if (node.isValid()) {
+      _applyUpdate(update, node);
+    }
   }
-#endif
 
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
-  inline void _traverse(int idx, int lower, int upper, TraverseArgs& args) {
-    auto& node = _nodes[idx];
-    if (lower >= upper || upper <= node.lower || node.upper <= lower) {
-      return;
-    }
-    Traverse traverse = _traverse(node, lower, upper, args);
-    if (traverse == Traverse::NONE || node.isLeaf()) {
-      return;
-    }
-    int rIdx = idx + node.lSize();
-    if (_hasUpdate(node)) {
-      _pushNode(node, _nodes[idx + 1]);
-      _pushNode(node, _nodes[rIdx]);
-      _clearUpdate(node);
-    }
-    if (traverse != Traverse::RIGHT) {
-      _traverse(idx + 1, lower, upper, args);
-    }
-    if (traverse != Traverse::LEFT) {
-      _traverse(rIdx, lower, upper, args);
-    }
-    _mergeV(_nodes[idx + 1], _nodes[rIdx], node.v);
-  }
-#endif
-
-  int _n;
+  int _n, _offset, _offsetBit;
   vector<Node> _nodes;
 
 #ifdef LOCAL
   inline friend ostream& operator<<(ostream& o, const BaseLazyCompactSegmentTree& st) {
-    vector<bool> toRight;
-    st._output(0, 0, toRight, o);
+    FOR(i, 1, st._offset << 1) {
+      if (st._nodes[i].isValid() && !st._nodes[i >> 1].isValid()) {
+        vector<bool> toRight;
+        st._output(0, i, toRight, o);
+      }
+    }
     return o;
   }
 
@@ -211,12 +200,12 @@ struct BaseLazyCompactSegmentTree {
       o << (toRight.back() ? 'L' : '|') << "---";
     }
     const auto& node = _nodes[idx];
-    o << '[' << node.lower << ',' << node.upper << "): " << node << " @" << idx;
+    o << node << " @" << idx;
     if (!node.isLeaf()) {
       toRight.push_back(false);
-      _output(depth + 1, idx + 1, toRight, o);
+      _output(depth + 1, idx << 1, toRight, o);
       toRight.back() = true;
-      _output(depth + 1, idx + node.lSize(), toRight, o);
+      _output(depth + 1, (idx << 1) | 1, toRight, o);
       toRight.pop_back();
     }
   }

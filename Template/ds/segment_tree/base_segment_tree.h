@@ -1,8 +1,8 @@
 // !macro_gen
-// ALL BASE_COMPACT_SEGMENT_TREE_ALL
+// ALL BASE_SEGMENT_TREE_ALL
 #pragma once
 
-#include "ds/segment_tree/base_compact_segment_tree_macros.h"
+#include "ds/segment_tree/base_segment_tree_macros.h"
 
 using namespace std;
 
@@ -11,12 +11,12 @@ namespace ds {
 template<
     typename V,
     typename InitV = V
-#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
+#ifdef _BASE_SEGMENT_TREE_UPDATE_V
     ,
     typename Update = InitV
 #endif
     >
-struct BaseCompactSegmentTree {
+struct BaseSegmentTree {
   struct _Node {
     V v;
     int lower, upper;
@@ -30,34 +30,34 @@ struct BaseCompactSegmentTree {
     }
   };
 
-#ifdef _BASE_COMPACT_SEGMENT_TREE_CLEAR_V // ^
+#ifdef _BASE_SEGMENT_TREE_CLEAR_V // ^
   virtual inline void _clearV(V& res) = 0;
 #endif
-#ifdef _BASE_COMPACT_SEGMENT_TREE_APPEND_V // ^
+#ifdef _BASE_SEGMENT_TREE_APPEND_V // ^
   virtual inline void _appendV(const _Node& node, V& res) = 0;
 #endif
-#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE_V // ^
+#ifdef _BASE_SEGMENT_TREE_UPDATE_V // ^
   virtual inline void _updateV(const Update& update, _Node& node) = 0;
 #endif
   virtual inline void _initV(InitV initV, _Node& node) = 0;
   virtual inline void _mergeV(const _Node& lNode, const _Node& rNode, V& res) = 0;
 
-#ifdef BASE_COMPACT_SEGMENT_TREE_RESERVE // ^
+#ifdef BASE_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
     _nodes.reserve(n << 1);
   }
 #endif
 
-#ifdef BASE_COMPACT_SEGMENT_TREE_INIT // ^
+#ifdef BASE_SEGMENT_TREE_INIT // ^
   inline void init(vector<InitV> leafVs) {
     _n = leafVs.size();
     _nodes.resize(_n << 1);
-    // BASE_COMPACT_SEGMENT_TREE_INIT => _BASE_COMPACT_SEGMENT_TREE_INIT
+    // BASE_SEGMENT_TREE_INIT => _BASE_SEGMENT_TREE_INIT
     _init(0, 0, _n, leafVs);
   }
 #endif
 
-#ifdef _BASE_COMPACT_SEGMENT_TREE_INIT // ^
+#ifdef _BASE_SEGMENT_TREE_INIT // ^
   inline void _init(int idx, int lower, int upper, vector<InitV>& leafVs) {
     auto& node = _nodes[idx];
     node.lower = lower;
@@ -74,18 +74,18 @@ struct BaseCompactSegmentTree {
   }
 #endif
 
-#ifdef BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
+#ifdef BASE_SEGMENT_TREE_UPDATE // ^
   inline void update(int pos, const Update& update) {
-    // BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE
+    // BASE_SEGMENT_TREE_UPDATE => _BASE_SEGMENT_TREE_UPDATE
     _update(0, pos, update);
   }
 #endif
 
-#ifdef _BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
+#ifdef _BASE_SEGMENT_TREE_UPDATE // ^
   inline void _update(int idx, int pos, const Update& update) {
     auto& node = _nodes[idx];
     if (node.isLeaf()) {
-      // _BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_UPDATE_V
+      // _BASE_SEGMENT_TREE_UPDATE => _BASE_SEGMENT_TREE_UPDATE_V
       _updateV(update, node);
       return;
     }
@@ -99,25 +99,25 @@ struct BaseCompactSegmentTree {
   }
 #endif
 
-#ifdef BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
+#ifdef BASE_SEGMENT_TREE_CALC_RANGE // ^
   inline V calcRange(int lower, int upper) {
     V res;
-    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CLEAR_V
+    // BASE_SEGMENT_TREE_CALC_RANGE => _BASE_SEGMENT_TREE_CLEAR_V
     _clearV(res);
-    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE
+    // BASE_SEGMENT_TREE_CALC_RANGE => _BASE_SEGMENT_TREE_CALC_RANGE
     _calcRange(0, lower, upper, res);
     return res;
   }
 #endif
 
-#ifdef _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
+#ifdef _BASE_SEGMENT_TREE_CALC_RANGE // ^
   inline void _calcRange(int idx, int lower, int upper, V& res) {
     if (lower >= upper) {
       return;
     }
     auto& node = _nodes[idx];
     if (lower <= node.lower && node.upper <= upper) {
-      // _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_APPEND_V
+      // _BASE_SEGMENT_TREE_CALC_RANGE => _BASE_SEGMENT_TREE_APPEND_V
       _appendV(node, res);
       return;
     }
@@ -140,7 +140,7 @@ struct BaseCompactSegmentTree {
     return o;
   }
 
-  inline friend ostream& operator<<(ostream& o, const BaseCompactSegmentTree& st) {
+  inline friend ostream& operator<<(ostream& o, const BaseSegmentTree& st) {
     vector<bool> toRight;
     st._output(0, 0, toRight, o);
     return o;
