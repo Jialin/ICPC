@@ -200,8 +200,8 @@ function CPP-gen-run17-multi {
       do
         _CPP-run gen/gendebug-$1 $input
       done
-      echo 'DONE'
     fi
+    echo -e "\033[1;33m=== DONE Compare ===\033[0m"
   fi
 }
 
@@ -239,9 +239,9 @@ function CPP-gen-gendiff17 {
   do
     echo -e "\033[1;33m=== Compare #$i ===\033[0m"
     ((i=i+1))
-    python3 $3 > diff-input
-    ./a.out < diff-input > diff-output
-    ./a-diff.out < diff-input > diff-compare
+    python3 $3 > input-diff
+    ./a.out < input-diff > output-diff
+    ./a-diff.out < input-diff > compare-diff
     diff_output=$(diff diff-output diff-compare)
     if [ "$diff_output" ]
     then
