@@ -5,7 +5,8 @@
 namespace math {
 
 TEST(Factorize, test) {
-  MinPrimeTagger mpt(1024 + 1);
+  MinPrimeTagger mpt;
+  mpt.init(1024 + 1);
   vector<int> ps;
   vector<int> es;
   const auto& processor = [&ps, &es](int p, int e) {

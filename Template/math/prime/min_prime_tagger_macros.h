@@ -1,0 +1,3 @@
+#ifdef MIN_PRIME_TAGGER_ALL
+#define MIN_PRIME_TAGGER_RESERVE
+#endif

@@ -5,7 +5,8 @@
 namespace math {
 
 TEST(DivisorIteratorUseTaggerTest, small) {
-  MinPrimeTagger mpt(12);
+  MinPrimeTagger mpt;
+  mpt.init(12);
   vector<int> ds;
   auto processor = [&ds](int d) {
     ds.push_back(d);
@@ -52,7 +53,8 @@ TEST(DivisorIteratorUseTaggerTest, small) {
 }
 
 TEST(DivisorIteratorUseTaggerTest, large) {
-  MinPrimeTagger mpt(987655);
+  MinPrimeTagger mpt;
+  mpt.init(987655);
   vector<int> ds;
   auto processor = [&ds](int d) {
     ds.push_back(d);

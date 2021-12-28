@@ -5,7 +5,8 @@
 namespace math {
 
 TEST(MinPrimeTagger, test) {
-  MinPrimeTagger tagger(20);
+  MinPrimeTagger tagger;
+  tagger.init(19);
   int p, cnt, nxt;
 
   tagger.process(1, p, cnt, nxt);

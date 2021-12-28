@@ -313,7 +313,8 @@ function unittest {
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
   python3 macro_gen.py
-  bazel build //... --compilation_mode opt && bazel test //... --compilation_mode opt $@
+  bazel build //... --compilation_mode opt --copt=-DUNITTEST
+  bazel test //... --compilation_mode opt --copt=-DUNITTEST $@
   cd $current_path
 }
 
@@ -326,7 +327,7 @@ function unittestdebug {
   trap "cd $current_path; exit" SIGHUP SIGINT SIGTERM
   cd $ICPC_HOME/Template
   python3 macro_gen.py
-  bazel test $@ --compilation_mode opt --copt=-DLOCAL
+  bazel test $@ --compilation_mode opt --copt=-DLOCAL --copt=-DUNITTEST
   cd $current_path
 }
 
