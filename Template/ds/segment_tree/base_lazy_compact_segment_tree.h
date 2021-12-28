@@ -11,7 +11,15 @@ using namespace std;
 
 namespace ds {
 
-template<typename V, typename InitV = V, typename Update = InitV>
+template<
+    typename V,
+    typename InitV = V,
+    typename Update = InitV
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+    ,
+    typename TraverseArgs = nullptr_t
+#endif
+    >
 struct BaseLazyCompactSegmentTree {
   struct Node {
     V v;
@@ -34,6 +42,16 @@ struct BaseLazyCompactSegmentTree {
 #endif
   };
 
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  enum Traverse { NONE, LEFT, RIGHT, ALL };
+#endif
+
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  virtual inline Traverse _traverse(Node& node, int lower, int upper, TraverseArgs& args) {
+    return Traverse::NONE;
+  }
+#endif
+
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_CLEAR_V // ^
   virtual inline void _clearV(V& res) = 0;
 #endif
@@ -54,18 +72,18 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_INIT // ^
   inline void init(vector<InitV> initVs) {
-    _n = SIZE(initVs);
-    _offset = _n > 0 ? math::nextPow2_32(_n - 1) : 1;
+    int n = SIZE(initVs);
+    _offset = math::nextPow2_32(n);
     _offsetBit = __builtin_ctz(_offset);
     _nodes.resize(_offset << 1);
-    FOR(i, 0, _n) {
+    FOR(i, 0, n) {
       auto& node = _nodes[_offset + i];
       node.lower = i;
       node.upper = i + 1;
       _clearUpdate(node);
       _initV(move(initVs[i]), node);
     }
-    FOR(i, _n, _offset) {
+    FOR(i, n, _offset) {
       auto& node = _nodes[_offset + i];
       node.lower = -1;
       node.upper = -2;
@@ -104,21 +122,24 @@ struct BaseLazyCompactSegmentTree {
     }
     for (int l = lower, u = upper; l < u; l >>= 1, u >>= 1) {
       if (l & 1) {
-        _applyUpdateImpl(update, _nodes[l++]);
+        // clang-format off
+        // BASE_LAZY_COMPACT_SEGMENT_TREE_UPDATE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPLY_UPDATE_WRAPPER
+        // clang-format on
+        _applyUpdateWrapper(update, _nodes[l++]);
       }
       if (u & 1) {
-        _applyUpdateImpl(update, _nodes[--u]);
+        _applyUpdateWrapper(update, _nodes[--u]);
       }
     }
     FOR(i, lowerCtz1, commonCtz1) {
-      _mergeVImpl(lower >> i);
+      _mergeVWrapper(lower >> i);
     }
     FOR(i, upperCtz1, commonCtz1) {
-      _mergeVImpl((upper - 1) >> i);
+      _mergeVWrapper((upper - 1) >> i);
     }
     for (int i = commonCtz1; i <= _offsetBit; ++i) {
-      _mergeVImpl(lower >> i);
-      _mergeVImpl((upper - 1) >> i);
+      _mergeVWrapper(lower >> i);
+      _mergeVWrapper((upper - 1) >> i);
     }
   }
 #endif
@@ -154,16 +175,60 @@ struct BaseLazyCompactSegmentTree {
     for (int l = lower; l < (upper >> bit); ++bit, l >>= 1) {
       if (l & 1) {
         // clang-format off
-        // _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL
+        // _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER
         // clang-format on
-        _appendVImpl(_nodes[l++], res);
+        _appendVWrapper(_nodes[l++], res);
       }
     }
     for (--bit; bit >= 0; --bit) {
       int u = upper >> bit;
       if (u & 1) {
-        _appendVImpl(_nodes[u ^ 1], res);
+        _appendVWrapper(_nodes[u ^ 1], res);
       }
+    }
+  }
+#endif
+
+#ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
+  inline void traverseRange(int lower, int upper, TraverseArgs& args) {
+    int lower2 = lower + _offset;
+    int upper2 = upper + _offset;
+    int lowerCtz1 = __builtin_ctz(lower2) + 1, upperCtz1 = __builtin_ctz(upper2) + 1,
+        commonCtz1 = max(lowerCtz1, upperCtz1);
+    FORR(i, _offsetBit, commonCtz1) {
+      _push(lower2 >> i);
+      _push((upper2 - 1) >> i);
+    }
+    FORR(i, commonCtz1 - 1, lowerCtz1) {
+      _push(lower2 >> i);
+    }
+    FORR(i, commonCtz1 - 1, upperCtz1) {
+      _push((upper2 - 1) >> i);
+    }
+    int bit = 0;
+    for (int l = lower2; l < (upper2 >> bit); ++bit, l >>= 1) {
+      if (l & 1) {
+        // clang-format off
+        // BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER
+        // clang-format on
+        _traverseWrapper(l++, lower, upper, args);
+      }
+    }
+    for (--bit; bit >= 0; --bit) {
+      int u = upper2 >> bit;
+      if (u & 1) {
+        _traverseWrapper(u ^ 1, lower, upper, args);
+      }
+    }
+    FOR(i, lowerCtz1, commonCtz1) {
+      _mergeVWrapper(lower2 >> i);
+    }
+    FOR(i, upperCtz1, commonCtz1) {
+      _mergeVWrapper((upper2 - 1) >> i);
+    }
+    for (int i = commonCtz1; i <= _offsetBit; ++i) {
+      _mergeVWrapper(lower2 >> i);
+      _mergeVWrapper((upper2 - 1) >> i);
     }
   }
 #endif
@@ -178,29 +243,58 @@ struct BaseLazyCompactSegmentTree {
     _clearUpdate(node);
   }
 
-  inline void _mergeVImpl(int idx) {
+  inline void _mergeVWrapper(int idx) {
     auto& node = _nodes[idx];
     if (node.isValid()) {
       _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
     }
   }
 
-#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL // ^
-  inline void _appendVImpl(const Node& node, V& res) {
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER // ^
+  inline void _appendVWrapper(const Node& node, V& res) {
     if (node.isValid()) {
-      // _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
+      // clang-format off
+      // _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
+      // clang-format on
       _appendV(node, res);
     }
   }
 #endif
 
-  inline void _applyUpdateImpl(const Update& update, Node& node) {
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPLY_UPDATE_WRAPPER // ^
+  inline void _applyUpdateWrapper(const Update& update, Node& node) {
     if (node.isValid()) {
       _applyUpdate(update, node);
     }
   }
+#endif
 
-  int _n, _offset, _offsetBit;
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER // ^
+  inline void _traverseWrapper(int idx, int lower, int upper, TraverseArgs& args) {
+    auto& node = _nodes[idx];
+    // clang-format off
+    // _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+    // clang-format on
+    Traverse traverse = _traverse(node, lower, upper, args);
+    if (traverse == Traverse::NONE || node.isLeaf()) {
+      return;
+    }
+    if (_hasUpdate(node)) {
+      _applyUpdate(node.update, _nodes[idx << 1]);
+      _applyUpdate(node.update, _nodes[(idx << 1) | 1]);
+      _clearUpdate(node);
+    }
+    if (traverse != Traverse::RIGHT) {
+      _traverseWrapper(idx << 1, lower, upper, args);
+    }
+    if (traverse != Traverse::LEFT) {
+      _traverseWrapper((idx << 1) | 1, lower, upper, args);
+    }
+    _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
+  }
+#endif
+
+  int _offset, _offsetBit;
   vector<Node> _nodes;
 
 #ifdef LOCAL
