@@ -30,7 +30,6 @@ struct LazyCompactSegmentTreeUpdateSetSum : BaseLazyCompactSegmentTree<_V, _Init
   }
 
   inline void _applyUpdate(const Update& update, Node& node) override {
-    assert((node.upper - node.lower) == (_offset >> (31 ^ __builtin_clz(&node - _nodes.data()))));
     int64_t delta = update.second * (node.upper - node.lower);
     if (update.first == 2) {
       node.update.first = 2;
@@ -57,12 +56,12 @@ struct LazyCompactSegmentTreeUpdateSetSum : BaseLazyCompactSegmentTree<_V, _Init
     res = lNode.v + rNode.v;
   }
 
-  inline void updateRange(int lower, int upper, V delta) {
-    BaseLazyCompactSegmentTree<V, InitV, Update>::updateRange(lower, upper, {1, move(delta)});
+  inline void changeRange(int lower, int upper, V delta) {
+    this->updateRange(lower, upper, {1, move(delta)});
   }
 
   inline void setRange(int lower, int upper, V v) {
-    BaseLazyCompactSegmentTree<V, InitV, Update>::updateRange(lower, upper, {2, move(v)});
+    this->updateRange(lower, upper, {2, move(v)});
   }
 };
 

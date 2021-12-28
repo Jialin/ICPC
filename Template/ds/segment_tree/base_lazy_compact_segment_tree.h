@@ -90,11 +90,16 @@ struct BaseLazyCompactSegmentTree {
   inline void updateRange(int lower, int upper, const Update& update) {
     lower += _offset;
     upper += _offset;
-    int lowerCtz1 = __builtin_ctz(lower) + 1, upperCtz1 = __builtin_ctz(upper) + 1;
-    FORR(i, _offsetBit, lowerCtz1) {
+    int lowerCtz1 = __builtin_ctz(lower) + 1, upperCtz1 = __builtin_ctz(upper) + 1,
+        commonCtz1 = max(lowerCtz1, upperCtz1);
+    FORR(i, _offsetBit, commonCtz1) {
+      _push(lower >> i);
+      _push((upper - 1) >> i);
+    }
+    FORR(i, commonCtz1 - 1, lowerCtz1) {
       _push(lower >> i);
     }
-    FORR(i, _offsetBit, upperCtz1) {
+    FORR(i, commonCtz1 - 1, upperCtz1) {
       _push((upper - 1) >> i);
     }
     for (int l = lower, u = upper; l < u; l >>= 1, u >>= 1) {
@@ -105,10 +110,14 @@ struct BaseLazyCompactSegmentTree {
         _applyUpdateImpl(update, _nodes[--u]);
       }
     }
-    for (int i = lowerCtz1; i <= _offsetBit; ++i) {
+    FOR(i, lowerCtz1, commonCtz1) {
       _mergeVImpl(lower >> i);
     }
-    for (int i = upperCtz1; i <= _offsetBit; ++i) {
+    FOR(i, upperCtz1, commonCtz1) {
+      _mergeVImpl((upper - 1) >> i);
+    }
+    for (int i = commonCtz1; i <= _offsetBit; ++i) {
+      _mergeVImpl(lower >> i);
       _mergeVImpl((upper - 1) >> i);
     }
   }
@@ -129,20 +138,31 @@ struct BaseLazyCompactSegmentTree {
   inline void _calcRange(int lower, int upper, V& res) {
     lower += _offset;
     upper += _offset;
-    int lowerCtz = __builtin_ctz(lower), upperCtz = __builtin_ctz(upper);
-    FORR(i, _offsetBit, lowerCtz) {
+    int lowerCtz = __builtin_ctz(lower), upperCtz = __builtin_ctz(upper),
+        commonCtz = max(lowerCtz, upperCtz);
+    FORR(i, _offsetBit, commonCtz) {
       _push(lower >> i);
-    }
-    FORR(i, _offsetBit, upperCtz) {
       _push((upper - 1) >> i);
     }
-    // TODO: append in order
-    for (int l = lower, u = upper; l < u; l >>= 1, u >>= 1) {
+    FORR(i, commonCtz - 1, lowerCtz) {
+      _push(lower >> i);
+    }
+    FORR(i, commonCtz - 1, upperCtz) {
+      _push((upper - 1) >> i);
+    }
+    int bit = 0;
+    for (int l = lower; l < (upper >> bit); ++bit, l >>= 1) {
       if (l & 1) {
+        // clang-format off
+        // _BASE_LAZY_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL
+        // clang-format on
         _appendVImpl(_nodes[l++], res);
       }
+    }
+    for (--bit; bit >= 0; --bit) {
+      int u = upper >> bit;
       if (u & 1) {
-        _appendVImpl(_nodes[--u], res);
+        _appendVImpl(_nodes[u ^ 1], res);
       }
     }
   }
@@ -165,11 +185,14 @@ struct BaseLazyCompactSegmentTree {
     }
   }
 
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL // ^
   inline void _appendVImpl(const Node& node, V& res) {
     if (node.isValid()) {
+      // _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V_IMPL => _BASE_LAZY_COMPACT_SEGMENT_TREE_APPEND_V
       _appendV(node, res);
     }
   }
+#endif
 
   inline void _applyUpdateImpl(const Update& update, Node& node) {
     if (node.isValid()) {
