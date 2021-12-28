@@ -108,6 +108,7 @@
 - [x] [HackerEarth - Lexicographically minimal string](https://www.hackerearth.com/practice/data-structures/disjoint-data-strutures/basics-of-disjoint-data-structures/practice-problems/algorithm/lexicographically-minimal-string-6edc1406/)
 - [x] [HackerEarth - Fight in Ninja World](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/containers-of-choclates-1/)
 - [x] [Codeforces - Knight Tournament](https://codeforces.com/contest/356/problem/A)
+- [x] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F): Disjoint + Fenwick
 
 ## 1.4. Fenwick Tree ([Template/ds/fenwick/](Template/ds/fenwick/))
 
@@ -214,7 +215,6 @@
 - [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
 - [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
-- [ ] [Codeforces - SUM and REPLACE](https://codeforces.com/contest/920/problem/F)
 - [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
