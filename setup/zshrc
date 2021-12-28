@@ -58,6 +58,7 @@ function CPP-compile {
   g++ "$1" -O3 -g3 \
       -std=$std_version \
       -o $out \
+      -fsanitize=address,undefined \
       -isystem /usr/local/Cellar/boost/1.73.0/include \
       -Wall \
       -Wno-c++98-compat \
