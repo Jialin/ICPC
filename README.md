@@ -218,7 +218,7 @@
 - [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
-- [ ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
+- x ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 
 # 2. Algorithms
 
