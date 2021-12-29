@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ds/treap/base_treap_macros.h" // INCLUDE
+#include "ds/treap/treap_multiset_macros.h"
 
 #include "ds/treap/base_treap.h"
 
