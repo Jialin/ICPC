@@ -243,7 +243,7 @@ function CPP-gen-gendiff17 {
     python3 $3 > input-diff
     ./a.out < input-diff > output-diff
     ./a-diff.out < input-diff > compare-diff
-    diff_output=$(diff diff-output diff-compare)
+    diff_output=$(diff output-diff compare-diff)
     if [ "$diff_output" ]
     then
       echo $diff_output
