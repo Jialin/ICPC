@@ -176,6 +176,27 @@ inline string tostring(const map<K, V>& vs) {
   return ss.str();
 }
 
+template<typename V>
+inline string tostring(V v, int base) {
+  stringstream ss;
+  bool negative = false;
+  if (v < 0) {
+    negative = true;
+    v = -v;
+  }
+  if (!v) {
+    ss << '0';
+  } else {
+    for (; v; v /= base) {
+      int digit = v % base;
+      ss << CAST<char>(digit < 10 ? '0' + digit : 'A' + digit - 10);
+    }
+  }
+  string res = ss.str();
+  reverse(res.begin(), res.end());
+  return (negative ? "-" : "") + res;
+}
+
 template<typename... VS>
 inline string tostring1(VS const&... vs) {
   stringstream ss;
