@@ -75,8 +75,8 @@
 - [Disjoint Sparse Table](https://discuss.codechef.com/t/tutorial-disjoint-sparse-table/17404)
 
 ### 1.2.3. Problems
-- [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/): TODO: Segment Tree Revisit
-- [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/): TODO: Segment Tree Revisit
+- [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/)
+- [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/)
 - [x] [Codechef - MSTICK](https://www.codechef.com/problems/MSTICK)
 - [x] [Codechef - SEAD](https://www.codechef.com/problems/SEAD)
 - [x] [Codeforces - Animals and Puzzles](http://codeforces.com/contest/713/problem/D)
@@ -85,8 +85,7 @@
 - [x] [Codeforces - Map](http://codeforces.com/contest/15/problem/D)
 - [x] [Codeforces - Awards for Contestants](http://codeforces.com/contest/873/problem/E)
 - [x] [Codechef - SEGPROD](https://www.codechef.com/problems/SEGPROD): Disjoint Sparse Table
-- [ ] [DevSkills - Multiplication Interval](https://devskill.com/CodingProblems/ViewProblem/19): TODO: Segment Tree
-- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D): TODO: Segment Tree
+- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
 
 ## 1.3. Disjoint Set Union ([Template/ds/disjoint_set/](Template/ds/disjoint_set/))
 
@@ -122,7 +121,7 @@
 - [x] [LOJ 1112 - Curious Robin Hood](https://lightoj.com/problem/curious-robin-hood)
 - [x] [LOJ 1266 - Points in Rectangle](https://lightoj.com/problem/points-in-rectangle)
 - [x] [Codechef - SPREAD](https://www.codechef.com/problems/SPREAD)
-- [ ] [SPOJ - CTRICK](https://www.spoj.com/problems/CTRICK/): TODO: Segment Tree
+- [x] [SPOJ - CTRICK](https://www.spoj.com/problems/CTRICK/): calcKth
 - [x] [SPOJ - MATSUM](https://www.spoj.com/problems/MATSUM/)
 - [x] [SPOJ - DQUERY](https://www.spoj.com/problems/DQUERY/)
 - [x] [SPOJ - YODANESS](https://www.spoj.com/problems/YODANESS/)
@@ -152,7 +151,8 @@
 - [x] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
 - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
 - [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
-
+- [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): calcKth
+- [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): calcKth
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
@@ -163,14 +163,11 @@
 - [x] [SPOJ - Ada and Aphids](https://www.spoj.com/problems/ADAAPHID/)
 - [x] [SPOJ - Ada and Harvest](https://www.spoj.com/problems/ADACROP/)
 - [x] [SPOJ - Ghost Town](https://www.spoj.com/problems/COUNT1IT/)
-- [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): TODO: Segment Tree Revisit
 - [x] [SPOJ - All in One](https://www.spoj.com/problems/ALLIN1/)
 - [x] [Codeforces - Yet Another Array Queries Problem](https://codeforces.com/contest/863/problem/D): TODO: Splay Tree Revisit
 - [x] [SPOJ - TWIST](https://www.spoj.com/problems/TWIST/): TODO: Splay Tree Revisit
-- [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): TODO: Segment Tree Revisit
 - [x] [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
 - [x] [Codeforces - T-Shirts](https://codeforces.com/contest/702/problem/F): TODO: Splay Tree Revisit
-- [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E): TODO: Segment Tree Revisit
 
 ## 1.6. Stairs Container ([Template/ds/stair_container.h](Template/ds/stair_container.h))
 
@@ -211,16 +208,20 @@
 - [x] [Codeforces - Ant colony](https://codeforces.com/contest/474/problem/F)
 - [x] [Codeforces - Drazil and Park](https://codeforces.com/contest/515/problem/E)
 - [x] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
-- [x] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042): Segment Tree + Manacher's Algorithm
+- [x] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042): Segment Tree Traverse + Manacher's Algorithm
 - [x] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
 - [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
 - [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
 - [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
-- [x] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
+- [x] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda): Traverse
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
 - [x] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
+- [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/)
+- [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/)
+- [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
+- [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E)
 
 # 2. Algorithms
 

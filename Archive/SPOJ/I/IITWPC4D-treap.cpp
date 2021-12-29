@@ -3,11 +3,14 @@
 #include "common/macros.h"
 #include "debug/debug_declare.h"
 
-#define BASE_FENWICK_CALC_KTH
-#define BASE_FENWICK_RESERVE
-#include "ds/fenwick/base_fenwick_macros.h"
+#define BASE_TREAP_INIT_ORDERED_ITEMS
+#define BASE_TREAP_POP_KTH
+#define BASE_TREAP_RESERVE_NODES
+#define TREAP_SET_INSERT
+#include "ds/treap/base_treap_macros.h"
+#include "ds/treap/treap_set_macros.h"
 
-#include "ds/fenwick/fenwick_sum.h"
+#include "ds/treap/treap_set.h"
 #include "io/read_int.h"
 #include "io/write_char_array.h"
 #include "io/write_int.h"
@@ -17,11 +20,14 @@
 
 const int MAXN = 100000;
 
+ds::TreapSet<int> treap;
+vector<int> as;
+vector<pair<int, nullptr_t>> inits;
+
 int main() {
-  vector<int> as;
+  treap.reserveNodes(MAXN);
   as.reserve(MAXN);
-  ds::FenwickSum<int> fen;
-  fen.reserve(MAXN);
+  inits.reserve(MAXN);
   int taskNumber;
   io::readInt(taskNumber);
   for (int taskIdx = 1; taskIdx <= taskNumber; ++taskIdx) {
@@ -45,19 +51,22 @@ int main() {
       io::writeChar('\n');
       continue;
     }
-    fen._n = n;
-    fen._vs.resize(n);
-    FOR(i, 0, n) {
-      fen._vs[i] = 1 << __builtin_ctz(i + 1);
+    inits.clear();
+    for (int i = (0); i < (n); ++i) {
+      inits.emplace_back(i + 1, nullptr);
     }
+    treap.clear();
+    treap.initOrderedItems(inits);
     for (int i = n - 1; i >= 0; --i) {
-      int idx = fen.calcKth(as[i]);
-      as[i] = idx;
-      fen.update(idx, -1);
+      const auto* p = treap.popKth(as[i]);
+      as[i] = p->_key;
     }
-    FOR(i, 0, n) {
-      io::writeInt(as[i] + 1, i + 1 == n ? '\n' : ' ');
+    io::writeInt(as[0]);
+    for (int i = (1); i < (n); ++i) {
+      io::writeChar(' ');
+      io::writeInt(as[i]);
     }
+    io::writeChar('\n');
   }
   return 0;
 }

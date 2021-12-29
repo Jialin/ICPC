@@ -104,12 +104,12 @@ struct BaseCompactSegmentTree {
   }
 #endif
 
-#ifdef BASE_COMPACT_SEGMENT_TREE_UPDATE_RANGE // ^
+#ifdef BASE_COMPACT_SEGMENT_TREE_UPDATE // ^
   inline void update(int idx, const Update& update) {
     idx += _offset;
     for (int l = idx, u = idx + 1; l < u; l >>= 1, u >>= 1) {
       if (l & 1) {
-        // BASE_COMPACT_SEGMENT_TREE_UPDATE_RANGE => _BASE_COMPACT_SEGMENT_TREE_APPLY_UPDATE_WRAPPER
+        // BASE_COMPACT_SEGMENT_TREE_UPDATE => _BASE_COMPACT_SEGMENT_TREE_APPLY_UPDATE_WRAPPER
         _applyUpdateWrapper(update, _nodes[l++]);
       }
       if (u & 1) {

@@ -61,12 +61,12 @@ using namespace std;
       __PRETTY_FUNCTION__,                                                                         \
       __LINE__,                                                                                    \
       args,                                                                                        \
-      boost::stacktrace::to_string(boost::stacktrace::stacktrace()).c_str())
+      boost::stacktrace::to_string(boost::stacktrace::stacktrace()).c_str());
 
 #define DEBUGF(fmt, ...)                                                                           \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, fmt, ##__VA_ARGS__);                                                             \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGF_LT(x, y, fmt, ...)                                                                  \
   if (x >= y) {                                                                                    \
@@ -93,43 +93,43 @@ using namespace std;
 #define DEBUGV(v)                                                                                  \
   DEBUG_BEGIN;                                                                                     \
   _DEBUGV(v);                                                                                      \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGV2(v1, v2)                                                                            \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2).c_str());                                    \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGV3(v1, v2, v3)                                                                        \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3).c_str());                           \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGV4(v1, v2, v3, v4)                                                                    \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4).c_str());                  \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGV5(v1, v2, v3, v4, v5)                                                                \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4, #v5, v5).c_str());         \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGV6(v1, v2, v3, v4, v5, v6)                                                            \
   DEBUG_BEGIN;                                                                                     \
   fprintf(                                                                                         \
       stderr, "%s\n", tostring2(#v1, v1, #v2, v2, #v3, v3, #v4, v4, #v5, v5, #v6, v6).c_str());    \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGVS(v, ...)                                                                            \
   DEBUG_BEGIN;                                                                                     \
   fprintf(stderr, "%s\n", tostring1(v, ##__VA_ARGS__).c_str());                                    \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUGBIT(v)                                                                                \
   DEBUG_BEGIN;                                                                                     \
   debugBit(v, #v);                                                                                 \
-  DEBUG_END
+  DEBUG_END;
 
 #define DEBUG_EQ(x, y)                                                                             \
   if ((x) != (y)) {                                                                                \
