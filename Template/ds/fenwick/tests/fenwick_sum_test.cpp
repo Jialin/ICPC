@@ -9,7 +9,7 @@ using namespace std;
 
 namespace ds {
 
-TEST(FenwickSum, basic) {
+TEST(FenwickSum, calcRange) {
   ds::FenwickSum<int> fen;
   fen.init(5);
 
@@ -47,6 +47,25 @@ TEST(FenwickSum, basic) {
   EXPECT_EQ(30, fen.calcRange(3, 4));
   EXPECT_EQ(70, fen.calcRange(3, 5));
   EXPECT_EQ(40, fen.calcRange(4, 5));
+}
+
+TEST(FenwickSum, calcKth) {
+  ds::FenwickSum<int> fen;
+  fen.init(5);
+  fen.update(0, 1);
+  fen.update(1, 2);
+  fen.update(2, 1);
+  fen.update(3, 0);
+  fen.update(4, 3);
+
+  EXPECT_EQ(0, fen.calcKth(0));
+  EXPECT_EQ(1, fen.calcKth(1));
+  EXPECT_EQ(1, fen.calcKth(2));
+  EXPECT_EQ(2, fen.calcKth(3));
+  EXPECT_EQ(4, fen.calcKth(4));
+  EXPECT_EQ(4, fen.calcKth(5));
+  EXPECT_EQ(4, fen.calcKth(6));
+  EXPECT_EQ(5, fen.calcKth(7));
 }
 
 } // namespace ds

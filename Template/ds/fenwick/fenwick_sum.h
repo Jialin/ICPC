@@ -16,7 +16,7 @@ struct FenwickSum : BaseFenwick<V> {
     v += deltaV;
   }
 
-#ifdef BASE_FENWICK_CALC_RANGE // ^
+#ifdef _BASE_FENWICK_SUB_V // ^
   inline V _subV(const V& upperV, const V& lowerV) const override {
     return upperV - lowerV;
   }

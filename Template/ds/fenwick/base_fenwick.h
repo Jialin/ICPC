@@ -51,9 +51,11 @@ struct BaseFenwick {
   }
 #endif
 
-#ifdef BASE_FENWICK_CALC_RANGE // ^
+#ifdef _BASE_FENWICK_SUB_V // ^
   virtual inline V _subV(const V& upperV, const V& lowerV) const = 0;
+#endif
 
+#ifdef BASE_FENWICK_CALC_RANGE // ^
   inline V calcRange(int lower, int upper) {
     if (lower >= upper || lower >= _n) {
       V res;
@@ -62,6 +64,21 @@ struct BaseFenwick {
     }
     // BASE_FENWICK_CALC_RANGE => BASE_FENWICK_CALC_PREFIX
     return lower ? _subV(calcPrefix(upper), calcPrefix(lower)) : calcPrefix(upper);
+  }
+#endif
+
+#ifdef BASE_FENWICK_CALC_KTH // ^
+  inline V calcKth(V kth) {
+    V res = 0;
+    for (int bit = 31 - __builtin_clz(_n); bit >= 0; --bit) {
+      int nxtRes = (res | (1 << bit)) - 1;
+      if (nxtRes < _n && kth >= _vs[nxtRes]) {
+        // BASE_FENWICK_CALC_KTH => _BASE_FENWICK_SUB_V
+        kth = _subV(kth, _vs[nxtRes]);
+        res = nxtRes + 1;
+      }
+    }
+    return res;
   }
 #endif
 
