@@ -151,6 +151,8 @@
 - [x] [SPOJ - Pyramid Sums 2](https://www.spoj.com/problems/PYRSUM2/): Range updates & queries
 - [x] [CSES - Polynomial Queries](https://cses.fi/problemset/task/1736)
 - [x] [Codeforces - DZY Loves Fibonacci Numbers](https://codeforces.com/contest/446/problem/C): 3 fenwick + d'Ocagne's identity
+- [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
+
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
@@ -215,10 +217,10 @@
 - [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
 - [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
 - [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
-- [ ] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
+- [x] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda) [Last element smaller or equal to x / Binary search]
 - [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
-- x ] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
+- [x] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 
 # 2. Algorithms
 
@@ -247,7 +249,6 @@
 
 ### 2.2.2. Problems
 - [x] [Codeforces - Radio Stations](https://codeforces.com/contest/762/problem/E): Split by radius, merge by frquency + Fenwick
-- [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/): TODO: Segment Tree Revisit
 
 # 3. String
 
