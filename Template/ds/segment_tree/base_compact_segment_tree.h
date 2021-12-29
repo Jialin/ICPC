@@ -68,7 +68,7 @@ struct BaseCompactSegmentTree {
 
 #ifdef BASE_COMPACT_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
-    _nodes.reserve((n > 0 ? math::nextPow2_32(n - 1) : 1) << 1);
+    _nodes.reserve(math::nextPow2_32(n) << 1);
   }
 #endif
 
@@ -122,6 +122,41 @@ struct BaseCompactSegmentTree {
   }
 #endif
 
+#ifdef BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
+  inline V calcRange(int lower, int upper) {
+    V res;
+    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CLEAR_V
+    _clearV(res);
+    // BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE
+    _calcRange(lower, upper, res);
+    return res;
+  }
+#endif
+
+#ifdef _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE // ^
+
+  // TODO: to verify
+  inline void _calcRange(int lower, int upper, V& res) {
+    lower += _offset;
+    upper += _offset;
+    int bit = 0;
+    for (int l = lower; l < (upper >> bit); ++bit, l >>= 1) {
+      if (l & 1) {
+        // clang-format off
+        // _BASE_COMPACT_SEGMENT_TREE_CALC_RANGE => _BASE_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER
+        // clang-format on
+        _appendVWrapper(_nodes[l++], res);
+      }
+    }
+    for (--bit; bit >= 0; --bit) {
+      int u = upper >> bit;
+      if (u & 1) {
+        _appendVWrapper(_nodes[u ^ 1], res);
+      }
+    }
+  }
+#endif
+
 #ifdef BASE_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
   inline void traverseRange(int lower, int upper, TraverseArgs& args) {
     int lower2 = lower + _offset, upper2 = upper + _offset;
@@ -161,6 +196,17 @@ struct BaseCompactSegmentTree {
       _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
     }
   }
+
+#ifdef _BASE_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER // ^
+  inline void _appendVWrapper(const Node& node, V& res) {
+    if (node.isValid()) {
+      // clang-format off
+      // _BASE_COMPACT_SEGMENT_TREE_APPEND_V_WRAPPER => _BASE_COMPACT_SEGMENT_TREE_APPEND_V
+      // clang-format on
+      _appendV(node, res);
+    }
+  }
+#endif
 
 #ifdef _BASE_COMPACT_SEGMENT_TREE_APPLY_UPDATE_WRAPPER // ^
   inline void _applyUpdateWrapper(const Update& update, Node& node) {
