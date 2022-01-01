@@ -43,7 +43,13 @@ struct BaseLazyCompactSegmentTree {
   };
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
-  enum Traverse { NONE, LEFT, RIGHT, ALL };
+  enum Traverse { NONE, LEFT, RIGHT, ALL, STOP };
+#endif
+
+#ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
+  virtual inline bool _mergeAfterTraverse(TraverseArgs& args) {
+    return true;
+  }
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
@@ -66,7 +72,7 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_RESERVE // ^
   inline void reserve(int n) {
-    _nodes.reserve((n > 0 ? math::nextPow2_32(n - 1) : 1) << 1);
+    _nodes.reserve(math::nextPow2_32(n) << 1);
   }
 #endif
 
@@ -191,8 +197,7 @@ struct BaseLazyCompactSegmentTree {
 
 #ifdef BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE // ^
   inline void traverseRange(int lower, int upper, TraverseArgs& args) {
-    int lower2 = lower + _offset;
-    int upper2 = upper + _offset;
+    int lower2 = lower + _offset, upper2 = upper + _offset;
     int lowerCtz1 = __builtin_ctz(lower2) + 1, upperCtz1 = __builtin_ctz(upper2) + 1,
         commonCtz1 = max(lowerCtz1, upperCtz1);
     FORR(i, _offsetBit, commonCtz1) {
@@ -207,28 +212,33 @@ struct BaseLazyCompactSegmentTree {
     }
     int bit = 0;
     for (int l = lower2; l < (upper2 >> bit); ++bit, l >>= 1) {
+      // clang-format off
+      // BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER
+      // clang-format on
       if (l & 1) {
-        // clang-format off
-        // BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER
-        // clang-format on
-        _traverseWrapper(l++, lower, upper, args);
+        if (_nodes[l].isValid() && !_traverseWrapper(l, lower, upper, args)) {
+          return;
+        }
+        ++l;
       }
     }
     for (--bit; bit >= 0; --bit) {
       int u = upper2 >> bit;
-      if (u & 1) {
-        _traverseWrapper(u ^ 1, lower, upper, args);
+      if ((u & 1) && _nodes[u ^ 1].isValid() && !_traverseWrapper(u ^ 1, lower, upper, args)) {
+        return;
       }
     }
-    FOR(i, lowerCtz1, commonCtz1) {
-      _mergeVWrapper(lower2 >> i);
-    }
-    FOR(i, upperCtz1, commonCtz1) {
-      _mergeVWrapper((upper2 - 1) >> i);
-    }
-    for (int i = commonCtz1; i <= _offsetBit; ++i) {
-      _mergeVWrapper(lower2 >> i);
-      _mergeVWrapper((upper2 - 1) >> i);
+    if (_mergeAfterTraverse(args)) {
+      FOR(i, lowerCtz1, commonCtz1) {
+        _mergeVWrapper(lower2 >> i);
+      }
+      FOR(i, upperCtz1, commonCtz1) {
+        _mergeVWrapper((upper2 - 1) >> i);
+      }
+      for (int i = commonCtz1; i <= _offsetBit; ++i) {
+        _mergeVWrapper(lower2 >> i);
+        _mergeVWrapper((upper2 - 1) >> i);
+      }
     }
   }
 #endif
@@ -270,27 +280,33 @@ struct BaseLazyCompactSegmentTree {
 #endif
 
 #ifdef _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER // ^
-  inline void _traverseWrapper(int idx, int lower, int upper, TraverseArgs& args) {
+  inline bool _traverseWrapper(int idx, int lower, int upper, TraverseArgs& args) {
     auto& node = _nodes[idx];
     // clang-format off
     // _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_WRAPPER => _BASE_LAZY_COMPACT_SEGMENT_TREE_TRAVERSE_RANGE
     // clang-format on
     Traverse traverse = _traverse(node, lower, upper, args);
+    if (traverse == Traverse::STOP) {
+      return false;
+    }
     if (traverse == Traverse::NONE || node.isLeaf()) {
-      return;
+      return true;
     }
     if (_hasUpdate(node)) {
       _applyUpdate(node.update, _nodes[idx << 1]);
       _applyUpdate(node.update, _nodes[(idx << 1) | 1]);
       _clearUpdate(node);
     }
-    if (traverse != Traverse::RIGHT) {
-      _traverseWrapper(idx << 1, lower, upper, args);
+    if (traverse != Traverse::RIGHT && !_traverseWrapper(idx << 1, lower, upper, args)) {
+      return false;
     }
-    if (traverse != Traverse::LEFT) {
-      _traverseWrapper((idx << 1) | 1, lower, upper, args);
+    if (traverse != Traverse::LEFT && !_traverseWrapper((idx << 1) | 1, lower, upper, args)) {
+      return false;
     }
-    _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
+    if (_mergeAfterTraverse(args)) {
+      _mergeV(_nodes[idx << 1], _nodes[(idx << 1) | 1], node.v);
+    }
+    return true;
   }
 #endif
 
