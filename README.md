@@ -153,6 +153,7 @@
 - [x] [SPOJ - Mean of Array](https://www.spoj.com/problems/MEANARR/)
 - [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): calcKth
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): calcKth
+- [x] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/)
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
@@ -198,9 +199,9 @@
 
 ### 1.9.1. Resources
 - [CP Algorithm](https://cp-algorithms.com/data_structures/segment_tree.html)
+- TODO: Persistent Segment Tree
 
 ### 1.9.2. Problems
-- [ ] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/) [Persistent segment tree / Merge sort tree]
 - [x] [Codeforces - Xenia and Bit Operations](https://codeforces.com/contest/339/problem/D)
 - [x] [UVA 11402 - Ahoy, Pirates!](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=26&page=show_problem&problem=2397)
 - [x] [SPOJ - GSS3](http://www.spoj.com/problems/GSS3/)
@@ -210,18 +211,18 @@
 - [x] [Codeforces - Sereja and Brackets](https://codeforces.com/contest/380/problem/C)
 - [x] [TIMUS - Nikita](https://acm.timus.ru/problem.aspx?space=1&num=2042): Segment Tree Traverse + Manacher's Algorithm
 - [x] [Codeforces - Circular RMQ](https://codeforces.com/contest/52/problem/C)
-- [ ] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
+- [x] [Codeforces - Lucky Array](https://codeforces.com/contest/121/problem/E)
 - [x] [Codeforces - The Child and Sequence](https://codeforces.com/contest/438/problem/D)
 - [x] [Codeforces - Eyes Closed](https://codeforces.com/contest/895/problem/E)
-- [ ] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
+- [x] [Codeforces - Kefa and Watch](https://codeforces.com/contest/580/problem/E)
 - [x] [COCI - Deda](https://oj.uz/problem/view/COCI17_deda): Traverse
-- [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 - [x] [CSES - Hotel Queries](https://cses.fi/problemset/task/1143)
 - [x] [CSES - Range Updates and Sums](https://cses.fi/problemset/task/1735)
 - [x] [SPOJ - RMQSQ](https://www.spoj.com/problems/RMQSQ/)
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/)
 - [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
 - [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E)
+- [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
 
 # 2. Algorithms
 
@@ -232,7 +233,7 @@
 
 ### 2.1.2. Problems
 - [x] [UVA 12003 - Array Transformer](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3154)
-- [x] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141): Follow up with Partition Tree
+- [x] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141): TODO: Follow up with Partition Tree
 - [x] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
 - [x] [SPOJ - Race Against Time](https://www.spoj.com/problems/RACETIME/)
 - [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D): TODO: Implicit Segment Tree

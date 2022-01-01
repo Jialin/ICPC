@@ -1,118 +1,81 @@
-#include <algorithm>
-#include <bitset>
-#include <cctype>
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <utility>
-#include <vector>
-using namespace std;
+// First batch includes
+#include "common/include.h"
+#include "common/macros.h"
+#include "debug/debug_declare.h"
 
-#define BEGIN(v) ((v).begin())
-#define END(v) ((v).end())
-#define ALL(v) BEGIN(v), END(v)
+#define BASE_FENWICK_CALC_RANGE
+#include "ds/fenwick/base_fenwick_macros.h"
 
-#define FOR(i, l, r) for (int i = (l); i < (r); ++i)
+#include "ds/fenwick/fenwick_sum.h"
+#include "io/read_int.h"
+#include "io/write_int.h"
 
-namespace mu {
+// Last include
+#include "debug/debug.h"
 
-// Checks whether the number is in the form of 2^x
-inline bool isPow2(int n) {
-  return n && !(n & (n - 1));
-}
+struct Query {
+  int v, lower, upper, idx;
+  bool isQuery;
 
-// Computes the smallest 2^x which is not less than n.
-inline int nextPow2(int n) {
-  if (n <= 1) return 1;
-  return isPow2(n) ? n : 1 << (32 - __builtin_clz(static_cast<unsigned int>(n)));
-}
+  inline Query(int v, int idx) : v(v), idx(idx), isQuery(false) {}
 
-} // namespace mu
+  inline Query(int v, int lower, int upper, int idx)
+      : v(v), lower(lower), upper(upper), idx(idx), isQuery(true) {}
 
-namespace cs { namespace bit {
-
-template <typename T>
-class BinaryIndexedTree {
-  int n;
-  vector<T> vs;
-
-  inline static int transform(int i) {
-    return (i & (i + 1)) - 1;
-  }
-
-public:
-  inline void init(int n_, bool fixed = true) {
-    this->n = n_;
-    vs.reserve(fixed ? n : mu::nextPow2(n));
-    vs.resize(n);
-    fill(ALL(vs), 0);
-  }
-
-  inline void update(int i, const T &delta) {
-    for (; i < n; i |= i + 1) {
-      vs[i] += delta;
+  inline bool operator<(const Query& o) const {
+    if (v == o.v) {
+      return isQuery > o.isQuery;
     }
+    return v > o.v;
   }
 
-  inline T calc(int i) {
-    if (i < 0) return T();
-    T res = vs[i];
-    for (i = transform(i); i >= 0; i = transform(i)) {
-      res += vs[i];
-    }
-    return res;
+#ifdef LOCAL
+  inline friend ostream& operator<<(ostream& o, const Query& query) {
+    return o
+           << '('
+           << (query.isQuery
+                   ? tostring2(
+                         "v", query.v, "lower", query.lower, "upper", query.upper, "idx", query.idx)
+                   : tostring2("v", query.v, "idx", query.idx))
+           << ')';
   }
-
-  inline T calcRange(int i, int j) {
-    return calc(j) - calc(i - 1);
-  }
+#endif
 };
-}} // namespace cs::bit
-
-using PII = pair<int, int>;
-
-const int MAXN = 30000;
-const int MAXQ = 200000;
-
-int aCnt, as[MAXN], aOrder[MAXN];
-int qCnt, ls[MAXQ], rs[MAXQ], ks[MAXQ], qOrder[MAXQ];
-cs::bit::BinaryIndexedTree<int> bit;
-int answer[MAXQ];
 
 int main() {
-  scanf("%d", &aCnt);
-  FOR(i, 0, aCnt) {
-    scanf("%d", as + i);
-    aOrder[i] = i;
+  int n;
+  io::readInt(n);
+  vector<int> vs(n);
+  FOR(i, 0, n) {
+    io::readInt(vs[i]);
   }
-  sort(aOrder, aOrder + aCnt, [](int x, int y) { return as[x] > as[y]; });
-  scanf("%d", &qCnt);
-  FOR(i, 0, qCnt) {
-    scanf("%d%d%d", ls + i, rs + i, ks + i);
-    --ls[i];
-    --rs[i];
-    qOrder[i] = i;
+  int q;
+  io::readInt(q);
+  vector<Query> queries;
+  queries.reserve(n + q);
+  FOR(i, 0, n) {
+    queries.emplace_back(vs[i], i);
   }
-  sort(qOrder, qOrder + qCnt, [](int x, int y) { return ks[x] > ks[y]; });
-  bit.init(aCnt);
-  int pnt = 0;
-  FOR(i, 0, qCnt) {
-    int qIdx = qOrder[i];
-    for (int aIdx = aOrder[pnt]; pnt < aCnt && as[aIdx] > ks[qOrder[i]];
-         aIdx = aOrder[++pnt]) {
-      bit.update(aIdx, 1);
+  FOR(i, 0, q) {
+    int lower, upper, v;
+    io::readInt(lower);
+    io::readInt(upper);
+    io::readInt(v);
+    queries.emplace_back(v, lower - 1, upper, i);
+  }
+  SORT(queries);
+  ds::FenwickSum<int> fen;
+  fen.init(n);
+  vector<int> results(q);
+  for (const auto& query : queries) {
+    if (query.isQuery) {
+      results[query.idx] = fen.calcRange(query.lower, query.upper);
+    } else {
+      fen.update(query.idx, 1);
     }
-    answer[qIdx] = bit.calcRange(ls[qIdx], rs[qIdx]);
   }
-  FOR(i, 0, qCnt) printf("%d\n", answer[i]);
+  FOR(i, 0, q) {
+    io::writeInt(results[i], '\n');
+  }
   return 0;
 }

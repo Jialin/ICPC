@@ -63,6 +63,7 @@ struct BaseFenwick {
       return res;
     }
     // BASE_FENWICK_CALC_RANGE => BASE_FENWICK_CALC_PREFIX
+    // BASE_FENWICK_CALC_RANGE => _BASE_FENWICK_SUB_V
     return lower ? _subV(calcPrefix(upper), calcPrefix(lower)) : calcPrefix(upper);
   }
 #endif

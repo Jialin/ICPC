@@ -66,9 +66,9 @@ struct MoHilbert {
 #endif
 
   inline void addQuery(int lower, int upper, int idx) {
-    DEBUG_TRUE((is_base_of<BaseMoHilbertState, STATE>::value));
+    DEBUG_TRUE((is_base_of<BaseMoHilbertState, STATE>::value))
     _queries.emplace_back(lower, upper, idx);
-    DEBUG_LE(upper, 1 << RANGE_BIT);
+    DEBUG_LE(upper, 1 << RANGE_BIT)
     _queries.back().order = math::hilbertOrder(RANGE_BIT, lower, upper);
   }
 
