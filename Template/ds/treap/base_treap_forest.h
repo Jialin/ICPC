@@ -2,6 +2,7 @@
 // ALL BASE_TREAP_FOREST_ALL
 #pragma once
 
+#include "ds/treap/base_treap_forest_macros.h"
 #include "ds/treap/base_treap_macros.h" // INCLUDE
 
 #include "common/macros.h"
@@ -27,7 +28,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_INIT_ORDERED_ITEMS // ^
   inline void initOrderedItems(const vector<pair<KEY, NODE_V>>& vs, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     // BASE_TREAP_FOREST_INIT_ORDERED_ITEMS => _BASE_TREAP_INIT_ORDERED_ITEMS
     this->_roots[rootIdx] = this->_initOrderedItems(vs, 0, SIZE(vs));
   }
@@ -35,7 +36,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_UPDATE // ^
   inline void update(const KEY& key, const NODE_V& delta, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     // BASE_TREAP_FOREST_UPDATE => _BASE_TREAP_UPDATE
     this->_roots[rootIdx] = this->_update(this->_roots[rootIdx], key, delta);
   }
@@ -43,7 +44,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_ERASE // ^
   inline void erase(const KEY& key, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     // BASE_TREAP_FOREST_ERASE => _BASE_TREAP_ERASE
     this->_roots[rootIdx] = this->_erase(this->_roots[rootIdx], key);
   }
@@ -52,7 +53,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 #ifdef BASE_TREAP_FOREST_CALC_PREFIX // ^
   // Calculates prefix from [-inf, upper)
   inline RANGE_V calcPrefix(const KEY& upper, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     RANGE_V res;
     this->_initRangeV(res);
     // BASE_TREAP_FOREST_CALC_PREFIX => _BASE_TREAP_CALC_PREFIX
@@ -63,7 +64,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_COUNT_PREFIX // ^
   inline int countPrefix(const KEY& upper, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     // BASE_TREAP_FOREST_COUNT_PREFIX => _BASE_TREAP_COUNT_PREFIX
     return this->_countPrefix(this->_roots[rootIdx], upper);
   }
@@ -71,7 +72,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_CALC_SUFFIX // ^
   inline RANGE_V calcSuffix(const KEY& lower, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     RANGE_V res;
     this->_initRangeV(res);
     // BASE_TREAP_FOREST_CALC_SUFFIX => _BASE_TREAP_CALC_SUFFIX
@@ -82,7 +83,7 @@ struct BaseTreapForest : BaseTreap<NODE_V, RANGE_V, KEY> {
 
 #ifdef BASE_TREAP_FOREST_CALC_RANGE // ^
   inline RANGE_V calcRange(const KEY& lower, const KEY& upper, int rootIdx) {
-    DEBUG_LT(rootIdx, SIZE(this->_roots));
+    DEBUG_LT(rootIdx, SIZE(this->_roots))
     RANGE_V res;
     _initRangeV(res);
     // BASE_TREAP_FOREST_CALC_RANGE => _BASE_TREAP_CALC_RANGE

@@ -143,7 +143,6 @@
 - [x] [Codeforces - Subsequences](http://codeforces.com/contest/597/problem/C)
 - [x] [Codeforces - Inversions after Shuffle](http://codeforces.com/contest/749/problem/E)
 - [x] [GYM - Cairo Market](http://codeforces.com/problemset/gymProblem/101055/D)
-- [ ] [Codeforces - Goodbye Souvenir](http://codeforces.com/contest/849/problem/E): TODO: Segment Tree + Fenwick
 - [x] [SPOJ - Ada and Species](https://www.spoj.com/problems/ADACABAA/): Fenwick + Stairs Container
 - [x] [Latin American Regionals 2017 - Fundraising](https://matcomgrader.com/problem/9346/fundraising/)
 - [x] [SPOJ - Horrible Queries](https://www.spoj.com/problems/HORRIBLE/): Range updates & queries
@@ -154,6 +153,7 @@
 - [x] [SPOJ - Arrangement Validity](https://www.spoj.com/problems/IITWPC4D/): calcKth
 - [x] [SPOJ - KOILINE](https://www.spoj.com/problems/KOILINE/): calcKth
 - [x] [SPOJ - KQUERY](http://www.spoj.com/problems/KQUERY/)
+- [x] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E)
 
 ## 1.5. Treap ([Template/ds/treap/](Template/ds/treap/))
 
@@ -222,7 +222,8 @@
 - [x] [SPOJ - THRBL](https://www.spoj.com/problems/THRBL/)
 - [x] [Codeforces - Wizards and Roads](https://codeforces.com/contest/167/problem/D)
 - [x] [Codeforces - Yaroslav and Points](https://codeforces.com/contest/295/problem/E)
-- [ ] [Codeforces - The Untended Antiquity](https://codeforces.com/contest/869/problem/E) [2D]
+- [ ] [Codeforces - Goodbye Souvenir](http://codeforces.com/contest/849/problem/E): Segment Tree + Treap : TODO Fenwick
+- [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D): TODO: Implicit Segment Tree
 
 # 2. Algorithms
 
@@ -236,7 +237,6 @@
 - [x] [UVA 11990 - Dynamic Inversion](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3141): TODO: Follow up with Partition Tree
 - [x] [SPOJ - Give Away](https://www.spoj.com/problems/GIVEAWAY/)
 - [x] [SPOJ - Race Against Time](https://www.spoj.com/problems/RACETIME/)
-- [ ] [Codeforces - Destiny](https://codeforces.com/contest/840/problem/D): TODO: Implicit Segment Tree
 - [x] [Codeforces - Holes](https://codeforces.com/contest/13/problem/E): TODO: Link Cut Tree
 - [x] [Codeforces - XOR and Favorite Number](https://codeforces.com/contest/617/problem/E)
 - [x] [Codeforces - Powerful array](https://codeforces.com/contest/86/problem/D)
