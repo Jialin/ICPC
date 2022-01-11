@@ -92,7 +92,8 @@
 			"system_error": "cpp",
 			"typeinfo": "cpp",
 			"thread": "cpp",
-			"forward_list": "cpp"
+			"forward_list": "cpp",
+			"fstream": "cpp"
 		},
 		"python.linting.prospectorEnabled": true,
 		"python.formatting.provider": "black",
