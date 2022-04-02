@@ -5,8 +5,6 @@
 #include "common/macros.h"
 #include "string/palindrome/manacher_macros.h"
 
-#include "string/palindrome/manacher.h"
-
 using namespace std;
 
 namespace str {

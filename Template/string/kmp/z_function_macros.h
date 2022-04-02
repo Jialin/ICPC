@@ -1,0 +1,4 @@
+#ifdef Z_FUNCTION_ALL
+#define Z_FUNCTION_INIT
+#define Z_FUNCTION_RESERVE
+#endif
