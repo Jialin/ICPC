@@ -2,6 +2,8 @@
 // ALL BASE_FENWICK_ALL
 #pragma once
 
+#include "common/macros.h"
+
 using namespace std;
 
 namespace ds {
@@ -25,6 +27,18 @@ struct BaseFenwick {
       _initV(v);
     }
   }
+
+#ifdef BASE_FENWICK_INIT_ALL // ^
+  inline void initAll(const vector<V>& vs) {
+    init(vs.size());
+    FOR(i, 0, _n) {
+      _updateV(_vs[i], vs[i]);
+      for (int j = 0; i & (1 << j); ++j) {
+        _updateV(_vs[i], _vs[i ^ (1 << j)]);
+      }
+    }
+  }
+#endif
 
   inline void update(int x, const V& deltaV) {
     for (int i = x; i < _n; i |= i + 1) {
