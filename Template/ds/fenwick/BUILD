@@ -32,6 +32,7 @@ cc_library(
 cc_library(
     name = "base_fenwick",
     hdrs = ["base_fenwick.h"],
+    deps = ["//common:macros"],
 )
 
 cc_library(

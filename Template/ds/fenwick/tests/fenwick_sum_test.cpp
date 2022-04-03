@@ -9,6 +9,26 @@ using namespace std;
 
 namespace ds {
 
+TEST(FenwickSum, initAll) {
+  ds::FenwickSum<int> fen;
+  fen.initAll({0, 20, 0, 30, 40});
+  EXPECT_EQ(0, fen.calcRange(0, 1));
+  EXPECT_EQ(20, fen.calcRange(0, 2));
+  EXPECT_EQ(20, fen.calcRange(0, 3));
+  EXPECT_EQ(50, fen.calcRange(0, 4));
+  EXPECT_EQ(90, fen.calcRange(0, 5));
+  EXPECT_EQ(20, fen.calcRange(1, 2));
+  EXPECT_EQ(20, fen.calcRange(1, 3));
+  EXPECT_EQ(50, fen.calcRange(1, 4));
+  EXPECT_EQ(90, fen.calcRange(1, 5));
+  EXPECT_EQ(0, fen.calcRange(2, 3));
+  EXPECT_EQ(30, fen.calcRange(2, 4));
+  EXPECT_EQ(70, fen.calcRange(2, 5));
+  EXPECT_EQ(30, fen.calcRange(3, 4));
+  EXPECT_EQ(70, fen.calcRange(3, 5));
+  EXPECT_EQ(40, fen.calcRange(4, 5));
+}
+
 TEST(FenwickSum, calcRange) {
   ds::FenwickSum<int> fen;
   fen.init(5);
