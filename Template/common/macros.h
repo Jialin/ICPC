@@ -11,7 +11,7 @@
   for (int i = (a); i >= (b); --i)                                                                 \
     if (condition)
 
-#define FOREDGE(i, j, vs) for (int i = (vs).lastOut[j]; i >= 0; i = (vs).nxtOut[i])
+#define FOREDGE(i, vs, j) for (int i = (vs).lastOut[j]; i >= 0; i = (vs).nxtOut[i])
 #define SIZE(vs) static_cast<int>((vs).size())
 #define FORSIZE(i, vs) for (int i = 0; i < SIZE(vs); ++i)
 #define SORT(vs) sort(ALL(vs))

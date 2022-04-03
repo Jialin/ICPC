@@ -55,7 +55,7 @@ struct ForwardStarEdgeWeighted : ForwardStar {
       int u = q.front();
       q.pop();
       inQ[u] = false;
-      FOREDGE(i, u, *this) {
+      FOREDGE(i, (*this), u) {
         int v = toIdx[i];
         if (updater(u, v, i) && !inQ[v]) {
           q.push(v);
